@@ -4,7 +4,7 @@
 
 
 > **SparseD: Sparse Attention for Diffusion Language Models**   🥯[[Arxiv]](https://arxiv.org/abs/2509.24014)   
-> [Zeqing Wang](https://github.com/INV-WZQ)<sup>1</sup>, [Gongfan Fang](https://fangggf.github.io/)<sup>1</sup>, [Xinyin Ma](https://horseee.github.io/)<sup>1</sup> , [Xingyi Yang](https://adamdad.github.io/)<sup>2</sup> , [Xinchao Wang](https://sites.google.com/site/sitexinchaowang/)<sup>1</sup>    
+> [Zeqing Wang](https://inv-wzq.github.io/)<sup>1</sup>, [Gongfan Fang](https://fangggf.github.io/)<sup>1</sup>, [Xinyin Ma](https://horseee.github.io/)<sup>1</sup> , [Xingyi Yang](https://adamdad.github.io/)<sup>2</sup> , [Xinchao Wang](https://sites.google.com/site/sitexinchaowang/)<sup>1</sup>    
 > <sup>1</sup> [xML Lab](https://sites.google.com/view/xml-nus), National University of Singapore  
 > <sup>2</sup> The Hong Kong Polytechnic University
 
