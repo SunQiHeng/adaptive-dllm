@@ -1,4 +1,11 @@
 import torch
+from transformers import AutoModel, AutoTokenizer
+
+import json 
+import argparse
+import time
+import sys
+import os
 import numpy as np
 import torch.nn.functional as F
 
@@ -110,25 +117,81 @@ def generate(model, prompt, steps=128, gen_length=128, block_length=128, tempera
 
     return x
 
+def set_random_seed(seed):
+    """
+    Set the random seed for reproducibility.
+    """
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
-def main():
-    device = 'cuda'
+if __name__ == "__main__":
+    # Add project directory to path
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_path", type=str, default="GSAI-ML/LLaDA-1.5")
+    parser.add_argument("--seq_len", type=int, default=128)
+    parser.add_argument("--steps", type=int, default=128)
+    parser.add_argument("--block_length", type=int, default=32)
+    parser.add_argument("--sampling-alg", type=str, default='low_confidence')
 
-    model = AutoModel.from_pretrained('GSAI-ML/LLaDA-8B-Instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
-    tokenizer = AutoTokenizer.from_pretrained('GSAI-ML/LLaDA-8B-Instruct', trust_remote_code=True)
+    parser.add_argument("--origin", action="store_true")
 
-    prompt = "Lily can run 12 kilometers per hour for 4 hours. After that, she runs 6 kilometers per hour. How many kilometers can she run in 8 hours?"
+    parser.add_argument("--skip", type=float, default=0.2)
+    parser.add_argument("--select", type=float, default=0.3)
+    parser.add_argument("--block_size", type=int, default=128)
+    
+    parser.add_argument("--prompt", type=str, default="short_context")
+    args = parser.parse_args()
 
-    # Add special tokens for the Instruct model. The Base model does not require the following two lines.
-    m = [{"role": "user", "content": prompt}, ]
-    prompt = tokenizer.apply_chat_template(m, add_generation_prompt=True, tokenize=False)
+    model_path = args.model_path
 
-    input_ids = tokenizer(prompt)['input_ids']
-    input_ids = torch.tensor(input_ids).to(device).unsqueeze(0)
+    # 使用稀疏版本的模型（支持 SparseD_param）
+    from models.LLaDA.core.sparsed_modeling import LLaDAModelLM
+    model = LLaDAModelLM.from_pretrained(model_path, torch_dtype=torch.bfloat16, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+    model = model.to("cuda").eval()
 
-    out = generate(model, input_ids, steps=128, gen_length=128, block_length=32, temperature=0., cfg_scale=0., remasking='low_confidence')
-    print(tokenizer.batch_decode(out[:, input_ids.shape[1]:], skip_special_tokens=True)[0])
+    with open('prompts.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    question=data["questions"][args.prompt]
+    question="Lily can run 12 kilometers per hour for 4 hours. After that, she runs 6 kilometers per hour. How many kilometers can she run in 8 hours?"
+    print('-=-=-=-=-', question)
+    messages = [{"role": "user", "content": question}]
 
+    prompts = tokenizer.apply_chat_template(
+        messages, add_generation_prompt=True, tokenize=False
+    )
+    prompt_ids = tokenizer(prompts, return_tensors="pt", padding=True, padding_side="left")
+    input_ids = prompt_ids.input_ids.to(device="cuda")
+    
+    if args.origin:
+        print("Use Original Model!")
+        SparseD_param = None
+    else:
+        print("Use Sparse Attention version!")
+        SparseD_param = {
+            'skip': args.skip, 
+            'select': args.select, 
+            'block_size': args.block_size,
+            'new_generation': args.seq_len,
+            'whole_steps': args.steps
+        }
 
-if __name__ == '__main__':
-    main()
+    import time
+    start_time = time.time()
+    output = generate(
+        model, input_ids, 
+        steps=args.steps, 
+        gen_length=args.seq_len, 
+        block_length=args.block_length, 
+        temperature=0, 
+        remasking=args.sampling_alg, 
+        SparseD_param=SparseD_param
+    )
+    end_time = time.time()
+
+    answer = tokenizer.batch_decode(output[:, input_ids.shape[1]:], skip_special_tokens=True)[0]
+    print(f"----Question of length {args.prompt}: {messages[0]['content']}")
+    print(answer)
+    print(f"Running Time: {end_time - start_time:.4f}")

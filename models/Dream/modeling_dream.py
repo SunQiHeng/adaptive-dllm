@@ -346,7 +346,7 @@ class DreamAttention(nn.Module):
         key_states = repeat_kv(key_states, self.num_key_value_groups)
         value_states = repeat_kv(value_states, self.num_key_value_groups)
 
-        # -------- Start SparseD -----------
+        # -------- Start Sparse Attention -----------
         if now_step == 0:
             self.fine_mask = None
             self.last = None
@@ -389,7 +389,7 @@ class DreamAttention(nn.Module):
             )
         else:
             attn_output = flex_attn(query_states, key_states, value_states, block_mask=self.block_mask)
-        # -------- End SparseD -----------
+        # -------- End Sparse Attention -----------
 
         # attn_weights = torch.matmul(query_states, key_states.transpose(2, 3)) / math.sqrt(self.head_dim)
         # # upcast attention to fp32

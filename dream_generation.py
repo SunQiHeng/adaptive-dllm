@@ -51,7 +51,7 @@ if __name__ == "__main__":
         print("Use Original Model!")
         SparseD_param = None
     else:
-        print("Use SparseD version!")
+        print("Use Sparse Attention version!")
         SparseD_param = {
             'skip': args.skip, 
             'select': args.select, 

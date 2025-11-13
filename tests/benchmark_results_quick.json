@@ -1,0 +1,60 @@
+{
+  "config": {
+    "model_path": "GSAI-ML/LLaDA-1.5",
+    "num_samples": 6,
+    "batch_size": 2,
+    "seq_len": 128,
+    "steps": 128,
+    "seed": 42
+  },
+  "results": [
+    {
+      "method": "Dense Attention",
+      "total_time": 10.329968452453613,
+      "avg_time_per_batch": 3.4433228174845376,
+      "std_time_per_batch": 0.12788372839067003,
+      "avg_time_per_sample": 1.7216614087422688,
+      "tokens_per_sec": 74.34679046067964,
+      "num_batches": 3,
+      "num_samples": 6,
+      "batch_size": 2,
+      "batch_times": [
+        3.6239864826202393,
+        3.345790147781372,
+        3.360191822052002
+      ]
+    },
+    {
+      "method": "Standard Sparse (keep=30%)",
+      "total_time": 13.206832647323608,
+      "avg_time_per_batch": 4.402277549107869,
+      "std_time_per_batch": 0.7661155358974473,
+      "avg_time_per_sample": 2.2011387745539346,
+      "tokens_per_sec": 58.15171741088404,
+      "num_batches": 3,
+      "num_samples": 6,
+      "batch_size": 2,
+      "batch_times": [
+        5.4822142124176025,
+        3.786796808242798,
+        3.937821626663208
+      ]
+    },
+    {
+      "method": "Adaptive Sparse (avg keep=30%)",
+      "total_time": 12.095700740814209,
+      "avg_time_per_batch": 4.031900246938069,
+      "std_time_per_batch": 0.01648947742950268,
+      "avg_time_per_sample": 2.0159501234690347,
+      "tokens_per_sec": 63.49363434633907,
+      "num_batches": 3,
+      "num_samples": 6,
+      "batch_size": 2,
+      "batch_times": [
+        4.052576303482056,
+        4.012222528457642,
+        4.030901908874512
+      ]
+    }
+  ]
+}

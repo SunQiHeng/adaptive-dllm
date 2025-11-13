@@ -31,7 +31,7 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.models.auto import AutoModel
 from transformers.cache_utils import Cache
 
-from .configuration_llada import (
+from .configuration import (
     LLaDAConfig,
     StrEnum,
     InitFnType,
@@ -60,7 +60,7 @@ import torch._dynamo
 torch._dynamo.config.cache_size_limit = 10000
 torch._dynamo.config.accumulated_cache_size_limit = 10000
 flex_attn = torch.compile(flex_attention, dynamic=False)
-from .SparseD_utils import create_block_mask_cached, customize_mask, create_attention_block_mask
+from ..sparse.sparsed_utils import create_block_mask_cached, customize_mask, create_attention_block_mask
 
 __all__ = [
     "LayerNormBase",
