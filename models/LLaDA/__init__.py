@@ -34,7 +34,7 @@ from .core import LLaDAConfig, LLaDAModel, LLaDAModelLM, ModelConfig
 from .generation import generate
 
 # Attribution
-from .attribution import IntegratedGradientsHeadAttribution
+from .attribution import BlockwiseIntegratedGradientsAttribution
 
 # Sparse
 from .sparse import (
@@ -61,7 +61,7 @@ __all__ = [
     # Generation
     "generate",
     # Attribution
-    "IntegratedGradientsHeadAttribution",
+    "BlockwiseIntegratedGradientsAttribution",
     # Sparse (full names)
     "allocate_adaptive_cache_from_importance",
     "get_topk_heads_per_layer",

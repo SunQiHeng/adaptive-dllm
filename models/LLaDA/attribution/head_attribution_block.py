@@ -1,12 +1,13 @@
 """
-Head Attribution using Integrated Gradients for Diffusion Language Models (LLaDA).
+Head Attribution using Integrated Gradients for Diffusion Language Models (LLaDA) - Version 2.
 
-针对每一层的 attention heads 进行归因，baseline 是该层 att 完全 mask 掉。
+Block-wise attribution: 每个 block 完成后进行一次归因。
+- Baseline: block 开始时的 attention 矩阵
+- Actual: block 结束时的 attention 矩阵
 """
 import torch
 import torch.nn.functional as F
-from typing import List, Dict, Optional, Tuple
-import numpy as np
+from typing import List, Dict, Optional
 
 
 def ensure_finite_(x: torch.Tensor, check_neg_inf: bool = True, check_pos_inf: bool = False):
@@ -20,28 +21,37 @@ def ensure_finite_(x: torch.Tensor, check_neg_inf: bool = True, check_pos_inf: b
         x.masked_fill_(x == float("inf"), torch.finfo(x.dtype).max)
 
 
-class IntegratedGradientsHeadAttribution:
+class BlockwiseIntegratedGradientsAttribution:
     """
-    对 Diffusion LM 的每一层 attention heads 使用 Integrated Gradients 归因。
+    Block-wise Integrated Gradients for LLaDA head attribution.
     
     核心思路：
-    1. 逐层归因：对每一层单独计算 head importance
-    2. Baseline: 该层所有 heads 的 att 输出都为 0
-    3. Actual: 该层 heads 的正常 att 输出
-    4. 在 baseline 和 actual 之间插值并积分
+    1. 每个 block 完成生成后进行一次归因
+    2. Baseline: block 开始时的 attention 输出（x_start）
+    3. Actual: block 结束时的 attention 输出（x_end）
+    4. 归因目标：该 block 对应的生成位置的 logits
     """
     
     def __init__(
         self,
         model,
-        n_steps: int = 20,
+        n_steps: int = 10,
     ):
         """
         Args:
-            model: LLaDAModel instance
+            model: LLaDAModel or LLaDAModelLM instance
             n_steps: Integrated Gradients 的积分步数
         """
-        self.model = model
+        # Handle both LLaDAModelLM (has .model attr) and LLaDAModel (direct)
+        if hasattr(model, 'model'):
+            # LLaDAModelLM wrapper
+            self.model_wrapper = model
+            self.model = model.model
+        else:
+            # Direct LLaDAModel
+            self.model_wrapper = None
+            self.model = model
+        
         self.n_steps = n_steps
         self.device = next(model.parameters()).device
     
@@ -64,7 +74,6 @@ class IntegratedGradientsHeadAttribution:
         Returns:
             logits: (B, L, vocab_size)
         """
-        # 确保模型处于 eval 模式（禁用 dropout）
         was_training = self.model.training
         self.model.eval()
         
@@ -87,39 +96,27 @@ class IntegratedGradientsHeadAttribution:
         
         x = self.model.transformer.emb_drop(x)
         
-        # Process attention mask and bias (following official implementation EXACTLY - line 1251-1292)
-        # Transform the attention mask into what the blocks expect
+        # Process attention mask and bias
         if attention_mask is not None and 0.0 in attention_mask:
-            # shape: (batch_size, 1, 1, seq_len)
             attention_mask = attention_mask.to(dtype=torch.float).view(batch_size, -1)[:, None, None, :]
             attention_mask = (1.0 - attention_mask) * torch.finfo(attention_mask.dtype).min
         else:
             attention_mask = None
         
-        # Merge attention mask with attention bias
-        # 🔑 KEY: Only prepare attention_bias if needed (matching official logic in modeling_llada.py:1259-1273)
         attention_bias = None
-        if (
-            attention_mask is not None
-            or self.model.config.alibi
-            # NOTE: We don't have past_key_values in our use case
-        ):
+        if attention_mask is not None or self.model.config.alibi:
             if attention_bias is None and self.model.config.alibi:
-                # Not implemented: would need get_causal_attention_bias + get_alibi_attention_bias
                 raise NotImplementedError("ALiBi is not supported in this implementation")
             elif attention_bias is None:
                 attention_bias = self.model.get_bidirectional_attention_bias(seq_len, x.device)
             
-            # Transform to the right shape
             mask_len = seq_len
             if attention_mask is not None:
                 mask_len = attention_mask.shape[-1]
             attention_bias = attention_bias[:, :, :mask_len, :mask_len].to(dtype=torch.float)
             
-            # Add in the masking bias
             if attention_mask is not None:
                 attention_bias = attention_bias + attention_mask
-                # Handle -inf values
                 ensure_finite_(attention_bias, check_neg_inf=True, check_pos_inf=False)
         
         # Get blocks
@@ -129,17 +126,13 @@ class IntegratedGradientsHeadAttribution:
         
         # Forward through blocks
         for curr_layer_idx, block in enumerate(blocks):
-            # Attention
             x_normed = block.attn_norm(x)
             
             if curr_layer_idx == target_layer_idx:
-                # 使用给定的 att 值，不计算 attention
-                # head_att_values 已经是 (B, nh, T, hs) 形状
-                # 需要 merge heads: (B, nh, T, hs) -> (B, T, d_model)
+                # 使用给定的 att 值
                 att = head_att_values.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
             else:
                 # 正常计算 attention
-                # Get Q, K, V
                 if hasattr(block, 'att_proj'):
                     qkv = block.att_proj(x_normed)
                     head_dim_size = d_model // n_heads
@@ -151,22 +144,17 @@ class IntegratedGradientsHeadAttribution:
                     k = block.k_proj(x_normed)
                     v = block.v_proj(x_normed)
                 
-                # Reshape
                 q = q.view(batch_size, seq_len, n_heads, head_dim).transpose(1, 2)
                 k = k.view(batch_size, seq_len, block.config.effective_n_kv_heads, head_dim).transpose(1, 2)
                 v = v.view(batch_size, seq_len, block.config.effective_n_kv_heads, head_dim).transpose(1, 2)
                 
-                # RoPE
                 if block.config.rope:
                     q, k = block.rotary_emb(q, k)
                 
-                # GQA
                 if k.size(1) != q.size(1):
                     k = k.repeat_interleave(n_heads // k.size(1), dim=1, output_size=n_heads)
                     v = v.repeat_interleave(n_heads // v.size(1), dim=1, output_size=n_heads)
                 
-                # Attention
-                # Apply attention bias (slice for current sequence length)
                 attn_bias_slice = attention_bias[:, :, :seq_len, :seq_len] if attention_bias is not None else None
                 att = F.scaled_dot_product_attention(
                     q, k, v,
@@ -175,10 +163,8 @@ class IntegratedGradientsHeadAttribution:
                     is_causal=False
                 )
                 
-                # Merge heads: (B, nh, T, hs) -> (B, T, d_model)
                 att = att.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
             
-            # Apply output projection
             att = block.attn_out(att)
             x = x + block.dropout(att)
             
@@ -208,7 +194,6 @@ class IntegratedGradientsHeadAttribution:
         else:
             logits = self.model.transformer.ff_out(x)
         
-        # 恢复原始训练状态
         if was_training:
             self.model.train()
         
@@ -222,8 +207,6 @@ class IntegratedGradientsHeadAttribution:
     ) -> torch.Tensor:
         """
         计算某一层的正常 attention outputs（在 scaled_dot_product_attention 之后）。
-        
-        策略：使用 hook 捕获官方 block 的 attention 输出，确保与官方实现完全一致。
         
         Returns:
             att: shape (B, nh, T, hs)
@@ -247,7 +230,7 @@ class IntegratedGradientsHeadAttribution:
         
         x = self.model.transformer.emb_drop(x)
         
-        # Process attention mask and bias (matching official logic)
+        # Process attention mask and bias
         if attention_mask is not None and 0.0 in attention_mask:
             attention_mask = attention_mask.to(dtype=torch.float).view(batch_size, -1)[:, None, None, :]
             attention_mask = (1.0 - attention_mask) * torch.finfo(attention_mask.dtype).min
@@ -255,10 +238,7 @@ class IntegratedGradientsHeadAttribution:
             attention_mask = None
         
         attention_bias = None
-        if (
-            attention_mask is not None
-            or self.model.config.alibi
-        ):
+        if attention_mask is not None or self.model.config.alibi:
             if attention_bias is None and self.model.config.alibi:
                 raise NotImplementedError("ALiBi is not supported in this implementation")
             elif attention_bias is None:
@@ -279,8 +259,6 @@ class IntegratedGradientsHeadAttribution:
         
         # 使用 hook 捕获目标层的 attention 输出
         captured_att = [None]
-        
-        # 替换 F.scaled_dot_product_attention 来捕获输出
         original_sdpa = F.scaled_dot_product_attention
         
         def sdpa_with_capture(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False):
@@ -291,7 +269,6 @@ class IntegratedGradientsHeadAttribution:
         # Forward through blocks
         for curr_layer_idx, block in enumerate(blocks):
             if curr_layer_idx == target_layer_idx:
-                # 在目标层，替换 SDPA 来捕获输出
                 F.scaled_dot_product_attention = sdpa_with_capture
                 try:
                     x, _ = block(x, attention_bias=attention_bias)
@@ -299,7 +276,6 @@ class IntegratedGradientsHeadAttribution:
                     F.scaled_dot_product_attention = original_sdpa
                 break
             else:
-                # 正常 forward
                 x, _ = block(x, attention_bias=attention_bias)
         
         if was_training:
@@ -310,71 +286,81 @@ class IntegratedGradientsHeadAttribution:
         
         return captured_att[0]  # (B, nh, T, hs)
     
-    def compute_head_attribution_for_layer(
+    def compute_block_attribution_for_layer(
         self,
-        input_ids: torch.LongTensor,
-        update_positions: List[int],
+        baseline_input_ids: torch.LongTensor,
+        actual_input_ids: torch.LongTensor,
+        block_positions: List[int],
         target_layer_idx: int,
         attention_mask: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
         """
-        对某一层的所有 heads 使用 Integrated Gradients 归因。
+        对某一层在某个 block 的归因。
         
         Args:
-            input_ids: (1, L)
-            update_positions: 被更新的位置列表，如 [10, 12, 13]
+            baseline_input_ids: (B, L) - block 开始时的状态（如 x_0 或 x_s）
+            actual_input_ids: (B, L) - block 结束时的状态（如 x_{s-1} 或 x_{2s-1}）
+            block_positions: 该 block 对应的生成位置列表
             target_layer_idx: 要归因的层
-            attention_mask: (1, L)
+            attention_mask: (B, L)
         
         Returns:
-            attributions: shape (n_heads,) - 该层每个 head 的重要性分数
+            attributions: shape (n_heads,) - 该层每个 head 在该 block 的重要性分数
         """
         self.model.eval()
         n_heads = self.model.config.n_heads
-        batch_size = input_ids.shape[0]
-        n_positions = len(update_positions)
         
-        # Step 1: 计算该层正常的 att 输出 (actual)
+        # Step 1: 计算 baseline attention (block 开始时)
         with torch.no_grad():
-            att_actual = self._compute_layer_head_att(
-                input_ids, attention_mask, target_layer_idx
+            att_baseline = self._compute_layer_head_att(
+                baseline_input_ids, attention_mask, target_layer_idx
             )  # (B, nh, T, hs)
         
-        # Step 2: Baseline - 所有 heads 的 att 都为 0
-        att_baseline = torch.zeros_like(att_actual)
+        # Step 2: 计算 actual attention (block 结束时)
+        with torch.no_grad():
+            att_actual = self._compute_layer_head_att(
+                actual_input_ids, attention_mask, target_layer_idx
+            )  # (B, nh, T, hs)
         
-        # Step 3: Integrated Gradients - 沿插值路径积分
-        # 存储每个 head 在每个插值点的梯度（保持完整形状用于逐元素乘法）
+        # Step 3: Integrated Gradients - 在 baseline 和 actual 之间插值
         accumulated_grads = torch.zeros_like(att_actual, device=self.device)  # (B, nh, T, hs)
         
         for step in range(self.n_steps + 1):
             alpha = step / self.n_steps
             
-            # 插值：所有 heads 一起从 baseline 到 actual
-            # att_α = α * att_actual (因为 baseline = 0)
-            att_interpolated = alpha * att_actual  # (B, nh, T, hs)
+            # 插值：att_α = baseline + α * (actual - baseline)
+            att_interpolated = att_baseline + alpha * (att_actual - att_baseline)
             att_interpolated = att_interpolated.detach().requires_grad_(True)
             
-            # Forward pass 得到 logits
+            # Forward pass 得到 logits（使用 block 结束时的 input_ids）
             logits = self._forward_with_layer_head_cache(
-                input_ids=input_ids,
+                input_ids=actual_input_ids,
                 attention_mask=attention_mask,
                 target_layer_idx=target_layer_idx,
                 head_att_values=att_interpolated
             )
             
-            # 提取更新位置的 logits，并对目标位置求和作为标量输出
-            logits_at_pos = logits[0, update_positions, :]  # (n_pos, vocab_size)
+            # 提取该 block 对应位置的 logits
+            logits_at_block = logits[:, block_positions, :]  # (B, len(block_positions), vocab_size)
             
-            # 对 logits 求和得到标量（用于计算梯度）
-            # 这里我们对每个位置的 logits 的 L1 范数求和
-            output_scalar = logits_at_pos.abs().sum()
+            # 获取这些位置的真实 token
+            target_tokens = actual_input_ids[:, block_positions]  # (B, len(block_positions))
+            
+            # 计算这些位置的 log probability 作为目标
+            log_probs = F.log_softmax(logits_at_block, dim=-1)
+            target_log_probs = torch.gather(
+                log_probs, 
+                dim=-1, 
+                index=target_tokens.unsqueeze(-1)
+            ).squeeze(-1)  # (B, len(block_positions))
+            
+            # 求和作为标量输出（越大越好）
+            output_scalar = target_log_probs.sum()
             
             # 计算梯度：∂output/∂att_interpolated
             if att_interpolated.requires_grad:
                 output_scalar.backward()
                 
-                # att_interpolated.grad shape: (B, nh, T, hs)
                 grads = att_interpolated.grad
                 
                 # 梯形法则权重
@@ -383,19 +369,13 @@ class IntegratedGradientsHeadAttribution:
                 else:
                     weight = 1.0
                 
-                # 累积梯度（保持完整形状）
                 accumulated_grads += grads * weight
         
         # Step 4: 归因 = (att_actual - att_baseline) ⊙ 平均梯度
-        # 因为 baseline = 0，所以归因 = att_actual ⊙ 平均梯度
-        # ⊙ 表示逐元素乘法（element-wise multiplication）
-        
-        # 计算平均梯度（保持完整形状）
         avg_grads = accumulated_grads / self.n_steps  # (B, nh, T, hs)
         
-        # 逐元素乘法，然后对每个 head 求和
-        # 这是标准的 Integrated Gradients 公式
-        elementwise_attribution = att_actual * avg_grads  # (B, nh, T, hs)
+        # 逐元素乘法
+        elementwise_attribution = (att_actual - att_baseline) * avg_grads  # (B, nh, T, hs)
         
         # 对每个 head 在 batch, seq_len, head_dim 维度上求和
         attributions = elementwise_attribution.sum(dim=[0, 2, 3])  # (nh,)
@@ -418,3 +398,4 @@ class IntegratedGradientsHeadAttribution:
             rankings[layer_idx] = sorted_indices
         
         return rankings
+

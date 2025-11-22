@@ -67,3 +67,9 @@ slurm-*.out
 # Archive
 docs/archive/
 
+
+# Attribution results
+attribution_results*/
+
+# Attribution logs
+models/LLaDA/attribution/logs/

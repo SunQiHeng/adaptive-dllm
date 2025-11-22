@@ -15,7 +15,7 @@ import os
 # Add project directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models.LLaDA.attribution.head_attribution_v2 import BlockwiseIntegratedGradientsAttribution
+from models.LLaDA.attribution.head_attribution_block import BlockwiseIntegratedGradientsAttribution
 from transformers import AutoTokenizer
 
 
