@@ -116,9 +116,9 @@ def generate(model, prompt, attention_mask=None, steps=128, gen_length=128, bloc
                 _, select_index = torch.topk(confidence[j], k=num_transfer_tokens[j, i])
                 transfer_index[j, select_index] = True
             x[transfer_index] = x0[transfer_index]
-            print('num_block', num_block)
-            print('steps', i)
-            print('transfer_index', transfer_index)
+            # print('num_block', num_block)
+            # print('steps', i)
+            # print('transfer_index', transfer_index)
             
 
     return x

@@ -18,7 +18,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BASE_OUTPUT_DIR=${BASE_OUTPUT_DIR:-"/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_${TIMESTAMP}"}
 
 # 指定使用GPU (默认GPU 5，可通过环境变量修改)
-export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-5}
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-4}
 
 # 定义三个不同的随机种子
 SEEDS=(47 123 2024)

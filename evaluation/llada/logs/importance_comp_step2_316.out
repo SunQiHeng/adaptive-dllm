@@ -1,0 +1,30 @@
+=========================================
+Job ID: 316
+Node: gs14
+Start time: Tuesday, November 25, 2025 PM09:34:00 HKT
+=========================================
+Using GPUs: 4,5
+=========================================
+Activating adaptive-dllm environment...
+Python: /home/qiheng/miniconda3/envs/adaptive-dllm/bin/python
+Python version: Python 3.10.15
+=========================================
+
+=========================================
+NOTE: Step 1 already completed
+Using importance configs from: configs/head_importance/
+=========================================
+
+=========================================
+STEP 2: Run Comprehensive Comparison
+=========================================
+Using the default sparsity block size: 128
+
+======================================================================
+LLaDA Evaluation Setup
+======================================================================
+Model type: standard
+Model path: GSAI-ML/LLaDA-8B-Base
+Steps: 1024, Gen length: 1024, Block length: 1024
+======================================================================
+

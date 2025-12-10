@@ -104,15 +104,21 @@ class LLaDAEvalHarness(LM):
             
         elif model_type == 'adaptive':
             from models.LLaDA.core.adaptive_sparsed_modeling import AdaptiveLLaDAModelLM
-            from models.LLaDA.sparse.adaptive_utils import (
-                create_adaptive_sparsity_config,
-                allocate_adaptive_sparsity_from_importance
-            )
+            from models.LLaDA.sparse.adaptive_utils import create_adaptive_sparsity_config
             from transformers import AutoConfig
+            import json
             
             # Load adaptive config
             if adaptive_config_path and os.path.exists(adaptive_config_path):
-                adaptive_config = torch.load(adaptive_config_path)
+                # Check file extension to determine load method
+                if adaptive_config_path.endswith('.json'):
+                    with open(adaptive_config_path, 'r') as f:
+                        adaptive_config = json.load(f)
+                    # Convert keep_mask to tensor
+                    if 'keep_mask' in adaptive_config:
+                        adaptive_config['keep_mask'] = torch.tensor(adaptive_config['keep_mask'], dtype=torch.bool)
+                else:
+                    adaptive_config = torch.load(adaptive_config_path, weights_only=False)
                 print(f"Loaded adaptive config from {adaptive_config_path}")
             else:
                 config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
@@ -124,13 +130,9 @@ class LLaDAEvalHarness(LM):
                     n_heads=n_heads,
                     strategy=importance_strategy,
                     base_sparsity=base_sparsity,
-                    seed=42
-                )
-                adaptive_config['sparsity_levels'] = allocate_adaptive_sparsity_from_importance(
-                    adaptive_config['importance_scores'],
-                    base_sparsity=base_sparsity,
                     min_sparsity=min_sparsity,
-                    max_sparsity=max_sparsity
+                    max_sparsity=max_sparsity,
+                    seed=42
                 )
             
             self.model = AdaptiveLLaDAModelLM.from_pretrained(
@@ -225,7 +227,16 @@ class LLaDAEvalHarness(LM):
             un_batch[prompt_index] = self.mask_id
             batch = torch.cat([batch, un_batch])
         
-        logits = self.model(batch).logits
+        # Pass SparseD_param for sparse/adaptive models
+        if self.sparse_param is not None:
+            # For loglikelihood tasks, we need to add 'now_step' which is used in generation
+            # Set it to 0 since we're not doing incremental generation here
+            sparse_param_copy = self.sparse_param.copy()
+            if 'now_step' not in sparse_param_copy:
+                sparse_param_copy['now_step'] = 0
+            logits = self.model(batch, SparseD_param=sparse_param_copy).logits
+        else:
+            logits = self.model(batch).logits
         
         if self.cfg > 0.:
             logits, un_logits = torch.chunk(logits, 2, dim=0)

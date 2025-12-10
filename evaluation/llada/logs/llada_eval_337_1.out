@@ -1,0 +1,50 @@
+================================================
+Job ID: 339, Array ID: 1
+Task: arc_challenge
+================================================
+
+Running standard model on arc_challenge...
+PPL params: num_fewshot=0, mc_num=128, cfg=0.5, block_size=128
+Traceback (most recent call last):
+  File "/home/qiheng/.local/bin/accelerate", line 5, in <module>
+    from accelerate.commands.accelerate_cli import main
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/accelerator.py", line 31, in <module>
+    import torch
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/__init__.py", line 38, in <module>
+    from typing_extensions import ParamSpec as _ParamSpec
+ModuleNotFoundError: No module named 'typing_extensions'
+Completed standard model on arc_challenge
+
+Running sparse model on arc_challenge...
+PPL params: num_fewshot=0, mc_num=128, cfg=0.5, block_size=128
+Traceback (most recent call last):
+  File "/home/qiheng/.local/bin/accelerate", line 5, in <module>
+    from accelerate.commands.accelerate_cli import main
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/accelerator.py", line 31, in <module>
+    import torch
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/__init__.py", line 38, in <module>
+    from typing_extensions import ParamSpec as _ParamSpec
+ModuleNotFoundError: No module named 'typing_extensions'
+Completed sparse model on arc_challenge
+
+Running adaptive model on arc_challenge...
+PPL params: num_fewshot=0, mc_num=128, cfg=0.5, block_size=128
+Traceback (most recent call last):
+  File "/home/qiheng/.local/bin/accelerate", line 5, in <module>
+    from accelerate.commands.accelerate_cli import main
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/accelerator.py", line 31, in <module>
+    import torch
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/__init__.py", line 38, in <module>
+    from typing_extensions import ParamSpec as _ParamSpec
+ModuleNotFoundError: No module named 'typing_extensions'
+Completed adaptive model on arc_challenge
+
+================================================
+All evaluations completed for arc_challenge
+================================================

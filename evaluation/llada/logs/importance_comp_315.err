@@ -1,0 +1,32 @@
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 265, in <module>
+    main()
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 248, in main
+    visualize_importance(np.abs(importance), args.output_dir)
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 208, in visualize_importance
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/pyplot.py", line 958, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/figure.py", line 3019, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/backend_bases.py", line 2295, in print_figure
+    self.figure.draw(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/artist.py", line 73, in draw_wrapper
+    result = draw(artist, renderer, *args, **kwargs)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/artist.py", line 50, in draw_wrapper
+    return draw(artist, renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/figure.py", line 2810, in draw
+    mimage._draw_list_compositing_images(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/image.py", line 132, in _draw_list_compositing_images
+    a.draw(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/artist.py", line 50, in draw_wrapper
+    return draw(artist, renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axes/_base.py", line 3046, in draw
+    self._update_title_position(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axes/_base.py", line 2982, in _update_title_position
+    top = -np.Inf
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/numpy/__init__.py", line 400, in __getattr__
+    raise AttributeError(
+AttributeError: `np.Inf` was removed in the NumPy 2.0 release. Use `np.inf` instead.

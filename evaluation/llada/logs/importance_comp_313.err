@@ -1,0 +1,36 @@
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 261, in <module>
+    main()
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 244, in main
+    visualize_importance(np.abs(importance), args.output_dir)
+  File "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/generate_average_importance.py", line 205, in visualize_importance
+    plt.tight_layout()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/pyplot.py", line 2302, in tight_layout
+    return gcf().tight_layout(pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/figure.py", line 3197, in tight_layout
+    kwargs = get_tight_layout_figure(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/tight_layout.py", line 320, in get_tight_layout_figure
+    kwargs = _auto_adjust_subplotpars(fig, renderer,
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/tight_layout.py", line 82, in _auto_adjust_subplotpars
+    bb += [ax.get_tightbbox(renderer, for_layout_only=True)]
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axes/_base.py", line 4619, in get_tightbbox
+    bb_xaxis = self.xaxis.get_tightbbox(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axis.py", line 1105, in get_tightbbox
+    self._update_label_position(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axis.py", line 2083, in _update_label_position
+    bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axis.py", line 1881, in _get_tick_boxes_siblings
+    tlb, tlb2 = axis._get_tick_bboxes(ticks_to_draw, renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axis.py", line 1085, in _get_tick_bboxes
+    return ([tick.label1.get_window_extent(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/axis.py", line 1085, in <listcomp>
+    return ([tick.label1.get_window_extent(renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/text.py", line 910, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/matplotlib/text.py", line 378, in _get_layout
+    xmin = corners_rotated[:, 0].min()
+  File "/home/qiheng/miniconda3/envs/qwen3/lib/python3.10/site-packages/numpy/core/_methods.py", line 44, in _amin
+    return umr_minimum(a, axis, None, out, keepdims, initial, where)
+RecursionError: maximum recursion depth exceeded while calling a Python object

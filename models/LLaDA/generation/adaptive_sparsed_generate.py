@@ -218,16 +218,9 @@ def main():
             n_heads=n_heads,
             strategy=args.importance_strategy,
             base_sparsity=args.base_sparsity,
-            seed=args.seed
-        )
-        
-        # Adjust sparsity range
-        from models.LLaDA.sparse.adaptive_utils import allocate_adaptive_sparsity_from_importance
-        adaptive_config['sparsity_levels'] = allocate_adaptive_sparsity_from_importance(
-            adaptive_config['importance_scores'],
-            base_sparsity=args.base_sparsity,
             min_sparsity=args.min_sparsity,
-            max_sparsity=args.max_sparsity
+            max_sparsity=args.max_sparsity,
+            seed=args.seed
         )
         
         if args.verbose:

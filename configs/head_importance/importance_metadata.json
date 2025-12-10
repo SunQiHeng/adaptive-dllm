@@ -1,0 +1,13 @@
+{
+  "n_samples": 15,
+  "n_runs": 3,
+  "n_categories": 5,
+  "shape": [
+    32,
+    32
+  ],
+  "mean_attribution": -0.07083673030138016,
+  "std_attribution": 0.30386248230934143,
+  "mean_importance": 0.11322268843650818,
+  "std_importance": 0.290741890668869
+}

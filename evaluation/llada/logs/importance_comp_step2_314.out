@@ -1,0 +1,175 @@
+=========================================
+Job ID: 314
+Node: gs14
+Start time: Tuesday, November 25, 2025 PM08:47:11 HKT
+=========================================
+Using GPUs: 4,5
+=========================================
+
+=========================================
+NOTE: Step 1 already completed
+Using importance configs from: configs/head_importance/
+=========================================
+
+=========================================
+STEP 2: Run Comprehensive Comparison
+=========================================
+================================================================================
+HEAD IMPORTANCE COMPARISON EXPERIMENT
+================================================================================
+Model: GSAI-ML/LLaDA-8B-Base
+Importance dir: /home/qiheng/Projects/adaptive-dllm/configs/head_importance
+Output dir: /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison
+Keep ratios: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+Tasks: arc_challenge, hellaswag, mmlu, truthfulqa_mc2, winogrande, gsm8k
+Batch size: 8
+Dry run: False
+================================================================================
+
+================================================================================
+Running STANDARD baseline (no sparsity)
+================================================================================
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type standard --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/standard --device cuda
+Error running standard baseline: Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'standard', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/standard', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=20.0%
+================================================================================
+Parameters: skip=0.500, select=0.125, effective_keep=20.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 0.125 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_20 --device cuda
+Error running uniform sparse (keep=0.2): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '0.125', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_20', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=30.0%
+================================================================================
+Parameters: skip=0.500, select=0.214, effective_keep=30.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 0.2142857142857143 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_30 --device cuda
+Error running uniform sparse (keep=0.3): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '0.2142857142857143', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_30', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=40.0%
+================================================================================
+Parameters: skip=0.500, select=0.333, effective_keep=40.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 0.33333333333333337 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_40 --device cuda
+Error running uniform sparse (keep=0.4): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '0.33333333333333337', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_40', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=50.0%
+================================================================================
+Parameters: skip=0.500, select=0.500, effective_keep=50.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 0.5 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_50 --device cuda
+Error running uniform sparse (keep=0.5): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '0.5', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_50', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=60.0%
+================================================================================
+Parameters: skip=0.500, select=0.750, effective_keep=60.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 0.7499999999999999 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_60 --device cuda
+Error running uniform sparse (keep=0.6): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '0.7499999999999999', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_60', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=70.0%
+================================================================================
+Parameters: skip=0.500, select=1.167, effective_keep=70.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 1.1666666666666665 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_70 --device cuda
+Error running uniform sparse (keep=0.7): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '1.1666666666666665', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_70', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running UNIFORM SPARSE with keep_ratio=80.0%
+================================================================================
+Parameters: skip=0.500, select=2.000, effective_keep=80.0%
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type sparse --skip 0.5 --select 2.0000000000000004 --block_size 128 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_80 --device cuda
+Error running uniform sparse (keep=0.8): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'sparse', '--skip', '0.5', '--select', '2.0000000000000004', '--block_size', '128', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/uniform_sparse_keep_80', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=20.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_20.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_20.json --base_sparsity 0.8 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_20 --device cuda
+Error running adaptive sparse (keep=0.2): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_20.json', '--base_sparsity', '0.8', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_20', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=30.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_30.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_30.json --base_sparsity 0.7 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_30 --device cuda
+Error running adaptive sparse (keep=0.3): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_30.json', '--base_sparsity', '0.7', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_30', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=40.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_40.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_40.json --base_sparsity 0.6 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_40 --device cuda
+Error running adaptive sparse (keep=0.4): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_40.json', '--base_sparsity', '0.6', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_40', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=50.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_50.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_50.json --base_sparsity 0.5 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_50 --device cuda
+Error running adaptive sparse (keep=0.5): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_50.json', '--base_sparsity', '0.5', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_50', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=60.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_60.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_60.json --base_sparsity 0.4 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_60 --device cuda
+Error running adaptive sparse (keep=0.6): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_60.json', '--base_sparsity', '0.4', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_60', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=70.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_70.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_70.json --base_sparsity 0.30000000000000004 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_70 --device cuda
+Error running adaptive sparse (keep=0.7): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_70.json', '--base_sparsity', '0.30000000000000004', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_70', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+Running ADAPTIVE SPARSE with importance scores (keep_ratio=80.0%)
+================================================================================
+Config: /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_80.json
+Command: python -m evaluation.llada.eval_llada --model_path GSAI-ML/LLaDA-8B-Base --model_type adaptive --adaptive_config_path /home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_80.json --base_sparsity 0.19999999999999996 --tasks arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k --batch_size 8 --output_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_80 --device cuda
+Error running adaptive sparse (keep=0.8): Command '['python', '-m', 'evaluation.llada.eval_llada', '--model_path', 'GSAI-ML/LLaDA-8B-Base', '--model_type', 'adaptive', '--adaptive_config_path', '/home/qiheng/Projects/adaptive-dllm/configs/head_importance/sparsity_configs/config_keep_80.json', '--base_sparsity', '0.19999999999999996', '--tasks', 'arc_challenge,hellaswag,mmlu,truthfulqa_mc2,winogrande,gsm8k', '--batch_size', '8', '--output_dir', '/home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/adaptive_sparse_keep_80', '--device', 'cuda']' returned non-zero exit status 1.
+
+================================================================================
+ALL EXPERIMENTS COMPLETE
+================================================================================
+Total experiments run: 0
+Experiment log: /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison/experiment_log.json
+Results directory: /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison
+================================================================================
+
+To compare results, run:
+  python -m evaluation.llada.compare_importance_results --results_dir /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison
+✓ Comparison experiments complete
+
+=========================================
+STEP 3: Compare and Visualize Results
+=========================================
+================================================================================
+IMPORTANCE-BASED SPARSE ATTENTION COMPARISON
+================================================================================
+Results directory: /home/qiheng/Projects/adaptive-dllm/evaluation/llada/results/importance_comparison
+================================================================================
+Loaded 0 experiments
+Tasks: arc_challenge, hellaswag, mmlu, truthfulqa_mc2, winogrande, gsm8k
+
+========================================================================================================================
+RESULTS COMPARISON
+========================================================================================================================
+
+========================================================================================================================
+Legend:
+  Standard: Full dense attention (100% heads)
+  Uniform: Uniform sparse attention (all heads same sparsity)
+  Adaptive: Importance-based adaptive sparse attention
+  Δ (A-U): Adaptive - Uniform (positive means adaptive is better)
+  Δ (A-S): Adaptive - Standard (negative means performance drop)
+========================================================================================================================
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+================================================================================
+
+Generating comparison plots...
+ERROR: Failed to compare results

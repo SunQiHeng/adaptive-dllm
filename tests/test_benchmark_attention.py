@@ -412,23 +412,16 @@ def main():
             # Create adaptive config with target average keep ratio
             # min and max are set so average ≈ target
             target_keep = args.adaptive_avg_keep
+            min_keep = max(0.1, target_keep - 0.2)
+            max_keep = min(0.9, target_keep + 0.2)
             adaptive_config = create_adaptive_sparsity_config(
                 n_layers=n_layers,
                 n_heads=n_heads,
                 strategy='uniform',
                 base_sparsity=1.0 - target_keep,  # sparsity = 1 - keep_ratio
-                seed=args.seed
-            )
-            
-            # Recalculate with target average
-            from models.LLaDA.sparse.adaptive_utils import allocate_adaptive_sparsity_from_importance
-            min_keep = max(0.1, target_keep - 0.2)
-            max_keep = min(0.9, target_keep + 0.2)
-            adaptive_config['sparsity_levels'] = allocate_adaptive_sparsity_from_importance(
-                adaptive_config['importance_scores'],
-                base_sparsity=1.0 - target_keep,
                 min_sparsity=1.0 - max_keep,
                 max_sparsity=1.0 - min_keep,
+                seed=args.seed
             )
             
             # Print average keep ratio

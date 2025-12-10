@@ -685,6 +685,10 @@ class LLaDABlock(nn.Module):
         if SparseD_param is not None:
             now_step, whole_steps, new_generation = SparseD_param['now_step'], SparseD_param['whole_steps'], SparseD_param['new_generation']
             skip, select, block_size = SparseD_param['skip'], SparseD_param['select'], SparseD_param['block_size']
+            # DEBUG: Print sparse parameters (show every 50 steps + key steps)
+            if self.layer_id == 0 and (now_step == 0 or now_step % 50 == 0 or now_step in [204, 205, 206]):
+                print(f"\n🔍 [SPARSE DEBUG] Layer {self.layer_id} - now_step={now_step}")
+                print(f"   skip={skip}, select={select}, whole_steps={whole_steps}")
 
         B, T, C = q.size()  # batch size, sequence length, d_model
         dtype = k.dtype
@@ -727,6 +731,9 @@ class LLaDABlock(nn.Module):
         # Get the attention scores.
         # shape: (B, nh, T, hs)
         if SparseD_param is None:
+            # DEBUG: Using standard attention (no SparseD_param)
+            if self.layer_id == 0:
+                print(f"⚠️  [SPARSE DEBUG] Layer {self.layer_id} - Using STANDARD attention (SparseD_param is None)")
             att = self._scaled_dot_product_attention(
                 q,
                 k,
@@ -742,8 +749,21 @@ class LLaDABlock(nn.Module):
                 self.block_mask = None
             
             end_time = int(whole_steps*skip)+1
+            # DEBUG: Check skip logic (show key transitions)
+            if self.layer_id == 0 and (now_step == 0 or now_step == end_time or now_step == end_time + 1):
+                print(f"🔧 [SPARSE DEBUG] Layer {self.layer_id} - now_step={now_step}")
+                print(f"   end_time={end_time}, condition: {now_step} <= {end_time} = {now_step <= end_time}")
+            
             if now_step <= end_time:
+                # DEBUG: In warmup phase
+                if self.layer_id == 0 and (now_step == 0 or now_step % 100 == 0):
+                    print(f"🟡 [SPARSE DEBUG] Layer {self.layer_id} - WARMUP (step {now_step}/{end_time})")
+                
                 if now_step==end_time:
+                    # DEBUG: Building sparse masks
+                    if self.layer_id == 0:
+                        print(f"🔨 [SPARSE DEBUG] Layer {self.layer_id} - Building sparse masks (now_step == end_time)")
+                    
                     query_states, key_states, value_states = q, k, v
                     if self.fine_mask is None:
                         bsz, num_heads, q_len, kv_len = query_states.size(0), query_states.size(1), query_states.size(2), key_states.size(2)
@@ -778,6 +798,9 @@ class LLaDABlock(nn.Module):
                     is_causal=False,
                 )
             else:
+                # DEBUG: Using sparse attention
+                if self.layer_id == 0 and (now_step == end_time + 1 or now_step % 100 == 0):
+                    print(f"🟢 [SPARSE DEBUG] Layer {self.layer_id} - SPARSE (step {now_step})")
                 att = flex_attn(q, k, v, block_mask=self.block_mask)
         
         # Re-assemble all head outputs side-by-side.

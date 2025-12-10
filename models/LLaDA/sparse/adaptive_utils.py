@@ -406,52 +406,14 @@ def allocate_adaptive_sparsity_from_importance(
     
     return sparsity_levels
 
-
-def compute_adaptive_block_sizes(
-    importance_scores: Dict[int, torch.Tensor],
-    total_budget: int,
-    min_block_size: int = 32,
-    max_block_size: Optional[int] = None
-) -> Dict[int, torch.Tensor]:
-    """
-    Compute adaptive block sizes for block-sparse attention based on head importance.
-    
-    根据 head 重要性计算块稀疏注意力的自适应块大小。
-    
-    Args:
-        importance_scores: Dictionary mapping layer_idx -> importance tensor of shape (n_heads,)
-        total_budget: Total number of blocks to allocate per layer
-        min_block_size: Minimum block size for any head
-        max_block_size: Maximum block size for any head
-    
-    Returns:
-        Dictionary mapping layer_idx -> block_size tensor of shape (n_heads,)
-    """
-    block_sizes = {}
-    
-    for layer_idx, scores in importance_scores.items():
-        n_heads = scores.shape[0]
-        
-        # Normalize scores
-        normalized_scores = scores / (scores.sum() + 1e-8)
-        
-        # Allocate blocks proportionally
-        allocated_blocks = min_block_size + normalized_scores * (total_budget - min_block_size * n_heads)
-        
-        if max_block_size is not None:
-            allocated_blocks = torch.clamp(allocated_blocks, min=min_block_size, max=max_block_size)
-        
-        block_sizes[layer_idx] = allocated_blocks.int()
-    
-    return block_sizes
-
-
 def create_adaptive_sparsity_config(
     n_layers: int,
     n_heads: int,
     importance_scores: Optional[Dict[int, torch.Tensor]] = None,
     strategy: str = 'random',
     base_sparsity: float = 0.5,
+    min_sparsity: float = 0.1,
+    max_sparsity: float = 0.9,
     seed: Optional[int] = None
 ) -> Dict:
     """
@@ -465,6 +427,8 @@ def create_adaptive_sparsity_config(
         importance_scores: Pre-computed importance scores (optional)
         strategy: Strategy for generating importance ('random', 'uniform', 'normal')
         base_sparsity: Base sparsity level
+        min_sparsity: Minimum sparsity level for any head
+        max_sparsity: Maximum sparsity level for any head
         seed: Random seed
     
     Returns:
@@ -485,7 +449,9 @@ def create_adaptive_sparsity_config(
     # Allocate sparsity based on importance
     sparsity_levels = allocate_adaptive_sparsity_from_importance(
         importance_scores=importance_scores,
-        base_sparsity=base_sparsity
+        base_sparsity=base_sparsity,
+        min_sparsity=min_sparsity,
+        max_sparsity=max_sparsity
     )
     
     config = {

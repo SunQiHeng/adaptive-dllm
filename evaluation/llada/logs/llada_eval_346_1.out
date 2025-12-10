@@ -1,0 +1,38 @@
+================================================
+Job ID: 348, Array ID: 1
+Task: arc_challenge
+================================================
+
+Running standard model on arc_challenge...
+PPL params: num_fewshot=0, mc_num=128, cfg=0.5, block_size=128
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-05:00:52:43 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-05:00:52:43 INFO     [__main__:446] Selected Tasks: ['arc_challenge']
+2025-12-05:00:52:43 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-05:00:52:43 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'standard', 'mc_num': 128, 'cfg': 0.5,
+        'is_check_greedy': False, 'skip': 0.2, 'select': 0.3, 'block_size': 128, 'base_sparsity': 0.5}
+Using the default sparsity block size: 128
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 3/6 [00:00<00:00, 13.35it/s]Loading checkpoint shards:  83%|████████▎ | 5/6 [00:00<00:00, 12.16it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 13.29it/s]
+2025-12-05:00:53:03 WARNING  [evaluator:324] Overwriting default num_fewshot of arc_challenge from None to 0
+2025-12-05:00:53:03 INFO     [api.task:434] Building contexts for arc_challenge on rank 0...
+
+======================================================================
+LLaDA Evaluation Setup
+======================================================================
+Model type: standard
+Model path: GSAI-ML/LLaDA-8B-Base
+Steps: 1024, Gen length: 1024, Block length: 1024
+======================================================================
+
+  0%|          | 0/10 [00:00<?, ?it/s]100%|██████████| 10/10 [00:00<00:00, 1470.45it/s]
+2025-12-05:00:53:03 INFO     [evaluator:574] Running loglikelihood requests
