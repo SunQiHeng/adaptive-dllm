@@ -1,0 +1,483 @@
+========================================================
+Dream Quick Test Configuration
+========================================================
+Tasks: GSM8K, HumanEval
+Model Types: standard, sparse, adaptive
+Max New Tokens: 256
+Block Size: 32
+Test Samples: 50 per dataset
+========================================================
+
+🚀 Starting Dream quick test evaluation...
+Started at: Wednesday, December 17, 2025 PM05:04:38 HKT
+
+
+================================================
+📊 Task: GSM8K
+================================================
+
+Progress: [1/6]
+
+========================================
+Running: adaptive on gsm8k
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:04:50 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:04:50 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-17:17:04:50 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:04:50 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:04:50 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'adaptive',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00, 15.88it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 21.20it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+2025-12-17:17:05:27 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
+2025-12-17:17:05:27 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
+Loading Dream pre-computed importance scores from /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream/head_importance.pt
+Created adaptive config using pre-computed Dream importance scores
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: adaptive
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+Sparse params: skip=0.2, select=0.3, block_size=32
+Adaptive params: strategy=uniform, base_sparsity=0.5, min=0.1, max=0.9
+======================================================================
+
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 235.25it/s]
+2025-12-17:17:05:27 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 49.07 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...:   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 422, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 357, in simple_evaluate
+    results = evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 585, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 387, in generate_until
+    generated = self.model.generate(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1928, in __getattr__
+    raise AttributeError(
+AttributeError: 'DreamModel' object has no attribute 'generate'
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/adaptive/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 2m 11s (131s total)
+
+
+Progress: [2/6]
+
+========================================
+Running: sparse on gsm8k
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:06:59 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:06:59 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-17:17:06:59 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=sparse,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:06:59 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:06:59 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'sparse',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 108.99it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+2025-12-17:17:07:10 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
+2025-12-17:17:07:10 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: sparse
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+Sparse params: skip=0.2, select=0.3, block_size=32
+======================================================================
+
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 280.99it/s]
+2025-12-17:17:07:10 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 65.73 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...:   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 422, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 357, in simple_evaluate
+    results = evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 585, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 387, in generate_until
+    generated = self.model.generate(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1928, in __getattr__
+    raise AttributeError(
+AttributeError: 'DreamModel' object has no attribute 'generate'
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=sparse,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/sparse/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed sparse on gsm8k
+⏱️  Running time: 1m 28s (88s total)
+
+
+Progress: [3/6]
+
+========================================
+Running: standard on gsm8k
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:08:26 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:08:26 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-17:17:08:26 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=standard,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:08:26 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:08:26 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'standard',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 112.75it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+2025-12-17:17:08:36 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
+2025-12-17:17:08:36 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: standard
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+======================================================================
+
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 230.90it/s]
+2025-12-17:17:08:36 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 71.91 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...:   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 422, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 357, in simple_evaluate
+    results = evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 585, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 387, in generate_until
+    generated = self.model.generate(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1928, in __getattr__
+    raise AttributeError(
+AttributeError: 'DreamModel' object has no attribute 'generate'
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=standard,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/standard/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed standard on gsm8k
+⏱️  Running time: 1m 26s (86s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [4/6]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:09:52 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:09:52 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-17:17:09:52 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:09:52 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:09:52 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'adaptive',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 115.74it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+Loading Dream pre-computed importance scores from /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream/head_importance.pt
+Created adaptive config using pre-computed Dream importance scores
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: adaptive
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+Sparse params: skip=0.2, select=0.3, block_size=32
+Adaptive params: strategy=uniform, base_sparsity=0.5, min=0.1, max=0.9
+======================================================================
+
+2025-12-17:17:10:05 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
+2025-12-17:17:10:05 INFO     [api.task:434] Building contexts for humaneval on rank 0...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 1851.79it/s]
+2025-12-17:17:10:05 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 144.13 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...:   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 422, in <module>
+    if stop_seq in generated_answer:
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 357, in simple_evaluate
+    results = evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 585, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 387, in generate_until
+    ds = ds.map(_tokenize)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1928, in __getattr__
+    raise AttributeError(
+AttributeError: 'DreamModel' object has no attribute 'generate'
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9', '--tasks', 'humaneval', '--limit', '1', '--output_path', 'results/adaptive/humaneval/results.json', '--log_samples', '--confirm_run_unsafe_code']' returned non-zero exit status 1.
+✅ Completed adaptive on humaneval
+⏱️  Running time: 1m 27s (87s total)
+
+
+Progress: [5/6]
+
+========================================
+Running: sparse on humaneval
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:11:18 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:11:18 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-17:17:11:18 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=sparse,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:11:18 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:11:18 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'sparse',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Using the default sparsity block size: 128
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 116.56it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: sparse
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+Sparse params: skip=0.2, select=0.3, block_size=32
+======================================================================
+
+2025-12-17:17:11:31 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
+2025-12-17:17:11:31 INFO     [api.task:434] Building contexts for humaneval on rank 0...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 2149.82it/s]
+2025-12-17:17:11:31 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 139.96 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...:   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 438, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 357, in simple_evaluate
+    results = evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 585, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/dream/eval_dream.py", line 403, in generate_until
+    generated = self.model.generate(
+  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1928, in __getattr__
+    raise AttributeError(
+AttributeError: 'DreamModel' object has no attribute 'generate'
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=sparse,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9', '--tasks', 'humaneval', '--limit', '1', '--output_path', 'results/sparse/humaneval/results.json', '--log_samples', '--confirm_run_unsafe_code']' returned non-zero exit status 1.
+✅ Completed sparse on humaneval
+⏱️  Running time: 1m 26s (86s total)
+
+
+Progress: [6/6]
+
+========================================
+Running: standard on humaneval
+========================================
+Params: max_new_tokens=256, steps=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-17:17:12:44 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-17:17:12:44 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-17:17:12:44 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=standard,max_new_tokens=256,steps=32,temperature=0.8,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,adaptive_strategy=uniform,base_sparsity=0.5,min_sparsity=0.1,max_sparsity=0.9
+        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
+        `fewshot_as_multiturn`).
+2025-12-17:17:12:44 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-17:17:12:44 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'standard',
+        'max_new_tokens': 256, 'steps': 32, 'temperature': 0.8, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select': 0.3,
+        'block_size': 32, 'adaptive_strategy': 'uniform', 'base_sparsity': 0.5, 'min_sparsity': 0.1, 'max_sparsity': 0.9}
+
+Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 98.17it/s]
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+
+======================================================================
+Dream Evaluation Setup
+======================================================================
+Model type: standard
+Model path: /data/qh_models/Dream-v0-Instruct-7B
+Steps: 32, Max new tokens: 256
+Temperature: 0.8, Top-p: 0.9, Top-k: None
+======================================================================
+
+2025-12-17:17:12:56 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
+2025-12-17:17:12:56 INFO     [api.task:434] Building contexts for humaneval on rank 0...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 1959.04it/s]
+2025-12-17:17:12:56 INFO     [evaluator:574] Running generate_until requests

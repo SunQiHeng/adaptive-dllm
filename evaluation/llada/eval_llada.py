@@ -108,7 +108,8 @@ class LLaDAEvalHarness(LM):
             from transformers import AutoConfig
             import json
             
-            # Load adaptive config
+            # Load adaptive config for LLaDA
+            # Default to LLaDA's pre-computed importance scores
             if adaptive_config_path and os.path.exists(adaptive_config_path):
                 # Check file extension to determine load method
                 if adaptive_config_path.endswith('.json'):
@@ -119,21 +120,48 @@ class LLaDAEvalHarness(LM):
                         adaptive_config['keep_mask'] = torch.tensor(adaptive_config['keep_mask'], dtype=torch.bool)
                 else:
                     adaptive_config = torch.load(adaptive_config_path, weights_only=False)
-                print(f"Loaded adaptive config from {adaptive_config_path}")
+                print(f"Loaded LLaDA adaptive config from {adaptive_config_path}")
             else:
-                config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
-                n_layers = config.n_layers
-                n_heads = config.n_kv_heads
-                
-                adaptive_config = create_adaptive_sparsity_config(
-                    n_layers=n_layers,
-                    n_heads=n_heads,
-                    strategy=importance_strategy,
-                    base_sparsity=base_sparsity,
-                    min_sparsity=min_sparsity,
-                    max_sparsity=max_sparsity,
-                    seed=42
-                )
+                # Try to use pre-computed importance scores from LLaDA attribution
+                llada_importance_path = '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt'
+                if os.path.exists(llada_importance_path):
+                    print(f"Loading LLaDA pre-computed importance scores from {llada_importance_path}")
+                    importance_data = torch.load(llada_importance_path, weights_only=False)
+                    importance_scores = importance_data['importance_scores']
+                    
+                    config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
+                    n_layers = config.n_layers
+                    n_heads = config.n_kv_heads
+                    
+                    adaptive_config = create_adaptive_sparsity_config(
+                        n_layers=n_layers,
+                        n_heads=n_heads,
+                        importance_scores=importance_scores,
+                        strategy=importance_strategy,
+                        base_sparsity=base_sparsity,
+                        min_sparsity=min_sparsity,
+                        max_sparsity=max_sparsity,
+                        seed=42
+                    )
+                    print(f"Created adaptive config using pre-computed LLaDA importance scores")
+                else:
+                    # Fallback: Create with random/uniform importance
+                    print(f"Warning: LLaDA importance scores not found at {llada_importance_path}")
+                    print(f"Falling back to {importance_strategy} importance generation")
+                    config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
+                    n_layers = config.n_layers
+                    n_heads = config.n_kv_heads
+                    
+                    adaptive_config = create_adaptive_sparsity_config(
+                        n_layers=n_layers,
+                        n_heads=n_heads,
+                        strategy=importance_strategy,
+                        base_sparsity=base_sparsity,
+                        min_sparsity=min_sparsity,
+                        max_sparsity=max_sparsity,
+                        seed=42
+                    )
+                    print(f"Created adaptive config with {importance_strategy} strategy")
             
             self.model = AdaptiveLLaDAModelLM.from_pretrained(
                 model_path, 

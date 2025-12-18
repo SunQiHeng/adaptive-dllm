@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate average head importance from all runs and categories.
+Generate average head importance from all runs and categories for Dream model.
 """
 import os
 import numpy as np
@@ -74,6 +74,7 @@ def compute_global_average(results):
     print(f"Max: {importance.max():.6f}")
     
     metadata = {
+        'model': 'Dream',
         'n_samples': len(all_attributions),
         'n_runs': len(results),
         'n_categories': len(results[list(results.keys())[0]]),
@@ -154,6 +155,7 @@ def save_importance_config(importance, metadata, output_dir):
         keep_mask = importance_abs >= threshold
         
         config = {
+            'model': 'Dream',
             'keep_ratio': keep_ratio,
             'threshold': float(threshold),
             'n_heads_kept': int(keep_mask.sum()),
@@ -191,7 +193,7 @@ def visualize_importance(importance, output_dir):
     im = ax.imshow(importance, aspect='auto', cmap='YlOrRd', interpolation='nearest')
     ax.set_xlabel('Head Index', fontsize=12)
     ax.set_ylabel('Layer Index', fontsize=12)
-    ax.set_title('Average Head Importance (All Runs & Categories)', fontsize=14, fontweight='bold')
+    ax.set_title('Dream Average Head Importance (All Runs & Categories)', fontsize=14, fontweight='bold')
     plt.colorbar(im, ax=ax, label='Importance Score')
     
     # Plot 2: Distribution
@@ -202,7 +204,7 @@ def visualize_importance(importance, output_dir):
     ax.set_title('Distribution of Importance Scores', fontsize=14, fontweight='bold')
     ax.grid(True, alpha=0.3)
     
-    # Save figure (avoid tight_layout which can cause RecursionError in some environments)
+    # Save figure
     output_file = os.path.join(output_dir, 'importance_visualization.png')
     try:
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
@@ -215,17 +217,17 @@ def visualize_importance(importance, output_dir):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='Generate average head importance')
+    parser = argparse.ArgumentParser(description='Generate average head importance for Dream')
     parser.add_argument('--results_dir', type=str,
-                       default='/home/qiheng/Projects/adaptive-dllm/attribution_results_20251124_005811',
+                       default='/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results_20251211_155653',
                        help='Directory containing attribution results')
     parser.add_argument('--output_dir', type=str,
-                       default='/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base',
+                       default='/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream',
                        help='Output directory for importance configs')
     args = parser.parse_args()
     
     print("="*80)
-    print("Generate Average Head Importance from Attribution Results")
+    print("Generate Average Head Importance from Attribution Results (Dream)")
     print("="*80)
     print(f"Input: {args.results_dir}")
     print(f"Output: {args.output_dir}")
