@@ -55,7 +55,7 @@ class DreamEvalHarness(LM):
         block_size=128,
         # Adaptive params
         adaptive_config_path=None,
-        adaptive_strategy='uniform',
+        importance_source='precomputed',  # 'precomputed', 'uniform', 'normal', or custom path
         base_sparsity=0.5,
         min_sparsity=0.1,
         max_sparsity=0.9,
@@ -116,14 +116,18 @@ class DreamEvalHarness(LM):
                 **model_kwargs
             )
             
-            # Load adaptive config for Dream
-            # Default to Dream's pre-computed importance scores
+            # Determine importance scores source
+            from models.Dream.sparse.adaptive_utils_dream import create_adaptive_sparsity_config
+            
+            n_layers = self.model.config.num_hidden_layers
+            n_heads = self.model.config.num_key_value_heads
+            importance_scores = None
+            
+            # Option 1: Load from explicit config file path
             if adaptive_config_path and os.path.exists(adaptive_config_path):
-                # Load from file
                 if adaptive_config_path.endswith('.json'):
                     with open(adaptive_config_path, 'r') as f:
                         adaptive_config = json.load(f)
-                        # Convert sparsity_levels to tensors if needed
                         if 'sparsity_levels' in adaptive_config:
                             sparsity_levels_dict = {}
                             for k, v in adaptive_config['sparsity_levels'].items():
@@ -131,51 +135,67 @@ class DreamEvalHarness(LM):
                             adaptive_config['sparsity_levels'] = sparsity_levels_dict
                 else:
                     adaptive_config = torch.load(adaptive_config_path, weights_only=False)
-                print(f"Loaded adaptive config from {adaptive_config_path}")
-            else:
+                print(f"✓ Loaded adaptive config from: {adaptive_config_path}")
+            
+            # Option 2: Load from importance source specification
+            elif importance_source == 'precomputed':
                 # Use pre-computed importance scores from attribution
                 dream_importance_path = '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream/head_importance.pt'
                 if os.path.exists(dream_importance_path):
-                    print(f"Loading Dream pre-computed importance scores from {dream_importance_path}")
+                    print(f"✓ Loading pre-computed importance scores from: {dream_importance_path}")
                     importance_data = torch.load(dream_importance_path, weights_only=False)
                     importance_scores = importance_data['importance_scores']
-                    
-                    # Create adaptive config using pre-computed importance
-                    from models.Dream.sparse.adaptive_utils_dream import create_adaptive_sparsity_config
-                    
-                    n_layers = self.model.config.num_hidden_layers
-                    n_heads = self.model.config.num_key_value_heads
-                    
-                    adaptive_config = create_adaptive_sparsity_config(
-                        n_layers=n_layers,
-                        n_heads=n_heads,
-                        importance_scores=importance_scores,
-                        strategy='uniform',
-                        base_sparsity=0.5,
-                        min_sparsity=0.1,
-                        max_sparsity=0.9,
-                        seed=42
-                    )
-                    print(f"Created adaptive config using pre-computed Dream importance scores")
                 else:
-                    # Fallback: Create with random importance
-                    print(f"Warning: Dream importance scores not found at {dream_importance_path}")
-                    print(f"Falling back to random importance generation")
-                    from models.Dream.sparse.adaptive_utils_dream import create_adaptive_sparsity_config
-                    
-                    n_layers = self.model.config.num_hidden_layers
-                    n_heads = self.model.config.num_key_value_heads
-                    
-                    adaptive_config = create_adaptive_sparsity_config(
-                        n_layers=n_layers,
-                        n_heads=n_heads,
-                        strategy='uniform',
-                        base_sparsity=0.5,
-                        min_sparsity=0.1,
-                        max_sparsity=0.9,
-                        seed=42
-                    )
-                    print(f"Created adaptive config with uniform strategy (random)")
+                    raise FileNotFoundError(f"Pre-computed importance file not found: {dream_importance_path}")
+                
+                adaptive_config = create_adaptive_sparsity_config(
+                    n_layers=n_layers,
+                    n_heads=n_heads,
+                    importance_scores=importance_scores,  # Use precomputed
+                    base_sparsity=base_sparsity,
+                    min_sparsity=min_sparsity,
+                    max_sparsity=max_sparsity,
+                    seed=42
+                )
+                print(f"✓ Created adaptive config using PRE-COMPUTED importance scores")
+            
+            elif importance_source in ['uniform', 'normal', 'random']:
+                # Generate random importance with specified distribution
+                print(f"✓ Generating RANDOM importance scores with '{importance_source}' distribution")
+                adaptive_config = create_adaptive_sparsity_config(
+                    n_layers=n_layers,
+                    n_heads=n_heads,
+                    importance_scores=None,  # Generate random
+                    strategy=importance_source,
+                    base_sparsity=base_sparsity,
+                    min_sparsity=min_sparsity,
+                    max_sparsity=max_sparsity,
+                    seed=42
+                )
+                print(f"✓ Created adaptive config using RANDOM '{importance_source}' importance")
+            
+            elif os.path.exists(importance_source):
+                # Custom importance file path
+                print(f"✓ Loading custom importance scores from: {importance_source}")
+                importance_data = torch.load(importance_source, weights_only=False)
+                importance_scores = importance_data['importance_scores']
+                
+                adaptive_config = create_adaptive_sparsity_config(
+                    n_layers=n_layers,
+                    n_heads=n_heads,
+                    importance_scores=importance_scores,
+                    base_sparsity=base_sparsity,
+                    min_sparsity=min_sparsity,
+                    max_sparsity=max_sparsity,
+                    seed=42
+                )
+                print(f"✓ Created adaptive config using CUSTOM importance from: {importance_source}")
+            
+            else:
+                raise ValueError(
+                    f"Invalid importance_source: {importance_source}. "
+                    f"Must be 'precomputed', 'uniform', 'normal', 'random', or a valid file path."
+                )
             
             # Apply adaptive sparsity config to each layer
             if hasattr(self.model, 'model') and hasattr(self.model.model, 'layers'):
@@ -249,7 +269,7 @@ class DreamEvalHarness(LM):
         if model_type in ['sparse', 'adaptive']:
             print(f"Sparse params: skip={skip}, select={select}, block_size={block_size}")
         if model_type == 'adaptive':
-            print(f"Adaptive params: strategy={adaptive_strategy}, base_sparsity={base_sparsity}, min={min_sparsity}, max={max_sparsity}")
+            print(f"Adaptive params: importance_source={importance_source}, base_sparsity={base_sparsity}, min={min_sparsity}, max={max_sparsity}")
         print(f"{'='*70}\n")
     
     @property

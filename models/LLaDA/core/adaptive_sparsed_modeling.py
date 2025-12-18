@@ -453,4 +453,53 @@ class AdaptiveLLaDAModelLM(LLaDAModelLM):
             self.model.set_adaptive_sparsity_config(adaptive_config)
         else:
             print("Warning: Model is not AdaptiveLLaDAModel, cannot set adaptive sparsity")
+    
+    @classmethod
+    def from_pretrained(cls, pretrained_model_name_or_path, *model_args, adaptive_config=None, **kwargs):
+        """
+        Load pretrained model with adaptive config.
+        
+        Args:
+            pretrained_model_name_or_path: Model identifier
+            adaptive_config: Dictionary containing adaptive sparsity configuration
+            **kwargs: Additional arguments for model loading
+        
+        Returns:
+            AdaptiveLLaDAModelLM with adaptive sparsity applied
+        """
+        # Remove adaptive_config from kwargs before passing to parent
+        kwargs_copy = kwargs.copy()
+        kwargs_copy.pop('adaptive_config', None)
+        
+        # Load standard sparse LLaDAModelLM first
+        from .sparsed_modeling import LLaDAModelLM as SparseLLaDAModelLM
+        base_model = SparseLLaDAModelLM.from_pretrained(
+            pretrained_model_name_or_path, *model_args, **kwargs_copy
+        )
+        
+        # Get the internal LLaDAModel
+        base_internal_model = base_model.model
+        config = base_model.config
+        
+        # Store original device and dtype
+        original_device = next(base_model.parameters()).device
+        original_dtype = next(base_model.parameters()).dtype
+        
+        # Convert to AdaptiveLLaDAModel by changing class and converting blocks
+        base_internal_model.__class__ = AdaptiveLLaDAModel
+        base_internal_model.adaptive_config = adaptive_config
+        
+        # Convert blocks to adaptive blocks if adaptive_config is provided
+        if adaptive_config is not None:
+            base_internal_model._convert_to_adaptive_blocks()
+            
+            # Ensure all parameters have consistent dtype after conversion
+            for param in base_model.parameters():
+                if param.dtype != original_dtype:
+                    param.data = param.data.to(original_dtype)
+        
+        # Change the wrapper class to AdaptiveLLaDAModelLM
+        base_model.__class__ = cls
+        
+        return base_model
 

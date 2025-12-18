@@ -1,54 +1,0 @@
-================================================
-Job ID: 353, Array ID: 6
-Task: gsm8k
-================================================
-
-Running standard model on gsm8k...
-Generation params: gen_length=1024, steps=1024, block_length=1024, block_size=128
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--num_machines` was set to a value of `1`
-	`--mixed_precision` was set to a value of `'no'`
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-2025-12-05:00:53:56 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
-2025-12-05:00:53:56 INFO     [__main__:446] Selected Tasks: ['gsm8k']
-2025-12-05:00:53:56 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
-2025-12-05:00:53:56 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'standard', 'gen_length': 1024,
-        'steps': 1024, 'block_length': 1024, 'skip': 0.2, 'select': 0.3, 'block_size': 128, 'base_sparsity': 0.5}
-Using the default sparsity block size: 128
-Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards:  17%|█▋        | 1/6 [00:00<00:00,  7.33it/s]Loading checkpoint shards:  50%|█████     | 3/6 [00:00<00:00, 10.87it/s]Loading checkpoint shards:  83%|████████▎ | 5/6 [00:00<00:00, 12.05it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 12.74it/s]
-Traceback (most recent call last):
-  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 386, in <module>
-    cli_evaluate()
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
-    results = evaluator.simple_evaluate(
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
-    return fn(*args, **kwargs)
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
-    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
-    return cls(**args, **args2)
-  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 157, in __init__
-    self.model = self.model.to(device)
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/transformers/modeling_utils.py", line 4278, in to
-    return super().to(*args, **kwargs)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1343, in to
-    return self._apply(convert)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  [Previous line repeated 2 more times]
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 930, in _apply
-    param_applied = fn(param)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1329, in convert
-    return t.to(
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 96.00 MiB. GPU 0 has a total capacity of 93.12 GiB of which 1.81 MiB is free. Process 1132803 has 15.78 GiB memory in use. Process 1132814 has 15.78 GiB memory in use. Process 1132810 has 15.78 GiB memory in use. Process 1132802 has 17.71 GiB memory in use. Process 1132801 has 15.78 GiB memory in use. Including non-PyTorch memory, this process has 12.25 GiB memory in use. Of the allocated memory 11.75 GiB is allocated by PyTorch, and 1.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

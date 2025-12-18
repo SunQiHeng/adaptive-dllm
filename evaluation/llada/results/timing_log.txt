@@ -4,3 +4,6 @@
 2025-12-08 03:21:48 - standard - humaneval - 476s (7m 56s)
 2025-12-08 03:31:53 - sparse - humaneval - 605s (10m 5s)
 2025-12-08 03:43:38 - adaptive - humaneval - 705s (11m 45s)
+2025-12-19 00:07:34 - adaptive - gsm8k - 145s (2m 25s)
+2025-12-19 00:09:53 - adaptive - humaneval - 139s (2m 19s)
+2025-12-19 01:05:27 - adaptive - humaneval - 719s (11m 59s)
