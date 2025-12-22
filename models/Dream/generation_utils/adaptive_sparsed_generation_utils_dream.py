@@ -378,6 +378,10 @@ class DreamAdaptiveSparsedGenerationMixin:
             attention_mask=attention_mask 
         )
 
+        # CRITICAL: Reset now_step to 0 for each new generation
+        if SparseD_param is not None:
+            SparseD_param['now_step'] = 0
+
         result = self._sample(
             input_ids,
             attention_mask=attention_mask,

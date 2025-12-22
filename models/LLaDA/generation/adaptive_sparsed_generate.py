@@ -153,8 +153,6 @@ def main():
     # Adaptive sparsity arguments
     parser.add_argument("--use_adaptive", action="store_true",
                        help="Use adaptive sparse attention")
-    parser.add_argument("--base_sparsity", type=float, default=0.5,
-                       help="Base sparsity level (0.0-1.0)")
     parser.add_argument("--min_sparsity", type=float, default=0.1,
                        help="Minimum sparsity level")
     parser.add_argument("--max_sparsity", type=float, default=0.9,
@@ -210,16 +208,18 @@ def main():
         print(f"  Layers: {n_layers}")
         print(f"  KV Heads per layer: {n_heads}")
         print(f"  Strategy: {args.importance_strategy}")
-        print(f"  Base sparsity: {args.base_sparsity}")
         print(f"  Sparsity range: [{args.min_sparsity}, {args.max_sparsity}]")
+        print(f"  Normalize strategy: global_percentile (robust to outliers)")
+        print(f"  Output mode: relative weights (mean=1.0)")
         
         adaptive_config = create_adaptive_sparsity_config(
             n_layers=n_layers,
             n_heads=n_heads,
             strategy=args.importance_strategy,
-            base_sparsity=args.base_sparsity,
             min_sparsity=args.min_sparsity,
             max_sparsity=args.max_sparsity,
+            normalize_strategy='global_percentile',
+            output_relative_weights=True,
             seed=args.seed
         )
         

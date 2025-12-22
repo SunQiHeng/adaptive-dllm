@@ -7,7 +7,7 @@
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=3
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
@@ -29,32 +29,39 @@ echo "========================================================"
 echo ""
 
 # Model configuration (matching attribution script)
+# NOTE:
+# - `humaneval` is a *code completion* task (expects raw function body continuation).
+#   Using chat template here makes the model emit explanations/markdown fences and tanks pass@1.
+# - `humaneval_instruct` is designed for *instruct/chat* models and SHOULD use chat template.
 MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
-MODEL_TYPES=("adaptive" "sparse" "standard"  )
+MODEL_TYPES=("standard" "adaptive" "sparse")
 
-# Generation parameters (matching attribution script)
-MAX_NEW_TOKENS=256
-STEPS=32
-TEMPERATURE=0.8
+# Generation parameters (FIXED to match official Dream eval)
+# CRITICAL: Official Dream uses temperature=0.1 and alg_temp=0.0, NOT 0.8/1.5!
+TEMPERATURE=0.1  # Official: 0.1 (NOT 0.8!)
 TOP_P=0.9
 ALG="entropy"
-ALG_TEMP=1.5
+ALG_TEMP=0.0  # Official: 0.0 (NOT 1.5!)
 BLOCK_SIZE=32
 LIMIT=50
 
+# Task-specific parameters (will be set per task)
+MAX_NEW_TOKENS=256
+STEPS=256
+
 # Sparse parameters
 SKIP=0.2
-SELECT=0.3
+SELECT=0.3 
 
 # Adaptive parameters
 # importance_source options: 'precomputed', 'uniform', 'normal', or custom path
 IMPORTANCE_SOURCE="precomputed"  # Use pre-computed head importance scores
-BASE_SPARSITY=0.5
-MIN_SPARSITY=0.1
-MAX_SPARSITY=0.9
+MIN_SPARSITY=0.15  
+MAX_SPARSITY=0.85
+
 
 # Tasks to run
-TASKS=("gsm8k" "humaneval")
+TASKS=("humaneval" "gsm8k")
 
 # Function to run evaluation for one model type on one task
 run_single_eval() {
@@ -72,14 +79,39 @@ run_single_eval() {
     # Record start time
     START_TIME=$(date +%s)
     
-    echo "Params: max_new_tokens=${MAX_NEW_TOKENS}, steps=${STEPS}, block_size=${BLOCK_SIZE}, limit=${LIMIT}"
+    # Set task-specific parameters (matching official Dream eval)
+    if [ "$task" = "humaneval" ] || [ "$task" = "humaneval_instruct" ]; then
+        MAX_NEW_TOKENS=768
+        STEPS=768
+    elif [ "$task" = "gsm8k" ] || [ "$task" = "gsm8k_cot" ]; then
+        MAX_NEW_TOKENS=256
+        STEPS=256
+    else
+        MAX_NEW_TOKENS=256
+        STEPS=256
+    fi
+    
+    echo "Params: max_new_tokens=${MAX_NEW_TOKENS}, steps=${STEPS}, temperature=${TEMPERATURE}, alg_temp=${ALG_TEMP}, block_size=${BLOCK_SIZE}, limit=${LIMIT}"
     
     # Build the command based on task
     if [ "$task" = "humaneval" ]; then
+        # HumanEval (non-instruct) expects raw code completion; DO NOT apply chat template.
         # HumanEval requires --confirm_run_unsafe_code
         python -m accelerate.commands.launch --num_processes=1 eval_dream.py \
             --model dream_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg="${ALG}",alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},importance_source="${IMPORTANCE_SOURCE}",base_sparsity=${BASE_SPARSITY},min_sparsity=${MIN_SPARSITY},max_sparsity=${MAX_SPARSITY} \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg="${ALG}",alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},importance_source="${IMPORTANCE_SOURCE}",min_sparsity=${MIN_SPARSITY},max_sparsity=${MAX_SPARSITY} \
+            --tasks "${task}" \
+            --num_fewshot 0 \
+            --limit ${LIMIT} \
+            --output_path "${OUTPUT_DIR}/results.json" \
+            --log_samples \
+            --confirm_run_unsafe_code \
+            2>&1 | tee "${OUTPUT_DIR}/eval.log"
+    elif [ "$task" = "humaneval_instruct" ]; then
+        # HumanEval-Instruct is designed for chat/instruct models; apply chat template.
+        python -m accelerate.commands.launch --num_processes=1 eval_dream.py \
+            --model dream_eval \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg="${ALG}",alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},importance_source="${IMPORTANCE_SOURCE}",min_sparsity=${MIN_SPARSITY},max_sparsity=${MAX_SPARSITY} \
             --tasks "${task}" \
             --num_fewshot 0 \
             --limit ${LIMIT} \
@@ -92,7 +124,7 @@ run_single_eval() {
         # GSM8K and other generation tasks
         python -m accelerate.commands.launch --num_processes=1 eval_dream.py \
             --model dream_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg="${ALG}",alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},importance_source="${IMPORTANCE_SOURCE}",base_sparsity=${BASE_SPARSITY},min_sparsity=${MIN_SPARSITY},max_sparsity=${MAX_SPARSITY} \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg="${ALG}",alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},importance_source="${IMPORTANCE_SOURCE}",min_sparsity=${MIN_SPARSITY},max_sparsity=${MAX_SPARSITY} \
             --tasks "${task}" \
             --num_fewshot 0 \
             --limit ${LIMIT} \

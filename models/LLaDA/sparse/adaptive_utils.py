@@ -355,10 +355,11 @@ def generate_random_head_importance(
 
 def allocate_adaptive_sparsity_from_importance(
     importance_scores: Dict[int, torch.Tensor],
-    base_sparsity: float = 0.5,
     min_sparsity: float = 0.1,
     max_sparsity: float = 0.9,
-    inverse_importance: bool = True
+    inverse_importance: bool = True,
+    normalize_strategy: str = 'global_percentile',
+    output_relative_weights: bool = True
 ) -> Dict[int, torch.Tensor]:
     """
     Allocate per-head sparsity levels based on importance scores.
@@ -370,39 +371,107 @@ def allocate_adaptive_sparsity_from_importance(
     
     Args:
         importance_scores: Dictionary mapping layer_idx -> importance tensor of shape (n_heads,)
-        base_sparsity: Base sparsity level (0.0 to 1.0, where 1.0 means fully sparse)
-        min_sparsity: Minimum sparsity level for any head
-        max_sparsity: Maximum sparsity level for any head
+        min_sparsity: Minimum sparsity level for any head (only used if output_relative_weights=False)
+        max_sparsity: Maximum sparsity level for any head (only used if output_relative_weights=False)
         inverse_importance: If True, less important heads get higher sparsity
+        normalize_strategy: Strategy for normalizing importance scores:
+            - 'per_layer': normalize within each layer (old behavior, sensitive to outliers)
+            - 'global': normalize across all layers using global min/max
+            - 'global_percentile': normalize using percentiles (robust to outliers, recommended)
+        output_relative_weights: If True, output relative weights normalized to mean=1.0
+                                 (to be multiplied by select at inference time)
+                                 If False, output absolute keep_ratios using min/max_sparsity
     
     Returns:
-        Dictionary mapping layer_idx -> sparsity tensor of shape (n_heads,)
-        Each value represents the fraction of tokens to KEEP (1.0 - sparsity)
+        Dictionary mapping layer_idx -> tensor of shape (n_heads,)
+        If output_relative_weights=True: relative importance weights (mean=1.0)
+        If output_relative_weights=False: absolute keep_ratios (fraction of tokens to KEEP)
     
-    Example:
+    Example (relative weights mode):
+        >>> importance = {0: torch.tensor([0.8, 0.5, 0.2])}
+        >>> weights = allocate_adaptive_sparsity_from_importance(
+        ...     importance, output_relative_weights=True
+        ... )
+        >>> print(weights[0])  # [1.2, 1.0, 0.8] (normalized to mean=1.0)
+        >>> # At inference: keep_ratio = weight * select
+        
+    Example (absolute mode - legacy):
         >>> importance = {0: torch.tensor([0.5, 0.3, 0.2])}
         >>> sparsity = allocate_adaptive_sparsity_from_importance(
-        ...     importance, base_sparsity=0.5, min_sparsity=0.2, max_sparsity=0.8
+        ...     importance, min_sparsity=0.2, max_sparsity=0.8,
+        ...     output_relative_weights=False
         ... )
-        >>> print(sparsity[0])  # Higher importance -> lower sparsity (more tokens kept)
+        >>> print(sparsity[0])  # Absolute keep_ratios
     """
     sparsity_levels = {}
     
+    # Collect all scores for global normalization if needed
+    if normalize_strategy in ['global', 'global_percentile']:
+        all_scores = torch.cat([scores.flatten() for scores in importance_scores.values()])
+        
+        if normalize_strategy == 'global':
+            # Global min-max normalization
+            global_min = all_scores.min()
+            global_max = all_scores.max()
+        elif normalize_strategy == 'global_percentile':
+            # Use 5th and 95th percentile to clip outliers
+            global_min = torch.quantile(all_scores, 0.05)
+            global_max = torch.quantile(all_scores, 0.95)
+    
+    # Step 1: Compute weights for all layers
     for layer_idx, scores in importance_scores.items():
-        # Normalize importance scores to [0, 1]
-        normalized_scores = (scores - scores.min()) / (scores.max() - scores.min() + 1e-8)
-        
-        if inverse_importance:
-            # Less important heads get higher sparsity (fewer tokens kept)
-            # More important heads get lower sparsity (more tokens kept)
-            sparsity = max_sparsity - normalized_scores * (max_sparsity - min_sparsity)
+        # Normalize importance scores to [0, 1] based on strategy
+        if normalize_strategy == 'per_layer':
+            # Per-layer normalization (old behavior)
+            normalized_scores = (scores - scores.min()) / (scores.max() - scores.min() + 1e-8)
+        elif normalize_strategy == 'global':
+            # Global normalization across all layers
+            normalized_scores = (scores - global_min) / (global_max - global_min + 1e-8)
+            normalized_scores = torch.clamp(normalized_scores, 0.0, 1.0)
+        elif normalize_strategy == 'global_percentile':
+            # Percentile-based normalization (robust to outliers)
+            normalized_scores = (scores - global_min) / (global_max - global_min + 1e-8)
+            normalized_scores = torch.clamp(normalized_scores, 0.0, 1.0)
         else:
-            # More important heads get higher sparsity
-            sparsity = min_sparsity + normalized_scores * (max_sparsity - min_sparsity)
+            raise ValueError(f"Unknown normalize_strategy: {normalize_strategy}")
         
-        # Convert sparsity to keep_ratio (fraction of tokens to KEEP)
-        keep_ratio = 1.0 - sparsity
-        sparsity_levels[layer_idx] = keep_ratio
+        if output_relative_weights:
+            # # Output relative importance weights for multiplication with select at inference
+            # # Higher importance -> higher weight -> more tokens kept
+            # if inverse_importance:
+            #     # Map [0, 1] normalized scores to weights with controlled variance
+            #     # Use a transformation that preserves relative differences
+            #     weights = 1.0 + (normalized_scores - 0.5) * 0.8  # Range roughly [0.6, 1.4]
+            # else:
+            #     # Inverse mapping (rarely used)
+            #     weights = 1.0 - (normalized_scores - 0.5) * 0.8
+            
+            sparsity_levels[layer_idx] = normalized_scores
+
+        else:
+            # Legacy mode: output absolute keep_ratios using base/min/max_sparsity
+            if inverse_importance:
+                # More important heads (higher normalized_scores) get LOWER sparsity → HIGHER keep_ratio (保留更多)
+                # Less important heads (lower normalized_scores) get HIGHER sparsity → LOWER keep_ratio (保留更少)
+                sparsity = max_sparsity - normalized_scores * (max_sparsity - min_sparsity)
+            else:
+                # More important heads get HIGHER sparsity → LOWER keep_ratio (反直觉，一般不用)
+                sparsity = min_sparsity + normalized_scores * (max_sparsity - min_sparsity)
+            
+            # Convert sparsity to keep_ratio (fraction of tokens to KEEP)
+            keep_ratio = 1.0 - sparsity
+            sparsity_levels[layer_idx] = keep_ratio
+    
+    # Step 2: Global normalization for relative weights mode
+    # Normalize all weights together so that the global mean = 1.0
+    # This ensures: mean(all weights * select) = select
+    if output_relative_weights:
+        all_weights = torch.cat([sparsity_levels[i] for i in sorted(sparsity_levels.keys())])
+        global_mean = all_weights.mean()
+        
+        # Normalize all layers by the same global factor
+        for layer_idx in sparsity_levels.keys():
+            sparsity_levels[layer_idx] = sparsity_levels[layer_idx] / global_mean
     
     return sparsity_levels
 
@@ -411,9 +480,10 @@ def create_adaptive_sparsity_config(
     n_heads: int,
     importance_scores: Optional[Dict[int, torch.Tensor]] = None,
     strategy: str = 'random',
-    base_sparsity: float = 0.5,
     min_sparsity: float = 0.1,
     max_sparsity: float = 0.9,
+    normalize_strategy: str = 'global_percentile',
+    output_relative_weights: bool = True,
     seed: Optional[int] = None
 ) -> Dict:
     """
@@ -426,15 +496,17 @@ def create_adaptive_sparsity_config(
         n_heads: Number of heads per layer
         importance_scores: Pre-computed importance scores (optional)
         strategy: Strategy for generating importance ('random', 'uniform', 'normal')
-        base_sparsity: Base sparsity level
-        min_sparsity: Minimum sparsity level for any head
-        max_sparsity: Maximum sparsity level for any head
+        min_sparsity: Minimum sparsity level for any head (only used if output_relative_weights=False)
+        max_sparsity: Maximum sparsity level for any head (only used if output_relative_weights=False)
+        normalize_strategy: Normalization strategy ('per_layer', 'global', 'global_percentile')
+        output_relative_weights: If True, output relative weights (mean=1.0) for select scaling
+                                 If False, use legacy absolute keep_ratios
         seed: Random seed
     
     Returns:
         Dictionary containing:
             - importance_scores: Head importance scores
-            - sparsity_levels: Per-head sparsity levels (keep ratios)
+            - sparsity_levels: Per-head sparsity levels (relative weights or absolute keep_ratios)
             - metadata: Configuration metadata
     """
     # Generate or use provided importance scores
@@ -449,9 +521,10 @@ def create_adaptive_sparsity_config(
     # Allocate sparsity based on importance
     sparsity_levels = allocate_adaptive_sparsity_from_importance(
         importance_scores=importance_scores,
-        base_sparsity=base_sparsity,
         min_sparsity=min_sparsity,
-        max_sparsity=max_sparsity
+        max_sparsity=max_sparsity,
+        normalize_strategy=normalize_strategy,
+        output_relative_weights=output_relative_weights
     )
     
     config = {
@@ -460,9 +533,12 @@ def create_adaptive_sparsity_config(
         'metadata': {
             'n_layers': n_layers,
             'n_heads': n_heads,
-            'base_sparsity': base_sparsity,
+            'min_sparsity': min_sparsity,
+            'max_sparsity': max_sparsity,
+            'normalize_strategy': normalize_strategy,
             'strategy': strategy,
-            'seed': seed
+            'seed': seed,
+            'output_relative_weights': output_relative_weights
         }
     }
     
@@ -483,8 +559,8 @@ def print_adaptive_sparsity_summary(config: Dict):
     print(f"\nMetadata:")
     print(f"  Layers: {metadata.get('n_layers', 'N/A')}")
     print(f"  Heads per layer: {metadata.get('n_heads', 'N/A')}")
-    print(f"  Base sparsity: {metadata.get('base_sparsity', 'N/A')}")
     print(f"  Strategy: {metadata.get('strategy', 'N/A')}")
+    print(f"  Output mode: {'Relative weights' if metadata.get('output_relative_weights', True) else 'Absolute keep_ratios'}")
     
     importance_scores = config['importance_scores']
     sparsity_levels = config['sparsity_levels']

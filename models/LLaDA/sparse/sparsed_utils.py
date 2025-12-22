@@ -31,7 +31,9 @@ def create_attention_block_mask(attn_weights, block_size=128, keep_ratio=0.5):
     
     blocks = padded_attn.unfold(2, block_size, block_size).unfold(3, block_size, block_size)
     block_importance = blocks.abs().mean(dim=(-1, -2))  # (bsz, num_heads, num_blocks_q, num_blocks_kv)
-    keep_per_q = max(1, int(num_blocks_kv * keep_ratio)+1)  
+    keep_per_q = max(1, int(num_blocks_kv * keep_ratio) + 1)
+    # Ensure keep_per_q doesn't exceed num_blocks_kv to avoid topk out of range error
+    keep_per_q = min(keep_per_q, num_blocks_kv)
     
     _, topk_indices = torch.topk(block_importance, k=keep_per_q, dim=-1, sorted=False)  # (bsz, num_heads, num_blocks_q, keep_per_q)
     

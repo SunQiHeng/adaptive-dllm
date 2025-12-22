@@ -81,9 +81,8 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         
         self.head_importance_scores = importance_scores
         
-        print(f"[Layer {self.layer_id}] Set adaptive sparsity levels:")
-        print(f"  KV heads: {n_kv_heads}, Query heads: {n_heads}")
-        print(f"  Keep ratios per group: {self.head_sparsity_levels}")
+        # Don't print here - will be noisy during model loading
+        # The relative weights will be printed in a summary after model initialization
     
     def attention_adaptive(
         self,
@@ -227,14 +226,28 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         """
         Build adaptive sparse masks with different sparsity per head/group.
         
-        OPTIMIZED: Build masks for all heads at once (like standard sparse),
-        but use different keep_ratio for each head.
+        Each head independently selects important blocks based on its own attention pattern.
+        This preserves multi-head diversity (different heads can focus on different aspects).
+        
+        The select parameter controls the average keep_ratio across all heads, while maintaining
+        the relative differences between heads based on their importance scores.
+        
+        head_sparsity_levels contains relative importance weights (mean=1.0) from
+        allocate_adaptive_sparsity_from_importance. At inference, we multiply by select:
+            keep_ratio = weight * select
         """
         B, n_heads, q_len, head_dim = q.shape
         _, n_kv_heads, kv_len, _ = k.shape
         heads_per_group = n_heads // n_kv_heads
         
-        # ✅ Create mask for ALL heads at once (like standard sparse)
+        # Get select parameter (controls average keep_ratio)
+        select = SparseD_param.get('select', 1.0)
+        
+        # head_sparsity_levels are relative weights (mean≈1.0)
+        # Multiply by select to get actual keep_ratios
+        # This ensures: mean(keep_ratio) ≈ select, while preserving relative importance
+        
+        # Create mask for ALL heads at once
         self.fine_mask = torch.zeros(
             (B, n_heads, (q_len+block_size-1)//block_size, (kv_len+block_size-1)//block_size),
             dtype=torch.bool, device=q.device
@@ -254,11 +267,17 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             attn_weights = torch.matmul(q_block, k.transpose(2, 3)) / math.sqrt(head_dim)
             attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(q.dtype)
             
-            # ✅ Apply different keep_ratio for each head
+            # Apply different keep_ratio for each head
             for head_idx in range(n_heads):
-                # Get keep_ratio for this head's KV group
+                # Get relative weight for this head's KV group
                 kv_head_idx = head_idx // heads_per_group
-                keep_ratio = self.head_sparsity_levels[kv_head_idx].item()
+                relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                
+                # Compute actual keep_ratio: weight * select
+                # Important heads have weight>1.0, less important have weight<1.0
+                # Average weight≈1.0, so average(keep_ratio)≈select
+                keep_ratio = relative_weight * select
+                keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
                 
                 # Create mask for this head with its specific keep_ratio
                 head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
@@ -281,7 +300,11 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
                 # Apply different keep_ratio for each head
                 for head_idx in range(n_heads):
                     kv_head_idx = head_idx // heads_per_group
-                    keep_ratio = self.head_sparsity_levels[kv_head_idx].item()
+                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                    
+                    # Compute actual keep_ratio (same as above)
+                    keep_ratio = relative_weight * select
+                    keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
                     
                     head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
                     head_mask = create_attention_block_mask(
@@ -292,7 +315,7 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
                         head_mask[:, :, :1, :]
                     )
         
-        # ✅ Convert to block mask for ALL heads at once
+        # Convert to block mask for ALL heads at once
         new_mask = customize_mask(self.fine_mask, block_size=block_size)
         self.block_mask = create_block_mask_cached(
             new_mask, B, n_heads, q_len, kv_len, device=q.device, _compile=True

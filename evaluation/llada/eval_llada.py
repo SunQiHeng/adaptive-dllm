@@ -34,6 +34,143 @@ def set_seed(seed):
     torch.backends.cudnn.benchmark = False
 
 
+def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, model_name="Model"):
+    """
+    Print statistics about adaptive sparsity configuration.
+    
+    Args:
+        adaptive_config: The adaptive configuration dict
+        select: The select parameter (target average keep ratio)
+        n_layers: Number of layers
+        n_heads: Number of KV heads per layer
+        model_name: Name of the model for display
+    """
+    print("\n" + "=" * 80)
+    print(f"📊 {model_name} Adaptive Sparsity Configuration Statistics")
+    print("=" * 80)
+    
+    sparsity_levels = adaptive_config['sparsity_levels']
+    metadata = adaptive_config.get('metadata', {})
+    
+    # Check if we're using relative weights or absolute keep_ratios
+    output_relative_weights = metadata.get('output_relative_weights', True)
+    
+    if output_relative_weights:
+        print(f"Mode: Relative Weights (mean=1.0, multiply by select at inference)")
+    else:
+        print(f"Mode: Absolute Keep Ratios (pre-computed)")
+    
+    print(f"Target select: {select:.3f} ({select*100:.1f}%)")
+    print(f"Layers: {n_layers}, KV Heads per layer: {n_heads}")
+    print(f"Total heads: {n_layers * n_heads}")
+    
+    # Collect all weights/keep_ratios
+    all_values = []
+    layer_means = []
+    
+    print("\n" + "-" * 80)
+    print("Per-Layer Statistics:")
+    print("-" * 80)
+    
+    for layer_idx in range(n_layers):
+        values = sparsity_levels[layer_idx]
+        print(values)
+        values_tensor = torch.clamp(values * select, max=1.0)
+        layer_mean = values_tensor.mean().item()
+        layer_min = values_tensor.min().item()
+        layer_max = values_tensor.max().item()
+        
+        all_values.append(values)
+        layer_means.append(layer_mean)
+        
+        # Calculate actual keep_ratio if using relative weights
+        if output_relative_weights:
+            actual_mean = layer_mean 
+            actual_min = layer_min
+            actual_max = layer_max 
+            # Clamp to [0, 1]
+            actual_mean = min(actual_mean, 1.0)
+            actual_max = min(actual_max, 1.0)
+            
+            print(f"Layer {layer_idx:2d}: weight_mean={layer_mean:.4f} "
+                  f"→ keep_ratio={actual_mean:.4f} ({actual_mean*100:.1f}%), "
+                  f"range=[{actual_min:.3f}, {actual_max:.3f}]")
+        else:
+            print(f"Layer {layer_idx:2d}: keep_ratio_mean={layer_mean:.4f} ({layer_mean*100:.1f}%), "
+                  f"range=[{layer_min:.3f}, {layer_max:.3f}]")
+    
+    all_values = [torch.clamp(v * select, max=1.0) for v in all_values]
+    # Global statistics
+    all_values_tensor = torch.cat(all_values)
+    global_mean = all_values_tensor.mean().item()
+    global_min = all_values_tensor.min().item()
+    global_max = all_values_tensor.max().item()
+    global_std = all_values_tensor.std().item()
+    
+    print("\n" + "-" * 80)
+    print("Global Statistics:")
+    print("-" * 80)
+    
+    if output_relative_weights:
+        actual_global_mean = global_mean
+        actual_global_min = global_min 
+        actual_global_max = global_max
+        # Clamp
+        actual_global_mean = min(actual_global_mean, 1.0)
+        actual_global_max = min(actual_global_max, 1.0)
+        
+        print(f"Relative weights:")
+        print(f"  Mean:   {global_mean:.4f} (should be ≈1.0)")
+        print(f"  Std:    {global_std:.4f}")
+        print(f"  Range:  [{global_min:.3f}, {global_max:.3f}]")
+        print(f"\nActual keep_ratios (weights × select={select}):")
+        print(f"  Mean:   {actual_global_mean:.4f} ({actual_global_mean*100:.1f}%)")
+        print(f"  Target: {select:.4f} ({select*100:.1f}%)")
+        print(f"  Deviation: {abs(actual_global_mean - select):.4f} ({abs(actual_global_mean - select)*100:.2f}%)")
+        print(f"  Range:  [{actual_global_min:.3f}, {actual_global_max:.3f}]")
+        
+        # Count heads that will hit upper limit (keep_ratio > 1.0 after scaling)
+        clamped_count = (all_values_tensor * select > 1.0).sum().item()
+        total_heads = n_layers * n_heads
+        print(f"  Heads hitting upper limit (>1.0): {clamped_count}/{total_heads} ({clamped_count/total_heads*100:.1f}%)")
+        
+        if abs(actual_global_mean - select) < 0.01:
+            print(f"  ✅ Mean matches target (deviation < 1%)")
+        elif abs(actual_global_mean - select) < 0.05:
+            print(f"  ⚠️  Mean has slight deviation (1-5%)")
+        else:
+            print(f"  ❌ Mean deviates significantly (>5%)")
+    else:
+        print(f"Keep ratios:")
+        print(f"  Mean:   {global_mean:.4f} ({global_mean*100:.1f}%)")
+        print(f"  Std:    {global_std:.4f}")
+        print(f"  Range:  [{global_min:.3f}, {global_max:.3f}]")
+    
+    # Layer-wise variation
+    layer_means_tensor = torch.tensor(layer_means)
+    layer_mean_std = layer_means_tensor.std().item()
+    layer_mean_min = layer_means_tensor.min().item()
+    layer_mean_max = layer_means_tensor.max().item()
+    
+    print("\n" + "-" * 80)
+    print("Layer-wise Variation:")
+    print("-" * 80)
+    
+    if output_relative_weights:
+        actual_layer_min = layer_mean_min * select
+        actual_layer_max = layer_mean_max * select
+        print(f"Layer means range: [{layer_mean_min:.4f}, {layer_mean_max:.4f}]")
+        print(f"Layer means std:   {layer_mean_std:.4f}")
+        print(f"Actual keep_ratio range across layers: [{actual_layer_min:.3f}, {actual_layer_max:.3f}]")
+        print(f"Variation: {(actual_layer_max - actual_layer_min)*100:.1f}% spread")
+    else:
+        print(f"Layer means range: [{layer_mean_min:.4f}, {layer_mean_max:.4f}]")
+        print(f"Layer means std:   {layer_mean_std:.4f}")
+        print(f"Variation: {(layer_mean_max - layer_mean_min)*100:.1f}% spread")
+    
+    print("=" * 80 + "\n")
+
+
 @register_model("llada_eval")
 class LLaDAEvalHarness(LM):
     def __init__(
@@ -57,9 +194,8 @@ class LLaDAEvalHarness(LM):
         # Adaptive params
         adaptive_config_path=None,
         importance_source='precomputed',  # 'precomputed', 'uniform', 'normal', or custom path
-        base_sparsity=0.5,
-        min_sparsity=0.1,
-        max_sparsity=0.9,
+        min_sparsity=0.15,  # Updated: optimized for global_percentile normalization
+        max_sparsity=0.85,  # Updated: optimized for global_percentile normalization
         device="cuda",
         **kwargs,
     ):
@@ -141,12 +277,16 @@ class LLaDAEvalHarness(LM):
                     n_layers=n_layers,
                     n_heads=n_heads,
                     importance_scores=importance_scores,  # Use precomputed
-                    base_sparsity=base_sparsity,
                     min_sparsity=min_sparsity,
                     max_sparsity=max_sparsity,
+                    normalize_strategy='global_percentile',
+                    output_relative_weights=True,
                     seed=42
                 )
                 print(f"✓ Created adaptive config using PRE-COMPUTED importance scores")
+                
+                # Print detailed statistics
+                print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
             
             elif importance_source in ['uniform', 'normal', 'random']:
                 # Generate random importance with specified distribution
@@ -156,12 +296,16 @@ class LLaDAEvalHarness(LM):
                     n_heads=n_heads,
                     importance_scores=None,  # Generate random
                     strategy=importance_source,
-                    base_sparsity=base_sparsity,
                     min_sparsity=min_sparsity,
                     max_sparsity=max_sparsity,
+                    normalize_strategy='global_percentile',
+                    output_relative_weights=True,
                     seed=42
                 )
                 print(f"✓ Created adaptive config using RANDOM '{importance_source}' importance")
+                
+                # Print detailed statistics
+                print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
             
             elif os.path.exists(importance_source):
                 # Custom importance file path
@@ -173,12 +317,16 @@ class LLaDAEvalHarness(LM):
                     n_layers=n_layers,
                     n_heads=n_heads,
                     importance_scores=importance_scores,
-                    base_sparsity=base_sparsity,
                     min_sparsity=min_sparsity,
                     max_sparsity=max_sparsity,
+                    normalize_strategy='global_percentile',
+                    output_relative_weights=True,
                     seed=42
                 )
                 print(f"✓ Created adaptive config using CUSTOM importance from: {importance_source}")
+                
+                # Print detailed statistics
+                print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
             
             else:
                 raise ValueError(
@@ -193,6 +341,7 @@ class LLaDAEvalHarness(LM):
                 adaptive_config=adaptive_config,
                 **model_kwargs
             )
+            
             self.sparse_param = {
                 'skip': skip,
                 'select': select,

@@ -179,25 +179,45 @@ class AdaptiveDreamAttention(DreamAttention):
         B, n_heads, q_len, head_dim = query_states.shape
         _, n_kv_heads, kv_len, _ = key_states.shape
         
-        # Initialize masks on first step
+        # Initialize masks on first step of each generation
+        # CRITICAL: Must reset for each new sample as sequence length varies!
         if now_step == 0:
             self.fine_mask = None
             self.block_mask = None
             self.last = None
+            self.prev_seq_len = None
+            if self.layer_idx == 0:
+                print(f"[Layer 0] Step 0 RESET: q_len={q_len}")
+        
+        # Also reset if sequence length changed (new sample with different prompt length)
+        if self.fine_mask is not None and hasattr(self, 'prev_seq_len') and self.prev_seq_len != q_len:
+            if self.layer_idx == 0:
+                print(f"[Layer 0] SEQ LENGTH CHANGED! prev={self.prev_seq_len}, new={q_len}, now_step={now_step}")
+            self.fine_mask = None
+            self.block_mask = None
+            self.last = None
+            self.prev_seq_len = None
         
         # Get adaptive skip threshold
         skip_threshold = int(whole_steps * SparseD_param.get('skip', 0.2))
         end_time = skip_threshold + 1
         
+        # Adaptive sparse attention logic
         if now_step <= end_time:
+            # Warmup phase: use standard attention
             if now_step == end_time:
-                # Build per-head adaptive masks (with unrepeated k/v)
+                # Build per-head adaptive masks at the end of warmup
                 self._build_adaptive_masks(
                     query_states, key_states, value_states, 
                     block_size, new_generation, SparseD_param
                 )
+                # Record sequence length for this generation
+                self.prev_seq_len = q_len
+                if self.layer_idx == 0:
+                    mask_shape = self.fine_mask.shape if self.fine_mask is not None else None
+                    print(f"[Layer 0] Step {now_step} BUILT MASK: q_len={q_len}, mask_shape={mask_shape}")
             
-            # During warmup, repeat k/v for standard attention
+            # Use standard attention during warmup
             key_states_repeated = self._repeat_kv(key_states, self.num_key_value_groups)
             value_states_repeated = self._repeat_kv(value_states, self.num_key_value_groups)
             
@@ -229,6 +249,12 @@ class AdaptiveDreamAttention(DreamAttention):
         Build adaptive sparse masks with different sparsity per head/group.
         
         Build masks for all heads at once but use different keep_ratio for each head.
+        The select parameter controls the average keep_ratio across all heads, while maintaining
+        the relative differences between heads based on their importance scores.
+        
+        head_sparsity_levels contains relative importance weights (mean=1.0) from
+        allocate_adaptive_sparsity_from_importance. At inference, we multiply by select:
+            keep_ratio = weight * select
         
         Args:
             query_states: (B, n_heads, q_len, head_dim)
@@ -240,6 +266,12 @@ class AdaptiveDreamAttention(DreamAttention):
         
         # For GQA: map query heads to KV heads
         heads_per_group = n_heads // n_kv_heads
+        
+        # Get select parameter (controls average keep_ratio)
+        select = SparseD_param.get('select', 1.0)
+        
+        # head_sparsity_levels are relative weights (mean≈1.0)
+        # Multiply by select to get actual keep_ratios
         
         # Create mask for ALL heads at once
         self.fine_mask = torch.zeros(
@@ -268,13 +300,14 @@ class AdaptiveDreamAttention(DreamAttention):
                 kv_head_idx = head_idx // heads_per_group
                 kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
                 
-                # Get base keep_ratio from adaptive config
-                base_keep_ratio = self.head_sparsity_levels[kv_head_idx].item()
+                # Get relative weight from adaptive config
+                relative_weight = self.head_sparsity_levels[kv_head_idx].item()
                 
-                # Apply select as multiplier: when select=1.0, use full adaptive ratio
-                # when select<1.0, reduce sparsity proportionally across all heads
-                select = SparseD_param.get('select', 1.0)
-                keep_ratio = base_keep_ratio * select
+                # Compute actual keep_ratio: weight * select
+                # Important heads have weight>1.0, less important have weight<1.0
+                # Average weight≈1.0, so average(keep_ratio)≈select
+                keep_ratio = relative_weight * select
+                keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
                 
                 # Compute attention for this query head with its KV head
                 q_head = q_block[:, head_idx:head_idx+1, :, :]  # (B, 1, block_len, head_dim)
@@ -304,10 +337,10 @@ class AdaptiveDreamAttention(DreamAttention):
                     kv_head_idx = head_idx // heads_per_group
                     kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
                     
-                    # Get base keep_ratio and apply select multiplier
-                    base_keep_ratio = self.head_sparsity_levels[kv_head_idx].item()
-                    select = SparseD_param.get('select', 1.0)
-                    keep_ratio = base_keep_ratio * select
+                    # Get relative weight and compute keep_ratio (same as above)
+                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                    keep_ratio = relative_weight * select
+                    keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
                     
                     # Compute attention for this query head with its KV head
                     q_head = q_block[:, head_idx:head_idx+1, :, :]
@@ -320,7 +353,7 @@ class AdaptiveDreamAttention(DreamAttention):
                         attn_weights, block_size=block_size, keep_ratio=keep_ratio
                     )
                     self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:] = torch.logical_or(
-                        self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:], 
+                        self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:],
                         head_mask[:, :, :1, :]
                     )
         

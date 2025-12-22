@@ -7,7 +7,7 @@
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=5
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
@@ -37,10 +37,10 @@ GEN_LENGTH=256
 STEPS=256
 BLOCK_LENGTH=32
 BLOCK_SIZE=32
-LIMIT=50
+LIMIT=100
 
 # Tasks to run
-TASKS=("humaneval")
+TASKS=("gsm8k" "humaneval")
 
 # Function to run evaluation for one model type on one task
 run_single_eval() {
@@ -72,7 +72,7 @@ run_single_eval() {
         # HumanEval requires --confirm_run_unsafe_code
         python -m accelerate.commands.launch --num_processes=1 eval_llada.py \
             --model llada_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE},base_sparsity=0.5${IMPORTANCE_ARG} \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE}${IMPORTANCE_ARG} \
             --tasks "${task}" \
             --limit ${LIMIT} \
             --output_path "${OUTPUT_DIR}/results.json" \
@@ -83,7 +83,7 @@ run_single_eval() {
         # GSM8K and other generation tasks
         python -m accelerate.commands.launch --num_processes=1 eval_llada.py \
             --model llada_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE},base_sparsity=0.5${IMPORTANCE_ARG} \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE}${IMPORTANCE_ARG} \
             --tasks "${task}" \
             --limit ${LIMIT} \
             --output_path "${OUTPUT_DIR}/results.json" \

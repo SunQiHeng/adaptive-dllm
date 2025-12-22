@@ -1,4 +1,3 @@
-nohup: ignoring input
 ========================================================
 Quick Test Configuration
 ========================================================
@@ -10,19 +9,19 @@ Test Samples: 50 per dataset
 ========================================================
 
 🚀 Starting quick test evaluation...
-Started at: Friday, December 19, 2025 AM12:53:28 HKT
+Started at: Monday, December 22, 2025 PM07:46:34 HKT
 
 
 ================================================
-📊 Task: HUMANEVAL
+📊 Task: GSM8K
 ================================================
 
-Progress: [1/1]
+Progress: [1/2]
 
 ========================================
-Running: adaptive on humaneval
+Running: adaptive on gsm8k
 ========================================
-Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=50
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
 /home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
   import pynvml  # type: ignore[import]
 The following values were not passed to `accelerate launch` and had defaults used instead:
@@ -32,208 +31,764 @@ The following values were not passed to `accelerate launch` and had defaults use
 To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
 /home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
   import pynvml  # type: ignore[import]
-2025-12-19:00:53:36 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
-2025-12-19:00:53:36 INFO     [__main__:446] Selected Tasks: ['humaneval']
-2025-12-19:00:53:36 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
-2025-12-19:00:53:36 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
-        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'base_sparsity': 0.5, 'importance_source': 'precomputed'}
+2025-12-22:19:46:43 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:46:43 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-22:19:46:43 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:46:43 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
 /home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
   import pynvml  # type: ignore[import]
 ✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
 ✓ Created adaptive config using PRE-COMPUTED importance scores
-Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 200.18it/s]
-[Layer 0] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.9000, 0.1174, 0.1039, 0.1011, 0.1101, 0.1396, 0.1175, 0.1381, 0.1175,
-        0.1221, 0.1069, 0.1022, 0.1020, 0.1238, 0.1026, 0.1404, 0.1042, 0.1115,
-        0.1686, 0.1089, 0.1096, 0.1018, 0.1031, 0.1000, 0.1456, 0.1224, 0.1020,
-        0.1040, 0.1070, 0.1098, 0.2253, 0.1004])
-[Layer 1] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1017, 0.1056, 0.1020, 0.1077, 0.1424, 0.1029, 0.1568, 0.1267, 0.1004,
-        0.1109, 0.1002, 0.1009, 0.1060, 0.1143, 0.1000, 0.1024, 0.1007, 0.1055,
-        0.1010, 0.1001, 0.1120, 0.1141, 0.1032, 0.1029, 0.1075, 0.9000, 0.1284,
-        0.1264, 0.1020, 0.1120, 0.1019, 0.1008])
-[Layer 2] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1817, 0.5818, 0.1104, 0.1107, 0.1057, 0.2754, 0.2173, 0.1594, 0.1043,
-        0.2186, 0.1085, 0.1199, 0.1075, 0.1773, 0.1370, 0.1447, 0.2243, 0.7005,
-        0.1189, 0.4588, 0.1348, 0.9000, 0.2569, 0.1202, 0.1000, 0.1082, 0.2491,
-        0.1230, 0.3876, 0.1307, 0.1180, 0.2451])
-[Layer 3] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.3037, 0.4269, 0.1942, 0.2772, 0.1130, 0.1703, 0.7897, 0.2131, 0.1092,
-        0.1895, 0.4157, 0.1002, 0.9000, 0.1599, 0.1337, 0.1585, 0.2810, 0.1607,
-        0.1123, 0.4055, 0.1645, 0.1511, 0.1631, 0.2102, 0.1365, 0.2614, 0.1022,
-        0.1202, 0.1174, 0.2642, 0.1000, 0.1033])
-[Layer 4] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2840, 0.3776, 0.1974, 0.1366, 0.1424, 0.1877, 0.8652, 0.2189, 0.3500,
-        0.1545, 0.1466, 0.1390, 0.2008, 0.3234, 0.1431, 0.1185, 0.1250, 0.2133,
-        0.3291, 0.1594, 0.2563, 0.7324, 0.2533, 0.8078, 0.1307, 0.1837, 0.2691,
-        0.2833, 0.1782, 0.1000, 0.6909, 0.9000])
-[Layer 5] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1000, 0.2767, 0.3688, 0.5968, 0.2019, 0.1907, 0.1019, 0.1716, 0.1688,
-        0.3142, 0.1575, 0.1045, 0.1495, 0.1956, 0.1407, 0.1452, 0.1002, 0.1266,
-        0.1503, 0.4883, 0.1133, 0.1941, 0.3419, 0.2844, 0.3165, 0.9000, 0.1443,
-        0.1087, 0.4689, 0.1258, 0.1547, 0.6024])
-[Layer 6] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2293, 0.1149, 0.1572, 0.4363, 0.1081, 0.1347, 0.1636, 0.2504, 0.1000,
-        0.1632, 0.2221, 0.2296, 0.2914, 0.1181, 0.1787, 0.1146, 0.1636, 0.9000,
-        0.1058, 0.1378, 0.1380, 0.3711, 0.1536, 0.2936, 0.1110, 0.1093, 0.1795,
-        0.1105, 0.2041, 0.1289, 0.1071, 0.1150])
-[Layer 7] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1008, 0.1580, 0.3062, 0.1133, 0.1518, 0.8754, 0.1368, 0.1238, 0.2366,
-        0.1423, 0.1285, 0.2847, 0.1943, 0.1895, 0.2137, 0.1909, 0.3186, 0.1000,
-        0.9000, 0.1848, 0.5087, 0.1949, 0.1162, 0.3507, 0.2308, 0.2342, 0.1083,
-        0.1843, 0.1516, 0.3463, 0.2097, 0.1165])
-[Layer 8] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1359, 0.4715, 0.1053, 0.1001, 0.1654, 0.1942, 0.1357, 0.2639, 0.1668,
-        0.2556, 0.1151, 0.1000, 0.1547, 0.1124, 0.2533, 0.1859, 0.2403, 0.3352,
-        0.1155, 0.9000, 0.1196, 0.2198, 0.1094, 0.2076, 0.2989, 0.3131, 0.2987,
-        0.1761, 0.1108, 0.7017, 0.1108, 0.1002])
-[Layer 9] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1416, 0.1078, 0.9000, 0.5541, 0.2748, 0.1101, 0.3095, 0.1087, 0.7616,
-        0.1560, 0.1683, 0.1884, 0.8479, 0.5650, 0.3465, 0.1000, 0.2270, 0.2105,
-        0.1450, 0.1748, 0.1811, 0.1919, 0.4166, 0.1808, 0.1015, 0.2556, 0.1861,
-        0.5298, 0.3659, 0.1816, 0.4474, 0.7817])
-[Layer 10] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.4904, 0.1271, 0.1449, 0.1271, 0.1908, 0.1717, 0.4661, 0.9000, 0.1110,
-        0.1161, 0.2389, 0.8349, 0.1139, 0.1063, 0.1000, 0.1980, 0.1086, 0.1461,
-        0.2752, 0.1017, 0.1988, 0.1505, 0.1319, 0.1408, 0.2073, 0.1808, 0.6511,
-        0.1113, 0.7291, 0.2611, 0.2163, 0.1654])
-[Layer 11] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.4392, 0.1008, 0.1983, 0.2521, 0.1439, 0.9000, 0.1457, 0.1879, 0.1084,
-        0.1645, 0.1491, 0.3363, 0.1173, 0.2538, 0.1355, 0.1278, 0.1638, 0.1700,
-        0.2235, 0.1790, 0.1715, 0.1818, 0.2604, 0.2758, 0.1207, 0.1000, 0.1774,
-        0.2085, 0.2158, 0.4203, 0.1762, 0.1217])
-[Layer 12] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.5145, 0.1909, 0.2706, 0.1550, 0.2887, 0.1137, 0.1475, 0.3726, 0.1135,
-        0.2415, 0.2174, 0.1753, 0.3139, 0.3068, 0.9000, 0.1137, 0.1000, 0.1160,
-        0.7744, 0.1457, 0.2199, 0.2224, 0.1280, 0.1812, 0.5171, 0.2119, 0.1602,
-        0.1909, 0.2122, 0.7462, 0.3047, 0.2419])
-[Layer 13] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.8363, 0.4472, 0.2046, 0.5229, 0.1845, 0.2413, 0.1030, 0.9000, 0.2948,
-        0.6367, 0.4482, 0.6521, 0.3302, 0.2598, 0.5243, 0.2677, 0.3145, 0.1993,
-        0.1289, 0.2683, 0.1999, 0.4788, 0.1147, 0.1564, 0.5097, 0.2512, 0.1972,
-        0.1000, 0.1290, 0.2550, 0.1024, 0.5703])
-[Layer 14] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1000, 0.4694, 0.1332, 0.2364, 0.3586, 0.1137, 0.2086, 0.4158, 0.5320,
-        0.2813, 0.3424, 0.3492, 0.1877, 0.9000, 0.3176, 0.1194, 0.2234, 0.1139,
-        0.1886, 0.8752, 0.3618, 0.1422, 0.2136, 0.4451, 0.1663, 0.1508, 0.4105,
-        0.4211, 0.1897, 0.4194, 0.4835, 0.2526])
-[Layer 15] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.7677, 0.1021, 0.3598, 0.2836, 0.1337, 0.6831, 0.3053, 0.6434, 0.3166,
-        0.5244, 0.2734, 0.6711, 0.4346, 0.2961, 0.2864, 0.2994, 0.1100, 0.6858,
-        0.3151, 0.1880, 0.1000, 0.2285, 0.5234, 0.2873, 0.1036, 0.2963, 0.3976,
-        0.5199, 0.1919, 0.1941, 0.9000, 0.2818])
-[Layer 16] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1003, 0.1863, 0.3966, 0.1999, 0.9000, 0.1512, 0.2056, 0.1886, 0.1481,
-        0.4688, 0.2038, 0.3963, 0.2395, 0.1666, 0.1827, 0.2318, 0.1370, 0.1872,
-        0.1000, 0.2664, 0.3330, 0.1695, 0.1063, 0.2250, 0.1172, 0.3295, 0.2405,
-        0.2894, 0.1330, 0.1320, 0.1449, 0.1207])
-[Layer 17] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2444, 0.1000, 0.1118, 0.3572, 0.2026, 0.3682, 0.9000, 0.2055, 0.2273,
-        0.1592, 0.4078, 0.1444, 0.2156, 0.3089, 0.5114, 0.3722, 0.2359, 0.3085,
-        0.3083, 0.1433, 0.3999, 0.2568, 0.1941, 0.3372, 0.1648, 0.2594, 0.1076,
-        0.3499, 0.1992, 0.5044, 0.2715, 0.4003])
-[Layer 18] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.3152, 0.4362, 0.2758, 0.3256, 0.2307, 0.4304, 0.4310, 0.3237, 0.8142,
-        0.4385, 0.8459, 0.4178, 0.2692, 0.5785, 0.4576, 0.4922, 0.4937, 0.3549,
-        0.1503, 0.2957, 0.3261, 0.7273, 0.6470, 0.9000, 0.2887, 0.1000, 0.1503,
-        0.2898, 0.2357, 0.4459, 0.2637, 0.3249])
-[Layer 19] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.4022, 0.4737, 0.1000, 0.3196, 0.2771, 0.6395, 0.1214, 0.1318, 0.2833,
-        0.2808, 0.1992, 0.1386, 0.4244, 0.1149, 0.5291, 0.4524, 0.2520, 0.9000,
-        0.2907, 0.1785, 0.1130, 0.6857, 0.1906, 0.6962, 0.4906, 0.1143, 0.2577,
-        0.3373, 0.1536, 0.2758, 0.2162, 0.4195])
-[Layer 20] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.6730, 0.1240, 0.1730, 0.9000, 0.1466, 0.1699, 0.2009, 0.2006, 0.3638,
-        0.1345, 0.1503, 0.3651, 0.4627, 0.1034, 0.1512, 0.1790, 0.1959, 0.2064,
-        0.1524, 0.2120, 0.2700, 0.1053, 0.1000, 0.2289, 0.1198, 0.3616, 0.3426,
-        0.1568, 0.1575, 0.1398, 0.1002, 0.1979])
-[Layer 21] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1792, 0.2959, 0.1980, 0.6985, 0.3060, 0.6149, 0.2166, 0.4963, 0.1373,
-        0.2251, 0.6275, 0.1700, 0.4589, 0.3241, 0.1000, 0.1861, 0.6721, 0.3013,
-        0.6670, 0.1825, 0.2877, 0.4924, 0.2261, 0.3614, 0.4553, 0.9000, 0.3626,
-        0.5855, 0.2078, 0.3776, 0.1660, 0.4050])
-[Layer 22] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1444, 0.3303, 0.2219, 0.2513, 0.2838, 0.2426, 0.1433, 0.2439, 0.1227,
-        0.2028, 0.1477, 0.1067, 0.2056, 0.1975, 0.3192, 0.1000, 0.1773, 0.1869,
-        0.2404, 0.3118, 0.1588, 0.3890, 0.1359, 0.9000, 0.1386, 0.1178, 0.1967,
-        0.1219, 0.2062, 0.2357, 0.1545, 0.1662])
-[Layer 23] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2618, 0.1970, 0.4772, 0.3037, 0.9000, 0.2050, 0.1441, 0.2260, 0.4297,
-        0.4795, 0.1913, 0.1864, 0.5435, 0.5437, 0.2011, 0.5705, 0.1906, 0.4884,
-        0.6931, 0.1021, 0.2593, 0.2243, 0.4400, 0.1000, 0.1817, 0.1451, 0.4782,
-        0.2189, 0.1676, 0.1480, 0.2214, 0.2949])
-[Layer 24] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2138, 0.1774, 0.1272, 0.2926, 0.5503, 0.1806, 0.5731, 0.2578, 0.1997,
-        0.2529, 0.1232, 0.1173, 0.3445, 0.2159, 0.2712, 0.4239, 0.1209, 0.3522,
-        0.2328, 0.1017, 0.2084, 0.9000, 0.1977, 0.1068, 0.1904, 0.1996, 0.1000,
-        0.3541, 0.1221, 0.2062, 0.2497, 0.2944])
-[Layer 25] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.3805, 0.1811, 0.2674, 0.1222, 0.1969, 0.2175, 0.1213, 0.3796, 0.1000,
-        0.1266, 0.1269, 0.1367, 0.1684, 0.2382, 0.2435, 0.4118, 0.1038, 0.1750,
-        0.1231, 0.1539, 0.1876, 0.2040, 0.1313, 0.4672, 0.1021, 0.6610, 0.8298,
-        0.1950, 0.1883, 0.9000, 0.1029, 0.1918])
-[Layer 26] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.2702, 0.1158, 0.1000, 0.2154, 0.1478, 0.1624, 0.5439, 0.1080, 0.4732,
-        0.2934, 0.1247, 0.2242, 0.3986, 0.2455, 0.2996, 0.1873, 0.5930, 0.5423,
-        0.9000, 0.2098, 0.1386, 0.2475, 0.1619, 0.3376, 0.4309, 0.1485, 0.3996,
-        0.2887, 0.1312, 0.5338, 0.1318, 0.1263])
-[Layer 27] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.1983, 0.1262, 0.5872, 0.2920, 0.2776, 0.5474, 0.1646, 0.1960, 0.1053,
-        0.1224, 0.1509, 0.1648, 0.2468, 0.1762, 0.1660, 0.2138, 0.2363, 0.2017,
-        0.1000, 0.1709, 0.9000, 0.1625, 0.1194, 0.1883, 0.2147, 0.5532, 0.1215,
-        0.1659, 0.1508, 0.1466, 0.1231, 0.2225])
-[Layer 28] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.3972, 0.2301, 0.1618, 0.5332, 0.1593, 0.1338, 0.1000, 0.3185, 0.3369,
-        0.5031, 0.3019, 0.4265, 0.3037, 0.1693, 0.4182, 0.3473, 0.1236, 0.2966,
-        0.9000, 0.1508, 0.5394, 0.8678, 0.1610, 0.2531, 0.6814, 0.1306, 0.8598,
-        0.4013, 0.2804, 0.1132, 0.1666, 0.8712])
-[Layer 29] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.6873, 0.2638, 0.3759, 0.4391, 0.5644, 0.2951, 0.2632, 0.1000, 0.3721,
-        0.7320, 0.1425, 0.1341, 0.3423, 0.1174, 0.2128, 0.9000, 0.2734, 0.2375,
-        0.3019, 0.1494, 0.3301, 0.1908, 0.2027, 0.4875, 0.5543, 0.7467, 0.2990,
-        0.1457, 0.2753, 0.1835, 0.1658, 0.4002])
-[Layer 30] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.3264, 0.1189, 0.1616, 0.4480, 0.1554, 0.2621, 0.4945, 0.3089, 0.9000,
-        0.1282, 0.2675, 0.2462, 0.4297, 0.1361, 0.1038, 0.1411, 0.1130, 0.1095,
-        0.1275, 0.1000, 0.6214, 0.1453, 0.1269, 0.4457, 0.1631, 0.1194, 0.2206,
-        0.1517, 0.2364, 0.1375, 0.1160, 0.3872])
-[Layer 31] Set adaptive sparsity levels:
-  KV heads: 32, Query heads: 32
-  Keep ratios per group: tensor([0.5801, 0.4588, 0.1072, 0.1750, 0.1105, 0.2590, 0.1267, 0.1769, 0.2514,
-        0.1183, 0.1466, 0.5723, 0.2653, 0.1744, 0.1031, 0.9000, 0.1480, 0.1373,
-        0.1616, 0.2824, 0.1304, 0.2263, 0.1568, 0.1509, 0.3393, 0.1000, 0.2228,
-        0.1829, 0.2156, 0.1023, 0.1175, 0.2294])
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 604, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 289, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 78, in print_adaptive_config_stats
+    values = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/adaptive/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 0m 13s (13s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [2/2]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:46:56 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:46:56 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-22:19:46:56 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:46:56 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 604, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 289, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 78, in print_adaptive_config_stats
+    values = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'humaneval', '--limit', '1', '--output_path', 'results/adaptive/humaneval/results.json', '--log_samples', '--confirm_run_unsafe_code']' returned non-zero exit status 1.
+✅ Completed adaptive on humaneval
+⏱️  Running time: 0m 13s (13s total)
+
+
+================================================
+✨ All evaluations completed!
+Finished at: Monday, December 22, 2025 PM07:47:00 HKT
+================================================
+
+📁 Results saved in: results/
+📊 Timing log: results/timing_log.txt
+
+📈 Summary:
+
+Task: gsm8k
+  ❌ adaptive: FAILED
+
+Task: humaneval
+  ❌ adaptive: FAILED
+
+========================================================
+Quick Test Configuration
+========================================================
+Tasks: GSM8K, HumanEval
+Model Types: standard, sparse, adaptive
+Generation Length: 256 tokens
+Block Size: 32
+Test Samples: 50 per dataset
+========================================================
+
+🚀 Starting quick test evaluation...
+Started at: Monday, December 22, 2025 PM07:47:40 HKT
+
+
+================================================
+📊 Task: GSM8K
+================================================
+
+Progress: [1/2]
+
+========================================
+Running: adaptive on gsm8k
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:47:49 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:47:49 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-22:19:47:49 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:47:49 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 604, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 289, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 78, in print_adaptive_config_stats
+    values_tensor = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/adaptive/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 0m 13s (13s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [2/2]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:48:02 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:48:02 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-22:19:48:02 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:48:02 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 604, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 289, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 78, in print_adaptive_config_stats
+    values_tensor = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'humaneval', '--limit', '1', '--output_path', 'results/adaptive/humaneval/results.json', '--log_samples', '--confirm_run_unsafe_code']' returned non-zero exit status 1.
+✅ Completed adaptive on humaneval
+⏱️  Running time: 0m 14s (14s total)
+
+
+================================================
+✨ All evaluations completed!
+Finished at: Monday, December 22, 2025 PM07:48:07 HKT
+================================================
+
+📁 Results saved in: results/
+📊 Timing log: results/timing_log.txt
+
+📈 Summary:
+
+Task: gsm8k
+  ❌ adaptive: FAILED
+
+Task: humaneval
+  ❌ adaptive: FAILED
+
+========================================================
+Quick Test Configuration
+========================================================
+Tasks: GSM8K, HumanEval
+Model Types: standard, sparse, adaptive
+Generation Length: 256 tokens
+Block Size: 32
+Test Samples: 50 per dataset
+========================================================
+
+🚀 Starting quick test evaluation...
+Started at: Monday, December 22, 2025 PM07:48:20 HKT
+
+
+================================================
+📊 Task: GSM8K
+================================================
+
+Progress: [1/2]
+
+========================================
+Running: adaptive on gsm8k
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:48:29 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:48:29 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-22:19:48:29 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:48:29 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([4.7369, 1.8927, 0.4886, 0.1957, 1.1352, 4.1860, 1.9033, 4.0374, 1.9037,
+        2.3787, 0.7965, 0.3143, 0.2968, 2.5494, 0.3535, 4.2770, 0.5230, 1.2804,
+        4.7369, 1.0119, 1.0837, 0.2681, 0.4031, 0.0848, 4.7369, 2.4029, 0.2952,
+        0.4972, 0.8076, 1.0998, 4.7369, 0.1213])
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 605, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 290, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 79, in print_adaptive_config_stats
+    values_tensor = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'gsm8k', '--limit', '1', '--output_path', 'results/adaptive/gsm8k/results.json', '--log_samples']' returned non-zero exit status 1.
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 0m 14s (14s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [2/2]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:48:43 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:48:43 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-22:19:48:43 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:48:43 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([4.7369, 1.8927, 0.4886, 0.1957, 1.1352, 4.1860, 1.9033, 4.0374, 1.9037,
+        2.3787, 0.7965, 0.3143, 0.2968, 2.5494, 0.3535, 4.2770, 0.5230, 1.2804,
+        4.7369, 1.0119, 1.0837, 0.2681, 0.4031, 0.0848, 4.7369, 2.4029, 0.2952,
+        0.4972, 0.8076, 1.0998, 4.7369, 0.1213])
+Traceback (most recent call last):
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 605, in <module>
+    cli_evaluate()
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/__main__.py", line 455, in cli_evaluate
+    results = evaluator.simple_evaluate(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/utils.py", line 456, in _wrapper
+    return fn(*args, **kwargs)
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/evaluator.py", line 245, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_string(
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/site-packages/lm_eval/api/model.py", line 155, in create_from_arg_string
+    return cls(**args, **args2)
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 290, in __init__
+    print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+  File "/home/qiheng/Projects/adaptive-dllm/evaluation/llada/eval_llada.py", line 79, in print_adaptive_config_stats
+    values_tensor = torch.cat(values)
+RuntimeError: zero-dimensional tensor (at position 0) cannot be concatenated
+Traceback (most recent call last):
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
+    main()
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
+    launch_command(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
+    simple_launcher(args)
+  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_llada.py', '--model', 'llada_eval', '--model_args', 'model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed', '--tasks', 'humaneval', '--limit', '1', '--output_path', 'results/adaptive/humaneval/results.json', '--log_samples', '--confirm_run_unsafe_code']' returned non-zero exit status 1.
+✅ Completed adaptive on humaneval
+⏱️  Running time: 0m 13s (13s total)
+
+
+================================================
+✨ All evaluations completed!
+Finished at: Monday, December 22, 2025 PM07:48:47 HKT
+================================================
+
+📁 Results saved in: results/
+📊 Timing log: results/timing_log.txt
+
+📈 Summary:
+
+Task: gsm8k
+  ❌ adaptive: FAILED
+
+Task: humaneval
+  ❌ adaptive: FAILED
+
+========================================================
+Quick Test Configuration
+========================================================
+Tasks: GSM8K, HumanEval
+Model Types: standard, sparse, adaptive
+Generation Length: 256 tokens
+Block Size: 32
+Test Samples: 50 per dataset
+========================================================
+
+🚀 Starting quick test evaluation...
+Started at: Monday, December 22, 2025 PM07:52:42 HKT
+
+
+================================================
+📊 Task: GSM8K
+================================================
+
+Progress: [1/2]
+
+========================================
+Running: adaptive on gsm8k
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:52:51 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:52:51 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-22:19:52:51 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:52:51 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([4.7369, 1.8927, 0.4886, 0.1957, 1.1352, 4.1860, 1.9033, 4.0374, 1.9037,
+        2.3787, 0.7965, 0.3143, 0.2968, 2.5494, 0.3535, 4.2770, 0.5230, 1.2804,
+        4.7369, 1.0119, 1.0837, 0.2681, 0.4031, 0.0848, 4.7369, 2.4029, 0.2952,
+        0.4972, 0.8076, 1.0998, 4.7369, 0.1213])
+Layer  0: weight_mean=0.4446 → keep_ratio=0.4446 (44.5%), range=[0.025, 1.000]
+tensor([2.4196e-02, 1.3631e-01, 3.1684e-02, 1.9545e-01, 1.2000e+00, 5.7474e-02,
+        1.6149e+00, 7.4442e-01, 0.0000e+00, 2.8945e-01, 0.0000e+00, 0.0000e+00,
+        1.4761e-01, 3.8639e-01, 0.0000e+00, 4.3247e-02, 0.0000e+00, 1.3444e-01,
+        4.0883e-03, 0.0000e+00, 3.2159e-01, 3.8180e-01, 6.6399e-02, 5.8878e-02,
+        1.9003e-01, 4.7369e+00, 7.9597e-01, 7.3690e-01, 3.2487e-02, 3.2141e-01,
+        2.8947e-02, 0.0000e+00])
+Layer  1: weight_mean=0.1057 → keep_ratio=0.1057 (10.6%), range=[0.000, 1.000]
+tensor([2.0419e-01, 1.3056e+00, 7.7927e-03, 8.7815e-03, 0.0000e+00, 4.6209e-01,
+        3.0218e-01, 1.4286e-01, 0.0000e+00, 3.0588e-01, 2.6152e-03, 3.4099e-02,
+        0.0000e+00, 1.9193e-01, 8.1228e-02, 1.0242e-01, 3.2160e-01, 1.6325e+00,
+        3.1223e-02, 9.6717e-01, 7.5168e-02, 2.1817e+00, 4.1121e-01, 3.5005e-02,
+        0.0000e+00, 1.8663e-03, 3.8972e-01, 4.2630e-02, 7.7095e-01, 6.3723e-02,
+        2.8776e-02, 3.7860e-01])
+Layer  2: weight_mean=0.0983 → keep_ratio=0.0983 (9.8%), range=[0.000, 0.655]
+tensor([0.7885, 1.2769, 0.3543, 0.6836, 0.0327, 0.2599, 2.7148, 0.4294, 0.0177,
+        0.3357, 1.2323, 0.0000, 3.1519, 0.2183, 0.1148, 0.2130, 0.6983, 0.2218,
+        0.0297, 1.1920, 0.2368, 0.1837, 0.2311, 0.4180, 0.1256, 0.6207, 0.0000,
+        0.0610, 0.0500, 0.6321, 0.0000, 0.0000])
+Layer  3: weight_mean=0.1549 → keep_ratio=0.1549 (15.5%), range=[0.000, 0.946]
+tensor([0.3626, 0.5524, 0.1871, 0.0639, 0.0754, 0.1674, 1.5408, 0.2306, 0.4964,
+        0.1001, 0.0840, 0.0687, 0.1939, 0.4424, 0.0770, 0.0270, 0.0402, 0.2193,
+        0.4540, 0.1099, 0.3064, 1.2717, 0.3003, 1.4243, 0.0518, 0.1593, 0.3323,
+        0.3611, 0.1480, 0.0000, 1.1874, 1.6113])
+Layer  4: weight_mean=0.1186 → keep_ratio=0.1186 (11.9%), range=[0.000, 0.483]
+tensor([0.0000, 0.2832, 0.4419, 0.8349, 0.1543, 0.1350, 0.0000, 0.1022, 0.0973,
+        0.3479, 0.0778, 0.0000, 0.0641, 0.1434, 0.0488, 0.0565, 0.0000, 0.0245,
+        0.0654, 0.6479, 0.0015, 0.1409, 0.3955, 0.2964, 0.3518, 1.3575, 0.0551,
+        0.0000, 0.6145, 0.0232, 0.0730, 0.8445])
+Layer  5: weight_mean=0.0720 → keep_ratio=0.0720 (7.2%), range=[0.000, 0.407]
+tensor([0.6321, 0.0539, 0.2680, 1.6788, 0.0196, 0.1543, 0.3004, 0.7390, 0.0000,
+        0.2981, 0.5961, 0.6337, 0.9462, 0.0700, 0.3767, 0.0524, 0.3002, 4.0230,
+        0.0079, 0.1695, 0.1709, 1.3493, 0.2497, 0.9572, 0.0344, 0.0257, 0.3806,
+        0.0317, 0.5051, 0.1247, 0.0144, 0.0545])
+Layer  6: weight_mean=0.1362 → keep_ratio=0.1362 (13.6%), range=[0.000, 1.000]
+tensor([0.0000, 0.1336, 0.5161, 0.0182, 0.1175, 1.9860, 0.0789, 0.0452, 0.3365,
+        0.0929, 0.0573, 0.4608, 0.2273, 0.2149, 0.2774, 0.2184, 0.5482, 0.0000,
+        2.0495, 0.2026, 1.0390, 0.2289, 0.0255, 0.6311, 0.3216, 0.3303, 0.0053,
+        0.2014, 0.1171, 0.6197, 0.2670, 0.0264])
+Layer  7: weight_mean=0.1068 → keep_ratio=0.1068 (10.7%), range=[0.000, 0.615]
+tensor([0.1221, 1.2752, 0.0167, 0.0000, 0.2234, 0.3222, 0.1213, 0.5618, 0.2283,
+        0.5333, 0.0505, 0.0000, 0.1867, 0.0413, 0.5255, 0.2939, 0.4807, 0.8068,
+        0.0517, 2.7474, 0.0661, 0.4104, 0.0309, 0.3685, 0.6820, 0.7307, 0.6815,
+        0.2602, 0.0357, 2.0659, 0.0357, 0.0000])
+Layer  8: weight_mean=0.1308 → keep_ratio=0.1308 (13.1%), range=[0.000, 0.824]
+tensor([0.0453, 0.0000, 1.2524, 0.7018, 0.2574, 0.0000, 0.3126, 0.0000, 1.0322,
+        0.0682, 0.0878, 0.1198, 1.1694, 0.7193, 0.3715, 0.0000, 0.1812, 0.1549,
+        0.0508, 0.0982, 0.1082, 0.1254, 0.4830, 0.1077, 0.0000, 0.2268, 0.1161,
+        0.6633, 0.4022, 0.1089, 0.5320, 1.0642])
+Layer  9: weight_mean=0.0990 → keep_ratio=0.0990 (9.9%), range=[0.000, 0.376]
+tensor([2.1837, 0.1380, 0.2379, 0.1381, 0.4966, 0.3891, 2.0468, 4.4900, 0.0473,
+        0.0760, 0.7673, 4.1237, 0.0635, 0.0210, 0.0000, 0.5369, 0.0340, 0.2451,
+        0.9720, 0.0000, 0.5418, 0.2696, 0.1650, 0.2151, 0.5897, 0.4405, 3.0883,
+        0.0489, 3.5275, 0.8924, 0.6401, 0.3536])
+Layer 10: weight_mean=0.2404 → keep_ratio=0.2404 (24.0%), range=[0.000, 1.000]
+tensor([1.1229, 0.0000, 0.3171, 0.4968, 0.1351, 2.6648, 0.1411, 0.2822, 0.0162,
+        0.2040, 0.1523, 0.7787, 0.0459, 0.5027, 0.1069, 0.0810, 0.2016, 0.2221,
+        0.4011, 0.2525, 0.2274, 0.2616, 0.5246, 0.5763, 0.0571, 0.0000, 0.2471,
+        0.3510, 0.3754, 1.0598, 0.2429, 0.0605])
+Layer 11: weight_mean=0.1135 → keep_ratio=0.1135 (11.4%), range=[0.000, 0.799]
+tensor([0.7785, 0.1769, 0.3251, 0.1101, 0.3587, 0.0334, 0.0962, 0.5146, 0.0329,
+        0.2709, 0.2261, 0.1478, 0.4054, 0.3923, 1.4950, 0.0333, 0.0079, 0.0376,
+        1.2616, 0.0928, 0.2307, 0.2354, 0.0599, 0.1588, 0.7833, 0.2160, 0.1198,
+        0.1768, 0.2164, 1.2091, 0.3884, 0.2717])
+Layer 12: weight_mean=0.1018 → keep_ratio=0.1018 (10.2%), range=[0.002, 0.449]
+tensor([0.9760, 0.4491, 0.1205, 0.5516, 0.0933, 0.1702, 0.0000, 1.0623, 0.2426,
+        0.7057, 0.4504, 0.7265, 0.2906, 0.1953, 0.5535, 0.2059, 0.2693, 0.1133,
+        0.0181, 0.2069, 0.1142, 0.4919, 0.0000, 0.0552, 0.5337, 0.1837, 0.1105,
+        0.0000, 0.0181, 0.1888, 0.0000, 0.6158])
+Layer 13: weight_mean=0.0911 → keep_ratio=0.0911 (9.1%), range=[0.000, 0.319]
+tensor([0.0000, 0.4425, 0.0395, 0.1633, 0.3097, 0.0162, 0.1299, 0.3784, 0.5176,
+        0.2171, 0.2903, 0.2984, 0.1048, 0.9588, 0.2606, 0.0230, 0.1477, 0.0164,
+        0.1060, 0.9290, 0.3135, 0.0503, 0.1359, 0.4134, 0.0792, 0.0607, 0.3719,
+        0.3846, 0.1073, 0.3827, 0.4594, 0.1826])
+Layer 14: weight_mean=0.0777 → keep_ratio=0.0777 (7.8%), range=[0.000, 0.288]
+tensor([1.1163, 0.0000, 0.4207, 0.2909, 0.0352, 0.9721, 0.3279, 0.9043, 0.3471,
+        0.7014, 0.2735, 0.9516, 0.5483, 0.3121, 0.2956, 0.3177, 0.0000, 0.9767,
+        0.3446, 0.1279, 0.0000, 0.1969, 0.6998, 0.2972, 0.0000, 0.3125, 0.4852,
+        0.6938, 0.1344, 0.1382, 1.3419, 0.2877])
+Layer 15: weight_mean=0.1299 → keep_ratio=0.1299 (13.0%), range=[0.000, 0.403]
+tensor([0.0411, 0.3395, 1.0682, 0.3863, 2.8134, 0.2176, 0.4063, 0.3473, 0.2070,
+        1.3188, 0.4000, 1.0671, 0.5239, 0.2711, 0.3267, 0.4969, 0.1684, 0.3424,
+        0.0401, 0.6170, 0.8478, 0.2812, 0.0621, 0.4734, 0.0998, 0.8357, 0.5272,
+        0.6968, 0.1544, 0.1511, 0.1957, 0.1117])
+Layer 16: weight_mean=0.1485 → keep_ratio=0.1485 (14.8%), range=[0.012, 0.844]
+tensor([0.3132, 0.0000, 0.0041, 0.5762, 0.2159, 0.6020, 1.8417, 0.2227, 0.2735,
+        0.1146, 0.6943, 0.0802, 0.2461, 0.4636, 0.9357, 0.6113, 0.2936, 0.4628,
+        0.4622, 0.0775, 0.6757, 0.3423, 0.1960, 0.5295, 0.1277, 0.3482, 0.0000,
+        0.5592, 0.2080, 0.9194, 0.3765, 0.6767])
+Layer 17: weight_mean=0.1261 → keep_ratio=0.1261 (12.6%), range=[0.000, 0.553]
+tensor([0.4709, 0.7191, 0.3900, 0.4923, 0.2975, 0.7073, 0.7086, 0.4884, 1.4945,
+        0.7238, 1.5596, 0.6815, 0.3766, 1.0111, 0.7630, 0.8341, 0.8370, 0.5524,
+        0.1326, 0.4310, 0.4933, 1.3162, 1.1516, 1.6706, 0.4166, 0.0295, 0.1326,
+        0.4188, 0.3077, 0.7391, 0.3653, 0.4907])
+Layer 18: weight_mean=0.1988 → keep_ratio=0.1988 (19.9%), range=[0.009, 0.501]
+tensor([0.7060, 0.8781, 0.0000, 0.5073, 0.4052, 1.2772, 0.0303, 0.0555, 0.4201,
+        0.4140, 0.2175, 0.0717, 0.7595, 0.0148, 1.0114, 0.8269, 0.3446, 1.9040,
+        0.4378, 0.1679, 0.0101, 1.3883, 0.1969, 1.4135, 0.9189, 0.0133, 0.3583,
+        0.5500, 0.1080, 0.4020, 0.2584, 0.7478])
+Layer 19: weight_mean=0.1576 → keep_ratio=0.1576 (15.8%), range=[0.000, 0.571]
+tensor([3.8328e+00, 1.6099e-01, 4.8886e-01, 4.7369e+00, 3.1198e-01, 4.6758e-01,
+        6.7543e-01, 6.7328e-01, 1.7649e+00, 2.3101e-01, 3.3663e-01, 1.7737e+00,
+        2.4265e+00, 2.2840e-02, 3.4313e-01, 5.2868e-01, 6.4189e-01, 7.1218e-01,
+        3.5114e-01, 7.4975e-01, 1.1373e+00, 3.5990e-02, 3.6723e-04, 8.6218e-01,
+        1.3274e-01, 1.7499e+00, 1.6231e+00, 3.8009e-01, 3.8490e-01, 2.6627e-01,
+        1.5837e-03, 6.5511e-01])
+Layer 20: weight_mean=0.2490 → keep_ratio=0.2490 (24.9%), range=[0.000, 1.000]
+tensor([0.4387, 0.8868, 0.5110, 2.4322, 0.9254, 2.1113, 0.5825, 1.6562, 0.2780,
+        0.6149, 2.1595, 0.4036, 1.5123, 0.9952, 0.1348, 0.4651, 2.3306, 0.9075,
+        2.3111, 0.4516, 0.8554, 1.6408, 0.6189, 1.1382, 1.4987, 3.2056, 1.1427,
+        1.9985, 0.5485, 1.2005, 0.3883, 1.3055])
+Layer 21: weight_mean=0.3530 → keep_ratio=0.3530 (35.3%), range=[0.040, 0.962]
+tensor([0.5379, 2.7120, 1.4441, 1.7877, 2.1676, 1.6864, 0.5240, 1.7011, 0.2833,
+        1.2209, 0.5765, 0.0966, 1.2535, 1.1588, 2.5814, 0.0180, 0.9223, 1.0340,
+        1.6606, 2.4947, 0.7057, 3.3982, 0.4378, 4.7369, 0.4698, 0.2262, 1.1486,
+        0.2747, 1.2607, 1.6050, 0.6558, 0.7929])
+Layer 22: weight_mean=0.3760 → keep_ratio=0.3760 (37.6%), range=[0.005, 1.000]
+tensor([2.0235, 1.2736, 4.5198, 2.5092, 4.7369, 1.3661, 0.6601, 1.6087, 3.9694,
+        4.5461, 1.2066, 1.1500, 4.7369, 4.7369, 1.3205, 4.7369, 1.1988, 4.6491,
+        4.7369, 0.1731, 1.9947, 1.5891, 4.0885, 0.1491, 1.0956, 0.6711, 4.5316,
+        1.5271, 0.9329, 0.7052, 1.5561, 2.4080])
+Layer 23: weight_mean=0.5980 → keep_ratio=0.5980 (59.8%), range=[0.045, 1.000]
+tensor([1.2460, 0.9160, 0.4625, 1.9588, 4.2904, 0.9456, 4.4967, 1.6442, 1.1183,
+        1.5991, 0.4263, 0.3723, 2.4282, 1.2644, 1.7654, 3.1467, 0.4051, 2.4977,
+        1.4174, 0.2311, 1.1967, 4.7369, 1.0999, 0.2775, 1.0338, 1.1170, 0.2160,
+        2.5149, 0.4164, 1.1772, 1.5710, 1.9751])
+Layer 24: weight_mean=0.4354 → keep_ratio=0.4354 (43.5%), range=[0.065, 1.000]
+tensor([4.7369, 1.5067, 2.9058, 0.5518, 1.7631, 2.0972, 0.5380, 4.7248, 0.1921,
+        0.6238, 0.6277, 0.7874, 1.3005, 2.4316, 2.5176, 4.7369, 0.2531, 1.4074,
+        0.5665, 1.0655, 1.6125, 1.8778, 0.6990, 4.7369, 0.2263, 4.7369, 4.7369,
+        1.7319, 1.6234, 4.7369, 0.2384, 1.6795])
+Layer 25: weight_mean=0.5077 → keep_ratio=0.5077 (50.8%), range=[0.058, 1.000]
+tensor([3.1231, 0.4194, 0.1421, 2.1634, 0.9790, 1.2347, 4.7369, 0.2820, 4.7369,
+        3.5279, 0.5753, 2.3164, 4.7369, 2.6904, 3.6372, 1.6703, 4.7369, 4.7369,
+        4.7369, 2.0648, 0.8180, 2.7244, 1.2259, 4.3035, 4.7369, 0.9907, 4.7369,
+        3.4465, 0.6885, 4.7369, 0.6988, 0.6026])
+Layer 26: weight_mean=0.6445 → keep_ratio=0.6445 (64.4%), range=[0.043, 1.000]
+tensor([2.3004, 0.6032, 4.7369, 4.5100, 4.1699, 4.7369, 1.5068, 2.2475, 0.1089,
+        0.5120, 1.1835, 1.5108, 3.4445, 1.7812, 1.5407, 2.6654, 3.1955, 2.3802,
+        0.0000, 1.6561, 4.7369, 1.4585, 0.4423, 2.0665, 2.6878, 4.7369, 0.4909,
+        1.5377, 1.1815, 1.0826, 0.5282, 2.8714])
+Layer 27: weight_mean=0.5707 → keep_ratio=0.5707 (57.1%), range=[0.000, 1.000]
+tensor([2.9585, 1.2900, 0.6077, 4.3169, 0.5831, 0.3283, 0.0000, 2.1726, 2.3566,
+        4.0157, 2.0068, 3.2508, 2.0248, 0.6830, 3.1677, 2.4602, 0.2263, 1.9533,
+        4.7369, 0.4975, 4.3782, 4.7369, 0.5996, 1.5190, 4.7369, 0.2961, 4.7369,
+        2.9997, 1.7919, 0.1223, 0.6560, 4.7369])
+Layer 28: weight_mean=0.5739 → keep_ratio=0.5739 (57.4%), range=[0.000, 1.000]
+tensor([4.4858, 1.2390, 2.0991, 2.5831, 3.5438, 1.4791, 1.2349, 0.0000, 2.0699,
+        4.7369, 0.3095, 0.2452, 1.8415, 0.1172, 0.8488, 4.7369, 1.3126, 1.0378,
+        1.5312, 0.3627, 1.7475, 0.6796, 0.7712, 2.9542, 3.4660, 4.7369, 1.5094,
+        0.3344, 1.3275, 0.6241, 0.4884, 2.2847])
+Layer 29: weight_mean=0.4784 → keep_ratio=0.4784 (47.8%), range=[0.000, 1.000]
+tensor([3.9837, 0.3551, 1.1011, 4.7369, 0.9929, 2.8587, 4.7369, 3.6781, 4.7369,
+        0.5172, 2.9544, 2.5809, 4.7369, 0.6563, 0.0899, 0.7437, 0.2518, 0.1894,
+        0.5057, 0.0240, 4.7369, 0.8160, 0.4938, 4.7369, 1.1285, 0.3632, 2.1330,
+        0.9291, 2.4108, 0.6791, 0.3044, 4.7369])
+Layer 30: weight_mean=0.4976 → keep_ratio=0.4976 (49.8%), range=[0.007, 1.000]
+tensor([4.7369, 4.7369, 0.1407, 1.6705, 0.2142, 3.5681, 0.5806, 1.7148, 3.3961,
+        0.3911, 1.0289, 4.7369, 3.7110, 1.6579, 0.0479, 4.7369, 1.0622, 0.8204,
+        1.3688, 4.0981, 0.6632, 2.8301, 1.2601, 1.1266, 4.7369, 0.0000, 2.7509,
+        1.8505, 2.5893, 0.0282, 0.3719, 2.9004])
+Layer 31: weight_mean=0.5350 → keep_ratio=0.5350 (53.5%), range=[0.000, 1.000]
+
+--------------------------------------------------------------------------------
+Global Statistics:
+--------------------------------------------------------------------------------
+Relative weights:
+  Mean:   0.2710 (should be ≈1.0)
+  Std:    0.3065
+  Range:  [0.000, 1.000]
+
+Actual keep_ratios (weights × select=0.3):
+  Mean:   0.2710 (27.1%)
+  Target: 0.3000 (30.0%)
+  Deviation: 0.0290 (2.90%)
+  Range:  [0.000, 1.000]
+  Heads hitting upper limit (>1.0): 0/1024 (0.0%)
+  ⚠️  Mean has slight deviation (1-5%)
+
+--------------------------------------------------------------------------------
+Layer-wise Variation:
+--------------------------------------------------------------------------------
+Layer means range: [0.0720, 0.6445]
+Layer means std:   0.1926
+Actual keep_ratio range across layers: [0.022, 0.193]
+Variation: 17.2% spread
+================================================================================
+
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 89.43it/s]
+2025-12-22:19:53:59 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
+2025-12-22:19:53:59 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
 Converted 32 blocks to adaptive blocks
 
 ======================================================================
@@ -245,26 +800,286 @@ Steps: 256, Gen length: 256, Block length: 32
 Sparse params: skip=0.2, select=0.3, block_size=32
 ======================================================================
 
-2025-12-19:00:54:40 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
-2025-12-19:00:54:40 INFO     [api.task:434] Building contexts for humaneval on rank 0...
-  0%|          | 0/50 [00:00<?, ?it/s]100%|██████████| 50/50 [00:00<00:00, 4181.09it/s]
-2025-12-19:00:54:40 INFO     [evaluator:574] Running generate_until requests
-Map:   0%|          | 0/50 [00:00<?, ? examples/s]Map: 100%|██████████| 50/50 [00:00<00:00, 2270.06 examples/s]
-Generating...:   0%|          | 0/50 [00:00<?, ?it/s]Generating...:   2%|▏         | 1/50 [00:12<10:11, 12.48s/it]Generating...:   4%|▍         | 2/50 [00:25<10:12, 12.77s/it]Generating...:   6%|▌         | 3/50 [00:38<09:57, 12.72s/it]Generating...:   8%|▊         | 4/50 [00:48<09:07, 11.91s/it]Generating...:  10%|█         | 5/50 [00:59<08:42, 11.60s/it]Generating...:  12%|█▏        | 6/50 [01:10<08:22, 11.41s/it]Generating...:  14%|█▍        | 7/50 [01:21<08:00, 11.17s/it]Generating...:  16%|█▌        | 8/50 [01:32<07:50, 11.20s/it]Generating...:  18%|█▊        | 9/50 [01:44<07:39, 11.22s/it]Generating...:  20%|██        | 10/50 [01:55<07:29, 11.24s/it]Generating...:  22%|██▏       | 11/50 [02:07<07:33, 11.63s/it]Generating...:  24%|██▍       | 12/50 [02:18<07:10, 11.33s/it]Generating...:  26%|██▌       | 13/50 [02:29<06:59, 11.34s/it]Generating...:  28%|██▊       | 14/50 [02:40<06:44, 11.23s/it]Generating...:  30%|███       | 15/50 [02:51<06:26, 11.04s/it]Generating...:  32%|███▏      | 16/50 [03:02<06:14, 11.02s/it]Generating...:  34%|███▍      | 17/50 [03:13<06:04, 11.03s/it]Generating...:  36%|███▌      | 18/50 [03:25<06:03, 11.36s/it]Generating...:  38%|███▊      | 19/50 [03:36<05:51, 11.33s/it]Generating...:  40%|████      | 20/50 [03:48<05:42, 11.43s/it]Generating...:  42%|████▏     | 21/50 [04:00<05:34, 11.54s/it]Generating...:  44%|████▍     | 22/50 [04:11<05:23, 11.57s/it]Generating...:  46%|████▌     | 23/50 [04:22<05:07, 11.38s/it]Generating...:  48%|████▊     | 24/50 [04:33<04:49, 11.13s/it]Generating...:  50%|█████     | 25/50 [04:44<04:34, 10.97s/it]Generating...:  52%|█████▏    | 26/50 [04:55<04:28, 11.19s/it]Generating...:  54%|█████▍    | 27/50 [05:06<04:15, 11.11s/it]Generating...:  56%|█████▌    | 28/50 [05:17<04:03, 11.06s/it]Generating...:  58%|█████▊    | 29/50 [05:28<03:49, 10.91s/it]Generating...:  60%|██████    | 30/50 [05:39<03:37, 10.89s/it]Generating...:  62%|██████▏   | 31/50 [05:50<03:27, 10.94s/it]Generating...:  64%|██████▍   | 32/50 [06:01<03:17, 10.95s/it]Generating...:  66%|██████▌   | 33/50 [06:16<03:27, 12.21s/it]Generating...:  68%|██████▊   | 34/50 [06:27<03:12, 12.01s/it]Generating...:  70%|███████   | 35/50 [06:38<02:54, 11.66s/it]Generating...:  72%|███████▏  | 36/50 [06:49<02:39, 11.41s/it]Generating...:  74%|███████▍  | 37/50 [06:59<02:24, 11.15s/it]Generating...:  76%|███████▌  | 38/50 [07:11<02:13, 11.16s/it]Generating...:  78%|███████▊  | 39/50 [07:22<02:04, 11.29s/it]Generating...:  80%|████████  | 40/50 [07:33<01:52, 11.25s/it]Generating...:  82%|████████▏ | 41/50 [07:45<01:42, 11.43s/it]Generating...:  84%|████████▍ | 42/50 [07:57<01:32, 11.51s/it]Generating...:  86%|████████▌ | 43/50 [08:08<01:19, 11.36s/it]Generating...:  88%|████████▊ | 44/50 [08:20<01:09, 11.54s/it]Generating...:  90%|█████████ | 45/50 [08:31<00:56, 11.30s/it]Generating...:  92%|█████████▏| 46/50 [08:41<00:44, 11.05s/it]Generating...:  94%|█████████▍| 47/50 [08:53<00:33, 11.26s/it]Generating...:  96%|█████████▌| 48/50 [09:04<00:22, 11.13s/it]Generating...:  98%|█████████▊| 49/50 [09:15<00:11, 11.17s/it]Generating...: 100%|██████████| 50/50 [09:26<00:00, 11.07s/it]Generating...: 100%|██████████| 50/50 [09:26<00:00, 11.33s/it]
-2025-12-19:01:05:25 INFO     [loggers.evaluation_tracker:209] Saving results aggregated
-2025-12-19:01:05:25 INFO     [loggers.evaluation_tracker:298] Saving per-sample results for: humaneval
-llada_eval (model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,base_sparsity=0.5,importance_source=precomputed), gen_kwargs: (None), limit: 50.0, num_fewshot: None, batch_size: 1
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 265.06it/s]
+2025-12-22:19:53:59 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 111.71 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...: 100%|██████████| 1/1 [00:34<00:00, 34.23s/it]Generating...: 100%|██████████| 1/1 [00:34<00:00, 34.23s/it]
+2025-12-22:19:55:43 INFO     [loggers.evaluation_tracker:209] Saving results aggregated
+2025-12-22:19:55:43 INFO     [loggers.evaluation_tracker:298] Saving per-sample results for: gsm8k
+llada_eval (model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed), gen_kwargs: (None), limit: 1.0, num_fewshot: None, batch_size: 1
+|Tasks|Version|     Filter     |n-shot|  Metric   |   |Value|   |Stderr|
+|-----|------:|----------------|-----:|-----------|---|----:|---|------|
+|gsm8k|      3|flexible-extract|     5|exact_match|↑  |    1|±  |   N/A|
+|     |       |strict-match    |     5|exact_match|↑  |    1|±  |   N/A|
+
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 3m 3s (183s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [2/2]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=1
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:19:55:54 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:19:55:54 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-22:19:55:54 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:19:55:54 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([4.7369, 1.8927, 0.4886, 0.1957, 1.1352, 4.1860, 1.9033, 4.0374, 1.9037,
+        2.3787, 0.7965, 0.3143, 0.2968, 2.5494, 0.3535, 4.2770, 0.5230, 1.2804,
+        4.7369, 1.0119, 1.0837, 0.2681, 0.4031, 0.0848, 4.7369, 2.4029, 0.2952,
+        0.4972, 0.8076, 1.0998, 4.7369, 0.1213])
+Layer  0: weight_mean=0.4446 → keep_ratio=0.4446 (44.5%), range=[0.025, 1.000]
+tensor([2.4196e-02, 1.3631e-01, 3.1684e-02, 1.9545e-01, 1.2000e+00, 5.7474e-02,
+        1.6149e+00, 7.4442e-01, 0.0000e+00, 2.8945e-01, 0.0000e+00, 0.0000e+00,
+        1.4761e-01, 3.8639e-01, 0.0000e+00, 4.3247e-02, 0.0000e+00, 1.3444e-01,
+        4.0883e-03, 0.0000e+00, 3.2159e-01, 3.8180e-01, 6.6399e-02, 5.8878e-02,
+        1.9003e-01, 4.7369e+00, 7.9597e-01, 7.3690e-01, 3.2487e-02, 3.2141e-01,
+        2.8947e-02, 0.0000e+00])
+Layer  1: weight_mean=0.1057 → keep_ratio=0.1057 (10.6%), range=[0.000, 1.000]
+tensor([2.0419e-01, 1.3056e+00, 7.7927e-03, 8.7815e-03, 0.0000e+00, 4.6209e-01,
+        3.0218e-01, 1.4286e-01, 0.0000e+00, 3.0588e-01, 2.6152e-03, 3.4099e-02,
+        0.0000e+00, 1.9193e-01, 8.1228e-02, 1.0242e-01, 3.2160e-01, 1.6325e+00,
+        3.1223e-02, 9.6717e-01, 7.5168e-02, 2.1817e+00, 4.1121e-01, 3.5005e-02,
+        0.0000e+00, 1.8663e-03, 3.8972e-01, 4.2630e-02, 7.7095e-01, 6.3723e-02,
+        2.8776e-02, 3.7860e-01])
+Layer  2: weight_mean=0.0983 → keep_ratio=0.0983 (9.8%), range=[0.000, 0.655]
+tensor([0.7885, 1.2769, 0.3543, 0.6836, 0.0327, 0.2599, 2.7148, 0.4294, 0.0177,
+        0.3357, 1.2323, 0.0000, 3.1519, 0.2183, 0.1148, 0.2130, 0.6983, 0.2218,
+        0.0297, 1.1920, 0.2368, 0.1837, 0.2311, 0.4180, 0.1256, 0.6207, 0.0000,
+        0.0610, 0.0500, 0.6321, 0.0000, 0.0000])
+Layer  3: weight_mean=0.1549 → keep_ratio=0.1549 (15.5%), range=[0.000, 0.946]
+tensor([0.3626, 0.5524, 0.1871, 0.0639, 0.0754, 0.1674, 1.5408, 0.2306, 0.4964,
+        0.1001, 0.0840, 0.0687, 0.1939, 0.4424, 0.0770, 0.0270, 0.0402, 0.2193,
+        0.4540, 0.1099, 0.3064, 1.2717, 0.3003, 1.4243, 0.0518, 0.1593, 0.3323,
+        0.3611, 0.1480, 0.0000, 1.1874, 1.6113])
+Layer  4: weight_mean=0.1186 → keep_ratio=0.1186 (11.9%), range=[0.000, 0.483]
+tensor([0.0000, 0.2832, 0.4419, 0.8349, 0.1543, 0.1350, 0.0000, 0.1022, 0.0973,
+        0.3479, 0.0778, 0.0000, 0.0641, 0.1434, 0.0488, 0.0565, 0.0000, 0.0245,
+        0.0654, 0.6479, 0.0015, 0.1409, 0.3955, 0.2964, 0.3518, 1.3575, 0.0551,
+        0.0000, 0.6145, 0.0232, 0.0730, 0.8445])
+Layer  5: weight_mean=0.0720 → keep_ratio=0.0720 (7.2%), range=[0.000, 0.407]
+tensor([0.6321, 0.0539, 0.2680, 1.6788, 0.0196, 0.1543, 0.3004, 0.7390, 0.0000,
+        0.2981, 0.5961, 0.6337, 0.9462, 0.0700, 0.3767, 0.0524, 0.3002, 4.0230,
+        0.0079, 0.1695, 0.1709, 1.3493, 0.2497, 0.9572, 0.0344, 0.0257, 0.3806,
+        0.0317, 0.5051, 0.1247, 0.0144, 0.0545])
+Layer  6: weight_mean=0.1362 → keep_ratio=0.1362 (13.6%), range=[0.000, 1.000]
+tensor([0.0000, 0.1336, 0.5161, 0.0182, 0.1175, 1.9860, 0.0789, 0.0452, 0.3365,
+        0.0929, 0.0573, 0.4608, 0.2273, 0.2149, 0.2774, 0.2184, 0.5482, 0.0000,
+        2.0495, 0.2026, 1.0390, 0.2289, 0.0255, 0.6311, 0.3216, 0.3303, 0.0053,
+        0.2014, 0.1171, 0.6197, 0.2670, 0.0264])
+Layer  7: weight_mean=0.1068 → keep_ratio=0.1068 (10.7%), range=[0.000, 0.615]
+tensor([0.1221, 1.2752, 0.0167, 0.0000, 0.2234, 0.3222, 0.1213, 0.5618, 0.2283,
+        0.5333, 0.0505, 0.0000, 0.1867, 0.0413, 0.5255, 0.2939, 0.4807, 0.8068,
+        0.0517, 2.7474, 0.0661, 0.4104, 0.0309, 0.3685, 0.6820, 0.7307, 0.6815,
+        0.2602, 0.0357, 2.0659, 0.0357, 0.0000])
+Layer  8: weight_mean=0.1308 → keep_ratio=0.1308 (13.1%), range=[0.000, 0.824]
+tensor([0.0453, 0.0000, 1.2524, 0.7018, 0.2574, 0.0000, 0.3126, 0.0000, 1.0322,
+        0.0682, 0.0878, 0.1198, 1.1694, 0.7193, 0.3715, 0.0000, 0.1812, 0.1549,
+        0.0508, 0.0982, 0.1082, 0.1254, 0.4830, 0.1077, 0.0000, 0.2268, 0.1161,
+        0.6633, 0.4022, 0.1089, 0.5320, 1.0642])
+Layer  9: weight_mean=0.0990 → keep_ratio=0.0990 (9.9%), range=[0.000, 0.376]
+tensor([2.1837, 0.1380, 0.2379, 0.1381, 0.4966, 0.3891, 2.0468, 4.4900, 0.0473,
+        0.0760, 0.7673, 4.1237, 0.0635, 0.0210, 0.0000, 0.5369, 0.0340, 0.2451,
+        0.9720, 0.0000, 0.5418, 0.2696, 0.1650, 0.2151, 0.5897, 0.4405, 3.0883,
+        0.0489, 3.5275, 0.8924, 0.6401, 0.3536])
+Layer 10: weight_mean=0.2404 → keep_ratio=0.2404 (24.0%), range=[0.000, 1.000]
+tensor([1.1229, 0.0000, 0.3171, 0.4968, 0.1351, 2.6648, 0.1411, 0.2822, 0.0162,
+        0.2040, 0.1523, 0.7787, 0.0459, 0.5027, 0.1069, 0.0810, 0.2016, 0.2221,
+        0.4011, 0.2525, 0.2274, 0.2616, 0.5246, 0.5763, 0.0571, 0.0000, 0.2471,
+        0.3510, 0.3754, 1.0598, 0.2429, 0.0605])
+Layer 11: weight_mean=0.1135 → keep_ratio=0.1135 (11.4%), range=[0.000, 0.799]
+tensor([0.7785, 0.1769, 0.3251, 0.1101, 0.3587, 0.0334, 0.0962, 0.5146, 0.0329,
+        0.2709, 0.2261, 0.1478, 0.4054, 0.3923, 1.4950, 0.0333, 0.0079, 0.0376,
+        1.2616, 0.0928, 0.2307, 0.2354, 0.0599, 0.1588, 0.7833, 0.2160, 0.1198,
+        0.1768, 0.2164, 1.2091, 0.3884, 0.2717])
+Layer 12: weight_mean=0.1018 → keep_ratio=0.1018 (10.2%), range=[0.002, 0.449]
+tensor([0.9760, 0.4491, 0.1205, 0.5516, 0.0933, 0.1702, 0.0000, 1.0623, 0.2426,
+        0.7057, 0.4504, 0.7265, 0.2906, 0.1953, 0.5535, 0.2059, 0.2693, 0.1133,
+        0.0181, 0.2069, 0.1142, 0.4919, 0.0000, 0.0552, 0.5337, 0.1837, 0.1105,
+        0.0000, 0.0181, 0.1888, 0.0000, 0.6158])
+Layer 13: weight_mean=0.0911 → keep_ratio=0.0911 (9.1%), range=[0.000, 0.319]
+tensor([0.0000, 0.4425, 0.0395, 0.1633, 0.3097, 0.0162, 0.1299, 0.3784, 0.5176,
+        0.2171, 0.2903, 0.2984, 0.1048, 0.9588, 0.2606, 0.0230, 0.1477, 0.0164,
+        0.1060, 0.9290, 0.3135, 0.0503, 0.1359, 0.4134, 0.0792, 0.0607, 0.3719,
+        0.3846, 0.1073, 0.3827, 0.4594, 0.1826])
+Layer 14: weight_mean=0.0777 → keep_ratio=0.0777 (7.8%), range=[0.000, 0.288]
+tensor([1.1163, 0.0000, 0.4207, 0.2909, 0.0352, 0.9721, 0.3279, 0.9043, 0.3471,
+        0.7014, 0.2735, 0.9516, 0.5483, 0.3121, 0.2956, 0.3177, 0.0000, 0.9767,
+        0.3446, 0.1279, 0.0000, 0.1969, 0.6998, 0.2972, 0.0000, 0.3125, 0.4852,
+        0.6938, 0.1344, 0.1382, 1.3419, 0.2877])
+Layer 15: weight_mean=0.1299 → keep_ratio=0.1299 (13.0%), range=[0.000, 0.403]
+tensor([0.0411, 0.3395, 1.0682, 0.3863, 2.8134, 0.2176, 0.4063, 0.3473, 0.2070,
+        1.3188, 0.4000, 1.0671, 0.5239, 0.2711, 0.3267, 0.4969, 0.1684, 0.3424,
+        0.0401, 0.6170, 0.8478, 0.2812, 0.0621, 0.4734, 0.0998, 0.8357, 0.5272,
+        0.6968, 0.1544, 0.1511, 0.1957, 0.1117])
+Layer 16: weight_mean=0.1485 → keep_ratio=0.1485 (14.8%), range=[0.012, 0.844]
+tensor([0.3132, 0.0000, 0.0041, 0.5762, 0.2159, 0.6020, 1.8417, 0.2227, 0.2735,
+        0.1146, 0.6943, 0.0802, 0.2461, 0.4636, 0.9357, 0.6113, 0.2936, 0.4628,
+        0.4622, 0.0775, 0.6757, 0.3423, 0.1960, 0.5295, 0.1277, 0.3482, 0.0000,
+        0.5592, 0.2080, 0.9194, 0.3765, 0.6767])
+Layer 17: weight_mean=0.1261 → keep_ratio=0.1261 (12.6%), range=[0.000, 0.553]
+tensor([0.4709, 0.7191, 0.3900, 0.4923, 0.2975, 0.7073, 0.7086, 0.4884, 1.4945,
+        0.7238, 1.5596, 0.6815, 0.3766, 1.0111, 0.7630, 0.8341, 0.8370, 0.5524,
+        0.1326, 0.4310, 0.4933, 1.3162, 1.1516, 1.6706, 0.4166, 0.0295, 0.1326,
+        0.4188, 0.3077, 0.7391, 0.3653, 0.4907])
+Layer 18: weight_mean=0.1988 → keep_ratio=0.1988 (19.9%), range=[0.009, 0.501]
+tensor([0.7060, 0.8781, 0.0000, 0.5073, 0.4052, 1.2772, 0.0303, 0.0555, 0.4201,
+        0.4140, 0.2175, 0.0717, 0.7595, 0.0148, 1.0114, 0.8269, 0.3446, 1.9040,
+        0.4378, 0.1679, 0.0101, 1.3883, 0.1969, 1.4135, 0.9189, 0.0133, 0.3583,
+        0.5500, 0.1080, 0.4020, 0.2584, 0.7478])
+Layer 19: weight_mean=0.1576 → keep_ratio=0.1576 (15.8%), range=[0.000, 0.571]
+tensor([3.8328e+00, 1.6099e-01, 4.8886e-01, 4.7369e+00, 3.1198e-01, 4.6758e-01,
+        6.7543e-01, 6.7328e-01, 1.7649e+00, 2.3101e-01, 3.3663e-01, 1.7737e+00,
+        2.4265e+00, 2.2840e-02, 3.4313e-01, 5.2868e-01, 6.4189e-01, 7.1218e-01,
+        3.5114e-01, 7.4975e-01, 1.1373e+00, 3.5990e-02, 3.6723e-04, 8.6218e-01,
+        1.3274e-01, 1.7499e+00, 1.6231e+00, 3.8009e-01, 3.8490e-01, 2.6627e-01,
+        1.5837e-03, 6.5511e-01])
+Layer 20: weight_mean=0.2490 → keep_ratio=0.2490 (24.9%), range=[0.000, 1.000]
+tensor([0.4387, 0.8868, 0.5110, 2.4322, 0.9254, 2.1113, 0.5825, 1.6562, 0.2780,
+        0.6149, 2.1595, 0.4036, 1.5123, 0.9952, 0.1348, 0.4651, 2.3306, 0.9075,
+        2.3111, 0.4516, 0.8554, 1.6408, 0.6189, 1.1382, 1.4987, 3.2056, 1.1427,
+        1.9985, 0.5485, 1.2005, 0.3883, 1.3055])
+Layer 21: weight_mean=0.3530 → keep_ratio=0.3530 (35.3%), range=[0.040, 0.962]
+tensor([0.5379, 2.7120, 1.4441, 1.7877, 2.1676, 1.6864, 0.5240, 1.7011, 0.2833,
+        1.2209, 0.5765, 0.0966, 1.2535, 1.1588, 2.5814, 0.0180, 0.9223, 1.0340,
+        1.6606, 2.4947, 0.7057, 3.3982, 0.4378, 4.7369, 0.4698, 0.2262, 1.1486,
+        0.2747, 1.2607, 1.6050, 0.6558, 0.7929])
+Layer 22: weight_mean=0.3760 → keep_ratio=0.3760 (37.6%), range=[0.005, 1.000]
+tensor([2.0235, 1.2736, 4.5198, 2.5092, 4.7369, 1.3661, 0.6601, 1.6087, 3.9694,
+        4.5461, 1.2066, 1.1500, 4.7369, 4.7369, 1.3205, 4.7369, 1.1988, 4.6491,
+        4.7369, 0.1731, 1.9947, 1.5891, 4.0885, 0.1491, 1.0956, 0.6711, 4.5316,
+        1.5271, 0.9329, 0.7052, 1.5561, 2.4080])
+Layer 23: weight_mean=0.5980 → keep_ratio=0.5980 (59.8%), range=[0.045, 1.000]
+tensor([1.2460, 0.9160, 0.4625, 1.9588, 4.2904, 0.9456, 4.4967, 1.6442, 1.1183,
+        1.5991, 0.4263, 0.3723, 2.4282, 1.2644, 1.7654, 3.1467, 0.4051, 2.4977,
+        1.4174, 0.2311, 1.1967, 4.7369, 1.0999, 0.2775, 1.0338, 1.1170, 0.2160,
+        2.5149, 0.4164, 1.1772, 1.5710, 1.9751])
+Layer 24: weight_mean=0.4354 → keep_ratio=0.4354 (43.5%), range=[0.065, 1.000]
+tensor([4.7369, 1.5067, 2.9058, 0.5518, 1.7631, 2.0972, 0.5380, 4.7248, 0.1921,
+        0.6238, 0.6277, 0.7874, 1.3005, 2.4316, 2.5176, 4.7369, 0.2531, 1.4074,
+        0.5665, 1.0655, 1.6125, 1.8778, 0.6990, 4.7369, 0.2263, 4.7369, 4.7369,
+        1.7319, 1.6234, 4.7369, 0.2384, 1.6795])
+Layer 25: weight_mean=0.5077 → keep_ratio=0.5077 (50.8%), range=[0.058, 1.000]
+tensor([3.1231, 0.4194, 0.1421, 2.1634, 0.9790, 1.2347, 4.7369, 0.2820, 4.7369,
+        3.5279, 0.5753, 2.3164, 4.7369, 2.6904, 3.6372, 1.6703, 4.7369, 4.7369,
+        4.7369, 2.0648, 0.8180, 2.7244, 1.2259, 4.3035, 4.7369, 0.9907, 4.7369,
+        3.4465, 0.6885, 4.7369, 0.6988, 0.6026])
+Layer 26: weight_mean=0.6445 → keep_ratio=0.6445 (64.4%), range=[0.043, 1.000]
+tensor([2.3004, 0.6032, 4.7369, 4.5100, 4.1699, 4.7369, 1.5068, 2.2475, 0.1089,
+        0.5120, 1.1835, 1.5108, 3.4445, 1.7812, 1.5407, 2.6654, 3.1955, 2.3802,
+        0.0000, 1.6561, 4.7369, 1.4585, 0.4423, 2.0665, 2.6878, 4.7369, 0.4909,
+        1.5377, 1.1815, 1.0826, 0.5282, 2.8714])
+Layer 27: weight_mean=0.5707 → keep_ratio=0.5707 (57.1%), range=[0.000, 1.000]
+tensor([2.9585, 1.2900, 0.6077, 4.3169, 0.5831, 0.3283, 0.0000, 2.1726, 2.3566,
+        4.0157, 2.0068, 3.2508, 2.0248, 0.6830, 3.1677, 2.4602, 0.2263, 1.9533,
+        4.7369, 0.4975, 4.3782, 4.7369, 0.5996, 1.5190, 4.7369, 0.2961, 4.7369,
+        2.9997, 1.7919, 0.1223, 0.6560, 4.7369])
+Layer 28: weight_mean=0.5739 → keep_ratio=0.5739 (57.4%), range=[0.000, 1.000]
+tensor([4.4858, 1.2390, 2.0991, 2.5831, 3.5438, 1.4791, 1.2349, 0.0000, 2.0699,
+        4.7369, 0.3095, 0.2452, 1.8415, 0.1172, 0.8488, 4.7369, 1.3126, 1.0378,
+        1.5312, 0.3627, 1.7475, 0.6796, 0.7712, 2.9542, 3.4660, 4.7369, 1.5094,
+        0.3344, 1.3275, 0.6241, 0.4884, 2.2847])
+Layer 29: weight_mean=0.4784 → keep_ratio=0.4784 (47.8%), range=[0.000, 1.000]
+tensor([3.9837, 0.3551, 1.1011, 4.7369, 0.9929, 2.8587, 4.7369, 3.6781, 4.7369,
+        0.5172, 2.9544, 2.5809, 4.7369, 0.6563, 0.0899, 0.7437, 0.2518, 0.1894,
+        0.5057, 0.0240, 4.7369, 0.8160, 0.4938, 4.7369, 1.1285, 0.3632, 2.1330,
+        0.9291, 2.4108, 0.6791, 0.3044, 4.7369])
+Layer 30: weight_mean=0.4976 → keep_ratio=0.4976 (49.8%), range=[0.007, 1.000]
+tensor([4.7369, 4.7369, 0.1407, 1.6705, 0.2142, 3.5681, 0.5806, 1.7148, 3.3961,
+        0.3911, 1.0289, 4.7369, 3.7110, 1.6579, 0.0479, 4.7369, 1.0622, 0.8204,
+        1.3688, 4.0981, 0.6632, 2.8301, 1.2601, 1.1266, 4.7369, 0.0000, 2.7509,
+        1.8505, 2.5893, 0.0282, 0.3719, 2.9004])
+Layer 31: weight_mean=0.5350 → keep_ratio=0.5350 (53.5%), range=[0.000, 1.000]
+
+--------------------------------------------------------------------------------
+Global Statistics:
+--------------------------------------------------------------------------------
+Relative weights:
+  Mean:   0.2710 (should be ≈1.0)
+  Std:    0.3065
+  Range:  [0.000, 1.000]
+
+Actual keep_ratios (weights × select=0.3):
+  Mean:   0.2710 (27.1%)
+  Target: 0.3000 (30.0%)
+  Deviation: 0.0290 (2.90%)
+  Range:  [0.000, 1.000]
+  Heads hitting upper limit (>1.0): 0/1024 (0.0%)
+  ⚠️  Mean has slight deviation (1-5%)
+
+--------------------------------------------------------------------------------
+Layer-wise Variation:
+--------------------------------------------------------------------------------
+Layer means range: [0.0720, 0.6445]
+Layer means std:   0.1926
+Actual keep_ratio range across layers: [0.022, 0.193]
+Variation: 17.2% spread
+================================================================================
+
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 185.25it/s]
+Converted 32 blocks to adaptive blocks
+
+======================================================================
+LLaDA Evaluation Setup
+======================================================================
+Model type: adaptive
+Model path: GSAI-ML/LLaDA-8B-Base
+Steps: 256, Gen length: 256, Block length: 32
+Sparse params: skip=0.2, select=0.3, block_size=32
+======================================================================
+
+2025-12-22:19:57:15 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
+2025-12-22:19:57:15 INFO     [api.task:434] Building contexts for humaneval on rank 0...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 1906.50it/s]
+2025-12-22:19:57:15 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/1 [00:00<?, ? examples/s]Map: 100%|██████████| 1/1 [00:00<00:00, 139.80 examples/s]
+Generating...:   0%|          | 0/1 [00:00<?, ?it/s]Generating...: 100%|██████████| 1/1 [00:13<00:00, 13.01s/it]Generating...: 100%|██████████| 1/1 [00:13<00:00, 13.01s/it]
+2025-12-22:19:58:37 INFO     [loggers.evaluation_tracker:209] Saving results aggregated
+2025-12-22:19:58:37 INFO     [loggers.evaluation_tracker:298] Saving per-sample results for: humaneval
+llada_eval (model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed), gen_kwargs: (None), limit: 1.0, num_fewshot: None, batch_size: 1
 |  Tasks  |Version|  Filter   |n-shot|Metric|   |Value|   |Stderr|
-|---------|------:|-----------|-----:|------|---|----:|---|-----:|
-|humaneval|      1|create_test|     0|pass@1|   | 0.58|±  |0.0705|
+|---------|------:|-----------|-----:|------|---|----:|---|------|
+|humaneval|      1|create_test|     0|pass@1|   |    1|±  |   N/A|
 
 ✅ Completed adaptive on humaneval
-⏱️  Running time: 11m 59s (719s total)
+⏱️  Running time: 2m 54s (174s total)
 
 
 ================================================
 ✨ All evaluations completed!
-Finished at: Friday, December 19, 2025 AM01:05:27 HKT
+Finished at: Monday, December 22, 2025 PM07:58:39 HKT
 ================================================
 
 📁 Results saved in: results/
@@ -272,6 +1087,527 @@ Finished at: Friday, December 19, 2025 AM01:05:27 HKT
 
 📈 Summary:
 
+Task: gsm8k
+  ❌ adaptive: FAILED
+
 Task: humaneval
   ❌ adaptive: FAILED
 
+========================================================
+Quick Test Configuration
+========================================================
+Tasks: GSM8K, HumanEval
+Model Types: standard, sparse, adaptive
+Generation Length: 256 tokens
+Block Size: 32
+Test Samples: 50 per dataset
+========================================================
+
+🚀 Starting quick test evaluation...
+Started at: Monday, December 22, 2025 PM08:14:39 HKT
+
+
+================================================
+📊 Task: GSM8K
+================================================
+
+Progress: [1/2]
+
+========================================
+Running: adaptive on gsm8k
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=100
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:20:14:47 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:20:14:47 INFO     [__main__:446] Selected Tasks: ['gsm8k']
+2025-12-22:20:14:47 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:20:14:47 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([0.0000, 0.5441, 1.0184, 1.4781, 0.8234, 0.0287, 0.8914, 0.2363, 0.6784,
+        0.6348, 0.9210, 1.0031, 1.1038, 0.5060, 1.0817, 0.0000, 1.0934, 0.8662,
+        0.0000, 0.8763, 0.5789, 1.1479, 1.0749, 1.1582, 0.0000, 0.4939, 1.0757,
+        1.0428, 0.9891, 0.9072, 0.0000, 1.0968])
+Layer  0: weight_mean=0.2189 → keep_ratio=0.2189 (21.9%), range=[0.000, 0.443]
+tensor([1.1236, 1.1413, 1.1871, 1.1071, 1.0213, 1.2376, 0.5852, 1.4437, 1.1812,
+        1.4781, 1.1636, 1.1463, 1.1500, 1.3832, 1.1753, 1.1643, 1.1712, 1.1367,
+        1.3813, 1.1758, 1.2590, 1.1451, 1.1349, 1.1234, 1.2668, 0.0000, 0.8832,
+        0.8138, 1.2241, 1.1946, 1.0948, 1.1836])
+Layer  1: weight_mean=0.3363 → keep_ratio=0.3363 (33.6%), range=[0.000, 0.443]
+tensor([1.2082, 1.3517, 1.1666, 1.1280, 1.1904, 1.2708, 1.1961, 1.0878, 1.1687,
+        1.2021, 1.1764, 1.2074, 1.1758, 1.1318, 1.2062, 1.2235, 1.1131, 1.4776,
+        1.3088, 0.9720, 1.1274, 0.6459, 1.0807, 1.1703, 1.1803, 1.1622, 1.0771,
+        1.1812, 1.3840, 1.1409, 1.1554, 0.8797])
+Layer  2: weight_mean=0.3483 → keep_ratio=0.3483 (34.8%), range=[0.194, 0.443]
+tensor([1.2739, 0.6987, 1.2901, 1.3883, 1.1599, 1.0742, 1.4781, 1.2438, 1.1874,
+        1.0177, 1.1033, 1.1973, 0.3220, 1.2348, 1.2305, 1.2259, 1.4156, 1.2565,
+        1.1939, 1.4781, 1.2601, 1.1179, 1.2365, 1.2943, 1.1526, 1.4231, 1.1749,
+        1.2440, 1.2019, 1.0611, 1.2348, 1.1731])
+Layer  3: weight_mean=0.3567 → keep_ratio=0.3567 (35.7%), range=[0.097, 0.443]
+tensor([1.0292, 0.8923, 1.2377, 1.1751, 1.2011, 1.2142, 0.6761, 1.0446, 1.1856,
+        1.1377, 1.2437, 1.1792, 1.2702, 1.3399, 1.2160, 1.1951, 1.1434, 1.1470,
+        1.2534, 1.2064, 1.0740, 1.1371, 1.2821, 1.4781, 1.1451, 1.2538, 1.2634,
+        1.2590, 1.2273, 1.2259, 1.4781, 1.4781])
+Layer  4: weight_mean=0.3590 → keep_ratio=0.3590 (35.9%), range=[0.203, 0.443]
+tensor([1.1252, 1.0912, 1.0566, 0.8629, 1.2646, 1.1893, 1.1815, 1.2894, 1.2148,
+        1.1172, 1.2056, 1.1715, 1.1633, 1.1658, 1.1720, 1.1354, 1.3817, 1.1868,
+        1.1303, 1.0061, 1.1830, 1.1107, 1.2249, 1.0903, 1.2748, 0.7053, 1.2046,
+        1.1677, 1.3427, 1.1878, 1.1212, 0.7655])
+Layer  5: weight_mean=0.3421 → keep_ratio=0.3421 (34.2%), range=[0.212, 0.415]
+tensor([1.0409, 1.2132, 1.2785, 0.7071, 1.1849, 1.0910, 1.2909, 0.9238, 1.1784,
+        1.0769, 1.3722, 1.4675, 0.9119, 1.2451, 1.3246, 1.1577, 1.0685, 0.0000,
+        1.1588, 1.2029, 1.0934, 0.8643, 1.1007, 1.4781, 1.2023, 1.1809, 1.2692,
+        1.1738, 1.3034, 1.1952, 1.1722, 1.1861])
+Layer  6: weight_mean=0.3386 → keep_ratio=0.3386 (33.9%), range=[0.000, 0.443]
+tensor([1.1266, 1.2194, 1.0604, 1.1672, 1.2104, 1.4781, 1.1331, 1.1702, 1.3180,
+        1.2061, 1.1757, 1.1067, 1.2266, 1.2332, 1.1383, 1.1409, 1.2694, 1.1838,
+        0.4839, 1.1972, 1.3825, 1.2510, 1.1691, 1.3614, 1.2914, 1.0881, 1.1987,
+        1.1152, 1.0740, 0.9097, 1.3376, 1.1181])
+Layer  7: weight_mean=0.3520 → keep_ratio=0.3520 (35.2%), range=[0.145, 0.443]
+tensor([1.3056, 0.8255, 1.1556, 1.2051, 1.1076, 1.2523, 1.1182, 1.1221, 1.0467,
+        1.3186, 1.1874, 1.1257, 1.1148, 1.2016, 1.2997, 1.2322, 1.4781, 0.9561,
+        1.2116, 0.2775, 1.1550, 1.2805, 1.2218, 1.0438, 1.2646, 1.2329, 0.8700,
+        1.2231, 1.1534, 0.7184, 1.1680, 1.1453])
+Layer  8: weight_mean=0.3377 → keep_ratio=0.3377 (33.8%), range=[0.083, 0.443]
+tensor([1.1809, 1.1773, 0.6403, 0.9702, 1.1554, 1.2496, 1.0814, 1.1802, 0.9239,
+        1.1768, 1.1661, 1.1229, 0.7315, 1.0035, 1.0212, 1.1852, 1.2202, 1.0734,
+        1.2148, 1.2069, 1.2059, 1.2601, 1.3884, 1.0310, 1.1822, 1.1305, 1.2393,
+        1.1660, 1.0329, 1.2357, 1.3163, 0.9558])
+Layer  9: weight_mean=0.3359 → keep_ratio=0.3359 (33.6%), range=[0.192, 0.417]
+tensor([0.5782, 1.1146, 1.2680, 1.2436, 1.1599, 1.2529, 0.5487, 0.0000, 1.1384,
+        1.1298, 1.2803, 0.0000, 1.1587, 1.1836, 1.1670, 1.0099, 1.1623, 1.2281,
+        0.8804, 1.1820, 1.3510, 1.2644, 1.2100, 1.2553, 1.2907, 1.1023, 0.1906,
+        1.2070, 0.2201, 1.3621, 1.0175, 1.2148])
+Layer 10: weight_mean=0.3035 → keep_ratio=0.3035 (30.3%), range=[0.000, 0.409]
+tensor([0.5220, 1.1490, 1.1031, 1.3299, 1.1139, 1.4781, 1.2101, 1.2693, 1.1628,
+        1.1614, 1.1356, 1.3661, 1.1859, 1.4653, 1.1563, 1.1549, 1.2586, 1.2443,
+        1.0777, 1.2717, 1.1740, 1.0975, 1.3084, 1.2657, 1.1706, 1.1572, 1.1126,
+        1.2141, 1.1119, 0.9028, 1.2840, 1.2362])
+Layer 11: weight_mean=0.3549 → keep_ratio=0.3549 (35.5%), range=[0.157, 0.443]
+tensor([0.8736, 1.0494, 1.2491, 1.1043, 0.9368, 1.1654, 1.2596, 1.2823, 1.2143,
+        1.2219, 1.0758, 1.2686, 1.1114, 1.2469, 1.4781, 1.2060, 1.2330, 1.1494,
+        1.4781, 1.0479, 1.0892, 1.2646, 1.2249, 1.1845, 0.9638, 1.2100, 1.0409,
+        1.1083, 1.1041, 0.9403, 1.0299, 1.0682])
+Layer 12: weight_mean=0.3458 → keep_ratio=0.3458 (34.6%), range=[0.262, 0.443]
+tensor([0.8321, 1.3109, 1.1610, 1.3637, 1.2129, 1.1601, 1.2489, 0.8745, 1.2270,
+        1.3354, 1.2716, 1.0761, 1.2326, 1.1399, 1.1454, 1.1897, 1.1230, 1.1300,
+        1.1745, 1.1038, 1.1162, 1.2799, 1.1724, 1.1152, 1.3559, 1.3020, 1.2143,
+        1.1777, 1.2002, 1.1687, 1.2102, 1.1386])
+Layer 13: weight_mean=0.3540 → keep_ratio=0.3540 (35.4%), range=[0.250, 0.409]
+tensor([1.2946, 0.8167, 1.1692, 1.2566, 1.3448, 1.1648, 1.0876, 1.0711, 1.0046,
+        1.1987, 1.1977, 1.2722, 1.1039, 0.8709, 1.1129, 1.1330, 1.1587, 1.1372,
+        1.1996, 1.4271, 1.0812, 1.1218, 1.1713, 1.2782, 1.1248, 1.1166, 1.1832,
+        1.0792, 1.1541, 1.1156, 1.2924, 1.1514])
+Layer 14: weight_mean=0.3459 → keep_ratio=0.3459 (34.6%), range=[0.245, 0.428]
+tensor([0.9826, 1.1670, 0.9818, 1.0596, 1.1466, 0.9676, 1.0767, 0.9652, 1.3604,
+        1.1768, 1.2446, 1.4312, 1.2554, 1.1181, 1.1279, 1.1196, 1.1708, 1.0108,
+        0.9569, 1.2585, 1.1523, 1.1140, 1.0077, 1.1362, 1.1819, 1.1120, 1.0105,
+        0.9899, 1.0576, 1.0896, 0.8099, 1.0534])
+Layer 15: weight_mean=0.3309 → keep_ratio=0.3309 (33.1%), range=[0.243, 0.429]
+tensor([1.1391, 1.1043, 0.8076, 1.0762, 0.3867, 1.1436, 1.0832, 1.0643, 1.1345,
+        0.8281, 1.2847, 0.8971, 1.0523, 1.2307, 1.3346, 1.0109, 1.1458, 1.0573,
+        1.1317, 1.0068, 1.3874, 1.0824, 1.1777, 1.0594, 1.1923, 1.4585, 1.0682,
+        0.8685, 1.2398, 1.1190, 1.2868, 1.1861])
+Layer 16: weight_mean=0.3286 → keep_ratio=0.3286 (32.9%), range=[0.116, 0.438]
+tensor([1.1977, 1.2116, 1.1619, 1.0217, 1.1013, 1.0213, 0.8050, 1.1125, 1.3671,
+        1.1448, 0.9368, 1.1021, 1.1072, 1.0776, 0.9234, 1.0224, 1.0947, 0.9906,
+        1.0827, 1.0961, 1.0858, 1.0547, 1.2327, 0.9824, 1.1806, 1.0156, 1.2462,
+        0.9973, 1.1261, 0.9680, 1.2870, 0.9256])
+Layer 17: weight_mean=0.3251 → keep_ratio=0.3251 (32.5%), range=[0.241, 0.410]
+tensor([1.0218, 1.0126, 1.2631, 1.0411, 1.0755, 0.9609, 1.0195, 1.2175, 0.7759,
+        1.3178, 0.7087, 1.0063, 1.0580, 0.9335, 1.4781, 0.9184, 1.3747, 1.3166,
+        1.1965, 1.0120, 1.0518, 0.8105, 0.8376, 0.8419, 1.0428, 1.1839, 1.1913,
+        1.0226, 1.2349, 1.4781, 1.1966, 0.9677])
+Layer 18: weight_mean=0.3241 → keep_ratio=0.3241 (32.4%), range=[0.213, 0.443]
+tensor([0.8787, 0.9137, 1.2062, 1.2616, 1.0733, 0.8809, 1.2215, 1.1568, 1.3207,
+        1.3455, 1.1355, 1.1371, 0.9882, 1.1857, 0.9677, 0.9340, 1.1117, 1.4781,
+        1.1107, 1.2059, 1.2028, 1.4781, 1.0906, 1.4781, 0.8748, 1.1198, 1.0964,
+        1.3498, 1.1231, 1.0616, 1.1363, 1.3769])
+Layer 19: weight_mean=0.3460 → keep_ratio=0.3460 (34.6%), range=[0.262, 0.443]
+tensor([0.1547, 1.2330, 1.0323, 0.0000, 1.1135, 1.0114, 0.9158, 0.9353, 0.6239,
+        1.1859, 1.0881, 0.8525, 0.5246, 1.1584, 1.2415, 1.0572, 1.4403, 1.0075,
+        1.0782, 0.9418, 0.8782, 1.1898, 1.1868, 1.3963, 1.2542, 0.7525, 1.4781,
+        1.0173, 1.0187, 0.9975, 1.1781, 0.9457])
+Layer 20: weight_mean=0.2990 → keep_ratio=0.2990 (29.9%), range=[0.000, 0.443]
+tensor([1.0659, 0.9064, 1.0423, 0.5751, 0.9526, 0.7323, 1.0562, 0.7606, 0.8847,
+        0.9894, 0.5409, 1.2516, 0.7377, 1.4781, 1.1373, 1.0931, 0.3218, 0.8936,
+        0.5664, 1.0841, 0.9809, 0.6155, 0.9409, 0.8134, 0.7741, 1.4781, 0.6946,
+        1.4781, 1.0981, 0.9204, 1.0917, 0.7485])
+Layer 21: weight_mean=0.2785 → keep_ratio=0.2785 (27.8%), range=[0.097, 0.443]
+tensor([0.9510, 0.4311, 0.7916, 0.6967, 0.5816, 1.4781, 1.0750, 1.4781, 1.1157,
+        0.9340, 1.0089, 1.1350, 0.7274, 0.8585, 1.4781, 1.2426, 1.4182, 0.8414,
+        0.7870, 1.4781, 1.3325, 0.3902, 1.0881, 0.0000, 1.0718, 1.2065, 0.9450,
+        1.2677, 0.8459, 1.4781, 0.9551, 0.9269])
+Layer 22: weight_mean=0.3001 → keep_ratio=0.3001 (30.0%), range=[0.000, 0.443]
+tensor([1.4781, 0.8316, 0.0481, 1.4781, 1.4781, 0.8752, 1.4488, 0.7454, 0.1079,
+        0.0277, 0.8538, 0.8524, 1.4781, 0.0000, 0.8335, 0.0000, 0.8544, 1.4781,
+        0.0000, 1.1547, 0.7219, 0.6772, 0.0000, 1.1927, 0.9290, 1.3175, 0.0000,
+        1.4781, 0.9465, 1.3605, 0.7757, 0.3631])
+Layer 23: weight_mean=0.2417 → keep_ratio=0.2417 (24.2%), range=[0.000, 0.443]
+tensor([0.8320, 0.9359, 1.0725, 0.6744, 0.0824, 0.9300, 0.0000, 1.4781, 0.9570,
+        1.4781, 1.0094, 1.2386, 0.5663, 0.8926, 0.7052, 0.3570, 1.1111, 0.4677,
+        0.8338, 1.0919, 1.4781, 1.4781, 0.9145, 1.1002, 0.9195, 0.8372, 1.1461,
+        0.4826, 1.2772, 0.8923, 0.7934, 0.6925])
+Layer 24: weight_mean=0.2693 → keep_ratio=0.2693 (26.9%), range=[0.000, 0.443]
+tensor([0.0090, 1.4781, 0.4555, 1.0257, 0.7783, 0.5794, 1.0353, 0.0000, 1.2195,
+        1.0119, 1.3404, 0.9553, 0.8368, 0.4371, 0.5625, 0.0000, 1.1346, 0.7574,
+        1.0584, 0.9653, 0.7229, 0.6996, 1.3630, 1.4781, 1.2176, 0.0000, 0.0000,
+        0.7570, 0.7130, 0.0000, 1.1293, 0.7101])
+Layer 25: weight_mean=0.2290 → keep_ratio=0.2290 (22.9%), range=[0.000, 0.443]
+tensor([0.3336, 1.0518, 1.1285, 0.6632, 0.9411, 0.8277, 0.0000, 1.1071, 0.0000,
+        0.2639, 1.0068, 0.6040, 0.0000, 0.4903, 0.2358, 0.7257, 0.0000, 0.0000,
+        1.4781, 0.7074, 1.3952, 0.4538, 0.8642, 0.0855, 1.4781, 0.9437, 0.0000,
+        1.4781, 0.9326, 0.0000, 0.9802, 1.3239])
+Layer 26: weight_mean=0.2016 → keep_ratio=0.2016 (20.2%), range=[0.000, 0.443]
+tensor([1.4781, 1.0149, 0.0000, 0.0000, 0.0890, 0.0000, 0.7987, 0.6041, 1.2006,
+        1.0352, 0.8579, 0.7529, 0.2996, 0.6919, 0.8232, 0.4908, 0.3205, 0.5851,
+        1.1760, 0.7436, 1.4781, 0.8003, 1.0739, 0.6587, 0.5007, 0.0000, 1.0874,
+        0.7869, 0.8740, 0.9405, 1.0275, 0.4039])
+Layer 27: weight_mean=0.2118 → keep_ratio=0.2118 (21.2%), range=[0.000, 0.443]
+tensor([0.3841, 0.7743, 1.0171, 0.0506, 1.3292, 1.0634, 1.1863, 0.5725, 0.5470,
+        0.1382, 0.6389, 0.3345, 0.6440, 0.9780, 0.3636, 0.5642, 1.1092, 0.6696,
+        0.0000, 1.0500, 0.0000, 0.0000, 1.0224, 0.7678, 1.4781, 1.1359, 0.0000,
+        0.3701, 0.6827, 1.1265, 0.9842, 0.0000])
+Layer 28: weight_mean=0.1967 → keep_ratio=0.1967 (19.7%), range=[0.000, 0.443]
+tensor([0.0000e+00, 1.4781e+00, 6.3693e-01, 4.8808e-01, 1.9210e-01, 7.8451e-01,
+        1.4781e+00, 1.2001e+00, 6.0796e-01, 0.0000e+00, 1.0971e+00, 1.1170e+00,
+        6.9505e-01, 1.1202e+00, 9.3995e-01, 0.0000e+00, 7.9806e-01, 9.0356e-01,
+        1.4781e+00, 1.0596e+00, 7.4900e-01, 9.8060e-01, 9.9946e-01, 1.4781e+00,
+        2.4710e-01, 6.7848e-04, 7.5893e-01, 1.2828e+00, 8.2281e-01, 1.3395e+00,
+        1.0462e+00, 1.4781e+00])
+Layer 29: weight_mean=0.2555 → keep_ratio=0.2555 (25.6%), range=[0.000, 0.443]
+tensor([0.1845, 1.0899, 0.8709, 0.0000, 0.9270, 0.4384, 0.0000, 0.2032, 0.0000,
+        1.3331, 0.3774, 0.4903, 0.0000, 0.9927, 1.1231, 0.9749, 1.1198, 1.1121,
+        1.0217, 1.1525, 0.0000, 1.3739, 1.3189, 0.0000, 0.8576, 1.0693, 0.6134,
+        1.4122, 0.5550, 0.9904, 1.0752, 0.0000])
+Layer 30: weight_mean=0.2126 → keep_ratio=0.2126 (21.3%), range=[0.000, 0.424]
+tensor([0.0000, 1.4781, 1.2377, 0.7186, 1.2366, 0.2219, 1.0262, 0.7027, 1.4781,
+        1.0503, 0.9039, 0.0000, 0.2236, 0.7280, 1.1586, 0.0000, 0.8945, 0.9619,
+        0.8171, 0.0790, 0.9920, 0.4354, 0.8481, 0.9013, 0.0000, 1.1715, 0.4240,
+        0.6632, 0.4949, 1.1520, 1.0607, 0.4273])
+Layer 31: weight_mean=0.2202 → keep_ratio=0.2202 (22.0%), range=[0.000, 0.443]
+
+--------------------------------------------------------------------------------
+Global Statistics:
+--------------------------------------------------------------------------------
+Relative weights:
+  Mean:   0.3000 (should be ≈1.0)
+  Std:    0.1072
+  Range:  [0.000, 0.443]
+
+Actual keep_ratios (weights × select=0.3):
+  Mean:   0.3000 (30.0%)
+  Target: 0.3000 (30.0%)
+  Deviation: 0.0000 (0.00%)
+  Range:  [0.000, 0.443]
+  Heads hitting upper limit (>1.0): 0/1024 (0.0%)
+  ✅ Mean matches target (deviation < 1%)
+
+--------------------------------------------------------------------------------
+Layer-wise Variation:
+--------------------------------------------------------------------------------
+Layer means range: [0.1967, 0.3590]
+Layer means std:   0.0553
+Actual keep_ratio range across layers: [0.059, 0.108]
+Variation: 4.9% spread
+================================================================================
+
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 192.42it/s]
+2025-12-22:20:15:56 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
+2025-12-22:20:15:56 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
+Converted 32 blocks to adaptive blocks
+
+======================================================================
+LLaDA Evaluation Setup
+======================================================================
+Model type: adaptive
+Model path: GSAI-ML/LLaDA-8B-Base
+Steps: 256, Gen length: 256, Block length: 32
+Sparse params: skip=0.2, select=0.3, block_size=32
+======================================================================
+
+  0%|          | 0/100 [00:00<?, ?it/s] 34%|███▍      | 34/100 [00:00<00:00, 329.10it/s] 67%|██████▋   | 67/100 [00:00<00:00, 322.66it/s]100%|██████████| 100/100 [00:00<00:00, 328.73it/s]
+2025-12-22:20:15:57 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/100 [00:00<?, ? examples/s]Map:  61%|██████    | 61/100 [00:00<00:00, 592.86 examples/s]Map: 100%|██████████| 100/100 [00:00<00:00, 536.54 examples/s]
+Generating...:   0%|          | 0/100 [00:00<?, ?it/s]Generating...:   1%|          | 1/100 [00:35<58:00, 35.16s/it]Generating...:   2%|▏         | 2/100 [01:10<57:11, 35.02s/it]Generating...:   3%|▎         | 3/100 [01:43<55:26, 34.29s/it]Generating...:   4%|▍         | 4/100 [02:12<51:34, 32.24s/it]Generating...:   5%|▌         | 5/100 [02:46<51:45, 32.68s/it]Generating...:   6%|▌         | 6/100 [03:10<46:42, 29.82s/it]Generating...:   7%|▋         | 7/100 [03:39<45:45, 29.52s/it]Generating...:   8%|▊         | 8/100 [04:10<46:00, 30.00s/it]Generating...:   9%|▉         | 9/100 [04:44<47:25, 31.27s/it]Generating...:  10%|█         | 10/100 [05:12<45:24, 30.27s/it]Generating...:  11%|█         | 11/100 [05:43<45:11, 30.47s/it]Generating...:  12%|█▏        | 12/100 [06:24<49:24, 33.69s/it]Generating...:  13%|█▎        | 13/100 [07:05<52:16, 36.05s/it]Generating...:  14%|█▍        | 14/100 [07:41<51:40, 36.05s/it]Generating...:  15%|█▌        | 15/100 [08:10<47:55, 33.83s/it]Generating...:  16%|█▌        | 16/100 [08:40<45:51, 32.75s/it]Generating...:  17%|█▋        | 17/100 [09:17<46:59, 33.98s/it]Generating...:  18%|█▊        | 18/100 [09:45<43:50, 32.08s/it]Generating...:  19%|█▉        | 19/100 [10:12<41:23, 30.66s/it]Generating...:  20%|██        | 20/100 [10:42<40:27, 30.34s/it]Generating...:  21%|██        | 21/100 [11:17<41:59, 31.89s/it]Generating...:  22%|██▏       | 22/100 [11:54<43:27, 33.43s/it]Generating...:  23%|██▎       | 23/100 [12:30<43:53, 34.20s/it]Generating...:  24%|██▍       | 24/100 [13:01<41:50, 33.04s/it]Generating...:  25%|██▌       | 25/100 [13:34<41:37, 33.30s/it]Generating...:  26%|██▌       | 26/100 [14:08<41:03, 33.29s/it]Generating...:  27%|██▋       | 27/100 [14:39<39:52, 32.77s/it]Generating...:  28%|██▊       | 28/100 [15:07<37:29, 31.24s/it]Generating...:  29%|██▉       | 29/100 [15:35<35:58, 30.40s/it]Generating...:  30%|███       | 30/100 [16:04<34:56, 29.96s/it]Generating...:  31%|███       | 31/100 [16:33<34:01, 29.59s/it]Generating...:  32%|███▏      | 32/100 [17:07<35:08, 31.00s/it]Generating...:  33%|███▎      | 33/100 [17:40<35:13, 31.54s/it]Generating...:  34%|███▍      | 34/100 [18:08<33:27, 30.41s/it]Generating...:  35%|███▌      | 35/100 [18:41<33:42, 31.12s/it]Generating...:  36%|███▌      | 36/100 [19:10<32:29, 30.47s/it]Generating...:  37%|███▋      | 37/100 [19:38<31:21, 29.87s/it]Generating...:  38%|███▊      | 38/100 [20:15<32:53, 31.83s/it]Generating...:  39%|███▉      | 39/100 [20:43<31:16, 30.76s/it]Generating...:  40%|████      | 40/100 [21:14<30:44, 30.74s/it]Generating...:  41%|████      | 41/100 [21:47<31:03, 31.59s/it]Generating...:  42%|████▏     | 42/100 [22:21<31:10, 32.24s/it]Generating...:  43%|████▎     | 43/100 [22:50<29:40, 31.24s/it]Generating...:  44%|████▍     | 44/100 [23:27<30:52, 33.07s/it]Generating...:  45%|████▌     | 45/100 [23:56<29:16, 31.94s/it]Generating...:  46%|████▌     | 46/100 [24:30<29:11, 32.44s/it]Generating...:  47%|████▋     | 47/100 [25:01<28:10, 31.90s/it]Generating...:  48%|████▊     | 48/100 [25:37<28:41, 33.10s/it]Generating...:  49%|████▉     | 49/100 [26:05<26:50, 31.59s/it]Generating...:  50%|█████     | 50/100 [26:34<25:51, 31.02s/it]Generating...:  51%|█████     | 51/100 [27:05<25:15, 30.93s/it]Generating...:  52%|█████▏    | 52/100 [27:33<23:55, 29.90s/it]Generating...:  53%|█████▎    | 53/100 [28:01<23:04, 29.46s/it]Generating...:  54%|█████▍    | 54/100 [28:42<25:19, 33.03s/it]Generating...:  55%|█████▌    | 55/100 [29:13<24:15, 32.34s/it]Generating...:  56%|█████▌    | 56/100 [29:46<23:52, 32.55s/it]Generating...:  57%|█████▋    | 57/100 [30:19<23:25, 32.68s/it]Generating...:  58%|█████▊    | 58/100 [30:53<23:10, 33.11s/it]Generating...:  59%|█████▉    | 59/100 [31:30<23:23, 34.23s/it]Generating...:  60%|██████    | 60/100 [32:01<22:15, 33.38s/it]Generating...:  61%|██████    | 61/100 [32:33<21:15, 32.71s/it]Generating...:  62%|██████▏   | 62/100 [33:01<19:49, 31.30s/it]Generating...:  63%|██████▎   | 63/100 [33:37<20:13, 32.79s/it]Generating...:  64%|██████▍   | 64/100 [34:05<18:52, 31.47s/it]Generating...:  65%|██████▌   | 65/100 [34:38<18:33, 31.82s/it]Generating...:  66%|██████▌   | 66/100 [35:08<17:47, 31.38s/it]Generating...:  67%|██████▋   | 67/100 [35:41<17:29, 31.80s/it]Generating...:  68%|██████▊   | 68/100 [36:10<16:31, 31.00s/it]Generating...:  69%|██████▉   | 69/100 [36:44<16:24, 31.76s/it]Generating...:  70%|███████   | 70/100 [37:12<15:26, 30.87s/it]Generating...:  71%|███████   | 71/100 [37:39<14:19, 29.63s/it]Generating...:  72%|███████▏  | 72/100 [38:13<14:24, 30.89s/it]Generating...:  73%|███████▎  | 73/100 [38:54<15:14, 33.87s/it]Generating...:  74%|███████▍  | 74/100 [39:27<14:31, 33.52s/it]Generating...:  75%|███████▌  | 75/100 [40:03<14:20, 34.43s/it]Generating...:  76%|███████▌  | 76/100 [40:31<12:59, 32.48s/it]Generating...:  77%|███████▋  | 77/100 [41:05<12:40, 33.04s/it]Generating...:  78%|███████▊  | 78/100 [41:35<11:47, 32.15s/it]Generating...:  79%|███████▉  | 79/100 [42:04<10:53, 31.11s/it]Generating...:  80%|████████  | 80/100 [42:41<10:55, 32.76s/it]Generating...:  81%|████████  | 81/100 [43:18<10:48, 34.13s/it]Generating...:  82%|████████▏ | 82/100 [43:48<09:51, 32.89s/it]Generating...:  83%|████████▎ | 83/100 [44:16<08:53, 31.38s/it]Generating...:  84%|████████▍ | 84/100 [44:49<08:30, 31.89s/it]Generating...:  85%|████████▌ | 85/100 [45:19<07:49, 31.31s/it]Generating...:  86%|████████▌ | 86/100 [45:54<07:34, 32.47s/it]Generating...:  87%|████████▋ | 87/100 [46:24<06:53, 31.79s/it]Generating...:  88%|████████▊ | 88/100 [46:55<06:17, 31.47s/it]Generating...:  89%|████████▉ | 89/100 [47:28<05:51, 31.97s/it]Generating...:  90%|█████████ | 90/100 [48:04<05:32, 33.23s/it]Generating...:  91%|█████████ | 91/100 [48:35<04:51, 32.42s/it]Generating...:  92%|█████████▏| 92/100 [49:04<04:10, 31.29s/it]Generating...:  93%|█████████▎| 93/100 [49:34<03:37, 31.09s/it]Generating...:  94%|█████████▍| 94/100 [50:07<03:10, 31.71s/it]Generating...:  95%|█████████▌| 95/100 [50:41<02:42, 32.43s/it]Generating...:  96%|█████████▌| 96/100 [51:13<02:08, 32.21s/it]Generating...:  97%|█████████▋| 97/100 [51:43<01:34, 31.64s/it]Generating...:  98%|█████████▊| 98/100 [52:20<01:06, 33.03s/it]Generating...:  99%|█████████▉| 99/100 [52:53<00:32, 32.99s/it]Generating...: 100%|██████████| 100/100 [53:23<00:00, 32.19s/it]Generating...: 100%|██████████| 100/100 [53:23<00:00, 32.03s/it]
+2025-12-22:21:10:31 INFO     [loggers.evaluation_tracker:209] Saving results aggregated
+2025-12-22:21:10:31 INFO     [loggers.evaluation_tracker:298] Saving per-sample results for: gsm8k
+llada_eval (model_path=GSAI-ML/LLaDA-8B-Base,model_type=adaptive,gen_length=256,steps=256,block_length=32,skip=0.2,select=0.3,block_size=32,importance_source=precomputed), gen_kwargs: (None), limit: 100.0, num_fewshot: None, batch_size: 1
+|Tasks|Version|     Filter     |n-shot|  Metric   |   |Value|   |Stderr|
+|-----|------:|----------------|-----:|-----------|---|----:|---|-----:|
+|gsm8k|      3|flexible-extract|     5|exact_match|↑  | 0.45|±  |0.0500|
+|     |       |strict-match    |     5|exact_match|↑  | 0.50|±  |0.0503|
+
+✅ Completed adaptive on gsm8k
+⏱️  Running time: 55m 54s (3354s total)
+
+
+================================================
+📊 Task: HUMANEVAL
+================================================
+
+Progress: [2/2]
+
+========================================
+Running: adaptive on humaneval
+========================================
+Params: gen_length=256, steps=256, block_length=32, block_size=32, limit=100
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+2025-12-22:21:10:42 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
+2025-12-22:21:10:42 INFO     [__main__:446] Selected Tasks: ['humaneval']
+2025-12-22:21:10:42 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2025-12-22:21:10:42 INFO     [evaluator:240] Initializing llada_eval model, with arguments: {'model_path': 'GSAI-ML/LLaDA-8B-Base', 'model_type': 'adaptive', 'gen_length': 256, 'steps':
+        256, 'block_length': 32, 'skip': 0.2, 'select': 0.3, 'block_size': 32, 'importance_source': 'precomputed'}
+/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt
+✓ Created adaptive config using PRE-COMPUTED importance scores
+
+================================================================================
+📊 LLaDA Adaptive Sparsity Configuration Statistics
+================================================================================
+Mode: Relative Weights (mean=1.0, multiply by select at inference)
+Target select: 0.300 (30.0%)
+Layers: 32, KV Heads per layer: 32
+Total heads: 1024
+
+--------------------------------------------------------------------------------
+Per-Layer Statistics:
+--------------------------------------------------------------------------------
+tensor([0.0000, 0.5441, 1.0184, 1.4781, 0.8234, 0.0287, 0.8914, 0.2363, 0.6784,
+        0.6348, 0.9210, 1.0031, 1.1038, 0.5060, 1.0817, 0.0000, 1.0934, 0.8662,
+        0.0000, 0.8763, 0.5789, 1.1479, 1.0749, 1.1582, 0.0000, 0.4939, 1.0757,
+        1.0428, 0.9891, 0.9072, 0.0000, 1.0968])
+Layer  0: weight_mean=0.2189 → keep_ratio=0.2189 (21.9%), range=[0.000, 0.443]
+tensor([1.1236, 1.1413, 1.1871, 1.1071, 1.0213, 1.2376, 0.5852, 1.4437, 1.1812,
+        1.4781, 1.1636, 1.1463, 1.1500, 1.3832, 1.1753, 1.1643, 1.1712, 1.1367,
+        1.3813, 1.1758, 1.2590, 1.1451, 1.1349, 1.1234, 1.2668, 0.0000, 0.8832,
+        0.8138, 1.2241, 1.1946, 1.0948, 1.1836])
+Layer  1: weight_mean=0.3363 → keep_ratio=0.3363 (33.6%), range=[0.000, 0.443]
+tensor([1.2082, 1.3517, 1.1666, 1.1280, 1.1904, 1.2708, 1.1961, 1.0878, 1.1687,
+        1.2021, 1.1764, 1.2074, 1.1758, 1.1318, 1.2062, 1.2235, 1.1131, 1.4776,
+        1.3088, 0.9720, 1.1274, 0.6459, 1.0807, 1.1703, 1.1803, 1.1622, 1.0771,
+        1.1812, 1.3840, 1.1409, 1.1554, 0.8797])
+Layer  2: weight_mean=0.3483 → keep_ratio=0.3483 (34.8%), range=[0.194, 0.443]
+tensor([1.2739, 0.6987, 1.2901, 1.3883, 1.1599, 1.0742, 1.4781, 1.2438, 1.1874,
+        1.0177, 1.1033, 1.1973, 0.3220, 1.2348, 1.2305, 1.2259, 1.4156, 1.2565,
+        1.1939, 1.4781, 1.2601, 1.1179, 1.2365, 1.2943, 1.1526, 1.4231, 1.1749,
+        1.2440, 1.2019, 1.0611, 1.2348, 1.1731])
+Layer  3: weight_mean=0.3567 → keep_ratio=0.3567 (35.7%), range=[0.097, 0.443]
+tensor([1.0292, 0.8923, 1.2377, 1.1751, 1.2011, 1.2142, 0.6761, 1.0446, 1.1856,
+        1.1377, 1.2437, 1.1792, 1.2702, 1.3399, 1.2160, 1.1951, 1.1434, 1.1470,
+        1.2534, 1.2064, 1.0740, 1.1371, 1.2821, 1.4781, 1.1451, 1.2538, 1.2634,
+        1.2590, 1.2273, 1.2259, 1.4781, 1.4781])
+Layer  4: weight_mean=0.3590 → keep_ratio=0.3590 (35.9%), range=[0.203, 0.443]
+tensor([1.1252, 1.0912, 1.0566, 0.8629, 1.2646, 1.1893, 1.1815, 1.2894, 1.2148,
+        1.1172, 1.2056, 1.1715, 1.1633, 1.1658, 1.1720, 1.1354, 1.3817, 1.1868,
+        1.1303, 1.0061, 1.1830, 1.1107, 1.2249, 1.0903, 1.2748, 0.7053, 1.2046,
+        1.1677, 1.3427, 1.1878, 1.1212, 0.7655])
+Layer  5: weight_mean=0.3421 → keep_ratio=0.3421 (34.2%), range=[0.212, 0.415]
+tensor([1.0409, 1.2132, 1.2785, 0.7071, 1.1849, 1.0910, 1.2909, 0.9238, 1.1784,
+        1.0769, 1.3722, 1.4675, 0.9119, 1.2451, 1.3246, 1.1577, 1.0685, 0.0000,
+        1.1588, 1.2029, 1.0934, 0.8643, 1.1007, 1.4781, 1.2023, 1.1809, 1.2692,
+        1.1738, 1.3034, 1.1952, 1.1722, 1.1861])
+Layer  6: weight_mean=0.3386 → keep_ratio=0.3386 (33.9%), range=[0.000, 0.443]
+tensor([1.1266, 1.2194, 1.0604, 1.1672, 1.2104, 1.4781, 1.1331, 1.1702, 1.3180,
+        1.2061, 1.1757, 1.1067, 1.2266, 1.2332, 1.1383, 1.1409, 1.2694, 1.1838,
+        0.4839, 1.1972, 1.3825, 1.2510, 1.1691, 1.3614, 1.2914, 1.0881, 1.1987,
+        1.1152, 1.0740, 0.9097, 1.3376, 1.1181])
+Layer  7: weight_mean=0.3520 → keep_ratio=0.3520 (35.2%), range=[0.145, 0.443]
+tensor([1.3056, 0.8255, 1.1556, 1.2051, 1.1076, 1.2523, 1.1182, 1.1221, 1.0467,
+        1.3186, 1.1874, 1.1257, 1.1148, 1.2016, 1.2997, 1.2322, 1.4781, 0.9561,
+        1.2116, 0.2775, 1.1550, 1.2805, 1.2218, 1.0438, 1.2646, 1.2329, 0.8700,
+        1.2231, 1.1534, 0.7184, 1.1680, 1.1453])
+Layer  8: weight_mean=0.3377 → keep_ratio=0.3377 (33.8%), range=[0.083, 0.443]
+tensor([1.1809, 1.1773, 0.6403, 0.9702, 1.1554, 1.2496, 1.0814, 1.1802, 0.9239,
+        1.1768, 1.1661, 1.1229, 0.7315, 1.0035, 1.0212, 1.1852, 1.2202, 1.0734,
+        1.2148, 1.2069, 1.2059, 1.2601, 1.3884, 1.0310, 1.1822, 1.1305, 1.2393,
+        1.1660, 1.0329, 1.2357, 1.3163, 0.9558])
+Layer  9: weight_mean=0.3359 → keep_ratio=0.3359 (33.6%), range=[0.192, 0.417]
+tensor([0.5782, 1.1146, 1.2680, 1.2436, 1.1599, 1.2529, 0.5487, 0.0000, 1.1384,
+        1.1298, 1.2803, 0.0000, 1.1587, 1.1836, 1.1670, 1.0099, 1.1623, 1.2281,
+        0.8804, 1.1820, 1.3510, 1.2644, 1.2100, 1.2553, 1.2907, 1.1023, 0.1906,
+        1.2070, 0.2201, 1.3621, 1.0175, 1.2148])
+Layer 10: weight_mean=0.3035 → keep_ratio=0.3035 (30.3%), range=[0.000, 0.409]
+tensor([0.5220, 1.1490, 1.1031, 1.3299, 1.1139, 1.4781, 1.2101, 1.2693, 1.1628,
+        1.1614, 1.1356, 1.3661, 1.1859, 1.4653, 1.1563, 1.1549, 1.2586, 1.2443,
+        1.0777, 1.2717, 1.1740, 1.0975, 1.3084, 1.2657, 1.1706, 1.1572, 1.1126,
+        1.2141, 1.1119, 0.9028, 1.2840, 1.2362])
+Layer 11: weight_mean=0.3549 → keep_ratio=0.3549 (35.5%), range=[0.157, 0.443]
+tensor([0.8736, 1.0494, 1.2491, 1.1043, 0.9368, 1.1654, 1.2596, 1.2823, 1.2143,
+        1.2219, 1.0758, 1.2686, 1.1114, 1.2469, 1.4781, 1.2060, 1.2330, 1.1494,
+        1.4781, 1.0479, 1.0892, 1.2646, 1.2249, 1.1845, 0.9638, 1.2100, 1.0409,
+        1.1083, 1.1041, 0.9403, 1.0299, 1.0682])
+Layer 12: weight_mean=0.3458 → keep_ratio=0.3458 (34.6%), range=[0.262, 0.443]
+tensor([0.8321, 1.3109, 1.1610, 1.3637, 1.2129, 1.1601, 1.2489, 0.8745, 1.2270,
+        1.3354, 1.2716, 1.0761, 1.2326, 1.1399, 1.1454, 1.1897, 1.1230, 1.1300,
+        1.1745, 1.1038, 1.1162, 1.2799, 1.1724, 1.1152, 1.3559, 1.3020, 1.2143,
+        1.1777, 1.2002, 1.1687, 1.2102, 1.1386])
+Layer 13: weight_mean=0.3540 → keep_ratio=0.3540 (35.4%), range=[0.250, 0.409]
+tensor([1.2946, 0.8167, 1.1692, 1.2566, 1.3448, 1.1648, 1.0876, 1.0711, 1.0046,
+        1.1987, 1.1977, 1.2722, 1.1039, 0.8709, 1.1129, 1.1330, 1.1587, 1.1372,
+        1.1996, 1.4271, 1.0812, 1.1218, 1.1713, 1.2782, 1.1248, 1.1166, 1.1832,
+        1.0792, 1.1541, 1.1156, 1.2924, 1.1514])
+Layer 14: weight_mean=0.3459 → keep_ratio=0.3459 (34.6%), range=[0.245, 0.428]
+tensor([0.9826, 1.1670, 0.9818, 1.0596, 1.1466, 0.9676, 1.0767, 0.9652, 1.3604,
+        1.1768, 1.2446, 1.4312, 1.2554, 1.1181, 1.1279, 1.1196, 1.1708, 1.0108,
+        0.9569, 1.2585, 1.1523, 1.1140, 1.0077, 1.1362, 1.1819, 1.1120, 1.0105,
+        0.9899, 1.0576, 1.0896, 0.8099, 1.0534])
+Layer 15: weight_mean=0.3309 → keep_ratio=0.3309 (33.1%), range=[0.243, 0.429]
+tensor([1.1391, 1.1043, 0.8076, 1.0762, 0.3867, 1.1436, 1.0832, 1.0643, 1.1345,
+        0.8281, 1.2847, 0.8971, 1.0523, 1.2307, 1.3346, 1.0109, 1.1458, 1.0573,
+        1.1317, 1.0068, 1.3874, 1.0824, 1.1777, 1.0594, 1.1923, 1.4585, 1.0682,
+        0.8685, 1.2398, 1.1190, 1.2868, 1.1861])
+Layer 16: weight_mean=0.3286 → keep_ratio=0.3286 (32.9%), range=[0.116, 0.438]
+tensor([1.1977, 1.2116, 1.1619, 1.0217, 1.1013, 1.0213, 0.8050, 1.1125, 1.3671,
+        1.1448, 0.9368, 1.1021, 1.1072, 1.0776, 0.9234, 1.0224, 1.0947, 0.9906,
+        1.0827, 1.0961, 1.0858, 1.0547, 1.2327, 0.9824, 1.1806, 1.0156, 1.2462,
+        0.9973, 1.1261, 0.9680, 1.2870, 0.9256])
+Layer 17: weight_mean=0.3251 → keep_ratio=0.3251 (32.5%), range=[0.241, 0.410]
+tensor([1.0218, 1.0126, 1.2631, 1.0411, 1.0755, 0.9609, 1.0195, 1.2175, 0.7759,
+        1.3178, 0.7087, 1.0063, 1.0580, 0.9335, 1.4781, 0.9184, 1.3747, 1.3166,
+        1.1965, 1.0120, 1.0518, 0.8105, 0.8376, 0.8419, 1.0428, 1.1839, 1.1913,
+        1.0226, 1.2349, 1.4781, 1.1966, 0.9677])
+Layer 18: weight_mean=0.3241 → keep_ratio=0.3241 (32.4%), range=[0.213, 0.443]
+tensor([0.8787, 0.9137, 1.2062, 1.2616, 1.0733, 0.8809, 1.2215, 1.1568, 1.3207,
+        1.3455, 1.1355, 1.1371, 0.9882, 1.1857, 0.9677, 0.9340, 1.1117, 1.4781,
+        1.1107, 1.2059, 1.2028, 1.4781, 1.0906, 1.4781, 0.8748, 1.1198, 1.0964,
+        1.3498, 1.1231, 1.0616, 1.1363, 1.3769])
+Layer 19: weight_mean=0.3460 → keep_ratio=0.3460 (34.6%), range=[0.262, 0.443]
+tensor([0.1547, 1.2330, 1.0323, 0.0000, 1.1135, 1.0114, 0.9158, 0.9353, 0.6239,
+        1.1859, 1.0881, 0.8525, 0.5246, 1.1584, 1.2415, 1.0572, 1.4403, 1.0075,
+        1.0782, 0.9418, 0.8782, 1.1898, 1.1868, 1.3963, 1.2542, 0.7525, 1.4781,
+        1.0173, 1.0187, 0.9975, 1.1781, 0.9457])
+Layer 20: weight_mean=0.2990 → keep_ratio=0.2990 (29.9%), range=[0.000, 0.443]
+tensor([1.0659, 0.9064, 1.0423, 0.5751, 0.9526, 0.7323, 1.0562, 0.7606, 0.8847,
+        0.9894, 0.5409, 1.2516, 0.7377, 1.4781, 1.1373, 1.0931, 0.3218, 0.8936,
+        0.5664, 1.0841, 0.9809, 0.6155, 0.9409, 0.8134, 0.7741, 1.4781, 0.6946,
+        1.4781, 1.0981, 0.9204, 1.0917, 0.7485])
+Layer 21: weight_mean=0.2785 → keep_ratio=0.2785 (27.8%), range=[0.097, 0.443]
+tensor([0.9510, 0.4311, 0.7916, 0.6967, 0.5816, 1.4781, 1.0750, 1.4781, 1.1157,
+        0.9340, 1.0089, 1.1350, 0.7274, 0.8585, 1.4781, 1.2426, 1.4182, 0.8414,
+        0.7870, 1.4781, 1.3325, 0.3902, 1.0881, 0.0000, 1.0718, 1.2065, 0.9450,
+        1.2677, 0.8459, 1.4781, 0.9551, 0.9269])
+Layer 22: weight_mean=0.3001 → keep_ratio=0.3001 (30.0%), range=[0.000, 0.443]
+tensor([1.4781, 0.8316, 0.0481, 1.4781, 1.4781, 0.8752, 1.4488, 0.7454, 0.1079,
+        0.0277, 0.8538, 0.8524, 1.4781, 0.0000, 0.8335, 0.0000, 0.8544, 1.4781,
+        0.0000, 1.1547, 0.7219, 0.6772, 0.0000, 1.1927, 0.9290, 1.3175, 0.0000,
+        1.4781, 0.9465, 1.3605, 0.7757, 0.3631])
+Layer 23: weight_mean=0.2417 → keep_ratio=0.2417 (24.2%), range=[0.000, 0.443]
+tensor([0.8320, 0.9359, 1.0725, 0.6744, 0.0824, 0.9300, 0.0000, 1.4781, 0.9570,
+        1.4781, 1.0094, 1.2386, 0.5663, 0.8926, 0.7052, 0.3570, 1.1111, 0.4677,
+        0.8338, 1.0919, 1.4781, 1.4781, 0.9145, 1.1002, 0.9195, 0.8372, 1.1461,
+        0.4826, 1.2772, 0.8923, 0.7934, 0.6925])
+Layer 24: weight_mean=0.2693 → keep_ratio=0.2693 (26.9%), range=[0.000, 0.443]
+tensor([0.0090, 1.4781, 0.4555, 1.0257, 0.7783, 0.5794, 1.0353, 0.0000, 1.2195,
+        1.0119, 1.3404, 0.9553, 0.8368, 0.4371, 0.5625, 0.0000, 1.1346, 0.7574,
+        1.0584, 0.9653, 0.7229, 0.6996, 1.3630, 1.4781, 1.2176, 0.0000, 0.0000,
+        0.7570, 0.7130, 0.0000, 1.1293, 0.7101])
+Layer 25: weight_mean=0.2290 → keep_ratio=0.2290 (22.9%), range=[0.000, 0.443]
+tensor([0.3336, 1.0518, 1.1285, 0.6632, 0.9411, 0.8277, 0.0000, 1.1071, 0.0000,
+        0.2639, 1.0068, 0.6040, 0.0000, 0.4903, 0.2358, 0.7257, 0.0000, 0.0000,
+        1.4781, 0.7074, 1.3952, 0.4538, 0.8642, 0.0855, 1.4781, 0.9437, 0.0000,
+        1.4781, 0.9326, 0.0000, 0.9802, 1.3239])
+Layer 26: weight_mean=0.2016 → keep_ratio=0.2016 (20.2%), range=[0.000, 0.443]
+tensor([1.4781, 1.0149, 0.0000, 0.0000, 0.0890, 0.0000, 0.7987, 0.6041, 1.2006,
+        1.0352, 0.8579, 0.7529, 0.2996, 0.6919, 0.8232, 0.4908, 0.3205, 0.5851,
+        1.1760, 0.7436, 1.4781, 0.8003, 1.0739, 0.6587, 0.5007, 0.0000, 1.0874,
+        0.7869, 0.8740, 0.9405, 1.0275, 0.4039])
+Layer 27: weight_mean=0.2118 → keep_ratio=0.2118 (21.2%), range=[0.000, 0.443]
+tensor([0.3841, 0.7743, 1.0171, 0.0506, 1.3292, 1.0634, 1.1863, 0.5725, 0.5470,
+        0.1382, 0.6389, 0.3345, 0.6440, 0.9780, 0.3636, 0.5642, 1.1092, 0.6696,
+        0.0000, 1.0500, 0.0000, 0.0000, 1.0224, 0.7678, 1.4781, 1.1359, 0.0000,
+        0.3701, 0.6827, 1.1265, 0.9842, 0.0000])
+Layer 28: weight_mean=0.1967 → keep_ratio=0.1967 (19.7%), range=[0.000, 0.443]
+tensor([0.0000e+00, 1.4781e+00, 6.3693e-01, 4.8808e-01, 1.9210e-01, 7.8451e-01,
+        1.4781e+00, 1.2001e+00, 6.0796e-01, 0.0000e+00, 1.0971e+00, 1.1170e+00,
+        6.9505e-01, 1.1202e+00, 9.3995e-01, 0.0000e+00, 7.9806e-01, 9.0356e-01,
+        1.4781e+00, 1.0596e+00, 7.4900e-01, 9.8060e-01, 9.9946e-01, 1.4781e+00,
+        2.4710e-01, 6.7848e-04, 7.5893e-01, 1.2828e+00, 8.2281e-01, 1.3395e+00,
+        1.0462e+00, 1.4781e+00])
+Layer 29: weight_mean=0.2555 → keep_ratio=0.2555 (25.6%), range=[0.000, 0.443]
+tensor([0.1845, 1.0899, 0.8709, 0.0000, 0.9270, 0.4384, 0.0000, 0.2032, 0.0000,
+        1.3331, 0.3774, 0.4903, 0.0000, 0.9927, 1.1231, 0.9749, 1.1198, 1.1121,
+        1.0217, 1.1525, 0.0000, 1.3739, 1.3189, 0.0000, 0.8576, 1.0693, 0.6134,
+        1.4122, 0.5550, 0.9904, 1.0752, 0.0000])
+Layer 30: weight_mean=0.2126 → keep_ratio=0.2126 (21.3%), range=[0.000, 0.424]
+tensor([0.0000, 1.4781, 1.2377, 0.7186, 1.2366, 0.2219, 1.0262, 0.7027, 1.4781,
+        1.0503, 0.9039, 0.0000, 0.2236, 0.7280, 1.1586, 0.0000, 0.8945, 0.9619,
+        0.8171, 0.0790, 0.9920, 0.4354, 0.8481, 0.9013, 0.0000, 1.1715, 0.4240,
+        0.6632, 0.4949, 1.1520, 1.0607, 0.4273])
+Layer 31: weight_mean=0.2202 → keep_ratio=0.2202 (22.0%), range=[0.000, 0.443]
+
+--------------------------------------------------------------------------------
+Global Statistics:
+--------------------------------------------------------------------------------
+Relative weights:
+  Mean:   0.3000 (should be ≈1.0)
+  Std:    0.1072
+  Range:  [0.000, 0.443]
+
+Actual keep_ratios (weights × select=0.3):
+  Mean:   0.3000 (30.0%)
+  Target: 0.3000 (30.0%)
+  Deviation: 0.0000 (0.00%)
+  Range:  [0.000, 0.443]
+  Heads hitting upper limit (>1.0): 0/1024 (0.0%)
+  ✅ Mean matches target (deviation < 1%)
+
+--------------------------------------------------------------------------------
+Layer-wise Variation:
+--------------------------------------------------------------------------------
+Layer means range: [0.1967, 0.3590]
+Layer means std:   0.0553
+Actual keep_ratio range across layers: [0.059, 0.108]
+Variation: 4.9% spread
+================================================================================
+
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 171.29it/s]
+Converted 32 blocks to adaptive blocks
+
+======================================================================
+LLaDA Evaluation Setup
+======================================================================
+Model type: adaptive
+Model path: GSAI-ML/LLaDA-8B-Base
+Steps: 256, Gen length: 256, Block length: 32
+Sparse params: skip=0.2, select=0.3, block_size=32
+======================================================================
+
+2025-12-22:21:11:59 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
+2025-12-22:21:11:59 INFO     [api.task:434] Building contexts for humaneval on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 3921.16it/s]
+2025-12-22:21:11:59 INFO     [evaluator:574] Running generate_until requests
+Map:   0%|          | 0/100 [00:00<?, ? examples/s]Map: 100%|██████████| 100/100 [00:00<00:00, 2506.68 examples/s]
+Generating...:   0%|          | 0/100 [00:00<?, ?it/s]Generating...:   1%|          | 1/100 [00:13<22:37, 13.71s/it]Generating...:   2%|▏         | 2/100 [00:28<22:58, 14.06s/it]Generating...:   3%|▎         | 3/100 [00:41<22:08, 13.70s/it]Generating...:   4%|▍         | 4/100 [00:52<20:35, 12.87s/it]Generating...:   5%|▌         | 5/100 [01:04<19:53, 12.57s/it]Generating...:   6%|▌         | 6/100 [01:16<19:24, 12.38s/it]Generating...:   7%|▋         | 7/100 [01:28<18:53, 12.19s/it]Generating...:   8%|▊         | 8/100 [01:40<18:42, 12.20s/it]Generating...:   9%|▉         | 9/100 [01:53<18:32, 12.22s/it]Generating...:  10%|█         | 10/100 [02:05<18:22, 12.24s/it]Generating...:  11%|█         | 11/100 [02:18<18:33, 12.51s/it]Generating...:  12%|█▏        | 12/100 [02:30<17:53, 12.20s/it]Generating...:  13%|█▎        | 13/100 [02:42<17:37, 12.15s/it]Generating...:  14%|█▍        | 14/100 [02:54<17:19, 12.08s/it]Generating...:  15%|█▌        | 15/100 [03:05<16:52, 11.91s/it]Generating...:  16%|█▌        | 16/100 [03:17<16:42, 11.93s/it]Generating...:  17%|█▋        | 17/100 [03:29<16:28, 11.91s/it]Generating...:  18%|█▊        | 18/100 [03:42<16:37, 12.17s/it]Generating...:  19%|█▉        | 19/100 [03:53<16:14, 12.04s/it]Generating...:  20%|██        | 20/100 [04:06<16:05, 12.07s/it]Generating...:  21%|██        | 21/100 [04:18<16:04, 12.21s/it]Generating...:  22%|██▏       | 22/100 [04:31<16:00, 12.31s/it]Generating...:  23%|██▎       | 23/100 [04:43<15:43, 12.25s/it]Generating...:  24%|██▍       | 24/100 [04:54<15:11, 11.99s/it]Generating...:  25%|██▌       | 25/100 [05:05<14:44, 11.79s/it]Generating...:  26%|██▌       | 26/100 [05:18<14:48, 12.00s/it]Generating...:  27%|██▋       | 27/100 [05:30<14:29, 11.91s/it]Generating...:  28%|██▊       | 28/100 [05:42<14:16, 11.90s/it]Generating...:  29%|██▉       | 29/100 [05:53<13:51, 11.70s/it]Generating...:  30%|███       | 30/100 [06:05<13:43, 11.76s/it]Generating...:  31%|███       | 31/100 [06:17<13:40, 11.89s/it]Generating...:  32%|███▏      | 32/100 [06:29<13:31, 11.94s/it]Generating...:  33%|███▎      | 33/100 [06:45<14:37, 13.10s/it]Generating...:  34%|███▍      | 34/100 [06:58<14:20, 13.04s/it]Generating...:  35%|███▌      | 35/100 [07:10<13:45, 12.70s/it]Generating...:  36%|███▌      | 36/100 [07:21<13:17, 12.47s/it]Generating...:  37%|███▋      | 37/100 [07:33<12:52, 12.26s/it]Generating...:  38%|███▊      | 38/100 [07:45<12:37, 12.23s/it]Generating...:  39%|███▉      | 39/100 [07:58<12:28, 12.27s/it]Generating...:  40%|████      | 40/100 [08:10<12:12, 12.21s/it]Generating...:  41%|████      | 41/100 [08:23<12:13, 12.42s/it]Generating...:  42%|████▏     | 42/100 [08:35<12:02, 12.46s/it]Generating...:  43%|████▎     | 43/100 [08:47<11:39, 12.26s/it]Generating...:  44%|████▍     | 44/100 [09:00<11:34, 12.41s/it]Generating...:  45%|████▌     | 45/100 [09:11<11:08, 12.16s/it]Generating...:  46%|████▌     | 46/100 [09:23<10:45, 11.95s/it]Generating...:  47%|████▋     | 47/100 [09:36<10:51, 12.30s/it]Generating...:  48%|████▊     | 48/100 [09:48<10:33, 12.18s/it]Generating...:  49%|████▉     | 49/100 [10:00<10:24, 12.24s/it]Generating...:  50%|█████     | 50/100 [10:12<10:06, 12.12s/it]Generating...:  51%|█████     | 51/100 [10:24<09:52, 12.10s/it]Generating...:  52%|█████▏    | 52/100 [10:37<09:46, 12.22s/it]Generating...:  53%|█████▎    | 53/100 [10:49<09:29, 12.12s/it]Generating...:  54%|█████▍    | 54/100 [11:00<09:09, 11.94s/it]Generating...:  55%|█████▌    | 55/100 [11:13<09:04, 12.10s/it]

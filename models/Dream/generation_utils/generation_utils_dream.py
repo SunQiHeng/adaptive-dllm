@@ -415,7 +415,11 @@ class DreamGenerationMixin:
             if SparseD_param is not None:
                 SparseD_param['now_step'] = i
             
+            # Ensure mask_index is a tensor (not a scalar bool)
             mask_index = (x == mask_token_id)
+            if not isinstance(mask_index, torch.Tensor):
+                # This shouldn't happen, but handle it gracefully
+                raise RuntimeError(f"mask_index is not a tensor: type={type(mask_index)}, x.shape={x.shape if isinstance(x, torch.Tensor) else type(x)}, mask_token_id={mask_token_id}")
             
             # Call model with SparseD_param if provided
             if SparseD_param is not None:

@@ -64,14 +64,16 @@ def compute_global_average(results):
     print(f"Min: {averaged.min():.6f}")
     print(f"Max: {averaged.max():.6f}")
     
-    # Convert to absolute values for importance scores
-    importance = np.abs(averaged)
+    # Use averaged attribution directly as importance (keep negative values)
+    # Negative values indicate negative impact, positive values indicate positive impact
+    importance = averaged
     
-    print(f"\nAbsolute Attribution (Importance) Statistics:")
+    print(f"\nImportance Scores (same as averaged attribution):")
     print(f"Mean: {importance.mean():.6f}")
     print(f"Std: {importance.std():.6f}")
     print(f"Min: {importance.min():.6f}")
     print(f"Max: {importance.max():.6f}")
+    print(f"Negative values: {(importance < 0).sum()}/{importance.size} ({(importance < 0).sum()/importance.size*100:.1f}%)")
     
     metadata = {
         'n_samples': len(all_attributions),
@@ -93,18 +95,17 @@ def save_importance_config(importance, metadata, output_dir):
     """
     os.makedirs(output_dir, exist_ok=True)
     
-    # 1. Save raw attribution (with signs)
+    # 1. Save raw attribution (with signs preserved)
     np.save(os.path.join(output_dir, 'average_attribution.npy'), importance)
-    print(f"\nSaved raw attribution to: {output_dir}/average_attribution.npy")
+    print(f"\nSaved attribution to: {output_dir}/average_attribution.npy")
     
-    # 2. Save absolute importance scores (no signs)
-    importance_abs = np.abs(importance)
-    np.save(os.path.join(output_dir, 'average_importance.npy'), importance_abs)
+    # 2. Save importance scores (same as attribution, with signs)
+    np.save(os.path.join(output_dir, 'average_importance.npy'), importance)
     print(f"Saved importance scores to: {output_dir}/average_importance.npy")
     
     # 3. Save as PyTorch format (for adaptive_utils.py)
     n_layers, n_heads = importance.shape
-    importance_dict = {layer_idx: torch.tensor(importance_abs[layer_idx]) 
+    importance_dict = {layer_idx: torch.tensor(importance[layer_idx]) 
                       for layer_idx in range(n_layers)}
     
     torch_save_path = os.path.join(output_dir, 'head_importance.pt')
@@ -116,9 +117,9 @@ def save_importance_config(importance, metadata, output_dir):
     
     # 4. Save normalized importance (for easy use)
     # Normalize per layer to [0, 1]
-    normalized_importance = np.zeros_like(importance_abs)
+    normalized_importance = np.zeros_like(importance)
     for layer_idx in range(n_layers):
-        layer_scores = importance_abs[layer_idx]
+        layer_scores = importance[layer_idx]
         min_score = layer_scores.min()
         max_score = layer_scores.max()
         if max_score > min_score:
@@ -145,13 +146,13 @@ def save_importance_config(importance, metadata, output_dir):
     
     for keep_ratio in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]:
         # Calculate threshold to keep top keep_ratio heads
-        flat_importance = importance_abs.flatten()
+        flat_importance = importance.flatten()
         sorted_importance = np.sort(flat_importance)[::-1]
         threshold_idx = int(len(sorted_importance) * keep_ratio)
         threshold = sorted_importance[threshold_idx]
         
         # Create mask
-        keep_mask = importance_abs >= threshold
+        keep_mask = importance >= threshold
         
         config = {
             'keep_ratio': keep_ratio,
@@ -159,7 +160,7 @@ def save_importance_config(importance, metadata, output_dir):
             'n_heads_kept': int(keep_mask.sum()),
             'n_heads_total': int(keep_mask.size),
             'keep_mask': keep_mask.tolist(),
-            'importance_scores': importance_abs.tolist()
+            'importance_scores': importance.tolist()
         }
         
         config_path = os.path.join(sparsity_configs_dir, f'config_keep_{int(keep_ratio*100)}.json')
@@ -186,13 +187,16 @@ def visualize_importance(importance, output_dir):
     
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     
-    # Plot 1: Heatmap
+    # Plot 1: Heatmap (use diverging colormap for positive/negative values)
     ax = axes[0]
-    im = ax.imshow(importance, aspect='auto', cmap='YlOrRd', interpolation='nearest')
+    # Use RdBu_r colormap: red for positive (important), blue for negative (detrimental)
+    vmax = max(abs(importance.min()), abs(importance.max()))
+    im = ax.imshow(importance, aspect='auto', cmap='RdBu_r', interpolation='nearest',
+                   vmin=-vmax, vmax=vmax)  # Center at 0
     ax.set_xlabel('Head Index', fontsize=12)
     ax.set_ylabel('Layer Index', fontsize=12)
-    ax.set_title('Average Head Importance (All Runs & Categories)', fontsize=14, fontweight='bold')
-    plt.colorbar(im, ax=ax, label='Importance Score')
+    ax.set_title('Average Head Attribution (Red=Positive, Blue=Negative)', fontsize=14, fontweight='bold')
+    plt.colorbar(im, ax=ax, label='Attribution Score')
     
     # Plot 2: Distribution
     ax = axes[1]
@@ -243,21 +247,22 @@ def main():
     print("\nSaving importance configurations...")
     importance_dict = save_importance_config(importance, metadata, args.output_dir)
     
-    # Visualize
+    # Visualize (preserve signs to show positive/negative attributions)
     print("\nGenerating visualization...")
-    visualize_importance(np.abs(importance), args.output_dir)
+    visualize_importance(importance, args.output_dir)
     
     print("\n" + "="*80)
     print("COMPLETE!")
     print("="*80)
     print(f"\nGenerated files in: {args.output_dir}/")
-    print("  - average_attribution.npy: Raw attribution scores (with signs)")
-    print("  - average_importance.npy: Absolute importance scores")
+    print("  - average_attribution.npy: Attribution scores (with signs)")
+    print("  - average_importance.npy: Importance scores (same as attribution)")
     print("  - normalized_importance.npy: Layer-normalized importance [0, 1]")
     print("  - head_importance.pt: PyTorch format for adaptive_utils")
     print("  - importance_metadata.json: Statistics and metadata")
     print("  - sparsity_configs/: Pre-configured sparsity levels (20%-80%)")
     print("  - importance_visualization.png: Heatmap and distribution")
+    print("\nNote: Negative values are preserved (negative impact heads)")
     print("="*80)
 
 
