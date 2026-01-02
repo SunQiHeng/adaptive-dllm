@@ -1,0 +1,270 @@
+{
+  "run_dirs": [
+    "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/margin_attribution_results/run_1_seed_47",
+    "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/margin_attribution_results/run_2_seed_123",
+    "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/margin_attribution_results/run_3_seed_2024"
+  ],
+  "comparisons": {
+    "chat": [
+      {
+        "spearman": 0.564187356948716,
+        "spearman_p": 4.060262899376417e-87,
+        "kendall": 0.42685804618768325,
+        "kendall_p": 5.5089644312443155e-93,
+        "top_k_overlap": {
+          "10": 0.6,
+          "20": 0.6,
+          "50": 0.76,
+          "100": 0.69
+        }
+      },
+      {
+        "spearman": 0.7149874718367785,
+        "spearman_p": 4.844293603022021e-161,
+        "kendall": 0.5551609848484849,
+        "kendall_p": 6.39164135245465e-156,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.7,
+          "50": 0.84,
+          "100": 0.82
+        }
+      },
+      {
+        "spearman": 0.64836736016737,
+        "spearman_p": 3.555274889955234e-123,
+        "kendall": 0.49688798264907136,
+        "kendall_p": 2.635744305728781e-125,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.8,
+          "50": 0.68,
+          "100": 0.73
+        }
+      }
+    ],
+    "code": [
+      {
+        "spearman": 0.693028350976325,
+        "spearman_p": 2.0442598525272205e-147,
+        "kendall": 0.5395168927174976,
+        "kendall_p": 2.2733139046406766e-147,
+        "top_k_overlap": {
+          "10": 0.5,
+          "20": 0.65,
+          "50": 0.68,
+          "100": 0.73
+        }
+      },
+      {
+        "spearman": 0.5236702489092339,
+        "spearman_p": 3.5080729673823296e-73,
+        "kendall": 0.38724951124144674,
+        "kendall_p": 7.258493737004168e-77,
+        "top_k_overlap": {
+          "10": 0.4,
+          "20": 0.5,
+          "50": 0.6,
+          "100": 0.66
+        }
+      },
+      {
+        "spearman": 0.5691555392139331,
+        "spearman_p": 5.809012529093472e-89,
+        "kendall": 0.42186354472140764,
+        "kendall_p": 7.239339283707875e-91,
+        "top_k_overlap": {
+          "10": 0.3,
+          "20": 0.55,
+          "50": 0.6,
+          "100": 0.69
+        }
+      }
+    ],
+    "math": [
+      {
+        "spearman": 0.6560804954044774,
+        "spearman_p": 4.567062886908021e-127,
+        "kendall": 0.5164421432062561,
+        "kendall_p": 3.345800777330542e-135,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.65,
+          "50": 0.62,
+          "100": 0.59
+        }
+      },
+      {
+        "spearman": 0.5332313008872288,
+        "spearman_p": 2.6646250526902694e-76,
+        "kendall": 0.4052556868354795,
+        "kendall_p": 5.325212413255625e-84,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.5,
+          "50": 0.64,
+          "100": 0.59
+        }
+      },
+      {
+        "spearman": 0.5019273212918629,
+        "spearman_p": 1.9028026511367867e-66,
+        "kendall": 0.3720811683633327,
+        "kendall_p": 4.178427854790589e-71,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.7,
+          "50": 0.62,
+          "100": 0.61
+        }
+      }
+    ],
+    "safety": [
+      {
+        "spearman": 0.8613194692797368,
+        "spearman_p": 8.132138502006557e-303,
+        "kendall": 0.7147750183284458,
+        "kendall_p": 4.263843839037283e-257,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.7,
+          "50": 0.76,
+          "100": 0.82
+        }
+      },
+      {
+        "spearman": 0.523863368142479,
+        "spearman_p": 3.041181932442746e-73,
+        "kendall": 0.3967268450635386,
+        "kendall_p": 1.398921981973392e-80,
+        "top_k_overlap": {
+          "10": 0.3,
+          "20": 0.3,
+          "50": 0.48,
+          "100": 0.5
+        }
+      },
+      {
+        "spearman": 0.4816183794077677,
+        "spearman_p": 1.397119493871884e-60,
+        "kendall": 0.3612574841153471,
+        "kendall_p": 3.901502248154396e-67,
+        "top_k_overlap": {
+          "10": 0.2,
+          "20": 0.3,
+          "50": 0.42,
+          "100": 0.44
+        }
+      }
+    ],
+    "science": [
+      {
+        "spearman": 0.5810920065624776,
+        "spearman_p": 1.5913454537296735e-93,
+        "kendall": 0.44423188538611924,
+        "kendall_p": 1.506264652836313e-100,
+        "top_k_overlap": {
+          "10": 0.4,
+          "20": 0.7,
+          "50": 0.54,
+          "100": 0.61
+        }
+      },
+      {
+        "spearman": 0.6811957410950574,
+        "spearman_p": 1.4292629350943082e-140,
+        "kendall": 0.5303106671554253,
+        "kendall_p": 1.8830993976239744e-142,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.6,
+          "50": 0.62,
+          "100": 0.64
+        }
+      },
+      {
+        "spearman": 0.7291401835526786,
+        "spearman_p": 1.5762996980117507e-170,
+        "kendall": 0.5776629704301075,
+        "kendall_p": 1.1985642285855522e-168,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.75,
+          "50": 0.66,
+          "100": 0.73
+        }
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "GSAI-ML/LLaDA-8B-Base",
+      "config": {
+        "model_path": "GSAI-ML/LLaDA-8B-Base",
+        "samples_per_category": 10,
+        "gen_length": 256,
+        "steps": 256,
+        "block_size": 32,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_20251223_213811/run_1_seed_47",
+        "seed": 47,
+        "device": "cuda"
+      }
+    },
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "GSAI-ML/LLaDA-8B-Base",
+      "config": {
+        "model_path": "GSAI-ML/LLaDA-8B-Base",
+        "samples_per_category": 10,
+        "gen_length": 256,
+        "steps": 256,
+        "block_size": 32,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_20251223_213811/run_2_seed_123",
+        "seed": 123,
+        "device": "cuda"
+      }
+    },
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "GSAI-ML/LLaDA-8B-Base",
+      "config": {
+        "model_path": "GSAI-ML/LLaDA-8B-Base",
+        "samples_per_category": 10,
+        "gen_length": 256,
+        "steps": 256,
+        "block_size": 32,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_20251223_213811/run_3_seed_2024",
+        "seed": 2024,
+        "device": "cuda"
+      }
+    }
+  ]
+}

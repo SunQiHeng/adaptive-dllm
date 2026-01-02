@@ -357,9 +357,19 @@ def allocate_adaptive_sparsity_from_importance(
     importance_scores: Dict[int, torch.Tensor],
     min_sparsity: float = 0.1,
     max_sparsity: float = 0.9,
-    inverse_importance: bool = True,
+    importance_increases_keep: bool = True,
     normalize_strategy: str = 'global_percentile',
-    output_relative_weights: bool = True
+    output_relative_weights: bool = True,
+    # Relative-weights mode parameters:
+    # Map normalized importance in [0, 1] to weights around 1.0, then globally re-normalize to mean=1.
+    # This avoids pathological near-zero weights (which can effectively "turn off" heads) and
+    # keeps adaptive behavior as a gentle reallocation around the target select.
+    # NOTE: This parameter was previously unused (bug). It now directly controls how far weights deviate from 1.0.
+    # A value around 2/3 (~0.6667) roughly matches the previous implicit range from (0.25 + normalized_scores)
+    # after global mean normalization.
+    relative_weight_scale: float = 2.0 / 3.0,  # weights in approx [1-scale, 1+scale] before global mean normalization
+    min_relative_weight: float = 0.1,       # safety clamp; prevents weights from reaching 0
+    max_relative_weight: float = 10.0       # safety clamp; avoids extreme allocations
 ) -> Dict[int, torch.Tensor]:
     """
     Allocate per-head sparsity levels based on importance scores.
@@ -373,7 +383,9 @@ def allocate_adaptive_sparsity_from_importance(
         importance_scores: Dictionary mapping layer_idx -> importance tensor of shape (n_heads,)
         min_sparsity: Minimum sparsity level for any head (only used if output_relative_weights=False)
         max_sparsity: Maximum sparsity level for any head (only used if output_relative_weights=False)
-        inverse_importance: If True, less important heads get higher sparsity
+        importance_increases_keep:
+            If True (default): higher importance -> higher weight -> higher keep_ratio (keep more tokens).
+            If False: invert mapping (ablation): higher importance -> lower keep_ratio.
         normalize_strategy: Strategy for normalizing importance scores:
             - 'per_layer': normalize within each layer (old behavior, sensitive to outliers)
             - 'global': normalize across all layers using global min/max
@@ -436,31 +448,25 @@ def allocate_adaptive_sparsity_from_importance(
             raise ValueError(f"Unknown normalize_strategy: {normalize_strategy}")
         
         if output_relative_weights:
-            # # Output relative importance weights for multiplication with select at inference
-            # # Higher importance -> higher weight -> more tokens kept
-            # if inverse_importance:
-            #     # Map [0, 1] normalized scores to weights with controlled variance
-            #     # Use a transformation that preserves relative differences
-            #     weights = 1.0 + (normalized_scores - 0.5) * 0.8  # Range roughly [0.6, 1.4]
-            # else:
-            #     # Inverse mapping (rarely used)
-            #     weights = 1.0 - (normalized_scores - 0.5) * 0.8
-            
-            sparsity_levels[layer_idx] = normalized_scores
+            # Output relative importance weights for multiplication with select at inference.
+            #
+            # IMPORTANT:
+            # - Do NOT directly use normalized_scores (0..1) as weights, because values near 0 will
+            #   translate to near-zero keep_ratio and can collapse quality compared to uniform sparse.
+            # - Use a bounded, centered mapping around 1.0 to keep adaptive reallocations gentle.
+            #
+            centered = normalized_scores - 0.5
+            if not importance_increases_keep:
+                centered = -centered
+
+            weights = 1.0 + float(relative_weight_scale) * (2.0 * centered)
+
+            # Safety clamps (still followed by global mean normalization below).
+            weights = torch.clamp(weights, min=float(min_relative_weight), max=float(max_relative_weight))
+            sparsity_levels[layer_idx] = weights
 
         else:
-            # Legacy mode: output absolute keep_ratios using base/min/max_sparsity
-            if inverse_importance:
-                # More important heads (higher normalized_scores) get LOWER sparsity → HIGHER keep_ratio (保留更多)
-                # Less important heads (lower normalized_scores) get HIGHER sparsity → LOWER keep_ratio (保留更少)
-                sparsity = max_sparsity - normalized_scores * (max_sparsity - min_sparsity)
-            else:
-                # More important heads get HIGHER sparsity → LOWER keep_ratio (反直觉，一般不用)
-                sparsity = min_sparsity + normalized_scores * (max_sparsity - min_sparsity)
-            
-            # Convert sparsity to keep_ratio (fraction of tokens to KEEP)
-            keep_ratio = 1.0 - sparsity
-            sparsity_levels[layer_idx] = keep_ratio
+            pass
     
     # Step 2: Global normalization for relative weights mode
     # Normalize all weights together so that the global mean = 1.0
@@ -484,6 +490,8 @@ def create_adaptive_sparsity_config(
     max_sparsity: float = 0.9,
     normalize_strategy: str = 'global_percentile',
     output_relative_weights: bool = True,
+    importance_increases_keep: bool = True,
+    relative_weight_scale: float = 2.0 / 3.0,
     seed: Optional[int] = None
 ) -> Dict:
     """
@@ -523,8 +531,10 @@ def create_adaptive_sparsity_config(
         importance_scores=importance_scores,
         min_sparsity=min_sparsity,
         max_sparsity=max_sparsity,
+        importance_increases_keep=importance_increases_keep,
         normalize_strategy=normalize_strategy,
-        output_relative_weights=output_relative_weights
+        output_relative_weights=output_relative_weights,
+        relative_weight_scale=relative_weight_scale,
     )
     
     config = {
@@ -538,7 +548,9 @@ def create_adaptive_sparsity_config(
             'normalize_strategy': normalize_strategy,
             'strategy': strategy,
             'seed': seed,
-            'output_relative_weights': output_relative_weights
+            'output_relative_weights': output_relative_weights,
+            'importance_increases_keep': importance_increases_keep,
+            'relative_weight_scale': float(relative_weight_scale),
         }
     }
     

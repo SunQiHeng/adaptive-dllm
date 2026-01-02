@@ -13,6 +13,7 @@ import random
 import numpy as np
 import torch.nn.functional as F
 import re
+import json
 from datasets import Dataset
 from lm_eval.__main__ import cli_evaluate
 from lm_eval.api.instance import Instance
@@ -67,7 +68,7 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         adaptive_config: The adaptive configuration dict
         select: The select parameter (target average keep ratio)
         n_layers: Number of layers
-        n_heads: Number of KV heads per layer
+        n_heads: Number of heads per layer in the adaptive config (can be Q-heads or KV-heads; inferred from data)
         model_name: Name of the model for display
     """
     print("\n" + "=" * 80)
@@ -86,7 +87,7 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         print(f"Mode: Absolute Keep Ratios (pre-computed)")
     
     print(f"Target select: {select:.3f} ({select*100:.1f}%)")
-    print(f"Layers: {n_layers}, KV Heads per layer: {n_heads}")
+    print(f"Layers: {n_layers}, Heads per layer (config width): {n_heads}")
     print(f"Total heads: {n_layers * n_heads}")
     
     # Collect all weights/keep_ratios
@@ -122,14 +123,22 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
             print(f"Layer {layer_idx:2d}: keep_ratio_mean={layer_mean:.4f} ({layer_mean*100:.1f}%), "
                   f"range=[{layer_min:.3f}, {layer_max:.3f}]")
     
-    print(f"select: {select}")
-    all_values = [torch.clamp(v * select, max=1.0) for v in all_values]
     # Global statistics
-    all_values_tensor = torch.cat(all_values)
-    global_mean = all_values_tensor.mean().item()
-    global_min = all_values_tensor.min().item()
-    global_max = all_values_tensor.max().item()
-    global_std = all_values_tensor.std().item()
+    #
+    # IMPORTANT (align with LLaDA):
+    # - If output_relative_weights=True, values are *relative weights* (mean≈1.0), and actual keep_ratios are
+    #   keep_ratio = clamp(weight * select, max=1.0).
+    # - If output_relative_weights=False, values are already *absolute keep_ratios* in [0, 1].
+    weights_tensor = torch.cat(all_values)
+    if output_relative_weights:
+        keep_tensor = torch.clamp(weights_tensor * float(select), max=1.0)
+    else:
+        keep_tensor = weights_tensor
+
+    global_mean = keep_tensor.mean().item()
+    global_min = keep_tensor.min().item()
+    global_max = keep_tensor.max().item()
+    global_std = keep_tensor.std().item()
     
     print("\n" + "-" * 80)
     print("Global Statistics:")
@@ -143,10 +152,15 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         actual_global_mean = min(actual_global_mean, 1.0)
         actual_global_max = min(actual_global_max, 1.0)
         
+        # Print weight stats separately (since global_* are keep_ratio stats here)
+        w_mean = weights_tensor.mean().item()
+        w_std = weights_tensor.std().item()
+        w_min = weights_tensor.min().item()
+        w_max = weights_tensor.max().item()
         print(f"Relative weights:")
-        print(f"  Mean:   {global_mean:.4f} (should be ≈1.0)")
-        print(f"  Std:    {global_std:.4f}")
-        print(f"  Range:  [{global_min:.3f}, {global_max:.3f}]")
+        print(f"  Mean:   {w_mean:.4f} (should be ≈1.0)")
+        print(f"  Std:    {w_std:.4f}")
+        print(f"  Range:  [{w_min:.3f}, {w_max:.3f}]")
         print(f"\nActual keep_ratios (weights × select={select}):")
         print(f"  Mean:   {actual_global_mean:.4f} ({actual_global_mean*100:.1f}%)")
         print(f"  Target: {select:.4f} ({select*100:.1f}%)")
@@ -154,7 +168,7 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         print(f"  Range:  [{actual_global_min:.3f}, {actual_global_max:.3f}]")
         
         # Count heads that will hit upper limit (keep_ratio > 1.0 after scaling)
-        clamped_count = (all_values_tensor * select > 1.0).sum().item()
+        clamped_count = (weights_tensor * float(select) > 1.0).sum().item()
         total_heads = n_layers * n_heads
         print(f"  Heads hitting upper limit (>1.0): {clamped_count}/{total_heads} ({clamped_count/total_heads*100:.1f}%)")
         
@@ -222,6 +236,11 @@ class DreamEvalHarness(LM):
         # Adaptive params
         adaptive_config_path=None,
         importance_source='precomputed',  # 'precomputed', 'uniform', 'normal', or custom path
+        precomputed_importance_path=None,
+        gqa_weight_mode="kv",  # 'kv' (average within KV-group; GQA only, recommended default for Dream) | 'q' (per query head)
+        relative_weight_scale=2.0 / 3.0,  # how far adaptive weights deviate from 1.0 (smaller => closer to uniform sparse)
+        importance_increases_keep=True,   # True: higher importance -> keep more; False: invert (ablation)
+        min_keep_ratio=0.01,              # safety clamp in adaptive mask building
         min_sparsity=0.1,
         max_sparsity=0.9,
         device="cuda",
@@ -281,11 +300,28 @@ class DreamEvalHarness(LM):
                 **model_kwargs
             )
             
+            # GQA sanity + default guidance:
+            # Dream is typically a GQA model (num_key_value_heads < num_attention_heads). In that case,
+            # applying weights per Q-head can be noisier than averaging within each KV group.
+            try:
+                n_q = int(getattr(self.model.config, "num_attention_heads", 0) or 0)
+                n_kv = int(getattr(self.model.config, "num_key_value_heads", n_q) or n_q)
+                if n_kv > 0 and n_q > 0 and (n_q % n_kv != 0):
+                    raise ValueError(f"Invalid GQA config: num_attention_heads={n_q} not divisible by num_key_value_heads={n_kv}")
+                if n_kv > 0 and n_kv < n_q and str(gqa_weight_mode) == "q":
+                    print(
+                        f"[warn] Dream config looks like GQA (num_attention_heads={n_q}, num_key_value_heads={n_kv}) "
+                        f"but gqa_weight_mode='q'. If quality is poor, try gqa_weight_mode='kv' (group-average weights)."
+                    )
+            except Exception as e:
+                print(f"[warn] Skipping GQA sanity check: {e}")
+            
             # Determine importance scores source
             from models.Dream.sparse.adaptive_utils_dream import create_adaptive_sparsity_config
             
             n_layers = self.model.config.num_hidden_layers
-            n_heads = self.model.config.num_key_value_heads
+            # Default to Q-heads for consistency with attribution outputs; may be overridden if we load a file.
+            n_heads = self.model.config.num_attention_heads
             importance_scores = None
             
             # Option 1: Load from explicit config file path
@@ -305,13 +341,31 @@ class DreamEvalHarness(LM):
             # Option 2: Load from importance source specification
             elif importance_source == 'precomputed':
                 # Use pre-computed importance scores from attribution
-                dream_importance_path = '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream/head_importance.pt'
+                dream_importance_path = precomputed_importance_path
                 if os.path.exists(dream_importance_path):
                     print(f"✓ Loading pre-computed importance scores from: {dream_importance_path}")
                     importance_data = torch.load(dream_importance_path, weights_only=False)
                     importance_scores = importance_data['importance_scores']
                 else:
                     raise FileNotFoundError(f"Pre-computed importance file not found: {dream_importance_path}")
+                
+                # Infer head dimension from file (can be Q-heads or KV-heads)
+                try:
+                    n_heads = int(importance_scores[0].numel())
+                except Exception:
+                    pass
+
+                # Validate that head dimension matches model (Q-heads or KV-heads) to avoid silent misalignment.
+                try:
+                    n_q = int(getattr(self.model.config, "num_attention_heads", 0) or 0)
+                    n_kv = int(getattr(self.model.config, "num_key_value_heads", n_q) or n_q)
+                    if n_heads not in (n_q, n_kv):
+                        raise ValueError(
+                            f"Importance head dimension mismatch: file_heads={n_heads}, model_q_heads={n_q}, model_kv_heads={n_kv}. "
+                            f"Expected file_heads to match Q-heads or KV-heads."
+                        )
+                except Exception as e:
+                    raise RuntimeError(f"Invalid importance file for this model: {e}") from e
                 
                 adaptive_config = create_adaptive_sparsity_config(
                     n_layers=n_layers,
@@ -321,6 +375,8 @@ class DreamEvalHarness(LM):
                     max_sparsity=max_sparsity,
                     normalize_strategy='global_percentile',
                     output_relative_weights=True,
+                    importance_increases_keep=bool(importance_increases_keep),
+                    relative_weight_scale=float(relative_weight_scale),
                     seed=42
                 )
                 print(f"✓ Created adaptive config using PRE-COMPUTED importance scores")
@@ -331,6 +387,8 @@ class DreamEvalHarness(LM):
             elif importance_source in ['uniform', 'normal', 'random']:
                 # Generate random importance with specified distribution
                 print(f"✓ Generating RANDOM importance scores with '{importance_source}' distribution")
+                # For Dream (GQA), generate per Q-head weights by default; attention module will aggregate to KV heads.
+                n_heads = self.model.config.num_attention_heads
                 adaptive_config = create_adaptive_sparsity_config(
                     n_layers=n_layers,
                     n_heads=n_heads,
@@ -340,6 +398,8 @@ class DreamEvalHarness(LM):
                     max_sparsity=max_sparsity,
                     normalize_strategy='global_percentile',
                     output_relative_weights=True,
+                    importance_increases_keep=bool(importance_increases_keep),
+                    relative_weight_scale=float(relative_weight_scale),
                     seed=42
                 )
                 print(f"✓ Created adaptive config using RANDOM '{importance_source}' importance")
@@ -352,6 +412,10 @@ class DreamEvalHarness(LM):
                 print(f"✓ Loading custom importance scores from: {importance_source}")
                 importance_data = torch.load(importance_source, weights_only=False)
                 importance_scores = importance_data['importance_scores']
+                try:
+                    n_heads = int(importance_scores[0].numel())
+                except Exception:
+                    pass
                 
                 adaptive_config = create_adaptive_sparsity_config(
                     n_layers=n_layers,
@@ -361,6 +425,8 @@ class DreamEvalHarness(LM):
                     max_sparsity=max_sparsity,
                     normalize_strategy='global_percentile',
                     output_relative_weights=True,
+                    importance_increases_keep=bool(importance_increases_keep),
+                    relative_weight_scale=float(relative_weight_scale),
                     seed=42
                 )
                 print(f"✓ Created adaptive config using CUSTOM importance from: {importance_source}")
@@ -405,7 +471,12 @@ class DreamEvalHarness(LM):
                 'new_generation': max_new_tokens,
                 'whole_steps': steps,
                 'now_step': 0,  # Will be updated during generation
-                'adaptive': True
+                'adaptive': True,
+                # For GQA models only: controls whether to apply head weights per query head ('q')
+                # or averaged per KV-group ('kv'). Default 'kv' is usually more stable for Dream.
+                'gqa_weight_mode': str(gqa_weight_mode),
+                # Safety clamp to avoid empty masks when a head gets very low weight.
+                'min_keep_ratio': float(min_keep_ratio),
             }
         else:
             raise ValueError(f"Unknown model_type: {model_type}")
@@ -423,6 +494,40 @@ class DreamEvalHarness(LM):
             self.model = self.model.to(device)
             self._rank = 0
             self._world_size = 1
+
+        # Print concrete CUDA device info for reproducibility/debugging.
+        # Important: CUDA_VISIBLE_DEVICES can remap physical GPU ids.
+        try:
+            cuda_visible = os.environ.get("CUDA_VISIBLE_DEVICES", "(unset)")
+            if self.device.type == "cuda" and torch.cuda.is_available():
+                cur = torch.cuda.current_device()
+                name = torch.cuda.get_device_name(cur)
+                print(f"[device] CUDA_VISIBLE_DEVICES={cuda_visible} | torch.cuda.current_device()={cur} | name={name}")
+            else:
+                print(f"[device] device={self.device} | CUDA_VISIBLE_DEVICES={cuda_visible}")
+        except Exception as e:
+            print(f"[device] (warn) failed to print CUDA device info: {e}")
+
+        # Print key library versions for reproducibility.
+        try:
+            import platform
+            import transformers
+            try:
+                import lm_eval  # type: ignore
+                lm_eval_ver = getattr(lm_eval, "__version__", None)
+            except Exception:
+                lm_eval_ver = None
+            try:
+                import numpy as _np
+                np_ver = getattr(_np, "__version__", None)
+            except Exception:
+                np_ver = None
+            print(
+                f"[env] python={platform.python_version()} | torch={torch.__version__} | "
+                f"transformers={getattr(transformers, '__version__', None)} | lm_eval={lm_eval_ver} | numpy={np_ver}"
+            )
+        except Exception as e:
+            print(f"[env] (warn) failed to print version info: {e}")
         
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
         # Get correct mask_id from tokenizer
@@ -524,7 +629,8 @@ class DreamEvalHarness(LM):
         """Get logits from model, with optional sparse parameters"""
         # Construct attention_mask if not provided
         if attention_mask is None:
-            attention_mask = torch.ones_like(batch, dtype=torch.long)
+            # Use bool mask to avoid SDPA dtype issues (align with Dream attribution fixes).
+            attention_mask = torch.ones_like(batch, dtype=torch.bool)
         
         # Construct position_ids if not provided
         if position_ids is None:
@@ -555,7 +661,7 @@ class DreamEvalHarness(LM):
         prompt_index = torch.arange(seq.shape[1], device=self.device) < len(prefix)
         
         # Construct attention_mask and position_ids for the sequence
-        attention_mask = torch.ones_like(seq, dtype=torch.long)
+        attention_mask = torch.ones_like(seq, dtype=torch.bool)
         position_ids = torch.arange(seq.shape[1], dtype=torch.long, device=self.device).unsqueeze(0).expand(seq.shape[0], -1)
         
         loss_acc = []
@@ -582,7 +688,7 @@ class DreamEvalHarness(LM):
         seq[0, :len(prefix)] = prefix
         
         # Construct attention_mask and position_ids for the sequence
-        attention_mask = torch.ones_like(seq, dtype=torch.long)
+        attention_mask = torch.ones_like(seq, dtype=torch.bool)
         position_ids = torch.arange(seq.shape[1], dtype=torch.long, device=self.device).unsqueeze(0)
         
         for i in range(len(target)):
@@ -667,7 +773,7 @@ class DreamEvalHarness(LM):
             prompt_ids = prompt_ids.to(self.device)
             
             # Create attention mask
-            attention_mask = torch.ones_like(prompt_ids, dtype=torch.long)
+            attention_mask = torch.ones_like(prompt_ids, dtype=torch.bool)
             
             # Generate using Dream's diffusion_generate method
             # NOTE: Following official demo - pass first arg as positional, rest as kwargs

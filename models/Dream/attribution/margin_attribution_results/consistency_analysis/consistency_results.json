@@ -1,0 +1,288 @@
+{
+  "run_dirs": [
+    "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_1_seed_42",
+    "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_2_seed_123",
+    "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_3_seed_2024"
+  ],
+  "comparisons": {
+    "chat": [
+      {
+        "spearman": 0.881196196173762,
+        "spearman_p": 1.1813026013096566e-256,
+        "kendall": 0.7396981781218235,
+        "kendall_p": 5.714306431020038e-211,
+        "top_k_overlap": {
+          "10": 0.6,
+          "20": 0.75,
+          "50": 0.74,
+          "100": 0.84
+        }
+      },
+      {
+        "spearman": 0.9204161318967884,
+        "spearman_p": 3.32e-321,
+        "kendall": 0.7927124872937681,
+        "kendall_p": 5.581635360502845e-242,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.85,
+          "50": 0.86,
+          "100": 0.85
+        }
+      },
+      {
+        "spearman": 0.8908185926101899,
+        "spearman_p": 3.903898765976849e-270,
+        "kendall": 0.7556884822894675,
+        "kendall_p": 4.2573193625741896e-220,
+        "top_k_overlap": {
+          "10": 0.6,
+          "20": 0.7,
+          "50": 0.74,
+          "100": 0.82
+        }
+      }
+    ],
+    "code": [
+      {
+        "spearman": 0.892136604257341,
+        "spearman_p": 4.4342050122849525e-272,
+        "kendall": 0.7722391638647796,
+        "kendall_p": 9.467760948103683e-230,
+        "top_k_overlap": {
+          "10": 1.0,
+          "20": 0.95,
+          "50": 0.94,
+          "100": 0.82
+        }
+      },
+      {
+        "spearman": 0.9106768206953328,
+        "spearman_p": 1.8489281298727133e-302,
+        "kendall": 0.8018544582583992,
+        "kendall_p": 1.523234564399558e-247,
+        "top_k_overlap": {
+          "10": 0.9,
+          "20": 0.95,
+          "50": 0.92,
+          "100": 0.86
+        }
+      },
+      {
+        "spearman": 0.9271152607759554,
+        "spearman_p": 0.0,
+        "kendall": 0.8106901764537232,
+        "kendall_p": 5.554469366687772e-253,
+        "top_k_overlap": {
+          "10": 0.9,
+          "20": 0.95,
+          "50": 0.92,
+          "100": 0.88
+        }
+      }
+    ],
+    "math": [
+      {
+        "spearman": 0.8979527838663102,
+        "spearman_p": 5.657943013782304e-281,
+        "kendall": 0.7657492115620195,
+        "kendall_p": 6.113234187002724e-226,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.9,
+          "50": 0.92,
+          "100": 0.84
+        }
+      },
+      {
+        "spearman": 0.8925388458333771,
+        "spearman_p": 1.1175937599119096e-272,
+        "kendall": 0.7730992780253864,
+        "kendall_p": 2.9437157101532787e-230,
+        "top_k_overlap": {
+          "10": 0.9,
+          "20": 0.9,
+          "50": 0.84,
+          "100": 0.86
+        }
+      },
+      {
+        "spearman": 0.8832707795761984,
+        "spearman_p": 1.8495160577051182e-259,
+        "kendall": 0.7593374514556781,
+        "kendall_p": 3.302749306083905e-222,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.85,
+          "50": 0.88,
+          "100": 0.83
+        }
+      }
+    ],
+    "safety": [
+      {
+        "spearman": 0.8389005679144049,
+        "spearman_p": 8.857001473001009e-209,
+        "kendall": 0.7005499517814788,
+        "kendall_p": 1.9136309396942597e-189,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.8,
+          "50": 0.84,
+          "100": 0.81
+        }
+      },
+      {
+        "spearman": 0.9127362138940063,
+        "spearman_p": 3.0760425707087965e-306,
+        "kendall": 0.7864701436130007,
+        "kendall_p": 3.231419173964161e-238,
+        "top_k_overlap": {
+          "10": 0.8,
+          "20": 0.85,
+          "50": 0.88,
+          "100": 0.87
+        }
+      },
+      {
+        "spearman": 0.9252024156906338,
+        "spearman_p": 0.0,
+        "kendall": 0.8189720332577476,
+        "kendall_p": 3.920930362294475e-258,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.95,
+          "50": 0.88,
+          "100": 0.87
+        }
+      }
+    ],
+    "science": [
+      {
+        "spearman": 0.9004415617920057,
+        "spearman_p": 6.043071156386022e-285,
+        "kendall": 0.775099695050434,
+        "kendall_p": 1.9352602817451215e-231,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.85,
+          "50": 0.82,
+          "100": 0.81
+        }
+      },
+      {
+        "spearman": 0.913458371122078,
+        "spearman_p": 1.3824067093134281e-307,
+        "kendall": 0.7861638908436938,
+        "kendall_p": 4.934304663640667e-238,
+        "top_k_overlap": {
+          "10": 0.7,
+          "20": 0.85,
+          "50": 0.86,
+          "100": 0.82
+        }
+      },
+      {
+        "spearman": 0.9348504860616184,
+        "spearman_p": 0.0,
+        "kendall": 0.8140589569160998,
+        "kendall_p": 4.524727078166503e-255,
+        "top_k_overlap": {
+          "10": 1.0,
+          "20": 0.9,
+          "50": 0.9,
+          "100": 0.89
+        }
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "/data/qh_models/Dream-v0-Instruct-7B",
+      "config": {
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "samples_per_category": 10,
+        "max_new_tokens": 256,
+        "steps": 256,
+        "step_interval": 32,
+        "temperature": 0.8,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_1_seed_42",
+        "seed": 42,
+        "device": "cuda",
+        "gpu": 0
+      },
+      "method": "stepwise_integrated_gradients"
+    },
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "/data/qh_models/Dream-v0-Instruct-7B",
+      "config": {
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "samples_per_category": 10,
+        "max_new_tokens": 256,
+        "steps": 256,
+        "step_interval": 32,
+        "temperature": 0.8,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_2_seed_123",
+        "seed": 123,
+        "device": "cuda",
+        "gpu": 0
+      },
+      "method": "stepwise_integrated_gradients"
+    },
+    {
+      "categories": [
+        "code",
+        "math",
+        "science",
+        "chat",
+        "safety"
+      ],
+      "model": "/data/qh_models/Dream-v0-Instruct-7B",
+      "config": {
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "samples_per_category": 10,
+        "max_new_tokens": 256,
+        "steps": 256,
+        "step_interval": 32,
+        "temperature": 0.8,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "n_attribution_steps": 10,
+        "objective": "margin",
+        "objective_margin_use_logprob": false,
+        "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_3_seed_2024",
+        "seed": 2024,
+        "device": "cuda",
+        "gpu": 0
+      },
+      "method": "stepwise_integrated_gradients"
+    }
+  ]
+}

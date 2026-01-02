@@ -14,13 +14,26 @@ from typing import Dict, List
 
 
 def load_attribution_results(base_dir: str) -> Dict[str, Dict[str, np.ndarray]]:
-    """Load attribution results from multiple runs."""
+    """Load attribution results from multiple runs. Only includes runs with complete category data."""
     results = {}
     run_dirs = [d for d in os.listdir(base_dir) if d.startswith('run_')]
     run_dirs = sorted(run_dirs)
     
     print(f"Found {len(run_dirs)} runs: {run_dirs}")
     
+    # First pass: collect all categories
+    all_categories = set()
+    for run_dir in run_dirs:
+        run_path = os.path.join(base_dir, run_dir)
+        npy_files = [f for f in os.listdir(run_path) if f.endswith('.npy')]
+        for npy_file in npy_files:
+            category = npy_file.replace('attribution_', '').replace('.npy', '')
+            all_categories.add(category)
+    
+    all_categories = sorted(list(all_categories))
+    print(f"Found categories: {all_categories}")
+    
+    # Second pass: load data
     for run_dir in run_dirs:
         run_path = os.path.join(base_dir, run_dir)
         results[run_dir] = {}
@@ -32,7 +45,18 @@ def load_attribution_results(base_dir: str) -> Dict[str, Dict[str, np.ndarray]]:
             results[run_dir][category] = np.load(file_path)
             print(f"  Loaded {run_dir}/{category}: shape {results[run_dir][category].shape}")
     
-    return results
+    # Filter out runs that don't have all categories
+    complete_runs = {}
+    for run_dir, categories in results.items():
+        if set(categories.keys()) == set(all_categories):
+            complete_runs[run_dir] = categories
+            print(f"  ✓ {run_dir}: complete ({len(categories)} categories)")
+        else:
+            missing = set(all_categories) - set(categories.keys())
+            print(f"  ✗ {run_dir}: incomplete (missing: {missing})")
+    
+    print(f"\nUsing {len(complete_runs)} complete runs: {list(complete_runs.keys())}")
+    return complete_runs
 
 
 def compute_run_average(run_data: Dict[str, np.ndarray]) -> np.ndarray:
@@ -300,7 +324,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='Analyze cross-category averaged attribution stability')
     parser.add_argument('--results_dir', type=str,
-                       default='/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_20251123_044549',
+                       default='/home/qiheng/Projects/adaptive-dllm/models/LLaDA/attribution/attribution_results_target_logit_20251224_234510',
                        help='Directory containing run results')
     parser.add_argument('--output_dir', type=str, default=None,
                        help='Output directory for analysis results')

@@ -1,0 +1,14 @@
+{
+  "model": "Dream",
+  "n_samples": 165,
+  "n_runs": 3,
+  "n_categories": 55,
+  "shape": [
+    28,
+    28
+  ],
+  "mean_attribution": -1.9612860831243246,
+  "std_attribution": 46.473657606043915,
+  "mean_importance": -1.9612860831243246,
+  "std_importance": 46.473657606043915
+}

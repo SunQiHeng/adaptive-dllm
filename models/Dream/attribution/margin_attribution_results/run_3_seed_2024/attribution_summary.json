@@ -1,0 +1,29 @@
+{
+  "categories": [
+    "code",
+    "math",
+    "science",
+    "chat",
+    "safety"
+  ],
+  "model": "/data/qh_models/Dream-v0-Instruct-7B",
+  "config": {
+    "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+    "samples_per_category": 10,
+    "max_new_tokens": 256,
+    "steps": 256,
+    "step_interval": 32,
+    "temperature": 0.8,
+    "top_p": 0.9,
+    "alg": "entropy",
+    "alg_temp": 0.0,
+    "n_attribution_steps": 10,
+    "objective": "margin",
+    "objective_margin_use_logprob": false,
+    "output_dir": "/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results/run_20251224_005807/run_3_seed_2024",
+    "seed": 2024,
+    "device": "cuda",
+    "gpu": 0
+  },
+  "method": "stepwise_integrated_gradients"
+}

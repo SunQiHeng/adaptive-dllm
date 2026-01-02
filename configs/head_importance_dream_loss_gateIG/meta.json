@@ -1,0 +1,9 @@
+{
+  "generated_at": "2025-12-28T01:05:08.343525",
+  "method": "average_two_runs",
+  "output": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt",
+  "sources": [
+    "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed47_n50_k8_L2048_dseed47_mseed47_ts20251227_191418",
+    "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed1234_n50_k8_L2048_dseed1234_mseed1234_ts20251227_191323"
+  ]
+}

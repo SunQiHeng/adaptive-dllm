@@ -40,6 +40,9 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         
         # Adaptive sparsity attributes
         self.head_sparsity_levels = None  # Will be set by set_adaptive_sparsity
+        # Optional per-query-head sparsity/weight vector (n_heads,). Used to avoid
+        # averaging away head-level attribution signals under GQA.
+        self.head_sparsity_levels_q = None
         self.head_importance_scores = None
         
         # Cache for sparse masks (unified for all heads, like standard sparse)
@@ -57,7 +60,13 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         
         Args:
             sparsity_levels: Tensor of shape (n_heads,) or (n_kv_heads,) containing
-                           keep ratios (fraction of tokens to KEEP, not drop)
+                           **relative weights** (mean≈1.0) OR absolute keep_ratios, depending on upstream config.
+                           In our eval pipeline we typically use relative weights and convert to keep_ratio via:
+                               keep_ratio = weight * select  (clamped to [min_keep_ratio, 1.0]).
+                           IMPORTANT: When sparsity_levels are provided per *query head* (n_heads), we prefer
+                           preserving per-Q-head resolution (even under GQA) to avoid averaging away head-level
+                           attribution signals. If sparsity_levels are provided per KV head/group (n_kv_heads),
+                           we use KV-level weights as before.
             importance_scores: Optional importance scores for reference
         """
         # For GQA, n_kv_heads < n_heads
@@ -67,11 +76,13 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         if sparsity_levels.shape[0] == n_kv_heads:
             # Sparsity defined per KV head/group
             self.head_sparsity_levels = sparsity_levels
+            self.head_sparsity_levels_q = None
         elif sparsity_levels.shape[0] == n_heads:
-            # Sparsity defined per query head, need to aggregate for KV heads
-            # For GQA: multiple query heads share the same KV head
+            # Sparsity/weights defined per query head.
+            # Preserve per-Q-head resolution for adaptive masks.
+            self.head_sparsity_levels_q = sparsity_levels
+            # Also keep a KV-group summary for any legacy/debug usage.
             heads_per_group = n_heads // n_kv_heads
-            # Average sparsity across query heads in each group
             self.head_sparsity_levels = sparsity_levels.view(n_kv_heads, heads_per_group).mean(dim=1)
         else:
             raise ValueError(
@@ -183,6 +194,18 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         
         B, n_heads, q_len, head_dim = q.shape
         _, n_kv_heads, kv_len, _ = k.shape
+
+        # IMPORTANT:
+        # For GQA, q has n_heads while k/v have n_kv_heads. flex_attention (and我们的 mask 构建逻辑)
+        # 需要 head 维度对齐，否则会导致 head 对应关系错位甚至维度不广播。
+        if n_heads != n_kv_heads:
+            assert n_heads % n_kv_heads == 0
+            repeat_factor = n_heads // n_kv_heads
+            k_for_q = k.repeat_interleave(repeat_factor, dim=1, output_size=n_heads)
+            v_for_q = v.repeat_interleave(repeat_factor, dim=1, output_size=n_heads)
+        else:
+            k_for_q = k
+            v_for_q = v
         
         # Initialize masks on first step
         if now_step == 0:
@@ -198,7 +221,7 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             if now_step == end_time:
                 # Build per-head adaptive masks
                 self._build_adaptive_masks(
-                    q, k, v, block_size, new_generation, SparseD_param
+                    q, k_for_q, v_for_q, block_size, new_generation, SparseD_param
                 )
             
             # During warmup, use standard attention
@@ -210,7 +233,7 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             )
         else:
             # Use adaptive sparse attention with unified block mask
-            att = flex_attn(q, k, v, block_mask=self.block_mask)
+            att = flex_attn(q, k_for_q, v_for_q, block_mask=self.block_mask)
         
         return att
     
@@ -237,11 +260,29 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             keep_ratio = weight * select
         """
         B, n_heads, q_len, head_dim = q.shape
-        _, n_kv_heads, kv_len, _ = k.shape
-        heads_per_group = n_heads // n_kv_heads
+        _, _k_heads, kv_len, _ = k.shape
+        # IMPORTANT:
+        # - head_sparsity_levels is stored per KV head/group (n_kv_heads).
+        # - head_sparsity_levels_q (if set) is stored per query head (n_heads) and takes precedence.
+        # Even if k/v have been expanded to n_heads for computation, the mapping from q-head -> kv-head
+        # must be based on the *original* effective_n_kv_heads from config, not k.shape[1].
+        effective_n_kv_heads = int(self.config.effective_n_kv_heads)
+        assert n_heads % effective_n_kv_heads == 0, "n_heads must be divisible by effective_n_kv_heads"
+        heads_per_group = n_heads // effective_n_kv_heads
         
         # Get select parameter (controls average keep_ratio)
         select = SparseD_param.get('select', 1.0)
+        if SparseD_param.get("debug_adaptive", False) and self.layer_id == 0:
+            # Quick summary to verify adaptive config is actually being consumed.
+            min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+            keep_by_kv = torch.clamp(self.head_sparsity_levels.to(torch.float32) * float(select), min=min_keep_ratio, max=1.0)
+            print(
+                f"[ADAPTIVE DEBUG] layer={self.layer_id} select={float(select):.4f} "
+                f"keep_ratio(kv): mean={float(keep_by_kv.mean()):.4f} "
+                f"std={float(keep_by_kv.std()):.4f} "
+                f"min={float(keep_by_kv.min()):.4f} max={float(keep_by_kv.max()):.4f} "
+                f"(n_kv={keep_by_kv.numel()}, n_q={n_heads})"
+            )
         
         # head_sparsity_levels are relative weights (mean≈1.0)
         # Multiply by select to get actual keep_ratios
@@ -263,21 +304,34 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             
             q_block = q[:, :, idx*block_size:(idx+1)*block_size, :]
             
-            # Compute attention scores for all heads
+            # Compute attention scores for all heads (k is expected to have n_heads here; see _adaptive_sparse_attention)
             attn_weights = torch.matmul(q_block, k.transpose(2, 3)) / math.sqrt(head_dim)
             attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(q.dtype)
             
             # Apply different keep_ratio for each head
             for head_idx in range(n_heads):
-                # Get relative weight for this head's KV group
-                kv_head_idx = head_idx // heads_per_group
-                relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                # Prefer per-query-head weights if available; otherwise fall back to KV-group weights.
+                if getattr(self, "head_sparsity_levels_q", None) is not None:
+                    relative_weight = self.head_sparsity_levels_q[head_idx].item()
+                else:
+                    # Get relative weight for this head's KV group (GQA: multiple q heads share one kv group)
+                    kv_head_idx = head_idx // heads_per_group
+                    # kv_head_idx should always be in-range now.
+                    if kv_head_idx >= self.head_sparsity_levels.numel():
+                        raise RuntimeError(
+                            f"kv_head_idx out of range: kv_head_idx={kv_head_idx}, "
+                            f"numel(head_sparsity_levels)={self.head_sparsity_levels.numel()}, "
+                            f"n_heads={n_heads}, effective_n_kv_heads={effective_n_kv_heads}"
+                        )
+                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
                 
                 # Compute actual keep_ratio: weight * select
                 # Important heads have weight>1.0, less important have weight<1.0
                 # Average weight≈1.0, so average(keep_ratio)≈select
                 keep_ratio = relative_weight * select
-                keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
+                # Clamp to a safe range to avoid empty masks
+                min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+                keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
                 
                 # Create mask for this head with its specific keep_ratio
                 head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
@@ -299,12 +353,22 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
                 
                 # Apply different keep_ratio for each head
                 for head_idx in range(n_heads):
-                    kv_head_idx = head_idx // heads_per_group
-                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                    if getattr(self, "head_sparsity_levels_q", None) is not None:
+                        relative_weight = self.head_sparsity_levels_q[head_idx].item()
+                    else:
+                        kv_head_idx = head_idx // heads_per_group
+                        if kv_head_idx >= self.head_sparsity_levels.numel():
+                            raise RuntimeError(
+                                f"kv_head_idx out of range: kv_head_idx={kv_head_idx}, "
+                                f"numel(head_sparsity_levels)={self.head_sparsity_levels.numel()}, "
+                                f"n_heads={n_heads}, effective_n_kv_heads={effective_n_kv_heads}"
+                            )
+                        relative_weight = self.head_sparsity_levels[kv_head_idx].item()
                     
                     # Compute actual keep_ratio (same as above)
                     keep_ratio = relative_weight * select
-                    keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
+                    min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+                    keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
                     
                     head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
                     head_mask = create_attention_block_mask(

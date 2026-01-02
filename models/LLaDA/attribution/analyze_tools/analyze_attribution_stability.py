@@ -21,6 +21,19 @@ def load_attribution_results(base_dir: str) -> Dict[str, Dict[str, np.ndarray]]:
     
     print(f"Found {len(run_dirs)} runs: {run_dirs}")
     
+    # First pass: collect all categories
+    all_categories = set()
+    for run_dir in run_dirs:
+        run_path = os.path.join(base_dir, run_dir)
+        npy_files = [f for f in os.listdir(run_path) if f.endswith('.npy')]
+        for npy_file in npy_files:
+            category = npy_file.replace('attribution_', '').replace('.npy', '')
+            all_categories.add(category)
+    
+    all_categories = sorted(list(all_categories))
+    print(f"Found categories: {all_categories}")
+    
+    # Second pass: load data and filter incomplete runs
     for run_dir in run_dirs:
         run_path = os.path.join(base_dir, run_dir)
         results[run_dir] = {}
@@ -32,7 +45,18 @@ def load_attribution_results(base_dir: str) -> Dict[str, Dict[str, np.ndarray]]:
             results[run_dir][category] = np.load(file_path)
             print(f"  Loaded {run_dir}/{category}: shape {results[run_dir][category].shape}")
     
-    return results
+    # Filter out runs that don't have all categories
+    complete_runs = {}
+    for run_dir, categories in results.items():
+        if set(categories.keys()) == set(all_categories):
+            complete_runs[run_dir] = categories
+            print(f"  ✓ {run_dir}: complete ({len(categories)} categories)")
+        else:
+            missing = set(all_categories) - set(categories.keys())
+            print(f"  ✗ {run_dir}: incomplete (missing: {missing})")
+    
+    print(f"\nUsing {len(complete_runs)} complete runs: {list(complete_runs.keys())}")
+    return complete_runs
 
 
 def get_important_heads_mask(arrays: List[np.ndarray], threshold: float = 0.01) -> np.ndarray:
@@ -256,11 +280,15 @@ def plot_top_k_heads(results: Dict[str, Dict[str, np.ndarray]],
     fig, ax = plt.subplots(figsize=(12, 8))
     
     x = np.arange(k)
-    width = 0.25
+    n_runs = len(run_names)
+    # Choose a bar width that stays readable as n_runs changes.
+    width = min(0.8 / max(n_runs, 1), 0.25)
     
+    # Center bars around each x position for arbitrary number of runs.
+    center = (n_runs - 1) / 2.0
     for run_idx, run_name in enumerate(run_names):
-        offset = (run_idx - 1) * width
-        ax.bar(x + offset, top_k_values[:, run_idx], width, 
+        offset = (run_idx - center) * width
+        ax.bar(x + offset, top_k_values[:, run_idx], width,
                label=run_name, alpha=0.8)
     
     ax.set_xlabel('Top-K Head Rank', fontsize=12)

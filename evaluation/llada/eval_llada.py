@@ -75,68 +75,86 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     for layer_idx in range(n_layers):
         values = sparsity_levels[layer_idx]
         print(values)
-        values_tensor = torch.clamp(values * select, max=1.0)
-        layer_mean = values_tensor.mean().item()
-        layer_min = values_tensor.min().item()
-        layer_max = values_tensor.max().item()
-        
-        all_values.append(values)
-        layer_means.append(layer_mean)
-        
-        # Calculate actual keep_ratio if using relative weights
+
+        # `values` is either:
+        # - relative weights (mean≈1.0) if output_relative_weights=True
+        # - absolute keep-ratios (mean≈select) if output_relative_weights=False
+        weights_tensor_layer = values.to(torch.float32)
+
         if output_relative_weights:
-            actual_mean = layer_mean 
-            actual_min = layer_min
-            actual_max = layer_max 
-            # Clamp to [0, 1]
-            actual_mean = min(actual_mean, 1.0)
-            actual_max = min(actual_max, 1.0)
-            
-            print(f"Layer {layer_idx:2d}: weight_mean={layer_mean:.4f} "
-                  f"→ keep_ratio={actual_mean:.4f} ({actual_mean*100:.1f}%), "
-                  f"range=[{actual_min:.3f}, {actual_max:.3f}]")
+            keep_tensor_layer = torch.clamp(weights_tensor_layer * float(select), max=1.0)
+            weight_mean = weights_tensor_layer.mean().item()
+            weight_min = weights_tensor_layer.min().item()
+            weight_max = weights_tensor_layer.max().item()
+
+            keep_mean_layer = keep_tensor_layer.mean().item()
+            keep_min_layer = keep_tensor_layer.min().item()
+            keep_max_layer = keep_tensor_layer.max().item()
+
+            all_values.append(values)  # keep global weight stats correct
+            layer_means.append(keep_mean_layer)  # store *keep-ratio* means for layer-wise variation
+
+            print(
+                f"Layer {layer_idx:2d}: weight_mean={weight_mean:.4f} (range=[{weight_min:.3f}, {weight_max:.3f}]) "
+                f"→ keep_ratio_mean={keep_mean_layer:.4f} ({keep_mean_layer*100:.1f}%) "
+                f"(range=[{keep_min_layer:.3f}, {keep_max_layer:.3f}])"
+            )
         else:
-            print(f"Layer {layer_idx:2d}: keep_ratio_mean={layer_mean:.4f} ({layer_mean*100:.1f}%), "
-                  f"range=[{layer_min:.3f}, {layer_max:.3f}]")
+            # Absolute keep ratios
+            keep_mean_layer = weights_tensor_layer.mean().item()
+            keep_min_layer = weights_tensor_layer.min().item()
+            keep_max_layer = weights_tensor_layer.max().item()
+
+            all_values.append(values)
+            layer_means.append(keep_mean_layer)
+
+            print(
+                f"Layer {layer_idx:2d}: keep_ratio_mean={keep_mean_layer:.4f} ({keep_mean_layer*100:.1f}%), "
+                f"range=[{keep_min_layer:.3f}, {keep_max_layer:.3f}]"
+            )
     
-    all_values = [torch.clamp(v * select, max=1.0) for v in all_values]
     # Global statistics
-    all_values_tensor = torch.cat(all_values)
-    global_mean = all_values_tensor.mean().item()
-    global_min = all_values_tensor.min().item()
-    global_max = all_values_tensor.max().item()
-    global_std = all_values_tensor.std().item()
+    #
+    # NOTE:
+    # - In relative-weights mode, `all_values` are the *weights* (mean should be ≈1.0).
+    # - Keep-ratios are computed at inference by: keep_ratio = clamp(weights * select, max=1.0).
+    #
+    # Previously this function overwrote `all_values` with keep-ratios and then printed them as
+    # "Relative weights", which was misleading (e.g., showing mean≈select).
+    weights_tensor = torch.cat(all_values).to(torch.float32)
+    global_mean = weights_tensor.mean().item()
+    global_min = weights_tensor.min().item()
+    global_max = weights_tensor.max().item()
+    global_std = weights_tensor.std().item()
+
+    keep_tensor = torch.clamp(weights_tensor * float(select), max=1.0)
+    keep_mean = keep_tensor.mean().item()
+    keep_min = keep_tensor.min().item()
+    keep_max = keep_tensor.max().item()
     
     print("\n" + "-" * 80)
     print("Global Statistics:")
     print("-" * 80)
     
     if output_relative_weights:
-        actual_global_mean = global_mean
-        actual_global_min = global_min 
-        actual_global_max = global_max
-        # Clamp
-        actual_global_mean = min(actual_global_mean, 1.0)
-        actual_global_max = min(actual_global_max, 1.0)
-        
         print(f"Relative weights:")
         print(f"  Mean:   {global_mean:.4f} (should be ≈1.0)")
         print(f"  Std:    {global_std:.4f}")
         print(f"  Range:  [{global_min:.3f}, {global_max:.3f}]")
         print(f"\nActual keep_ratios (weights × select={select}):")
-        print(f"  Mean:   {actual_global_mean:.4f} ({actual_global_mean*100:.1f}%)")
+        print(f"  Mean:   {keep_mean:.4f} ({keep_mean*100:.1f}%)")
         print(f"  Target: {select:.4f} ({select*100:.1f}%)")
-        print(f"  Deviation: {abs(actual_global_mean - select):.4f} ({abs(actual_global_mean - select)*100:.2f}%)")
-        print(f"  Range:  [{actual_global_min:.3f}, {actual_global_max:.3f}]")
+        print(f"  Deviation: {abs(keep_mean - select):.4f} ({abs(keep_mean - select)*100:.2f}%)")
+        print(f"  Range:  [{keep_min:.3f}, {keep_max:.3f}]")
         
         # Count heads that will hit upper limit (keep_ratio > 1.0 after scaling)
-        clamped_count = (all_values_tensor * select > 1.0).sum().item()
+        clamped_count = (weights_tensor * float(select) > 1.0).sum().item()
         total_heads = n_layers * n_heads
         print(f"  Heads hitting upper limit (>1.0): {clamped_count}/{total_heads} ({clamped_count/total_heads*100:.1f}%)")
         
-        if abs(actual_global_mean - select) < 0.01:
+        if abs(keep_mean - select) < 0.01:
             print(f"  ✅ Mean matches target (deviation < 1%)")
-        elif abs(actual_global_mean - select) < 0.05:
+        elif abs(keep_mean - select) < 0.05:
             print(f"  ⚠️  Mean has slight deviation (1-5%)")
         else:
             print(f"  ❌ Mean deviates significantly (>5%)")
@@ -157,8 +175,9 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     print("-" * 80)
     
     if output_relative_weights:
-        actual_layer_min = layer_mean_min * select
-        actual_layer_max = layer_mean_max * select
+        # `layer_means` already stores per-layer *keep-ratio* means (not weights)
+        actual_layer_min = layer_mean_min
+        actual_layer_max = layer_mean_max
         print(f"Layer means range: [{layer_mean_min:.4f}, {layer_mean_max:.4f}]")
         print(f"Layer means std:   {layer_mean_std:.4f}")
         print(f"Actual keep_ratio range across layers: [{actual_layer_min:.3f}, {actual_layer_max:.3f}]")
@@ -194,6 +213,7 @@ class LLaDAEvalHarness(LM):
         # Adaptive params
         adaptive_config_path=None,
         importance_source='precomputed',  # 'precomputed', 'uniform', 'normal', or custom path
+        precomputed_importance_path=None,
         min_sparsity=0.15,  # Updated: optimized for global_percentile normalization
         max_sparsity=0.85,  # Updated: optimized for global_percentile normalization
         device="cuda",
@@ -247,7 +267,9 @@ class LLaDAEvalHarness(LM):
             # Determine importance scores source
             config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
             n_layers = config.n_layers
-            n_heads = config.n_kv_heads
+            # Use query heads here because attribution is typically produced per attention (query) head.
+            # Adaptive blocks can accept per-query-head sparsity and will aggregate to KV heads for GQA.
+            n_heads = config.n_heads
             
             importance_scores = None
             
@@ -265,7 +287,7 @@ class LLaDAEvalHarness(LM):
             # Option 2: Load from importance source specification
             elif importance_source == 'precomputed':
                 # Use pre-computed importance scores from attribution
-                llada_importance_path = '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base/head_importance.pt'
+                llada_importance_path = precomputed_importance_path or '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_margin/head_importance.pt'
                 if os.path.exists(llada_importance_path):
                     print(f"✓ Loading pre-computed importance scores from: {llada_importance_path}")
                     importance_data = torch.load(llada_importance_path, weights_only=False)

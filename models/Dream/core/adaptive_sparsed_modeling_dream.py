@@ -64,7 +64,12 @@ class AdaptiveDreamAttention(DreamAttention):
         
         Args:
             sparsity_levels: Tensor of shape (n_heads,) or (n_kv_heads,) containing
-                           keep ratios (fraction of tokens to KEEP, not drop)
+                           **relative weights** (mean≈1.0) OR absolute keep_ratios, depending on upstream config.
+                           In our eval pipeline we use relative weights (output_relative_weights=True) and convert
+                           to actual keep_ratio via: keep_ratio = weight * select (clamped to [0, 1]).
+                           IMPORTANT: For Dream (GQA), we still build sparse masks **per query head**, so if
+                           sparsity_levels are provided per query head (n_heads), we should preserve that
+                           resolution instead of averaging into KV groups.
             importance_scores: Optional importance scores for reference
         """
         n_kv_heads = self.config.num_key_value_heads
@@ -73,10 +78,15 @@ class AdaptiveDreamAttention(DreamAttention):
         if sparsity_levels.shape[0] == n_kv_heads:
             # Sparsity defined per KV head/group
             self.head_sparsity_levels = sparsity_levels
+            self.head_sparsity_levels_q = None
         elif sparsity_levels.shape[0] == n_heads:
-            # Sparsity defined per query head, need to aggregate for KV heads
+            # Sparsity/weights defined per *query head*.
+            # Keep per-Q-head resolution for adaptive masks.
+            self.head_sparsity_levels_q = sparsity_levels
+            # Also keep a KV-group summary for any legacy paths (not used for mask building).
+            if n_kv_heads <= 0 or n_heads % n_kv_heads != 0:
+                raise ValueError(f"Invalid GQA config: n_heads={n_heads} not divisible by n_kv_heads={n_kv_heads}")
             heads_per_group = n_heads // n_kv_heads
-            # Average sparsity across query heads in each group
             self.head_sparsity_levels = sparsity_levels.view(n_kv_heads, heads_per_group).mean(dim=1)
         else:
             raise ValueError(
@@ -264,7 +274,7 @@ class AdaptiveDreamAttention(DreamAttention):
         B, n_heads, q_len, head_dim = query_states.shape
         _, n_kv_heads, kv_len, _ = key_states.shape
         
-        # For GQA: map query heads to KV heads
+        # For GQA: map query heads to KV heads (only needed if we only have KV-level weights)
         heads_per_group = n_heads // n_kv_heads
         
         # Get select parameter (controls average keep_ratio)
@@ -294,29 +304,37 @@ class AdaptiveDreamAttention(DreamAttention):
             # q_block: (B, n_heads, block_len, head_dim)
             # key_states: (B, n_kv_heads, kv_len, head_dim)
             
-            # Apply different keep_ratio for each head
+            # Apply different keep_ratio for each query head.
+            #
+            # NOTE (GQA granularity):
+            # - If `head_sparsity_levels_q` is present, we *can* use per-Q-head weights (n_heads) directly.
+            # - However, for GQA models it may be more stable to apply weights per KV-group (n_kv_heads),
+            #   i.e., average weights within each group and use the same keep_ratio for all Q heads in that group.
+            # This knob is controlled by SparseD_param['gqa_weight_mode'] ∈ {'q','kv'} (default 'q').
+            gqa_weight_mode = str(SparseD_param.get("gqa_weight_mode", "kv"))
+            if gqa_weight_mode not in ("q", "kv"):
+                raise ValueError(f"Invalid gqa_weight_mode={gqa_weight_mode!r}. Expected 'q' or 'kv'.")
+            
             for head_idx in range(n_heads):
-                # Get corresponding KV head
+                # Prefer per-Q-head weights if available and requested; otherwise fall back to KV-group weights.
                 kv_head_idx = head_idx // heads_per_group
                 kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
+                if getattr(self, "head_sparsity_levels_q", None) is not None and gqa_weight_mode == "q":
+                    relative_weight = float(self.head_sparsity_levels_q[head_idx].item())
+                else:
+                    relative_weight = float(self.head_sparsity_levels[kv_head_idx].item())
                 
-                # Get relative weight from adaptive config
-                relative_weight = self.head_sparsity_levels[kv_head_idx].item()
-                
-                # Compute actual keep_ratio: weight * select
-                # Important heads have weight>1.0, less important have weight<1.0
-                # Average weight≈1.0, so average(keep_ratio)≈select
                 keep_ratio = relative_weight * select
-                keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
+                # Clamp to a safe range to avoid empty/degenerate masks.
+                min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+                keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
                 
-                # Compute attention for this query head with its KV head
                 q_head = q_block[:, head_idx:head_idx+1, :, :]  # (B, 1, block_len, head_dim)
                 k_head = key_states[:, kv_head_idx:kv_head_idx+1, :, :]  # (B, 1, kv_len, head_dim)
                 
                 attn_weights = torch.matmul(q_head, k_head.transpose(2, 3)) / math.sqrt(head_dim)
                 attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
                 
-                # Create mask for this head with its specific keep_ratio
                 head_mask = create_attention_block_mask(
                     attn_weights, block_size=block_size, keep_ratio=keep_ratio
                 )
@@ -333,14 +351,19 @@ class AdaptiveDreamAttention(DreamAttention):
                 q_block = query_states[:, :, idx*block_size:(idx+1)*block_size, :]
                 
                 # Apply different keep_ratio for each head
+                gqa_weight_mode = str(SparseD_param.get("gqa_weight_mode", "kv"))
+                if gqa_weight_mode not in ("q", "kv"):
+                    raise ValueError(f"Invalid gqa_weight_mode={gqa_weight_mode!r}. Expected 'q' or 'kv'.")
                 for head_idx in range(n_heads):
                     kv_head_idx = head_idx // heads_per_group
                     kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
-                    
-                    # Get relative weight and compute keep_ratio (same as above)
-                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
+                    if getattr(self, "head_sparsity_levels_q", None) is not None and gqa_weight_mode == "q":
+                        relative_weight = float(self.head_sparsity_levels_q[head_idx].item())
+                    else:
+                        relative_weight = float(self.head_sparsity_levels[kv_head_idx].item())
                     keep_ratio = relative_weight * select
-                    keep_ratio = min(keep_ratio, 1.0)  # Clamp to [0, 1]
+                    min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+                    keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
                     
                     # Compute attention for this query head with its KV head
                     q_head = q_block[:, head_idx:head_idx+1, :, :]

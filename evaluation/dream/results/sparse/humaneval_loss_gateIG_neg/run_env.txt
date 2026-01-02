@@ -1,0 +1,5 @@
+[env] date: 2025-12-29T23:54:53+08:00
+[env] CUDA_VISIBLE_DEVICES=5
+[env] python: 3.13.5
+[env] torch: 2.9.1+cu128
+[env] transformers: 4.57.1

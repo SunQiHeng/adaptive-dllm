@@ -185,8 +185,8 @@ def test_gqa_compatibility():
     print("\n✓ GQA compatibility verified")
 
 
-def test_inverse_importance_logic():
-    """Test that inverse importance works correctly."""
+def test_importance_increases_keep_logic():
+    """Test that importance_increases_keep works correctly (higher importance -> higher keep ratio)."""
     print("\n" + "="*70)
     print("TEST 5: Inverse Importance Logic")
     print("="*70)
@@ -196,30 +196,30 @@ def test_inverse_importance_logic():
         0: torch.tensor([1.0, 0.5, 0.1])  # High, medium, low importance
     }
     
-    # Test inverse importance (default: True)
+    # Test importance_increases_keep (default: True)
     sparsity_inverse = allocate_adaptive_sparsity_from_importance(
         importance_scores=importance,
         base_sparsity=0.5,
         min_sparsity=0.2,
         max_sparsity=0.8,
-        inverse_importance=True
+        importance_increases_keep=True
     )
     
     keep_ratios = sparsity_inverse[0]
     
-    # With inverse_importance=True:
+    # With importance_increases_keep=True:
     # High importance (1.0) -> Low sparsity -> High keep ratio
     # Low importance (0.1) -> High sparsity -> Low keep ratio
     assert keep_ratios[0] > keep_ratios[2], \
         "High importance should have higher keep ratio than low importance"
     
-    print("✓ Inverse importance logic correct")
+    print("✓ importance_increases_keep logic correct")
     print(f"  Importance: {importance[0].tolist()}")
     print(f"  Keep ratios: {keep_ratios.tolist()}")
     print(f"  High importance -> High keep ratio: {keep_ratios[0]:.3f}")
     print(f"  Low importance -> Low keep ratio: {keep_ratios[2]:.3f}")
     
-    print("\n✓ Inverse importance verified")
+    print("\n✓ importance_increases_keep verified")
 
 
 def test_determinism():
@@ -295,7 +295,7 @@ def run_all_tests():
         test_sparsity_allocation,
         test_adaptive_config_creation,
         test_gqa_compatibility,
-        test_inverse_importance_logic,
+        test_importance_increases_keep_logic,
         test_determinism,
     ]
     

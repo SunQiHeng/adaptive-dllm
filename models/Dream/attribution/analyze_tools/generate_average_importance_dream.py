@@ -223,10 +223,10 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='Generate average head importance for Dream')
     parser.add_argument('--results_dir', type=str,
-                       default='/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/attribution_results_20251211_155653',
+                       default='/home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/margin_attribution_results',
                        help='Directory containing attribution results')
     parser.add_argument('--output_dir', type=str,
-                       default='/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream',
+                       default='/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_margin',
                        help='Output directory for importance configs')
     args = parser.parse_args()
     

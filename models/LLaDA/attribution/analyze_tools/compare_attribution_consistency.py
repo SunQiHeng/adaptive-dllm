@@ -23,12 +23,14 @@ def load_attribution_results(run_dir):
     with open(summary_file, 'r') as f:
         summary = json.load(f)
     
-    # Load attribution arrays
+    # Load attribution arrays (auto-detect categories from files)
     results = {}
-    for category in ['chat', 'code', 'math', 'reasoning', 'stem']:
-        npy_file = os.path.join(run_dir, f"attribution_{category}.npy")
-        if os.path.exists(npy_file):
-            results[category] = np.load(npy_file)
+    for fname in sorted(os.listdir(run_dir)):
+        if not (fname.startswith("attribution_") and fname.endswith(".npy")):
+            continue
+        category = fname.replace("attribution_", "").replace(".npy", "")
+        npy_file = os.path.join(run_dir, fname)
+        results[category] = np.load(npy_file)
     
     return summary, results
 

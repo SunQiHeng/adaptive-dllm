@@ -772,7 +772,9 @@ class LLaDABlock(nn.Module):
                             if q_len - idx*block_size <= new_generation or idx==(q_len+block_size-1)//block_size-1:
                                 if self.last is None: self.last = idx
                             query_states_reduce = query_states[:, :, idx*block_size:(idx+1)*block_size]
-                            attn_weights = torch.matmul(query_states_reduce, key_states.transpose(2, 3)) / math.sqrt(num_heads)
+                            # Scale by sqrt(head_dim), consistent with attention computation.
+                            head_dim = query_states_reduce.size(-1)
+                            attn_weights = torch.matmul(query_states_reduce, key_states.transpose(2, 3)) / math.sqrt(head_dim)
                             attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
                             fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                             self.fine_mask[:, :, idx:idx+1, :] = fine_mask[:, : :1, :]
@@ -783,7 +785,8 @@ class LLaDABlock(nn.Module):
                         key_states_reduce = key_states[:, :, self.last*block_size:, :]
                         for idx in range((q_len+block_size-1)//block_size):
                             query_states_reduce = query_states[:, :, idx*block_size:(idx+1)*block_size]
-                            attn_weights = torch.matmul(query_states_reduce, key_states_reduce.transpose(2, 3)) / math.sqrt(num_heads)
+                            head_dim = query_states_reduce.size(-1)
+                            attn_weights = torch.matmul(query_states_reduce, key_states_reduce.transpose(2, 3)) / math.sqrt(head_dim)
                             attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
                             fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                             self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
