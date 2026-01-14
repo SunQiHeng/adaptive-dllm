@@ -216,6 +216,20 @@ class LLaDAEvalHarness(LM):
         precomputed_importance_path=None,
         min_sparsity=0.15,  # Updated: optimized for global_percentile normalization
         max_sparsity=0.85,  # Updated: optimized for global_percentile normalization
+        # Likelihood eval params (for multiple-choice tasks like MMLU)
+        #
+        # NOTE:
+        # - Multiple-choice tasks like MMLU go through `loglikelihood()` (not `generate_until()`).
+        # - The sparse/adaptive attention implementations only start applying sparse attention
+        #   after a warmup window controlled by (now_step, whole_steps, skip).
+        # - Historically `get_logits()` forced now_step=0 for likelihood scoring, which keeps the
+        #   model in warmup -> sparse/adaptive behave like standard attention.
+        #
+        # To make sparse/adaptive affect likelihood scoring, set:
+        # - likelihood_now_step: e.g. =steps (or any value > end_time)
+        # - recompute_mask_each_call: True (masks depend on content; caching across examples is wrong)
+        likelihood_now_step=None,
+        recompute_mask_each_call=False,
         device="cuda",
         **kwargs,
     ):
@@ -310,6 +324,23 @@ class LLaDAEvalHarness(LM):
                 # Print detailed statistics
                 print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
             
+            elif importance_source == "all_ones":
+                # Fair sanity: all heads have equal relative weight (=1.0), so keep_ratio_per_head == select.
+                # This should closely match sparse mode when skip/select/block_size are the same.
+                print("✓ Using ALL-ONES importance (equal head weights = 1.0) for fair sanity check")
+                adaptive_config = {
+                    "importance_scores": {i: torch.ones(n_heads) for i in range(n_layers)},
+                    "sparsity_levels": {i: torch.ones(n_heads) for i in range(n_layers)},  # relative weights (mean=1.0)
+                    "metadata": {
+                        "strategy": "all_ones",
+                        "normalize_strategy": None,
+                        "output_relative_weights": True,
+                        "note": "All heads have equal relative weight (=1.0). keep_ratio = select after clamping.",
+                    },
+                }
+                print("✓ Created adaptive config using ALL-ONES importance")
+                print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, "LLaDA")
+
             elif importance_source in ['uniform', 'normal', 'random']:
                 # Generate random importance with specified distribution
                 print(f"✓ Generating RANDOM importance scores with '{importance_source}' distribution")
@@ -353,7 +384,7 @@ class LLaDAEvalHarness(LM):
             else:
                 raise ValueError(
                     f"Invalid importance_source: {importance_source}. "
-                    f"Must be 'precomputed', 'uniform', 'normal', 'random', or a valid file path."
+                    f"Must be 'precomputed', 'all_ones', 'uniform', 'normal', 'random', or a valid file path."
                 )
             
             self.model = AdaptiveLLaDAModelLM.from_pretrained(
@@ -403,6 +434,8 @@ class LLaDAEvalHarness(LM):
         self.gen_length = gen_length
         self.block_length = block_length
         self.remasking = remasking
+        self.likelihood_now_step = likelihood_now_step
+        self.recompute_mask_each_call = recompute_mask_each_call
         
         print(f"\n{'='*70}")
         print(f"LLaDA Evaluation Setup")
@@ -451,11 +484,13 @@ class LLaDAEvalHarness(LM):
         
         # Pass SparseD_param for sparse/adaptive models
         if self.sparse_param is not None:
-            # For loglikelihood tasks, we need to add 'now_step' which is used in generation
-            # Set it to 0 since we're not doing incremental generation here
+            # For loglikelihood tasks, we need to add 'now_step' which controls sparse warmup/scheduling.
+            # Default keeps historical behavior (0 -> warmup -> standard attention).
             sparse_param_copy = self.sparse_param.copy()
             if 'now_step' not in sparse_param_copy:
-                sparse_param_copy['now_step'] = 0
+                sparse_param_copy['now_step'] = int(self.likelihood_now_step) if self.likelihood_now_step is not None else 0
+            if self.recompute_mask_each_call:
+                sparse_param_copy['recompute_mask_each_call'] = True
             logits = self.model(batch, SparseD_param=sparse_param_copy).logits
         else:
             logits = self.model(batch).logits

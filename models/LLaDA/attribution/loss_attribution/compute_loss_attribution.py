@@ -206,6 +206,7 @@ def _tokenize_pair(
     max_length: int,
     *,
     mask_token_id: int,
+    min_completion_tokens: int = 0,
 ) -> Tuple[torch.Tensor, torch.Tensor, int]:
     """
     Returns:
@@ -224,9 +225,24 @@ def _tokenize_pair(
     if tokenizer.bos_token_id is not None:
         bos = [tokenizer.bos_token_id]
 
-    input_ids_list = (bos + prompt_ids + answer_ids)[:max_length]
-    # Answer starts after bos + prompt
-    completion_start = min(len(bos) + len(prompt_ids), len(input_ids_list))
+    # Default behavior (backward compatible): right-truncate (bos + prompt + completion).
+    # Optional behavior: keep at least `min_completion_tokens` completion tokens by truncating prompt from the left.
+    min_c = int(max(0, min_completion_tokens))
+    if min_c <= 0:
+        input_ids_list = (bos + prompt_ids + answer_ids)[:max_length]
+        # completion starts after bos + full prompt (may be truncated)
+        completion_start = min(len(bos) + len(prompt_ids), len(input_ids_list))
+    else:
+        # Keep the completion *prefix* (more stable semantics than tail for QA-like data),
+        # and keep the prompt *suffix* so completion is conditioned on the most recent context.
+        keep_c = min(len(answer_ids), min_c)
+        budget = max_length - len(bos) - keep_c
+        if budget <= 0:
+            prompt_keep = []
+        else:
+            prompt_keep = prompt_ids[-budget:]
+        input_ids_list = (bos + prompt_keep + answer_ids[:keep_c])[:max_length]
+        completion_start = min(len(bos) + len(prompt_keep), len(input_ids_list))
 
     input_ids = torch.tensor([input_ids_list], dtype=torch.long, device=device)
     attention_mask = torch.ones_like(input_ids, dtype=torch.long, device=device)
@@ -863,7 +879,14 @@ def main() -> None:
             # Take subset (changes with data_seed if pool_per_category > samples_per_category)
             take_n = min(int(args.samples_per_category), len(buf))
             rows.extend(buf[:take_n])
-        # global cap
+        # IMPORTANT: apply dataset_shuffle globally for nemotron too; otherwise small max_samples
+        # always picks from the first category due to fixed concatenation order.
+        if bool(args.dataset_shuffle) and len(rows) > 1:
+            g_all = torch.Generator()
+            g_all.manual_seed(_stable_int_seed(int(data_seed), 999_001))
+            perm = torch.randperm(len(rows), generator=g_all).tolist()
+            rows = [rows[i] for i in perm]
+        # global cap after (optional) shuffle
         if len(rows) > int(args.max_samples):
             rows = rows[: int(args.max_samples)]
     else:

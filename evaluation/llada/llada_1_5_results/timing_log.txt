@@ -1,0 +1,8 @@
+2026-01-08 01:46:39 - adaptive - gsm8k - 2266s (37m 46s)
+2026-01-08 01:47:02 - adaptive - gsm8k - 2198s (36m 38s)
+2026-01-08 02:03:32 - adaptive - humaneval - 990s (16m 30s)
+2026-01-08 02:03:39 - adaptive - humaneval - 1020s (17m 0s)
+2026-01-08 05:50:08 - adaptive - mmlu - 13596s (226m 36s)
+2026-01-08 05:57:25 - adaptive - mmlu - 14026s (233m 46s)
+2026-01-08 10:37:56 - adaptive - ruler - 17268s (287m 48s)
+2026-01-08 10:46:40 - adaptive - ruler - 17355s (289m 15s)

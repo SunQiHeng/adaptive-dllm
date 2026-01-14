@@ -3,11 +3,14 @@
 # Tests 3 model types on 2 tasks with reduced parameters
 # Usage: bash run_eval_quick_test.sh
 
+# Make pipelines fail if the left-hand command fails (e.g., when piping to tee).
+set -o pipefail
+
 # Environment setup
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=5
+export CUDA_VISIBLE_DEVICES=1
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
@@ -23,7 +26,7 @@ mkdir -p logs results
 #   Using chat template here makes the model emit explanations/markdown fences and tanks pass@1.
 # - `humaneval_instruct` is designed for *instruct/chat* models and SHOULD use chat template.
 MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
-MODEL_TYPES=("sparse")
+MODEL_TYPES=("adaptive")
 
 # Which precomputed head-importance to use for adaptive mode:
 #
@@ -33,7 +36,7 @@ MODEL_TYPES=("sparse")
 #
 # Back-compat:
 # - loss_gateIG_zero / loss_gateIG_zero_neg keep the older single-run paths.
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"loss_gateIG_neg"}  # loss_gateIG | loss_gateIG_neg | loss_gateIG_zero | loss_gateIG_zero_neg | all_ones
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"loss_gateIG"}  # loss_gateIG | loss_gateIG_neg | loss_gateIG_zero | loss_gateIG_zero_neg | all_ones
 SHUFFLE_SEED=${SHUFFLE_SEED:-1234}
 
 if [ "$IMPORTANCE_TAG" = "loss_gateIG" ]; then
@@ -74,7 +77,7 @@ fi
 echo "========================================================"
 echo "Dream Quick Test Configuration"
 echo "========================================================"
-echo "Tasks: GSM8K, HumanEval"
+echo "Tasks: ${TASKS[*]}"
 echo "Model Types: standard, sparse, adaptive"
 echo "Max New Tokens: 256"
 echo "Block Size: 32"
@@ -102,8 +105,12 @@ SKIP=0.2
 SELECT=0.3
 
 
-# Tasks to run
+# Tasks to run (can be overridden without editing file):
+#   TASKS_STR="mmlu" bash run_eval_task.sh
 TASKS=("gsm8k" "humaneval")
+if [ -n "${TASKS_STR:-}" ]; then
+    IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
+fi
 
 # Function to run evaluation for one model type on one task
 run_single_eval() {
@@ -115,7 +122,13 @@ run_single_eval() {
     echo "Running: ${model_type} on ${task}"
     echo "========================================"
     
-    OUTPUT_DIR="results/${model_type}/${task}_${IMPORTANCE_TAG}"
+    # Task tag for output directory (avoid overwriting when toggling chat template, etc.)
+    TASK_TAG="${task}"
+    if [ "${task}" = "mmlu" ]; then
+        TASK_TAG="mmlu_chat"
+    fi
+
+    OUTPUT_DIR="results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}"
     mkdir -p "$OUTPUT_DIR"
     
     # Record start time
@@ -194,6 +207,24 @@ PY
             --log_samples
             --confirm_run_unsafe_code
         )
+    elif [ "$task" = "mmlu" ]; then
+        # MMLU is a multiple-choice likelihood task. Follow eval_dream.sh:
+        # - use few-shot (default 5)
+        # - batch_size=1 (passed via lm-eval CLI, NOT via --model_args to avoid duplicate kwarg)
+        # - Apply chat template by default to align with attribution context
+        # - For sparse/adaptive: enable likelihood_now_step and recompute_mask_each_call to trigger sparse attention
+        MMLU_FEWSHOT=${MMLU_FEWSHOT:-5}
+        CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
+            --model dream_eval
+            --model_args "${MODEL_ARGS_STR},mc_num=1,likelihood_now_step=${STEPS},recompute_mask_each_call=true"
+            --tasks "${task}"
+            --num_fewshot "${MMLU_FEWSHOT}"
+            --batch_size 1
+            --limit "${LIMIT}"
+            --output_path "${OUTPUT_DIR}/results.json"
+            --log_samples
+            --apply_chat_template
+        )
     elif [ "$task" = "humaneval_instruct" ]; then
         # HumanEval-Instruct is designed for chat/instruct models; apply chat template.
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
@@ -232,6 +263,7 @@ PY
 
     # Execute
     "${CMD[@]}" 2>&1 | tee "${OUTPUT_DIR}/eval.log"
+    CMD_RC=${PIPESTATUS[0]}
     
     # Calculate running time
     END_TIME=$(date +%s)
@@ -243,9 +275,16 @@ PY
     echo "${ELAPSED}" > "${OUTPUT_DIR}/runtime.txt"
     echo "$(date '+%Y-%m-%d %H:%M:%S') - ${model_type} - ${task} - ${ELAPSED}s (${ELAPSED_MIN}m ${ELAPSED_SEC}s)" >> "results/timing_log.txt"
     
-    echo "✅ Completed ${model_type} on ${task}"
+    if [ "${CMD_RC}" -eq 0 ]; then
+        echo "✅ Completed ${model_type} on ${task}"
+    else
+        echo "❌ Failed ${model_type} on ${task} (exit=${CMD_RC})"
+        echo "   See: ${OUTPUT_DIR}/eval.log"
+    fi
     echo "⏱️  Running time: ${ELAPSED_MIN}m ${ELAPSED_SEC}s (${ELAPSED}s total)"
     echo ""
+
+    return "${CMD_RC}"
 }
 
 # Main execution
@@ -269,7 +308,7 @@ for task in "${TASKS[@]}"; do
         echo ""
         echo "Progress: [${CURRENT_TASK}/${TOTAL_TASKS}]"
         
-        run_single_eval "$task" "$model_type"
+        run_single_eval "$task" "$model_type" || exit $?
     done
 done
 

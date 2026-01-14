@@ -243,6 +243,9 @@ class DreamEvalHarness(LM):
         min_keep_ratio=0.01,              # safety clamp in adaptive mask building
         min_sparsity=0.1,
         max_sparsity=0.9,
+        # Likelihood eval params (for multiple-choice tasks like MMLU)
+        likelihood_now_step=None,         # Set > warmup to trigger sparse attention in likelihood scoring
+        recompute_mask_each_call=False,  # Recompute masks for each forward (needed for dynamic sequences)
         device="cuda",
         **kwargs,
     ):
@@ -541,6 +544,8 @@ class DreamEvalHarness(LM):
         assert mc_num % self.batch_size == 0
         self.max_length = max_length
         self.is_check_greedy = is_check_greedy
+        self.likelihood_now_step = likelihood_now_step
+        self.recompute_mask_each_call = recompute_mask_each_call
         
         # Dream generation config
         from models.Dream.generation_utils.generation_utils_dream import DreamGenerationConfig
@@ -638,11 +643,22 @@ class DreamEvalHarness(LM):
         
         # For sparse/adaptive models, pass SparseD_param
         if self.sparse_param is not None:
+            # For loglikelihood tasks (MMLU), need to set now_step to trigger sparse attention
+            sparse_param_copy = self.sparse_param.copy()
+            # NOTE:
+            # Dream's `self.sparse_param` is initialized with now_step=0, so checking
+            # `'now_step' not in sparse_param_copy` will *never* override it.
+            # For likelihood scoring we want to force now_step > warmup when requested.
+            if self.likelihood_now_step is not None:
+                sparse_param_copy['now_step'] = int(self.likelihood_now_step)
+            if self.recompute_mask_each_call:
+                sparse_param_copy['recompute_mask_each_call'] = True
+            
             logits = self.model(
                 input_ids=batch,
                 attention_mask=attention_mask,
                 position_ids=position_ids,
-                SparseD_param=self.sparse_param
+                SparseD_param=sparse_param_copy
             ).logits
         else:
             logits = self.model(

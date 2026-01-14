@@ -212,6 +212,13 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             self.fine_mask = None
             self.block_mask = None
             self.last = None
+
+        # For likelihood evaluation we may want to recompute masks for every forward.
+        # (Masks depend on the actual q/k content; caching across different examples is incorrect.)
+        if SparseD_param.get("recompute_mask_each_call", False):
+            self.fine_mask = None
+            self.block_mask = None
+            self.last = None
         
         # Get adaptive skip threshold based on sparsity levels
         skip_threshold = int(whole_steps * SparseD_param.get('skip', 0.2))
@@ -233,6 +240,11 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             )
         else:
             # Use adaptive sparse attention with unified block mask
+            if self.block_mask is None:
+                # Build masks on-demand if we didn't pass through the warmup "build" step.
+                self._build_adaptive_masks(
+                    q, k_for_q, v_for_q, block_size, new_generation, SparseD_param
+                )
             att = flex_attn(q, k_for_q, v_for_q, block_mask=self.block_mask)
         
         return att
@@ -271,10 +283,10 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         heads_per_group = n_heads // effective_n_kv_heads
         
         # Get select parameter (controls average keep_ratio)
-        select = SparseD_param.get('select', 1.0)
+        select = float(SparseD_param.get('select', 1.0))
+        min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
         if SparseD_param.get("debug_adaptive", False) and self.layer_id == 0:
             # Quick summary to verify adaptive config is actually being consumed.
-            min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
             keep_by_kv = torch.clamp(self.head_sparsity_levels.to(torch.float32) * float(select), min=min_keep_ratio, max=1.0)
             print(
                 f"[ADAPTIVE DEBUG] layer={self.layer_id} select={float(select):.4f} "
@@ -288,6 +300,16 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         # Multiply by select to get actual keep_ratios
         # This ensures: mean(keep_ratio) ≈ select, while preserving relative importance
         
+        # Precompute per-(query-)head keep_ratio on-device.
+        # NOTE: Avoid `.item()` in per-head loops: that triggers GPU↔CPU sync and is extremely slow.
+        if getattr(self, "head_sparsity_levels_q", None) is not None:
+            relative_weights_q = self.head_sparsity_levels_q.to(device=q.device, dtype=torch.float32)
+        else:
+            relative_weights_kv = self.head_sparsity_levels.to(device=q.device, dtype=torch.float32)
+            relative_weights_q = relative_weights_kv.repeat_interleave(heads_per_group, dim=0)[:n_heads]
+
+        keep_ratio_per_head = torch.clamp(relative_weights_q * float(select), min=min_keep_ratio, max=1.0)  # (n_heads,)
+
         # Create mask for ALL heads at once
         self.fine_mask = torch.zeros(
             (B, n_heads, (q_len+block_size-1)//block_size, (kv_len+block_size-1)//block_size),
@@ -308,37 +330,9 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             attn_weights = torch.matmul(q_block, k.transpose(2, 3)) / math.sqrt(head_dim)
             attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(q.dtype)
             
-            # Apply different keep_ratio for each head
-            for head_idx in range(n_heads):
-                # Prefer per-query-head weights if available; otherwise fall back to KV-group weights.
-                if getattr(self, "head_sparsity_levels_q", None) is not None:
-                    relative_weight = self.head_sparsity_levels_q[head_idx].item()
-                else:
-                    # Get relative weight for this head's KV group (GQA: multiple q heads share one kv group)
-                    kv_head_idx = head_idx // heads_per_group
-                    # kv_head_idx should always be in-range now.
-                    if kv_head_idx >= self.head_sparsity_levels.numel():
-                        raise RuntimeError(
-                            f"kv_head_idx out of range: kv_head_idx={kv_head_idx}, "
-                            f"numel(head_sparsity_levels)={self.head_sparsity_levels.numel()}, "
-                            f"n_heads={n_heads}, effective_n_kv_heads={effective_n_kv_heads}"
-                        )
-                    relative_weight = self.head_sparsity_levels[kv_head_idx].item()
-                
-                # Compute actual keep_ratio: weight * select
-                # Important heads have weight>1.0, less important have weight<1.0
-                # Average weight≈1.0, so average(keep_ratio)≈select
-                keep_ratio = relative_weight * select
-                # Clamp to a safe range to avoid empty masks
-                min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
-                keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
-                
-                # Create mask for this head with its specific keep_ratio
-                head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
-                head_mask = create_attention_block_mask(
-                    head_attn, block_size=block_size, keep_ratio=keep_ratio
-                )
-                self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, :] = head_mask[:, :, :1, :]
+            # Vectorized per-head keep_ratio mask selection (no Python head loop).
+            head_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=keep_ratio_per_head)
+            self.fine_mask[:, :, idx:idx+1, :] = head_mask[:, :, :1, :]
         
         # Set last blocks to False
         self.fine_mask[:, :, :, self.last:] = False
@@ -351,38 +345,17 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
                 attn_weights = torch.matmul(q_block, k_last.transpose(2, 3)) / math.sqrt(head_dim)
                 attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(q.dtype)
                 
-                # Apply different keep_ratio for each head
-                for head_idx in range(n_heads):
-                    if getattr(self, "head_sparsity_levels_q", None) is not None:
-                        relative_weight = self.head_sparsity_levels_q[head_idx].item()
-                    else:
-                        kv_head_idx = head_idx // heads_per_group
-                        if kv_head_idx >= self.head_sparsity_levels.numel():
-                            raise RuntimeError(
-                                f"kv_head_idx out of range: kv_head_idx={kv_head_idx}, "
-                                f"numel(head_sparsity_levels)={self.head_sparsity_levels.numel()}, "
-                                f"n_heads={n_heads}, effective_n_kv_heads={effective_n_kv_heads}"
-                            )
-                        relative_weight = self.head_sparsity_levels[kv_head_idx].item()
-                    
-                    # Compute actual keep_ratio (same as above)
-                    keep_ratio = relative_weight * select
-                    min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
-                    keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
-                    
-                    head_attn = attn_weights[:, head_idx:head_idx+1, :, :]
-                    head_mask = create_attention_block_mask(
-                        head_attn, block_size=block_size, keep_ratio=keep_ratio
-                    )
-                    self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:] = torch.logical_or(
-                        self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:], 
-                        head_mask[:, :, :1, :]
-                    )
+                head_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=keep_ratio_per_head)
+                self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(
+                    self.fine_mask[:, :, idx:idx+1, self.last:],
+                    head_mask[:, :, :1, :],
+                )
         
         # Convert to block mask for ALL heads at once
         new_mask = customize_mask(self.fine_mask, block_size=block_size)
+        compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
         self.block_mask = create_block_mask_cached(
-            new_mask, B, n_heads, q_len, kv_len, device=q.device, _compile=True
+            new_mask, B, n_heads, q_len, kv_len, device=q.device, _compile=compile_masks
         )
     
     def forward(

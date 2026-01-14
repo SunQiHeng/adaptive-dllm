@@ -347,10 +347,28 @@ class DreamAttention(nn.Module):
         value_states = repeat_kv(value_states, self.num_key_value_groups)
 
         # -------- Start Sparse Attention -----------
+        # NOTE:
+        # - In likelihood scoring we may set `now_step` directly > warmup. In that case, we won't pass through
+        #   the `now_step == 0` initialization below, so we must ensure these attributes exist.
+        if not hasattr(self, "fine_mask"):
+            self.fine_mask = None
+        if not hasattr(self, "last"):
+            self.last = None
+        if not hasattr(self, "block_mask"):
+            self.block_mask = None
+
         if now_step == 0:
             self.fine_mask = None
             self.last = None
             self.block_mask = None
+
+        # For likelihood evaluation we may want to recompute masks for every forward.
+        # (Masks depend on the actual q/k content; caching across different examples is incorrect.)
+        if SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False):
+            self.fine_mask = None
+            self.last = None
+            self.block_mask = None
+
         end_time = int(whole_steps*skip)+1
         if now_step <= end_time:
             if now_step==end_time:
@@ -377,7 +395,10 @@ class DreamAttention(nn.Module):
                     fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                     self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
                 new_mask = customize_mask(self.fine_mask, block_size=block_size)
-                self.block_mask = create_block_mask_cached(new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=True)
+                compile_masks = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
+                self.block_mask = create_block_mask_cached(
+                    new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks
+                )
             
             attn_output = torch.nn.functional.scaled_dot_product_attention(
                 query_states,
@@ -388,7 +409,58 @@ class DreamAttention(nn.Module):
                 is_causal=False, 
             )
         else:
-            attn_output = flex_attn(query_states, key_states, value_states, block_mask=self.block_mask)
+            # Build sparse masks on-demand if we didn't pass through the warmup "build" step.
+            # This is useful when `now_step` is set > end_time directly (e.g., likelihood scoring).
+            if self.block_mask is None:
+                bsz, num_heads, q_len, kv_len = (
+                    query_states.size(0),
+                    query_states.size(1),
+                    query_states.size(2),
+                    key_states.size(2),
+                )
+
+                if self.fine_mask is None:
+                    self.fine_mask = torch.zeros(
+                        (bsz, num_heads, (q_len + block_size - 1) // block_size, (kv_len + block_size - 1) // block_size),
+                        dtype=torch.bool,
+                        device=query_states.device,
+                    )
+                    self.last = None
+                    for idx in range((q_len + block_size - 1) // block_size):
+                        if q_len - idx * block_size <= new_generation or idx == (q_len + block_size - 1) // block_size - 1:
+                            if self.last is None:
+                                self.last = idx
+                        query_states_reduce = query_states[:, :, idx * block_size : (idx + 1) * block_size]
+                        attn_weights = torch.matmul(query_states_reduce, key_states.transpose(2, 3)) / math.sqrt(self.head_dim)
+                        attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+                        fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select)
+                        self.fine_mask[:, :, idx : idx + 1, :] = fine_mask[:, : :1, :]
+                    assert self.last is not None
+                    self.fine_mask[:, :, :, self.last:] = False
+
+                key_states_reduce = key_states[:, :, self.last * block_size :, :]
+                for idx in range((q_len + block_size - 1) // block_size):
+                    query_states_reduce = query_states[:, :, idx * block_size : (idx + 1) * block_size]
+                    attn_weights = torch.matmul(query_states_reduce, key_states_reduce.transpose(2, 3)) / math.sqrt(self.head_dim)
+                    attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+                    fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select)
+                    self.fine_mask[:, :, idx : idx + 1, self.last:] = torch.logical_or(
+                        self.fine_mask[:, :, idx : idx + 1, self.last:], fine_mask[:, : :1, :]
+                    )
+                new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                compile_masks = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
+                self.block_mask = create_block_mask_cached(
+                    new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks
+                )
+
+            # `flex_attn` is torch.compile'd and may be unstable under highly dynamic shapes
+            # (e.g., likelihood evaluation with recompute_mask_each_call). Fall back to eager
+            # `flex_attention` in that case to avoid inductor/triton autotune crashes.
+            use_compiled_flex = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
+            if use_compiled_flex:
+                attn_output = flex_attn(query_states, key_states, value_states, block_mask=self.block_mask)
+            else:
+                attn_output = flex_attention(query_states, key_states, value_states, block_mask=self.block_mask)
         # -------- End Sparse Attention -----------
 
         # attn_weights = torch.matmul(query_states, key_states.transpose(2, 3)) / math.sqrt(self.head_dim)

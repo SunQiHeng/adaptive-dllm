@@ -20,7 +20,7 @@ echo "========================================================"
 
 # Pin to a specific GPU id (default: 1)
 # If you want a different GPU later, you can still override via env: GPU_ID=0 bash run_loss_attribution.sh
-GPU_ID=${GPU_ID:-4}
+GPU_ID=${GPU_ID:-2}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -49,7 +49,7 @@ NEMOTRON_CATEGORIES=${NEMOTRON_CATEGORIES:-"code,math,science,chat,safety"} # ne
 MAX_SAMPLES=${MAX_SAMPLES:-50}
 IG_STEPS=${IG_STEPS:-8}
 MAX_LENGTH=${MAX_LENGTH:-2048}
-SEED=${SEED:-47}
+SEED=${SEED:-1234}
 
 # Seeds:
 # - DATA_SEED controls which samples are selected (dataset subsampling/shuffle).

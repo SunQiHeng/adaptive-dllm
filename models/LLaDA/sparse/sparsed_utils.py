@@ -31,14 +31,42 @@ def create_attention_block_mask(attn_weights, block_size=128, keep_ratio=0.5):
     
     blocks = padded_attn.unfold(2, block_size, block_size).unfold(3, block_size, block_size)
     block_importance = blocks.abs().mean(dim=(-1, -2))  # (bsz, num_heads, num_blocks_q, num_blocks_kv)
-    keep_per_q = max(1, int(num_blocks_kv * keep_ratio) + 1)
-    # Ensure keep_per_q doesn't exceed num_blocks_kv to avoid topk out of range error
-    keep_per_q = min(keep_per_q, num_blocks_kv)
-    
-    _, topk_indices = torch.topk(block_importance, k=keep_per_q, dim=-1, sorted=False)  # (bsz, num_heads, num_blocks_q, keep_per_q)
-    
-    block_mask = torch.zeros_like(block_importance, dtype=torch.bool) 
-    block_mask.scatter_(dim=-1, index=topk_indices, value=True)  # (bsz, num_heads, num_blocks_q, num_blocks_kv)
+    # keep_ratio:
+    # - float: shared keep_ratio for all heads
+    # - torch.Tensor: per-head/per-batch keep_ratio, broadcastable to (bsz, num_heads, 1, 1)
+    if torch.is_tensor(keep_ratio):
+        keep_ratio_t = keep_ratio.to(device=block_importance.device, dtype=torch.float32)
+        if keep_ratio_t.ndim == 0:
+            keep_ratio_t = keep_ratio_t.view(1, 1, 1, 1)
+        elif keep_ratio_t.ndim == 1:
+            # (num_heads,)
+            keep_ratio_t = keep_ratio_t.view(1, num_heads, 1, 1)
+        elif keep_ratio_t.ndim == 2:
+            # (bsz, num_heads)
+            keep_ratio_t = keep_ratio_t.view(bsz, num_heads, 1, 1)
+        # else: assume broadcastable already
+
+        # Keep at least 1 and at most num_blocks_kv blocks.
+        keep_per_q = torch.floor(keep_ratio_t * float(num_blocks_kv)).to(torch.int64) + 1
+        keep_per_q = torch.clamp(keep_per_q, min=1, max=num_blocks_kv)
+
+        # Vectorized "top-k with varying k" via sorting + rank mask.
+        sorted_idx = torch.argsort(block_importance, dim=-1, descending=True)
+        ranks = torch.arange(num_blocks_kv, device=block_importance.device, dtype=torch.int64).view(1, 1, 1, -1)
+        keep_sorted = ranks < keep_per_q  # broadcast to (..., num_blocks_kv)
+        keep_sorted = keep_sorted.expand_as(sorted_idx)
+
+        block_mask = torch.zeros_like(block_importance, dtype=torch.bool)
+        block_mask.scatter_(dim=-1, index=sorted_idx, src=keep_sorted)
+    else:
+        keep_per_q = max(1, int(num_blocks_kv * float(keep_ratio)) + 1)
+        # Ensure keep_per_q doesn't exceed num_blocks_kv to avoid topk out of range error
+        keep_per_q = min(keep_per_q, num_blocks_kv)
+        
+        _, topk_indices = torch.topk(block_importance, k=keep_per_q, dim=-1, sorted=False)  # (bsz, num_heads, num_blocks_q, keep_per_q)
+        
+        block_mask = torch.zeros_like(block_importance, dtype=torch.bool) 
+        block_mask.scatter_(dim=-1, index=topk_indices, value=True)  # (bsz, num_heads, num_blocks_q, num_blocks_kv)
     
     expanded_mask = block_mask.unsqueeze(-1).unsqueeze(-1)
     

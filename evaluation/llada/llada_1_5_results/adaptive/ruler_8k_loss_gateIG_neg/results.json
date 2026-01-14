@@ -1,0 +1,18 @@
+{
+  "task": "ruler",
+  "len_k": 8,
+  "n": 100,
+  "exact_match": 0.0,
+  "normalized_exact_match": 0.0,
+  "contains_match": 0.65,
+  "first_line_contains_match": 0.65,
+  "yn_first_token_acc": 0.1,
+  "model_path": "/data/qh_models/LLaDA-1.5",
+  "model_type": "adaptive",
+  "gen_length": 256,
+  "steps": 256,
+  "block_length": 32,
+  "select": 0.3,
+  "skip": 0.2,
+  "block_size": 32
+}

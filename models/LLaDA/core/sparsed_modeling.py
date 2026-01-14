@@ -747,6 +747,13 @@ class LLaDABlock(nn.Module):
                 self.fine_mask = None
                 self.last = None
                 self.block_mask = None
+
+            # For likelihood evaluation we may want to recompute masks for every forward.
+            # (Masks depend on the actual q/k content; caching across different examples is incorrect.)
+            if SparseD_param.get("recompute_mask_each_call", False):
+                self.fine_mask = None
+                self.last = None
+                self.block_mask = None
             
             end_time = int(whole_steps*skip)+1
             # DEBUG: Check skip logic (show key transitions)
@@ -765,6 +772,7 @@ class LLaDABlock(nn.Module):
                         print(f"🔨 [SPARSE DEBUG] Layer {self.layer_id} - Building sparse masks (now_step == end_time)")
                     
                     query_states, key_states, value_states = q, k, v
+                    compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
                     if self.fine_mask is None:
                         bsz, num_heads, q_len, kv_len = query_states.size(0), query_states.size(1), query_states.size(2), key_states.size(2)
                         self.fine_mask = torch.zeros((bsz, num_heads, (q_len+block_size-1)//block_size, (kv_len+block_size-1)//block_size), dtype=torch.bool, device=query_states.device)
@@ -790,8 +798,9 @@ class LLaDABlock(nn.Module):
                             attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
                             fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                             self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
-                        new_mask = customize_mask(self.fine_mask, block_size=block_size)
-                        self.block_mask = create_block_mask_cached(new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=True)
+                    compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
+                    new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                    self.block_mask = create_block_mask_cached(new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks)
                 att = self._scaled_dot_product_attention(
                     q,
                     k,
@@ -804,6 +813,60 @@ class LLaDABlock(nn.Module):
                 # DEBUG: Using sparse attention
                 if self.layer_id == 0 and (now_step == end_time + 1 or now_step % 100 == 0):
                     print(f"🟢 [SPARSE DEBUG] Layer {self.layer_id} - SPARSE (step {now_step})")
+
+                # Build sparse masks on-demand if we didn't pass through the warmup "build" step.
+                # This is useful when `now_step` is set > end_time directly (e.g., likelihood scoring).
+                if self.block_mask is None:
+                    query_states, key_states, value_states = q, k, v
+                    compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
+                    if self.fine_mask is None:
+                        bsz, num_heads, q_len, kv_len = (
+                            query_states.size(0),
+                            query_states.size(1),
+                            query_states.size(2),
+                            key_states.size(2),
+                        )
+                        self.fine_mask = torch.zeros(
+                            (bsz, num_heads, (q_len + block_size - 1) // block_size, (kv_len + block_size - 1) // block_size),
+                            dtype=torch.bool,
+                            device=query_states.device,
+                        )
+                        self.last = None
+                        for idx in range((q_len + block_size - 1) // block_size):
+                            if q_len - idx * block_size <= new_generation or idx == (q_len + block_size - 1) // block_size - 1:
+                                if self.last is None:
+                                    self.last = idx
+                            query_states_reduce = query_states[:, :, idx * block_size : (idx + 1) * block_size]
+                            # Scale by sqrt(head_dim), consistent with attention computation.
+                            head_dim = query_states_reduce.size(-1)
+                            attn_weights = torch.matmul(query_states_reduce, key_states.transpose(2, 3)) / math.sqrt(head_dim)
+                            attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+                            fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select)
+                            self.fine_mask[:, :, idx : idx + 1, :] = fine_mask[:, : :1, :]
+                        assert self.last is not None
+                        self.fine_mask[:, :, :, self.last:] = False
+
+                    bsz, num_heads, q_len, kv_len = (
+                        query_states.size(0),
+                        query_states.size(1),
+                        query_states.size(2),
+                        key_states.size(2),
+                    )
+                    key_states_reduce = key_states[:, :, self.last * block_size :, :]
+                    for idx in range((q_len + block_size - 1) // block_size):
+                        query_states_reduce = query_states[:, :, idx * block_size : (idx + 1) * block_size]
+                        head_dim = query_states_reduce.size(-1)
+                        attn_weights = torch.matmul(query_states_reduce, key_states_reduce.transpose(2, 3)) / math.sqrt(head_dim)
+                        attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+                        fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select)
+                        self.fine_mask[:, :, idx : idx + 1, self.last:] = torch.logical_or(
+                            self.fine_mask[:, :, idx : idx + 1, self.last:], fine_mask[:, : :1, :]
+                        )
+                    new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                    self.block_mask = create_block_mask_cached(
+                        new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks
+                    )
+
                 att = flex_attn(q, k, v, block_mask=self.block_mask)
         
         # Re-assemble all head outputs side-by-side.

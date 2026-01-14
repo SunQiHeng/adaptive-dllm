@@ -189,6 +189,18 @@ class AdaptiveDreamAttention(DreamAttention):
         B, n_heads, q_len, head_dim = query_states.shape
         _, n_kv_heads, kv_len, _ = key_states.shape
         
+        # NOTE:
+        # - In likelihood scoring we may set `now_step` directly > warmup. In that case, we won't pass through
+        #   the `now_step == 0` initialization below, so we must ensure these attributes exist.
+        if not hasattr(self, "fine_mask"):
+            self.fine_mask = None
+        if not hasattr(self, "last"):
+            self.last = None
+        if not hasattr(self, "block_mask"):
+            self.block_mask = None
+        if not hasattr(self, "prev_seq_len"):
+            self.prev_seq_len = None
+        
         # Initialize masks on first step of each generation
         # CRITICAL: Must reset for each new sample as sequence length varies!
         if now_step == 0:
@@ -198,6 +210,14 @@ class AdaptiveDreamAttention(DreamAttention):
             self.prev_seq_len = None
             if self.layer_idx == 0:
                 print(f"[Layer 0] Step 0 RESET: q_len={q_len}")
+        
+        # For likelihood evaluation we may want to recompute masks for every forward.
+        # (Masks depend on the actual q/k content; caching across different examples is incorrect.)
+        if SparseD_param.get("recompute_mask_each_call", False):
+            self.fine_mask = None
+            self.block_mask = None
+            self.last = None
+            self.prev_seq_len = None
         
         # Also reset if sequence length changed (new sample with different prompt length)
         if self.fine_mask is not None and hasattr(self, 'prev_seq_len') and self.prev_seq_len != q_len:
@@ -238,11 +258,25 @@ class AdaptiveDreamAttention(DreamAttention):
             )
         else:
             # Use adaptive sparse attention with unified block mask
+            # Build masks on-demand if we didn't pass through the warmup "build" step.
+            if self.block_mask is None:
+                self._build_adaptive_masks(
+                    query_states, key_states, value_states,
+                    block_size, new_generation, SparseD_param
+                )
+            
             # Repeat k/v for flex_attn
             key_states_repeated = self._repeat_kv(key_states, self.num_key_value_groups)
             value_states_repeated = self._repeat_kv(value_states, self.num_key_value_groups)
             
-            attn_output = flex_attn(query_states, key_states_repeated, value_states_repeated, block_mask=self.block_mask)
+            # `flex_attn` is torch.compile'd and may be unstable under highly dynamic shapes
+            # (e.g., likelihood evaluation with recompute_mask_each_call). Fall back to eager
+            # `flex_attention` in that case to avoid inductor/triton autotune crashes.
+            use_compiled_flex = not SparseD_param.get("recompute_mask_each_call", False)
+            if use_compiled_flex:
+                attn_output = flex_attn(query_states, key_states_repeated, value_states_repeated, block_mask=self.block_mask)
+            else:
+                attn_output = flex_attention(query_states, key_states_repeated, value_states_repeated, block_mask=self.block_mask)
         
         return attn_output
     
@@ -278,10 +312,27 @@ class AdaptiveDreamAttention(DreamAttention):
         heads_per_group = n_heads // n_kv_heads
         
         # Get select parameter (controls average keep_ratio)
-        select = SparseD_param.get('select', 1.0)
+        select = float(SparseD_param.get('select', 1.0))
+        min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
+        gqa_weight_mode = str(SparseD_param.get("gqa_weight_mode", "kv"))
+        if gqa_weight_mode not in ("q", "kv"):
+            raise ValueError(f"Invalid gqa_weight_mode={gqa_weight_mode!r}. Expected 'q' or 'kv'.")
         
         # head_sparsity_levels are relative weights (mean≈1.0)
         # Multiply by select to get actual keep_ratios
+
+        # Precompute per-(query-)head keep_ratio on-device.
+        # NOTE: Avoid `.item()` in per-head loops: it triggers GPU↔CPU sync and is extremely slow.
+        if getattr(self, "head_sparsity_levels_q", None) is not None and gqa_weight_mode == "q":
+            relative_weights_q = self.head_sparsity_levels_q.to(device=query_states.device, dtype=torch.float32)
+        else:
+            relative_weights_kv = self.head_sparsity_levels.to(device=query_states.device, dtype=torch.float32)
+            relative_weights_q = relative_weights_kv.repeat_interleave(heads_per_group, dim=0)[:n_heads]
+
+        keep_ratio_per_head = torch.clamp(relative_weights_q * float(select), min=min_keep_ratio, max=1.0)  # (n_heads,)
+        
+        # Repeat KV heads to match Q heads once (GQA) - avoid doing this in every loop iteration
+        k_for_q = key_states.repeat_interleave(heads_per_group, dim=1)[:, :n_heads, :, :]  # (B, n_heads, kv_len, head_dim)
         
         # Create mask for ALL heads at once
         self.fine_mask = torch.zeros(
@@ -298,47 +349,14 @@ class AdaptiveDreamAttention(DreamAttention):
                     self.last = idx
             
             q_block = query_states[:, :, idx*block_size:(idx+1)*block_size, :]
-            
-            # Compute attention scores for all query heads with their corresponding KV heads
-            # For GQA: each query head uses its corresponding KV head
-            # q_block: (B, n_heads, block_len, head_dim)
-            # key_states: (B, n_kv_heads, kv_len, head_dim)
-            
-            # Apply different keep_ratio for each query head.
-            #
-            # NOTE (GQA granularity):
-            # - If `head_sparsity_levels_q` is present, we *can* use per-Q-head weights (n_heads) directly.
-            # - However, for GQA models it may be more stable to apply weights per KV-group (n_kv_heads),
-            #   i.e., average weights within each group and use the same keep_ratio for all Q heads in that group.
-            # This knob is controlled by SparseD_param['gqa_weight_mode'] ∈ {'q','kv'} (default 'q').
-            gqa_weight_mode = str(SparseD_param.get("gqa_weight_mode", "kv"))
-            if gqa_weight_mode not in ("q", "kv"):
-                raise ValueError(f"Invalid gqa_weight_mode={gqa_weight_mode!r}. Expected 'q' or 'kv'.")
-            
-            for head_idx in range(n_heads):
-                # Prefer per-Q-head weights if available and requested; otherwise fall back to KV-group weights.
-                kv_head_idx = head_idx // heads_per_group
-                kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
-                if getattr(self, "head_sparsity_levels_q", None) is not None and gqa_weight_mode == "q":
-                    relative_weight = float(self.head_sparsity_levels_q[head_idx].item())
-                else:
-                    relative_weight = float(self.head_sparsity_levels[kv_head_idx].item())
-                
-                keep_ratio = relative_weight * select
-                # Clamp to a safe range to avoid empty/degenerate masks.
-                min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
-                keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
-                
-                q_head = q_block[:, head_idx:head_idx+1, :, :]  # (B, 1, block_len, head_dim)
-                k_head = key_states[:, kv_head_idx:kv_head_idx+1, :, :]  # (B, 1, kv_len, head_dim)
-                
-                attn_weights = torch.matmul(q_head, k_head.transpose(2, 3)) / math.sqrt(head_dim)
-                attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
-                
-                head_mask = create_attention_block_mask(
-                    attn_weights, block_size=block_size, keep_ratio=keep_ratio
-                )
-                self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, :] = head_mask[:, :, :1, :]
+
+            # Vectorize attention score computation across all heads.
+            attn_weights = torch.matmul(q_block, k_for_q.transpose(2, 3)) / math.sqrt(head_dim)  # (B, n_heads, block_len, kv_len)
+            attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+
+            # Vectorized per-head keep_ratio mask selection (no Python head loop).
+            head_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=keep_ratio_per_head)
+            self.fine_mask[:, :, idx:idx+1, :] = head_mask[:, :, :1, :]
         
         # Set last blocks to False
         if self.last is not None:
@@ -347,43 +365,26 @@ class AdaptiveDreamAttention(DreamAttention):
         # Handle last blocks
         if self.last is not None:
             k_last = key_states[:, :, self.last*block_size:, :]
+            k_last_for_q = k_last.repeat_interleave(heads_per_group, dim=1)[:, :n_heads, :, :]  # (B, n_heads, kv_len_last, head_dim)
+            
             for idx in range((q_len+block_size-1)//block_size):
                 q_block = query_states[:, :, idx*block_size:(idx+1)*block_size, :]
                 
-                # Apply different keep_ratio for each head
-                gqa_weight_mode = str(SparseD_param.get("gqa_weight_mode", "kv"))
-                if gqa_weight_mode not in ("q", "kv"):
-                    raise ValueError(f"Invalid gqa_weight_mode={gqa_weight_mode!r}. Expected 'q' or 'kv'.")
-                for head_idx in range(n_heads):
-                    kv_head_idx = head_idx // heads_per_group
-                    kv_head_idx = min(kv_head_idx, len(self.head_sparsity_levels) - 1)
-                    if getattr(self, "head_sparsity_levels_q", None) is not None and gqa_weight_mode == "q":
-                        relative_weight = float(self.head_sparsity_levels_q[head_idx].item())
-                    else:
-                        relative_weight = float(self.head_sparsity_levels[kv_head_idx].item())
-                    keep_ratio = relative_weight * select
-                    min_keep_ratio = float(SparseD_param.get("min_keep_ratio", 0.01))
-                    keep_ratio = max(min(keep_ratio, 1.0), min_keep_ratio)
-                    
-                    # Compute attention for this query head with its KV head
-                    q_head = q_block[:, head_idx:head_idx+1, :, :]
-                    k_head_last = k_last[:, kv_head_idx:kv_head_idx+1, :, :]
-                    
-                    attn_weights = torch.matmul(q_head, k_head_last.transpose(2, 3)) / math.sqrt(head_dim)
-                    attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
-                    
-                    head_mask = create_attention_block_mask(
-                        attn_weights, block_size=block_size, keep_ratio=keep_ratio
-                    )
-                    self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:] = torch.logical_or(
-                        self.fine_mask[:, head_idx:head_idx+1, idx:idx+1, self.last:],
-                        head_mask[:, :, :1, :]
-                    )
+                # Vectorized attention with KV tail blocks.
+                attn_weights = torch.matmul(q_block, k_last_for_q.transpose(2, 3)) / math.sqrt(head_dim)
+                attn_weights = F.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
+
+                head_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=keep_ratio_per_head)
+                self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(
+                    self.fine_mask[:, :, idx:idx+1, self.last:],
+                    head_mask[:, :, :1, :],
+                )
         
         # Convert to block mask for ALL heads at once
         new_mask = customize_mask(self.fine_mask, block_size=block_size)
+        compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
         self.block_mask = create_block_mask_cached(
-            new_mask, B, n_heads, q_len, kv_len, device=query_states.device, _compile=True
+            new_mask, B, n_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks
         )
     
     def _apply_rotary_pos_emb(self, q, k, cos, sin):

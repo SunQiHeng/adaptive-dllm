@@ -1,660 +1,0 @@
-➖ Using existing negated importance: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt
-========================================================
-Dream Quick Test Configuration
-========================================================
-Tasks: GSM8K, HumanEval
-Model Types: standard, sparse, adaptive
-Max New Tokens: 256
-Block Size: 32
-Test Samples: 50 per dataset
-Importance tag: loss_gateIG_neg
-Importance file: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt
-========================================================
-
-🚀 Starting Dream quick test evaluation...
-Started at: Monday, December 29, 2025 PM09:26:25 HKT
-
-
-================================================
-📊 Task: GSM8K
-================================================
-
-Progress: [1/2]
-
-========================================
-Running: adaptive on gsm8k
-========================================
-Params: max_new_tokens=256, steps=256, temperature=0.1, alg_temp=0.0, block_size=32, limit=150
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--num_machines` was set to a value of `1`
-	`--mixed_precision` was set to a value of `'no'`
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-2025-12-29:21:26:33 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
-2025-12-29:21:26:33 INFO     [__main__:446] Selected Tasks: ['gsm8k']
-2025-12-29:21:26:33 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
-2025-12-29:21:26:33 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'adaptive',
-        'max_new_tokens': 256, 'steps': 256, 'temperature': 0.1, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select':
-        0.3, 'block_size': 32, 'importance_source': 'precomputed', 'precomputed_importance_path':
-        '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt', 'gqa_weight_mode': 'kv',
-        'relative_weight_scale': 0.6666667, 'min_keep_ratio': 0.1}
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-
-Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
-Using the default sparsity block size: 128
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 114.49it/s]
-The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-2025-12-29:21:27:35 INFO     [evaluator:305] gsm8k: Using gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
-2025-12-29:21:27:35 WARNING  [evaluator:324] Overwriting default num_fewshot of gsm8k from 5 to 0
-2025-12-29:21:27:35 WARNING  [evaluator:480] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
-2025-12-29:21:27:35 INFO     [api.task:434] Building contexts for gsm8k on rank 0...
-✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt
-✓ Created adaptive config using PRE-COMPUTED importance scores
-
-================================================================================
-📊 Dream Adaptive Sparsity Configuration Statistics
-================================================================================
-Mode: Relative Weights (mean=1.0, multiply by select at inference)
-Target select: 0.300 (30.0%)
-Layers: 28, Heads per layer (config width): 28
-Total heads: 784
-
---------------------------------------------------------------------------------
-Per-Layer Statistics:
---------------------------------------------------------------------------------
-Layer  0: weight_mean=0.9062 → keep_ratio=0.2719 (27.2%), range=[0.097, 0.487]
-Layer  1: weight_mean=0.8725 → keep_ratio=0.2618 (26.2%), range=[0.100, 0.353]
-Layer  2: weight_mean=1.0501 → keep_ratio=0.3150 (31.5%), range=[0.226, 0.335]
-Layer  3: weight_mean=1.0344 → keep_ratio=0.3103 (31.0%), range=[0.172, 0.343]
-Layer  4: weight_mean=1.0822 → keep_ratio=0.3247 (32.5%), range=[0.236, 0.444]
-Layer  5: weight_mean=1.0312 → keep_ratio=0.3094 (30.9%), range=[0.113, 0.376]
-Layer  6: weight_mean=1.0486 → keep_ratio=0.3146 (31.5%), range=[0.218, 0.380]
-Layer  7: weight_mean=1.0429 → keep_ratio=0.3129 (31.3%), range=[0.240, 0.400]
-Layer  8: weight_mean=1.0647 → keep_ratio=0.3194 (31.9%), range=[0.234, 0.407]
-Layer  9: weight_mean=1.0149 → keep_ratio=0.3045 (30.4%), range=[0.189, 0.443]
-Layer 10: weight_mean=1.0668 → keep_ratio=0.3200 (32.0%), range=[0.262, 0.392]
-Layer 11: weight_mean=1.0797 → keep_ratio=0.3239 (32.4%), range=[0.269, 0.415]
-Layer 12: weight_mean=1.0691 → keep_ratio=0.3207 (32.1%), range=[0.250, 0.424]
-Layer 13: weight_mean=1.0234 → keep_ratio=0.3070 (30.7%), range=[0.209, 0.487]
-Layer 14: weight_mean=0.9716 → keep_ratio=0.2915 (29.1%), range=[0.113, 0.487]
-Layer 15: weight_mean=0.9355 → keep_ratio=0.2807 (28.1%), range=[0.097, 0.487]
-Layer 16: weight_mean=1.0022 → keep_ratio=0.3007 (30.1%), range=[0.097, 0.487]
-Layer 17: weight_mean=0.8562 → keep_ratio=0.2569 (25.7%), range=[0.097, 0.487]
-Layer 18: weight_mean=1.0135 → keep_ratio=0.3041 (30.4%), range=[0.161, 0.487]
-Layer 19: weight_mean=0.7673 → keep_ratio=0.2302 (23.0%), range=[0.097, 0.487]
-Layer 20: weight_mean=0.9282 → keep_ratio=0.2785 (27.8%), range=[0.097, 0.487]
-Layer 21: weight_mean=0.9052 → keep_ratio=0.2715 (27.2%), range=[0.097, 0.487]
-Layer 22: weight_mean=1.0040 → keep_ratio=0.3012 (30.1%), range=[0.097, 0.487]
-Layer 23: weight_mean=1.1224 → keep_ratio=0.3367 (33.7%), range=[0.097, 0.487]
-Layer 24: weight_mean=1.0461 → keep_ratio=0.3138 (31.4%), range=[0.097, 0.487]
-Layer 25: weight_mean=1.0883 → keep_ratio=0.3265 (32.6%), range=[0.097, 0.487]
-Layer 26: weight_mean=0.9933 → keep_ratio=0.2980 (29.8%), range=[0.097, 0.487]
-Layer 27: weight_mean=0.9795 → keep_ratio=0.2939 (29.4%), range=[0.097, 0.487]
-
---------------------------------------------------------------------------------
-Global Statistics:
---------------------------------------------------------------------------------
-Relative weights:
-  Mean:   1.0000 (should be ≈1.0)
-  Std:    0.2974
-  Range:  [0.325, 1.624]
-
-Actual keep_ratios (weights × select=0.3):
-  Mean:   0.3000 (30.0%)
-  Target: 0.3000 (30.0%)
-  Deviation: 0.0000 (0.00%)
-  Range:  [0.097, 0.487]
-  Heads hitting upper limit (>1.0): 0/784 (0.0%)
-  ✅ Mean matches target (deviation < 1%)
-
---------------------------------------------------------------------------------
-Layer-wise Variation:
---------------------------------------------------------------------------------
-Layer means range: [0.7673, 1.1224]
-Layer means std:   0.0818
-Actual keep_ratio range across layers: [0.230, 0.337]
-Variation: 10.7% spread
-================================================================================
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-📌 重要说明：Adaptive Sparsity 工作原理
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-adaptive_config 中存储的是相对权重 (relative weights)，全局平均=1.0
-在推理时，实际的 keep_ratio 计算方式为：
-  keep_ratio = relative_weight × select = relative_weight × 0.3
-
-例如：
-  如果某个head的 relative_weight = 1.2
-  那么实际 keep_ratio = 1.2 × 0.3 = 0.360 (36.0%)
-  如果某个head的 relative_weight = 0.8
-  那么实际 keep_ratio = 0.8 × 0.3 = 0.240 (24.0%)
-
-所有heads的实际keep_ratio的平均值 = 0.300 (30.0%)
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-======================================================================
-Dream Evaluation Setup
-======================================================================
-Model type: adaptive
-Model path: /data/qh_models/Dream-v0-Instruct-7B
-Steps: 256, Max new tokens: 256
-Temperature: 0.1, Top-p: 0.9, Top-k: None
-Sparse params: skip=0.2, select=0.3, block_size=32
-Adaptive params: importance_source=precomputed, min=0.1, max=0.9
-======================================================================
-
-  0%|          | 0/150 [00:00<?, ?it/s]100%|██████████| 150/150 [00:00<00:00, 2578.06it/s]
-2025-12-29:21:27:35 INFO     [evaluator:574] Running generate_until requests
-Generating...:   0%|          | 0/150 [00:00<?, ?it/s]Generating...:   1%|          | 1/150 [00:12<31:53, 12.85s/it]Generating...:   1%|▏         | 2/150 [00:25<31:12, 12.65s/it]Generating...:   2%|▏         | 3/150 [00:36<29:25, 12.01s/it]Generating...:   3%|▎         | 4/150 [00:47<27:40, 11.37s/it]Generating...:   3%|▎         | 5/150 [00:58<27:52, 11.53s/it]Generating...:   4%|▍         | 6/150 [01:09<27:18, 11.38s/it]Generating...:   5%|▍         | 7/150 [01:21<27:09, 11.39s/it]Generating...:   5%|▌         | 8/150 [01:32<26:46, 11.31s/it]Generating...:   6%|▌         | 9/150 [01:44<26:56, 11.47s/it]Generating...:   7%|▋         | 10/150 [01:55<26:37, 11.41s/it]Generating...:   7%|▋         | 11/150 [02:06<26:03, 11.25s/it]Generating...:   8%|▊         | 12/150 [02:17<25:37, 11.14s/it]Generating...:   9%|▊         | 13/150 [02:28<25:27, 11.15s/it]Generating...:   9%|▉         | 14/150 [02:39<25:12, 11.12s/it]Generating...:  10%|█         | 15/150 [02:50<25:08, 11.17s/it]Generating...:  11%|█         | 16/150 [03:02<25:18, 11.33s/it]Generating...:  11%|█▏        | 17/150 [03:14<25:24, 11.46s/it]Generating...:  12%|█▏        | 18/150 [03:25<24:50, 11.29s/it]Generating...:  13%|█▎        | 19/150 [03:35<24:09, 11.06s/it]Generating...:  13%|█▎        | 20/150 [03:47<24:09, 11.15s/it]Generating...:  14%|█▍        | 21/150 [03:58<24:08, 11.23s/it]Generating...:  15%|█▍        | 22/150 [04:09<23:51, 11.18s/it]Generating...:  15%|█▌        | 23/150 [04:20<23:48, 11.24s/it]Generating...:  16%|█▌        | 24/150 [04:31<23:08, 11.02s/it]Generating...:  17%|█▋        | 25/150 [04:42<22:46, 10.93s/it]Generating...:  17%|█▋        | 26/150 [04:53<22:50, 11.05s/it]Generating...:  18%|█▊        | 27/150 [05:04<22:49, 11.14s/it]Generating...:  19%|█▊        | 28/150 [05:16<22:43, 11.18s/it]Generating...:  19%|█▉        | 29/150 [05:27<22:35, 11.20s/it]Generating...:  20%|██        | 30/150 [05:38<22:11, 11.09s/it]Generating...:  21%|██        | 31/150 [05:48<21:24, 10.80s/it]Generating...:  21%|██▏       | 32/150 [05:59<21:19, 10.85s/it]Generating...:  22%|██▏       | 33/150 [06:09<20:59, 10.77s/it]Generating...:  23%|██▎       | 34/150 [06:20<20:42, 10.71s/it]Generating...:  23%|██▎       | 35/150 [06:31<20:28, 10.68s/it]Generating...:  24%|██▍       | 36/150 [06:42<20:35, 10.84s/it]Generating...:  25%|██▍       | 37/150 [06:53<20:30, 10.89s/it]Generating...:  25%|██▌       | 38/150 [07:04<20:21, 10.91s/it]Generating...:  26%|██▌       | 39/150 [07:15<20:17, 10.97s/it]Generating...:  27%|██▋       | 40/150 [07:26<20:25, 11.14s/it]Generating...:  27%|██▋       | 41/150 [07:37<20:04, 11.05s/it]Generating...:  28%|██▊       | 42/150 [07:49<20:24, 11.34s/it]Generating...:  29%|██▊       | 43/150 [08:01<20:37, 11.56s/it]Generating...:  29%|██▉       | 44/150 [08:13<20:20, 11.51s/it]Generating...:  30%|███       | 45/150 [08:24<20:10, 11.53s/it]Generating...:  31%|███       | 46/150 [08:36<20:09, 11.63s/it]Generating...:  31%|███▏      | 47/150 [08:48<19:56, 11.62s/it]Generating...:  32%|███▏      | 48/150 [08:59<19:32, 11.50s/it]Generating...:  33%|███▎      | 49/150 [09:10<18:55, 11.24s/it]Generating...:  33%|███▎      | 50/150 [09:20<18:31, 11.12s/it]Generating...:  34%|███▍      | 51/150 [09:31<17:56, 10.88s/it]Generating...:  35%|███▍      | 52/150 [09:42<18:00, 11.03s/it]Generating...:  35%|███▌      | 53/150 [09:53<17:56, 11.10s/it]Generating...:  36%|███▌      | 54/150 [10:05<18:01, 11.26s/it]Generating...:  37%|███▋      | 55/150 [10:17<18:02, 11.39s/it]Generating...:  37%|███▋      | 56/150 [10:28<17:37, 11.25s/it]Generating...:  38%|███▊      | 57/150 [10:39<17:14, 11.13s/it]Generating...:  39%|███▊      | 58/150 [10:50<17:10, 11.20s/it]Generating...:  39%|███▉      | 59/150 [11:02<17:24, 11.47s/it]Generating...:  40%|████      | 60/150 [11:13<16:47, 11.20s/it]
-[DEBUG] First request context:
-  Context length: 406 chars
-  Context (first 300 chars): "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\nQuestion: Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. Ho"
-  Context (last 200 chars): " with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?\nAnswer:<|im_end|>\n<|im_start|>assistant\n"
-  gen_kwargs: {'until': ['Question:', '</s>', '<|im_end|>'], 'do_sample': False, 'temperature': 0.0}
-[Layer 0] Step 0 RESET: q_len=343
-[Layer 0] Step 52 BUILT MASK: q_len=343, mask_shape=torch.Size([1, 28, 11, 11])
-
-[DEBUG] First generation:
-  Prompt length: 87
-  Generated sequence length: 343
-  Generated tokens shape: torch.Size([343])
-  First 10 tokens: [151644, 8948, 198, 2610, 525, 264, 10950, 17847, 13, 151645]
-  Last 10 tokens: [151643, 151643, 151643, 151643, 151643, 151643, 151643, 151643, 151643, 151643]
-  Mask token ID: 151666
-  Generated answer length: 251
-  Generated answer (first 200 chars): 'Janet eats 3 eggs for breakfast and bakes 4 eggs for muffins, so she uses 3 + 4 = 7 eggs per day. Her ducks lay 16 eggs per day, so she sells 16 - 7 = 9 eggs per day. She sells each egg for $2, so she'
-
-[Layer 0] Step 0 RESET: q_len=305
-[Layer 0] Step 52 BUILT MASK: q_len=305, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=336
-[Layer 0] Step 52 BUILT MASK: q_len=336, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=314
-[Layer 0] Step 52 BUILT MASK: q_len=314, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=390
-[Layer 0] Step 52 BUILT MASK: q_len=390, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=335
-[Layer 0] Step 52 BUILT MASK: q_len=335, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=321
-[Layer 0] Step 52 BUILT MASK: q_len=321, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=348
-[Layer 0] Step 52 BUILT MASK: q_len=348, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=383
-[Layer 0] Step 52 BUILT MASK: q_len=383, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=339
-[Layer 0] Step 52 BUILT MASK: q_len=339, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=339
-[Layer 0] Step 52 BUILT MASK: q_len=339, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=343
-[Layer 0] Step 52 BUILT MASK: q_len=343, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=346
-[Layer 0] Step 52 BUILT MASK: q_len=346, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=336
-[Layer 0] Step 52 BUILT MASK: q_len=336, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=331
-[Layer 0] Step 52 BUILT MASK: q_len=331, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=373
-[Layer 0] Step 52 BUILT MASK: q_len=373, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=332
-[Layer 0] Step 52 BUILT MASK: q_len=332, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=336
-[Layer 0] Step 52 BUILT MASK: q_len=336, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=307
-[Layer 0] Step 52 BUILT MASK: q_len=307, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=344
-[Layer 0] Step 52 BUILT MASK: q_len=344, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=342
-[Layer 0] Step 52 BUILT MASK: q_len=342, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=324
-[Layer 0] Step 52 BUILT MASK: q_len=324, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=334
-[Layer 0] Step 52 BUILT MASK: q_len=334, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=319
-[Layer 0] Step 52 BUILT MASK: q_len=319, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=318
-[Layer 0] Step 52 BUILT MASK: q_len=318, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=346
-[Layer 0] Step 52 BUILT MASK: q_len=346, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=347
-[Layer 0] Step 52 BUILT MASK: q_len=347, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=337
-[Layer 0] Step 52 BUILT MASK: q_len=337, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=329
-[Layer 0] Step 52 BUILT MASK: q_len=329, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=346
-[Layer 0] Step 52 BUILT MASK: q_len=346, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=318
-[Layer 0] Step 52 BUILT MASK: q_len=318, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=342
-[Layer 0] Step 52 BUILT MASK: q_len=342, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=320
-[Layer 0] Step 52 BUILT MASK: q_len=320, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=309
-[Layer 0] Step 52 BUILT MASK: q_len=309, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=320
-[Layer 0] Step 52 BUILT MASK: q_len=320, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=331
-[Layer 0] Step 52 BUILT MASK: q_len=331, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=322
-[Layer 0] Step 52 BUILT MASK: q_len=322, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=342
-[Layer 0] Step 52 BUILT MASK: q_len=342, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=351
-[Layer 0] Step 52 BUILT MASK: q_len=351, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=407
-[Layer 0] Step 52 BUILT MASK: q_len=407, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=360
-[Layer 0] Step 52 BUILT MASK: q_len=360, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=340
-[Layer 0] Step 52 BUILT MASK: q_len=340, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=356
-[Layer 0] Step 52 BUILT MASK: q_len=356, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=371
-[Layer 0] Step 52 BUILT MASK: q_len=371, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=372
-[Layer 0] Step 52 BUILT MASK: q_len=372, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=329
-[Layer 0] Step 52 BUILT MASK: q_len=329, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=315
-[Layer 0] Step 52 BUILT MASK: q_len=315, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=322
-[Layer 0] Step 52 BUILT MASK: q_len=322, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=315
-[Layer 0] Step 52 BUILT MASK: q_len=315, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=328
-[Layer 0] Step 52 BUILT MASK: q_len=328, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=341
-[Layer 0] Step 52 BUILT MASK: q_len=341, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=379
-[Layer 0] Step 52 BUILT MASK: q_len=379, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=361
-[Layer 0] Step 52 BUILT MASK: q_len=361, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=329
-[Layer 0] Step 52 BUILT MASK: q_len=329, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=324
-[Layer 0] Step 52 BUILT MASK: q_len=324, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=356
-[Layer 0] Step 52 BUILT MASK: q_len=356, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=363
-[Layer 0] Step 52 BUILT MASK: q_len=363, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=311
-[Layer 0] Step 52 BUILT MASK: q_len=311, mask_shape=torch.Size([1, 28, 10, 10])
-Generating...:  41%|████      | 61/150 [11:23<16:23, 11.06s/it]Generating...:  41%|████▏     | 62/150 [11:34<16:14, 11.07s/it]Generating...:  42%|████▏     | 63/150 [11:45<16:04, 11.09s/it]Generating...:  43%|████▎     | 64/150 [11:57<16:07, 11.24s/it]Generating...:  43%|████▎     | 65/150 [12:09<16:01, 11.31s/it]Generating...:  44%|████▍     | 66/150 [12:20<15:47, 11.28s/it]Generating...:  45%|████▍     | 67/150 [12:31<15:34, 11.26s/it]Generating...:  45%|████▌     | 68/150 [12:43<15:30, 11.34s/it]Generating...:  46%|████▌     | 69/150 [12:53<14:58, 11.09s/it]Generating...:  47%|████▋     | 70/150 [13:05<14:58, 11.24s/it]Generating...:  47%|████▋     | 71/150 [13:15<14:39, 11.13s/it]Generating...:  48%|████▊     | 72/150 [13:26<14:21, 11.05s/it]Generating...:  49%|████▊     | 73/150 [13:38<14:23, 11.22s/it]Generating...:  49%|████▉     | 74/150 [13:49<14:15, 11.26s/it]Generating...:  50%|█████     | 75/150 [14:01<14:19, 11.46s/it]Generating...:  51%|█████     | 76/150 [14:12<14:02, 11.39s/it]Generating...:  51%|█████▏    | 77/150 [14:25<14:05, 11.58s/it]Generating...:  52%|█████▏    | 78/150 [14:35<13:37, 11.35s/it]Generating...:  53%|█████▎    | 79/150 [14:47<13:23, 11.32s/it]Generating...:  53%|█████▎    | 80/150 [14:58<13:10, 11.29s/it]Generating...:  54%|█████▍    | 81/150 [15:08<12:36, 10.97s/it]Generating...:  55%|█████▍    | 82/150 [15:19<12:36, 11.12s/it]Generating...:  55%|█████▌    | 83/150 [15:30<12:11, 10.91s/it]Generating...:  56%|█████▌    | 84/150 [15:40<11:46, 10.70s/it]Generating...:  57%|█████▋    | 85/150 [15:51<11:31, 10.64s/it]Generating...:  57%|█████▋    | 86/150 [16:02<11:37, 10.91s/it]Generating...:  58%|█████▊    | 87/150 [16:14<11:40, 11.12s/it]Generating...:  59%|█████▊    | 88/150 [16:25<11:39, 11.28s/it]Generating...:  59%|█████▉    | 89/150 [16:36<11:12, 11.02s/it]Generating...:  60%|██████    | 90/150 [16:47<11:02, 11.04s/it]Generating...:  61%|██████    | 91/150 [16:59<11:03, 11.25s/it]Generating...:  61%|██████▏   | 92/150 [17:09<10:37, 10.99s/it]Generating...:  62%|██████▏   | 93/150 [17:20<10:25, 10.97s/it]Generating...:  63%|██████▎   | 94/150 [17:31<10:20, 11.09s/it]Generating...:  63%|██████▎   | 95/150 [17:43<10:12, 11.14s/it]Generating...:  64%|██████▍   | 96/150 [17:54<10:02, 11.15s/it]Generating...:  65%|██████▍   | 97/150 [18:04<09:36, 10.88s/it]Generating...:  65%|██████▌   | 98/150 [18:15<09:32, 11.00s/it]Generating...:  66%|██████▌   | 99/150 [18:27<09:30, 11.20s/it]Generating...:  67%|██████▋   | 100/150 [18:38<09:21, 11.22s/it]Generating...:  67%|██████▋   | 101/150 [18:50<09:12, 11.28s/it]Generating...:  68%|██████▊   | 102/150 [19:01<09:02, 11.30s/it]Generating...:  69%|██████▊   | 103/150 [19:12<08:49, 11.26s/it]Generating...:  69%|██████▉   | 104/150 [19:23<08:35, 11.21s/it]Generating...:  70%|███████   | 105/150 [19:34<08:21, 11.15s/it]Generating...:  71%|███████   | 106/150 [19:45<08:02, 10.97s/it]Generating...:  71%|███████▏  | 107/150 [19:56<07:51, 10.97s/it]Generating...:  72%|███████▏  | 108/150 [20:08<07:58, 11.39s/it]Generating...:  73%|███████▎  | 109/150 [20:20<07:50, 11.47s/it]Generating...:  73%|███████▎  | 110/150 [20:31<07:36, 11.40s/it]Generating...:  74%|███████▍  | 111/150 [20:43<07:29, 11.54s/it]Generating...:  75%|███████▍  | 112/150 [20:54<07:13, 11.40s/it]Generating...:  75%|███████▌  | 113/150 [21:05<06:58, 11.30s/it]Generating...:  76%|███████▌  | 114/150 [21:15<06:34, 10.95s/it]Generating...:  77%|███████▋  | 115/150 [21:26<06:26, 11.05s/it]Generating...:  77%|███████▋  | 116/150 [21:38<06:18, 11.13s/it]Generating...:  78%|███████▊  | 117/150 [21:49<06:04, 11.04s/it]Generating...:  79%|███████▊  | 118/150 [21:59<05:45, 10.79s/it]Generating...:  79%|███████▉  | 119/150 [22:10<05:37, 10.87s/it]Generating...:  80%|████████  | 120/150 [22:21<05:29, 10.98s/it]Generating...:  81%|████████  | 121/150 [22:31<05:13, 10.80s/it]Generating...:  81%|████████▏ | 122/150 [22:43<05:05, 10.91s/it]Generating...:  82%|████████▏ | 123/150 [22:54<04:54, 10.90s/it]Generating...:  83%|████████▎ | 124/150 [23:04<04:41, 10.82s/it]Generating...:  83%|████████▎ | 125/150 [23:15<04:34, 10.97s/it]Generating...:  84%|████████▍ | 126/150 [23:28<04:31, 11.31s/it]Generating...:  85%|████████▍ | 127/150 [23:39<04:17, 11.21s/it]Generating...:  85%|████████▌ | 128/150 [23:49<04:00, 10.93s/it]Generating...:  86%|████████▌ | 129/150 [24:01<03:55, 11.22s/it]Generating...:  87%|████████▋ | 130/150 [24:13<03:47, 11.39s/it]Generating...:  87%|████████▋ | 131/150 [24:24<03:34, 11.29s/it][Layer 0] Step 0 RESET: q_len=317
-[Layer 0] Step 52 BUILT MASK: q_len=317, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=340
-[Layer 0] Step 52 BUILT MASK: q_len=340, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=347
-[Layer 0] Step 52 BUILT MASK: q_len=347, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=348
-[Layer 0] Step 52 BUILT MASK: q_len=348, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=371
-[Layer 0] Step 52 BUILT MASK: q_len=371, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=326
-[Layer 0] Step 52 BUILT MASK: q_len=326, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=337
-[Layer 0] Step 52 BUILT MASK: q_len=337, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=333
-[Layer 0] Step 52 BUILT MASK: q_len=333, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=316
-[Layer 0] Step 52 BUILT MASK: q_len=316, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=330
-[Layer 0] Step 52 BUILT MASK: q_len=330, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=331
-[Layer 0] Step 52 BUILT MASK: q_len=331, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=328
-[Layer 0] Step 52 BUILT MASK: q_len=328, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=405
-[Layer 0] Step 52 BUILT MASK: q_len=405, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=345
-[Layer 0] Step 52 BUILT MASK: q_len=345, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=365
-[Layer 0] Step 52 BUILT MASK: q_len=365, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=324
-[Layer 0] Step 52 BUILT MASK: q_len=324, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=321
-[Layer 0] Step 52 BUILT MASK: q_len=321, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=327
-[Layer 0] Step 52 BUILT MASK: q_len=327, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=314
-[Layer 0] Step 52 BUILT MASK: q_len=314, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=338
-[Layer 0] Step 52 BUILT MASK: q_len=338, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=309
-[Layer 0] Step 52 BUILT MASK: q_len=309, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=311
-[Layer 0] Step 52 BUILT MASK: q_len=311, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=303
-[Layer 0] Step 52 BUILT MASK: q_len=303, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=362
-[Layer 0] Step 52 BUILT MASK: q_len=362, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=367
-[Layer 0] Step 52 BUILT MASK: q_len=367, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=358
-[Layer 0] Step 52 BUILT MASK: q_len=358, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=317
-[Layer 0] Step 52 BUILT MASK: q_len=317, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=328
-[Layer 0] Step 52 BUILT MASK: q_len=328, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=365
-[Layer 0] Step 52 BUILT MASK: q_len=365, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=315
-[Layer 0] Step 52 BUILT MASK: q_len=315, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=330
-[Layer 0] Step 52 BUILT MASK: q_len=330, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=363
-[Layer 0] Step 52 BUILT MASK: q_len=363, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=330
-[Layer 0] Step 52 BUILT MASK: q_len=330, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=321
-[Layer 0] Step 52 BUILT MASK: q_len=321, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=311
-[Layer 0] Step 52 BUILT MASK: q_len=311, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=333
-[Layer 0] Step 52 BUILT MASK: q_len=333, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=375
-[Layer 0] Step 52 BUILT MASK: q_len=375, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=361
-[Layer 0] Step 52 BUILT MASK: q_len=361, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=373
-[Layer 0] Step 52 BUILT MASK: q_len=373, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=356
-[Layer 0] Step 52 BUILT MASK: q_len=356, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=344
-[Layer 0] Step 52 BUILT MASK: q_len=344, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=343
-[Layer 0] Step 52 BUILT MASK: q_len=343, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=327
-[Layer 0] Step 52 BUILT MASK: q_len=327, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=308
-[Layer 0] Step 52 BUILT MASK: q_len=308, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=393
-[Layer 0] Step 52 BUILT MASK: q_len=393, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=359
-[Layer 0] Step 52 BUILT MASK: q_len=359, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=340
-[Layer 0] Step 52 BUILT MASK: q_len=340, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=366
-[Layer 0] Step 52 BUILT MASK: q_len=366, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=348
-[Layer 0] Step 52 BUILT MASK: q_len=348, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=341
-[Layer 0] Step 52 BUILT MASK: q_len=341, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=309
-[Layer 0] Step 52 BUILT MASK: q_len=309, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=359
-[Layer 0] Step 52 BUILT MASK: q_len=359, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=371
-[Layer 0] Step 52 BUILT MASK: q_len=371, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=330
-[Layer 0] Step 52 BUILT MASK: q_len=330, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=309
-[Layer 0] Step 52 BUILT MASK: q_len=309, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=352
-[Layer 0] Step 52 BUILT MASK: q_len=352, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=362
-[Layer 0] Step 52 BUILT MASK: q_len=362, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=318
-[Layer 0] Step 52 BUILT MASK: q_len=318, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=332
-[Layer 0] Step 52 BUILT MASK: q_len=332, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=340
-[Layer 0] Step 52 BUILT MASK: q_len=340, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=315
-[Layer 0] Step 52 BUILT MASK: q_len=315, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=349
-[Layer 0] Step 52 BUILT MASK: q_len=349, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=395
-[Layer 0] Step 52 BUILT MASK: q_len=395, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=333
-[Layer 0] Step 52 BUILT MASK: q_len=333, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=314
-[Layer 0] Step 52 BUILT MASK: q_len=314, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=364
-[Layer 0] Step 52 BUILT MASK: q_len=364, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=342
-[Layer 0] Step 52 BUILT MASK: q_len=342, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=333
-[Layer 0] Step 52 BUILT MASK: q_len=333, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=313
-Generating...:  88%|████████▊ | 132/150 [24:35<03:21, 11.21s/it]Generating...:  89%|████████▊ | 133/150 [24:46<03:09, 11.17s/it]Generating...:  89%|████████▉ | 134/150 [24:57<02:59, 11.19s/it]Generating...:  90%|█████████ | 135/150 [25:07<02:44, 10.94s/it]Generating...:  91%|█████████ | 136/150 [25:18<02:32, 10.92s/it]Generating...:  91%|█████████▏| 137/150 [25:29<02:21, 10.91s/it]Generating...:  92%|█████████▏| 138/150 [25:41<02:14, 11.21s/it]Generating...:  93%|█████████▎| 139/150 [25:52<02:01, 11.08s/it]Generating...:  93%|█████████▎| 140/150 [26:03<01:50, 11.09s/it]Generating...:  94%|█████████▍| 141/150 [26:13<01:37, 10.88s/it]Generating...:  95%|█████████▍| 142/150 [26:24<01:26, 10.83s/it]Generating...:  95%|█████████▌| 143/150 [26:35<01:15, 10.85s/it]Generating...:  96%|█████████▌| 144/150 [26:46<01:05, 10.87s/it]Generating...:  97%|█████████▋| 145/150 [26:58<00:55, 11.20s/it]Generating...:  97%|█████████▋| 146/150 [27:09<00:44, 11.09s/it]Generating...:  98%|█████████▊| 147/150 [27:20<00:33, 11.15s/it]Generating...:  99%|█████████▊| 148/150 [27:32<00:22, 11.44s/it]Generating...:  99%|█████████▉| 149/150 [27:43<00:11, 11.27s/it]Generating...: 100%|██████████| 150/150 [27:53<00:00, 11.04s/it]Generating...: 100%|██████████| 150/150 [27:53<00:00, 11.16s/it]
-2025-12-29:21:55:34 INFO     [loggers.evaluation_tracker:209] Saving results aggregated
-2025-12-29:21:55:34 INFO     [loggers.evaluation_tracker:298] Saving per-sample results for: gsm8k
-[Layer 0] Step 52 BUILT MASK: q_len=313, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=336
-[Layer 0] Step 52 BUILT MASK: q_len=336, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=325
-[Layer 0] Step 52 BUILT MASK: q_len=325, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=307
-[Layer 0] Step 52 BUILT MASK: q_len=307, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=325
-[Layer 0] Step 52 BUILT MASK: q_len=325, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=323
-[Layer 0] Step 52 BUILT MASK: q_len=323, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=353
-[Layer 0] Step 52 BUILT MASK: q_len=353, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=352
-[Layer 0] Step 52 BUILT MASK: q_len=352, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=325
-[Layer 0] Step 52 BUILT MASK: q_len=325, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=318
-[Layer 0] Step 52 BUILT MASK: q_len=318, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=319
-[Layer 0] Step 52 BUILT MASK: q_len=319, mask_shape=torch.Size([1, 28, 10, 10])
-[Layer 0] Step 0 RESET: q_len=325
-[Layer 0] Step 52 BUILT MASK: q_len=325, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=336
-[Layer 0] Step 52 BUILT MASK: q_len=336, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=412
-[Layer 0] Step 52 BUILT MASK: q_len=412, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=327
-[Layer 0] Step 52 BUILT MASK: q_len=327, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=361
-[Layer 0] Step 52 BUILT MASK: q_len=361, mask_shape=torch.Size([1, 28, 12, 12])
-[Layer 0] Step 0 RESET: q_len=404
-[Layer 0] Step 52 BUILT MASK: q_len=404, mask_shape=torch.Size([1, 28, 13, 13])
-[Layer 0] Step 0 RESET: q_len=344
-[Layer 0] Step 52 BUILT MASK: q_len=344, mask_shape=torch.Size([1, 28, 11, 11])
-[Layer 0] Step 0 RESET: q_len=320
-[Layer 0] Step 52 BUILT MASK: q_len=320, mask_shape=torch.Size([1, 28, 10, 10])
-dream_eval (model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=256,steps=256,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,importance_source=precomputed,precomputed_importance_path=/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt,gqa_weight_mode=kv,relative_weight_scale=0.6666667,min_keep_ratio=0.1), gen_kwargs: (None), limit: 150.0, num_fewshot: 0, batch_size: 1
-|Tasks|Version|     Filter     |n-shot|  Metric   |   |Value |   |Stderr|
-|-----|------:|----------------|-----:|-----------|---|-----:|---|-----:|
-|gsm8k|      3|flexible-extract|     0|exact_match|↑  |0.7000|±  |0.0375|
-|     |       |strict-match    |     0|exact_match|↑  |0.1733|±  |0.0310|
-
-✅ Completed adaptive on gsm8k
-⏱️  Running time: 29m 11s (1751s total)
-
-
-================================================
-📊 Task: HUMANEVAL
-================================================
-
-Progress: [2/2]
-
-========================================
-Running: adaptive on humaneval
-========================================
-Params: max_new_tokens=768, steps=768, temperature=0.1, alg_temp=0.0, block_size=32, limit=150
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--num_machines` was set to a value of `1`
-	`--mixed_precision` was set to a value of `'no'`
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-2025-12-29:21:55:44 WARNING  [__main__:369]  --limit SHOULD ONLY BE USED FOR TESTING.REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.
-2025-12-29:21:55:44 INFO     [__main__:446] Selected Tasks: ['humaneval']
-2025-12-29:21:55:44 WARNING  [evaluator:172] pretrained=model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=768,steps=768,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,importance_source=precomputed,precomputed_importance_path=/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt,gqa_weight_mode=kv,relative_weight_scale=0.6666667,min_keep_ratio=0.1
-        appears to be an instruct or chat variant but chat template is not applied. Recommend setting `apply_chat_template` (optionally
-        `fewshot_as_multiturn`).
-2025-12-29:21:55:44 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
-2025-12-29:21:55:44 INFO     [evaluator:240] Initializing dream_eval model, with arguments: {'model_path': '/data/qh_models/Dream-v0-Instruct-7B', 'model_type': 'adaptive',
-        'max_new_tokens': 768, 'steps': 768, 'temperature': 0.1, 'top_p': 0.9, 'alg': 'entropy', 'alg_temp': 0.0, 'skip': 0.2, 'select':
-        0.3, 'block_size': 32, 'importance_source': 'precomputed', 'precomputed_importance_path':
-        '/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt', 'gqa_weight_mode': 'kv',
-        'relative_weight_scale': 0.6666667, 'min_keep_ratio': 0.1}
-/home/qiheng/.local/lib/python3.10/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
-  import pynvml  # type: ignore[import]
-
-Loading Dream model from /data/qh_models/Dream-v0-Instruct-7B...
-Using the default sparsity block size: 128
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 114.73it/s]
-The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-✓ Loading pre-computed importance scores from: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt
-✓ Created adaptive config using PRE-COMPUTED importance scores
-
-================================================================================
-📊 Dream Adaptive Sparsity Configuration Statistics
-================================================================================
-Mode: Relative Weights (mean=1.0, multiply by select at inference)
-Target select: 0.300 (30.0%)
-Layers: 28, Heads per layer (config width): 28
-Total heads: 784
-
---------------------------------------------------------------------------------
-Per-Layer Statistics:
---------------------------------------------------------------------------------
-Layer  0: weight_mean=0.9062 → keep_ratio=0.2719 (27.2%), range=[0.097, 0.487]
-Layer  1: weight_mean=0.8725 → keep_ratio=0.2618 (26.2%), range=[0.100, 0.353]
-Layer  2: weight_mean=1.0501 → keep_ratio=0.3150 (31.5%), range=[0.226, 0.335]
-Layer  3: weight_mean=1.0344 → keep_ratio=0.3103 (31.0%), range=[0.172, 0.343]
-Layer  4: weight_mean=1.0822 → keep_ratio=0.3247 (32.5%), range=[0.236, 0.444]
-Layer  5: weight_mean=1.0312 → keep_ratio=0.3094 (30.9%), range=[0.113, 0.376]
-Layer  6: weight_mean=1.0486 → keep_ratio=0.3146 (31.5%), range=[0.218, 0.380]
-Layer  7: weight_mean=1.0429 → keep_ratio=0.3129 (31.3%), range=[0.240, 0.400]
-Layer  8: weight_mean=1.0647 → keep_ratio=0.3194 (31.9%), range=[0.234, 0.407]
-Layer  9: weight_mean=1.0149 → keep_ratio=0.3045 (30.4%), range=[0.189, 0.443]
-Layer 10: weight_mean=1.0668 → keep_ratio=0.3200 (32.0%), range=[0.262, 0.392]
-Layer 11: weight_mean=1.0797 → keep_ratio=0.3239 (32.4%), range=[0.269, 0.415]
-Layer 12: weight_mean=1.0691 → keep_ratio=0.3207 (32.1%), range=[0.250, 0.424]
-Layer 13: weight_mean=1.0234 → keep_ratio=0.3070 (30.7%), range=[0.209, 0.487]
-Layer 14: weight_mean=0.9716 → keep_ratio=0.2915 (29.1%), range=[0.113, 0.487]
-Layer 15: weight_mean=0.9355 → keep_ratio=0.2807 (28.1%), range=[0.097, 0.487]
-Layer 16: weight_mean=1.0022 → keep_ratio=0.3007 (30.1%), range=[0.097, 0.487]
-Layer 17: weight_mean=0.8562 → keep_ratio=0.2569 (25.7%), range=[0.097, 0.487]
-Layer 18: weight_mean=1.0135 → keep_ratio=0.3041 (30.4%), range=[0.161, 0.487]
-Layer 19: weight_mean=0.7673 → keep_ratio=0.2302 (23.0%), range=[0.097, 0.487]
-Layer 20: weight_mean=0.9282 → keep_ratio=0.2785 (27.8%), range=[0.097, 0.487]
-Layer 21: weight_mean=0.9052 → keep_ratio=0.2715 (27.2%), range=[0.097, 0.487]
-Layer 22: weight_mean=1.0040 → keep_ratio=0.3012 (30.1%), range=[0.097, 0.487]
-Layer 23: weight_mean=1.1224 → keep_ratio=0.3367 (33.7%), range=[0.097, 0.487]
-Layer 24: weight_mean=1.0461 → keep_ratio=0.3138 (31.4%), range=[0.097, 0.487]
-Layer 25: weight_mean=1.0883 → keep_ratio=0.3265 (32.6%), range=[0.097, 0.487]
-Layer 26: weight_mean=0.9933 → keep_ratio=0.2980 (29.8%), range=[0.097, 0.487]
-Layer 27: weight_mean=0.9795 → keep_ratio=0.2939 (29.4%), range=[0.097, 0.487]
-
---------------------------------------------------------------------------------
-Global Statistics:
---------------------------------------------------------------------------------
-Relative weights:
-  Mean:   1.0000 (should be ≈1.0)
-  Std:    0.2974
-  Range:  [0.325, 1.624]
-
-Actual keep_ratios (weights × select=0.3):
-  Mean:   0.3000 (30.0%)
-  Target: 0.3000 (30.0%)
-  Deviation: 0.0000 (0.00%)
-  Range:  [0.097, 0.487]
-  Heads hitting upper limit (>1.0): 0/784 (0.0%)
-  ✅ Mean matches target (deviation < 1%)
-
---------------------------------------------------------------------------------
-Layer-wise Variation:
---------------------------------------------------------------------------------
-Layer means range: [0.7673, 1.1224]
-Layer means std:   0.0818
-Actual keep_ratio range across layers: [0.230, 0.337]
-Variation: 10.7% spread
-================================================================================
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-📌 重要说明：Adaptive Sparsity 工作原理
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-adaptive_config 中存储的是相对权重 (relative weights)，全局平均=1.0
-在推理时，实际的 keep_ratio 计算方式为：
-  keep_ratio = relative_weight × select = relative_weight × 0.3
-
-例如：
-  如果某个head的 relative_weight = 1.2
-  那么实际 keep_ratio = 1.2 × 0.3 = 0.360 (36.0%)
-  如果某个head的 relative_weight = 0.8
-  那么实际 keep_ratio = 0.8 × 0.3 = 0.240 (24.0%)
-
-所有heads的实际keep_ratio的平均值 = 0.300 (30.0%)
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-======================================================================
-Dream Evaluation Setup
-======================================================================
-Model type: adaptive
-Model path: /data/qh_models/Dream-v0-Instruct-7B
-Steps: 768, Max new tokens: 768
-Temperature: 0.1, Top-p: 0.9, Top-k: None
-Sparse params: skip=0.2, select=0.3, block_size=32
-Adaptive params: importance_source=precomputed, min=0.1, max=0.9
-======================================================================
-
-2025-12-29:21:56:55 INFO     [evaluator:305] humaneval: Using gen_kwargs: {'until': ['\nclass', '\ndef', '\n#', '\nif', '\nprint'], 'max_gen_toks': 1024, 'do_sample': False}
-2025-12-29:21:56:55 INFO     [evaluator:320] num_fewshot has been set to 0 for humaneval in its config. Manual configuration will be ignored.
-2025-12-29:21:56:55 INFO     [api.task:434] Building contexts for humaneval on rank 0...
-  0%|          | 0/150 [00:00<?, ?it/s]100%|██████████| 150/150 [00:00<00:00, 4274.03it/s]
-2025-12-29:21:56:55 INFO     [evaluator:574] Running generate_until requests
-Generating...:   0%|          | 0/150 [00:00<?, ?it/s]Generating...:   1%|          | 1/150 [00:52<2:09:43, 52.24s/it]Generating...:   1%|▏         | 2/150 [01:44<2:09:05, 52.33s/it]Generating...:   2%|▏         | 3/150 [02:35<2:06:17, 51.55s/it]Generating...:   3%|▎         | 4/150 [03:25<2:04:22, 51.11s/it]Generating...:   3%|▎         | 5/150 [04:16<2:03:16, 51.01s/it]Generating...:   4%|▍         | 6/150 [05:06<2:01:12, 50.50s/it]Generating...:   5%|▍         | 7/150 [05:56<2:00:05, 50.39s/it]Generating...:   5%|▌         | 8/150 [06:46<1:58:52, 50.23s/it]Generating...:   6%|▌         | 9/150 [07:36<1:57:53, 50.16s/it]Generating...:   7%|▋         | 10/150 [08:26<1:56:58, 50.13s/it]Generating...:   7%|▋         | 11/150 [09:18<1:57:22, 50.66s/it]Generating...:   8%|▊         | 12/150 [10:07<1:55:39, 50.29s/it]Generating...:   9%|▊         | 13/150 [10:56<1:54:06, 49.98s/it]Generating...:   9%|▉         | 14/150 [11:46<1:53:05, 49.90s/it]Generating...:  10%|█         | 15/150 [12:35<1:51:36, 49.61s/it]Generating...:  11%|█         | 16/150 [13:24<1:50:22, 49.42s/it]Generating...:  11%|█▏        | 17/150 [14:13<1:49:34, 49.43s/it]Generating...:  12%|█▏        | 18/150 [15:06<1:50:45, 50.35s/it]Generating...:  13%|█▎        | 19/150 [15:56<1:49:42, 50.25s/it]Generating...:  13%|█▎        | 20/150 [16:46<1:48:53, 50.26s/it]Generating...:  14%|█▍        | 21/150 [17:37<1:48:34, 50.50s/it]Generating...:  15%|█▍        | 22/150 [18:27<1:47:37, 50.45s/it]Generating...:  15%|█▌        | 23/150 [19:17<1:46:00, 50.08s/it]Generating...:  16%|█▌        | 24/150 [20:05<1:44:12, 49.62s/it]Generating...:  17%|█▋        | 25/150 [20:54<1:42:59, 49.44s/it]Generating...:  17%|█▋        | 26/150 [21:45<1:42:53, 49.79s/it]Traceback (most recent call last):
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/home/qiheng/miniconda3/envs/adaptive-dllm/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1291, in <module>
-    main()
-  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1287, in main
-    launch_command(args)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1281, in launch_command
-    simple_launcher(args)
-  File "/home/qiheng/.local/lib/python3.10/site-packages/accelerate/commands/launch.py", line 869, in simple_launcher
-    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
-subprocess.CalledProcessError: Command '['/home/qiheng/miniconda3/envs/adaptive-dllm/bin/python', 'eval_dream.py', '--model', 'dream_eval', '--model_args', 'model_path=/data/qh_models/Dream-v0-Instruct-7B,model_type=adaptive,max_new_tokens=768,steps=768,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,skip=0.2,select=0.3,block_size=32,importance_source=precomputed,precomputed_importance_path=/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg/head_importance.pt,gqa_weight_mode=kv,relative_weight_scale=0.6666667,min_keep_ratio=0.1', '--tasks', 'humaneval', '--num_fewshot', '0', '--limit', '150', '--output_path', 'results/adaptive/humaneval_loss_gateIG_neg/results.json', '--log_samples', '--confirm_run_unsafe_code']' died with <Signals.SIGTERM: 15>.
-./run_eval_task.sh: line 201: results/adaptive/humaneval_loss_gateIG_neg/runtime.txt: No such file or directory
-✅ Completed adaptive on humaneval
-⏱️  Running time: 23m 5s (1385s total)
-
-
-================================================
-✨ All evaluations completed!
-Finished at: Monday, December 29, 2025 PM10:18:41 HKT
-================================================
-
-📁 Results saved in: results/
-📊 Timing log: results/timing_log.txt
-
-📈 Summary:
-
-Task: gsm8k
-  ❌ adaptive: FAILED
-
-Task: humaneval
-  ❌ adaptive: FAILED
-
