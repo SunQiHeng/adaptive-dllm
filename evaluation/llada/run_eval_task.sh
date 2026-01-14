@@ -6,16 +6,20 @@
 # Make pipelines fail if the left-hand command fails (e.g., when piping to tee).
 set -o pipefail
 
+# Project root (auto-detected, but can be overridden)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
+
 # Environment setup
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
-export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
+export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
 export CUDA_VISIBLE_DEVICES=1
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
 
-cd /home/qiheng/Projects/adaptive-dllm/evaluation/llada
+cd "${PROJECT_ROOT}/evaluation/llada"
 
 # Model configuration
 MODEL_PATH=${MODEL_PATH:-"/data/qh_models/LLaDA-1.5"}
@@ -28,7 +32,7 @@ if [ -n "${MODEL_TYPES_STR:-}" ]; then
 fi
 
 # Output root (all results go here)
-RESULTS_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/llada/${MODEL_NAME}_results"
+RESULTS_ROOT="${PROJECT_ROOT}/evaluation/llada/${MODEL_NAME}_results"
 mkdir -p "$RESULTS_ROOT"
 
 # Model-specific head-importance (used for loss_gateIG variants)
@@ -51,83 +55,54 @@ case "$MODEL_NAME" in
         ;;
 esac
 
-# Which precomputed head-importance to use for adaptive mode:
-# - margin:       /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_margin/head_importance.pt
-# - target_logit: /home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_target_logit/head_importance.pt
+# -------------------------
+# Importance path selection
+# -------------------------
+# You can manually choose the score file by setting:
+#   PRECOMPUTED_IMPORTANCE_PATH=/path/to/head_importance.pt bash run_eval_task.sh
 #
-# Shuffle ablations (distribution preserved, head indices permuted within each layer):
-# - margin_shuf
-# - target_logit_shuf
+# This script will then set:
+#   RECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"<default>"}
+# and (optionally) negate it based on USE_NEGATED.
 #
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"loss_gateIG"}  # margin | target_logit | all_ones | margin_shuf | target_logit_shuf | loss_gateIG | loss_gateIG_neg
-SHUFFLE_SEED=${SHUFFLE_SEED:-1234}
-if [ "$IMPORTANCE_TAG" = "margin" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_margin/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "target_logit" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_target_logit/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "all_ones" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_all_ones/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "margin_shuf" ]; then
-    SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_margin/head_importance.pt"
-    SHUF_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_margin_shuf_seed${SHUFFLE_SEED}"
-    PRECOMPUTED_IMPORTANCE_PATH="${SHUF_DIR}/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "target_logit_shuf" ]; then
-    SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_target_logit/head_importance.pt"
-    SHUF_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_target_logit_shuf_seed${SHUFFLE_SEED}"
-    PRECOMPUTED_IMPORTANCE_PATH="${SHUF_DIR}/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "loss_gateIG" ]; then
-    if [ -z "$MODEL_IMPORTANCE_ROOT" ]; then
-        echo "ERROR: Unknown MODEL_NAME='${MODEL_NAME}' for IMPORTANCE_TAG=loss_gateIG."
-        echo "Please set MODEL_NAME to one of: llada-8b-instruct, llada-1_5 (or extend the mapping in this script)."
-        exit 2
-    fi
-    PRECOMPUTED_IMPORTANCE_PATH="${MODEL_IMPORTANCE_ROOT}/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "loss_gateIG_neg" ]; then
-    if [ -z "$MODEL_IMPORTANCE_ROOT" ]; then
-        echo "ERROR: Unknown MODEL_NAME='${MODEL_NAME}' for IMPORTANCE_TAG=loss_gateIG_neg."
-        echo "Please set MODEL_NAME to one of: llada-8b-instruct, llada-1_5 (or extend the mapping in this script)."
-        exit 2
-    fi
-    SRC_IMPORTANCE_PATH="${MODEL_IMPORTANCE_ROOT}/head_importance.pt"
-    NEG_DIR="${MODEL_IMPORTANCE_ROOT}_neg"
-    PRECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+# Whether to negate the scores (0=use original, 1=negate)
+USE_NEGATED=${USE_NEGATED:-1}
+
+# Default base importance (if not provided via env). Prefer model-specific mapping; otherwise fall back to a sensible default.
+DEFAULT_IMPORTANCE_PATH=""
+if [ -n "${MODEL_IMPORTANCE_ROOT}" ]; then
+    DEFAULT_IMPORTANCE_PATH="${MODEL_IMPORTANCE_ROOT}/head_importance.pt"
 else
-    echo "ERROR: Unknown IMPORTANCE_TAG='$IMPORTANCE_TAG'. Use 'margin', 'target_logit', 'all_ones', 'margin_shuf', 'target_logit_shuf', 'loss_gateIG', or 'loss_gateIG_neg'."
-    exit 2
+    DEFAULT_IMPORTANCE_PATH="${PROJECT_ROOT}/configs/head_importance_llada-1_5_loss_gateIG/head_importance.pt"
 fi
 
-# Auto-generate shuffled importance if needed
-if [ "$IMPORTANCE_TAG" = "margin_shuf" ] || [ "$IMPORTANCE_TAG" = "target_logit_shuf" ]; then
-    if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-        echo "🔀 Generating shuffled importance (seed=${SHUFFLE_SEED})..."
-        python /home/qiheng/Projects/adaptive-dllm/evaluation/llada/generate_shuffled_importance.py \
-            --in_pt "$SRC_IMPORTANCE_PATH" \
-            --out_dir "$SHUF_DIR" \
-            --seed "$SHUFFLE_SEED"
-        if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-            echo "ERROR: Failed to generate shuffled importance at: $PRECOMPUTED_IMPORTANCE_PATH"
-            exit 3
-        fi
-    else
-        echo "🔀 Using existing shuffled importance: $PRECOMPUTED_IMPORTANCE_PATH"
-    fi
-fi
+# Base score path (user-selectable)
+PRECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"${DEFAULT_IMPORTANCE_PATH}"}
 
-# Auto-generate negated importance if needed
-if [ "$IMPORTANCE_TAG" = "loss_gateIG_neg" ]; then
-    if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
+# Final score path (what we actually pass downstream)
+RECOMPUTED_IMPORTANCE_PATH=${RECOMPUTED_IMPORTANCE_PATH:-"${PRECOMPUTED_IMPORTANCE_PATH}"}
+
+# Auto-generate negated importance if requested
+if [ "${USE_NEGATED}" = "1" ]; then
+    SRC_IMPORTANCE_PATH="${RECOMPUTED_IMPORTANCE_PATH}"
+    NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
+    RECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+    if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
         echo "➖ Generating negated importance..."
-        python /home/qiheng/Projects/adaptive-dllm/evaluation/llada/generate_negated_importance.py \
-            --in_pt "$SRC_IMPORTANCE_PATH" \
-            --out_dir "$NEG_DIR"
-        if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-            echo "ERROR: Failed to generate negated importance at: $PRECOMPUTED_IMPORTANCE_PATH"
+        python "${SCRIPT_DIR}/generate_negated_importance.py" \
+            --in_pt "${SRC_IMPORTANCE_PATH}" \
+            --out_dir "${NEG_DIR}"
+        if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
+            echo "ERROR: Failed to generate negated importance at: ${RECOMPUTED_IMPORTANCE_PATH}"
             exit 3
         fi
     else
-        echo "➖ Using existing negated importance: $PRECOMPUTED_IMPORTANCE_PATH"
+        echo "➖ Using existing negated importance: ${RECOMPUTED_IMPORTANCE_PATH}"
     fi
 fi
+
+# Tag for output directory naming only (can be overridden)
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"manual$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"}
 
 # Generation parameters
 GEN_LENGTH=256
@@ -169,7 +144,8 @@ echo "Gen Length: ${GEN_LENGTH}, Steps: ${STEPS}, Block Length: ${BLOCK_LENGTH},
 echo "Limit: ${LIMIT}"
 echo "RULER len_k (if enabled): ${RULER_LEN_K}k"
 echo "Importance tag: ${IMPORTANCE_TAG}"
-echo "Importance file: ${PRECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance base: ${PRECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance used: ${RECOMPUTED_IMPORTANCE_PATH}"
 echo "========================================================"
 echo ""
 
@@ -216,7 +192,7 @@ run_single_eval() {
     
     # Set importance source for adaptive mode
     if [ "$model_type" = "adaptive" ]; then
-        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${PRECOMPUTED_IMPORTANCE_PATH}"
+        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${RECOMPUTED_IMPORTANCE_PATH}"
     else
         IMPORTANCE_ARG=""
     fi
@@ -284,7 +260,7 @@ run_single_eval() {
             --select 0.3 \
             --block_size "${BLOCK_SIZE}" \
             --importance_source precomputed \
-            --precomputed_importance_path "${PRECOMPUTED_IMPORTANCE_PATH}" \
+            --precomputed_importance_path "${RECOMPUTED_IMPORTANCE_PATH}" \
             --len_k "${RULER_LEN_K}" \
             --limit "${RULER_LIMIT}" \
             --output_path "${OUTPUT_DIR}/results.json" \

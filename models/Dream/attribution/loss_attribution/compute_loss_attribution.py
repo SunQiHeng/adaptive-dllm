@@ -118,7 +118,7 @@ def _build_gsm8k_prompt_and_completion(
     *,
     tokenizer,
     use_chat_template: bool,
-    completion_mode: str,
+    answer_mode: str,
 ) -> Tuple[str, str]:
     """
     Build GSM8K prompt + completion for attribution.
@@ -126,19 +126,24 @@ def _build_gsm8k_prompt_and_completion(
     IMPORTANT:
     - Dream eval uses chat formatting (apply_chat_template). If attribution uses a plain prompt while
       eval uses chat, the distribution mismatch can make importance scores ineffective.
-    - completion_mode:
-        - "final": supervise only the final numeric answer (shorter; default)
-        - "full":  supervise the full GSM8K reference answer (often closer to model outputs)
+    - answer_mode:
+        - "final":      supervise only final answer tokens (after '####')
+        - "final_hash": supervise "#### <final>" (closer to lm-eval extraction pattern)
+        - "full":       supervise full `answer` field (rationale + final), usually more stable
     """
     base_user = f"Question: {question}\nAnswer:"
-    if completion_mode == "final":
+    mode = str(answer_mode).strip().lower()
+    if mode == "final":
         final = _parse_gsm8k_final_answer(answer)
         completion = f" {final}"
-    elif completion_mode == "full":
+    elif mode == "final_hash":
+        final = _parse_gsm8k_final_answer(answer)
+        completion = f" #### {final}"
+    elif mode == "full":
         ans = answer if isinstance(answer, str) else str(answer)
         completion = ans if ans.startswith((" ", "\n")) else f" {ans}"
     else:
-        raise ValueError(f"Unsupported completion_mode: {completion_mode}")
+        raise ValueError(f"Unsupported gsm8k answer_mode: {answer_mode!r} (expected: final|final_hash|full)")
 
     if use_chat_template and hasattr(tokenizer, "apply_chat_template"):
         messages = [
@@ -156,6 +161,97 @@ def _build_gsm8k_prompt_and_completion(
             pass
 
     return base_user, completion
+
+
+def _build_mmlu_prompt_and_answer(
+    row: Dict[str, Any],
+    *,
+    tokenizer,
+    use_chat_template: bool,
+) -> Tuple[str, str]:
+    """
+    MMLU (cais/mmlu) row schema:
+      - question: str
+      - choices: List[str] (len=4)
+      - answer: int (0..3)
+    """
+    q = str(row.get("question", "")).strip()
+    choices = row.get("choices", None)
+    if not isinstance(choices, list) or len(choices) < 4:
+        raise ValueError("MMLU row missing/invalid `choices` (expected list of 4).")
+    ch = [str(c) for c in choices[:4]]
+    prompt_plain = (
+        f"Question: {q}\n"
+        f"A. {ch[0]}\n"
+        f"B. {ch[1]}\n"
+        f"C. {ch[2]}\n"
+        f"D. {ch[3]}\n"
+        f"Answer:"
+    )
+    ans = row.get("answer", None)
+    letters = ["A", "B", "C", "D"]
+    if isinstance(ans, int):
+        idx = int(ans)
+        if idx < 0 or idx > 3:
+            raise ValueError(f"MMLU answer index out of range: {idx}")
+        gold = letters[idx]
+    else:
+        s = str(ans).strip().upper()
+        if s not in letters:
+            raise ValueError(f"MMLU answer is not a valid option letter/index: {ans!r}")
+        gold = s
+    completion = f" {gold}"
+
+    if use_chat_template and hasattr(tokenizer, "apply_chat_template"):
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt_plain},
+        ]
+        try:
+            prompt = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+            return prompt, completion
+        except Exception:
+            pass
+
+    return prompt_plain, completion
+
+
+def _build_humaneval_prompt_and_completion(
+    row: Dict[str, Any],
+    *,
+    tokenizer,
+    use_chat_template: bool,
+) -> Tuple[str, str]:
+    """
+    HumanEval (openai_humaneval):
+      - prompt: str
+      - canonical_solution: str
+    """
+    prompt_plain = str(row.get("prompt", ""))
+    sol = row.get("canonical_solution", "")
+    sol = sol if isinstance(sol, str) else str(sol)
+    completion = sol if sol.startswith((" ", "\n", "\t")) else ("\n" + sol)
+
+    if use_chat_template and hasattr(tokenizer, "apply_chat_template"):
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt_plain},
+        ]
+        try:
+            prompt = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+            return prompt, completion
+        except Exception:
+            pass
+
+    return prompt_plain, completion
 
 
 def _prepare_nemotron_messages(sample: Dict[str, Any]) -> List[Dict[str, str]]:

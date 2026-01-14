@@ -6,16 +6,20 @@
 # Make pipelines fail if the left-hand command fails (e.g., when piping to tee).
 set -o pipefail
 
+# Project root (auto-detected, but can be overridden)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
+
 # Environment setup
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
-export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
+export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
 export CUDA_VISIBLE_DEVICES=1
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
 
-cd /home/qiheng/Projects/adaptive-dllm/evaluation/dream
+cd "${PROJECT_ROOT}/evaluation/dream"
 
 # Create logs directory
 mkdir -p logs results
@@ -28,51 +32,49 @@ mkdir -p logs results
 MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
 MODEL_TYPES=("adaptive")
 
-# Which precomputed head-importance to use for adaptive mode:
+# -------------------------
+# Importance path selection
+# -------------------------
+# You can manually choose the score file by setting:
+#   PRECOMPUTED_IMPORTANCE_PATH=/path/to/head_importance.pt bash run_eval_task.sh
 #
-# Keep tag semantics aligned with LLaDA:
-# - loss_gateIG:     use averaged loss-attribution scores
-# - loss_gateIG_neg: use negated scores (ablation)
+# This script will then set:
+#   RECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"<default>"}
+# and (optionally) negate it based on USE_NEGATED.
 #
-# Back-compat:
-# - loss_gateIG_zero / loss_gateIG_zero_neg keep the older single-run paths.
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"loss_gateIG"}  # loss_gateIG | loss_gateIG_neg | loss_gateIG_zero | loss_gateIG_zero_neg | all_ones
-SHUFFLE_SEED=${SHUFFLE_SEED:-1234}
+# Whether to negate the scores (0=use original, 1=negate)
+USE_NEGATED=${USE_NEGATED:-1}
 
-if [ "$IMPORTANCE_TAG" = "loss_gateIG" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "loss_gateIG_neg" ]; then
-    SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt"
-    NEG_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg"
-    PRECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "loss_gateIG_zero" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed47_n50_k8_L2048_dseed47_mseed47_ts20251227_191418/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "loss_gateIG_zero_neg" ]; then
-    SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed47_n50_k8_L2048_dseed47_mseed47_ts20251227_191418/head_importance.pt"
-    NEG_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_neg"
-    PRECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-elif [ "$IMPORTANCE_TAG" = "all_ones" ]; then
-    PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_all_ones/head_importance.pt"
-else
-    echo "ERROR: Unknown IMPORTANCE_TAG='$IMPORTANCE_TAG'. Use 'loss_gateIG', 'loss_gateIG_neg', 'loss_gateIG_zero', 'loss_gateIG_zero_neg', or 'all_ones'."
-    exit 2
-fi
+# Default base importance (if not provided via env)
+DEFAULT_IMPORTANCE_PATH="${PROJECT_ROOT}/configs/head_importance_dream_loss_gateIG/head_importance.pt"
 
-# Auto-generate negated importance if needed
-if [ "$IMPORTANCE_TAG" = "loss_gateIG_neg" ] || [ "$IMPORTANCE_TAG" = "loss_gateIG_zero_neg" ]; then
-    if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
+# Base score path (user-selectable)
+PRECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"${DEFAULT_IMPORTANCE_PATH}"}
+
+# Final score path (what we actually pass downstream)
+RECOMPUTED_IMPORTANCE_PATH=${RECOMPUTED_IMPORTANCE_PATH:-"${PRECOMPUTED_IMPORTANCE_PATH}"}
+
+# Auto-generate negated importance if requested
+if [ "${USE_NEGATED}" = "1" ]; then
+    SRC_IMPORTANCE_PATH="${RECOMPUTED_IMPORTANCE_PATH}"
+    NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
+    RECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+    if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
         echo "➖ Generating negated importance..."
-        python /home/qiheng/Projects/adaptive-dllm/evaluation/dream/generate_negated_importance.py \
-            --in_pt "$SRC_IMPORTANCE_PATH" \
-            --out_dir "$NEG_DIR"
-        if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-            echo "ERROR: Failed to generate negated importance at: $PRECOMPUTED_IMPORTANCE_PATH"
+        python "${SCRIPT_DIR}/generate_negated_importance.py" \
+            --in_pt "${SRC_IMPORTANCE_PATH}" \
+            --out_dir "${NEG_DIR}"
+        if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
+            echo "ERROR: Failed to generate negated importance at: ${RECOMPUTED_IMPORTANCE_PATH}"
             exit 3
         fi
     else
-        echo "➖ Using existing negated importance: $PRECOMPUTED_IMPORTANCE_PATH"
+        echo "➖ Using existing negated importance: ${RECOMPUTED_IMPORTANCE_PATH}"
     fi
 fi
+
+# Tag for output directory naming only (can be overridden)
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"manual$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"}
 
 echo "========================================================"
 echo "Dream Quick Test Configuration"
@@ -83,7 +85,8 @@ echo "Max New Tokens: 256"
 echo "Block Size: 32"
 echo "Test Samples: 50 per dataset"
 echo "Importance tag: ${IMPORTANCE_TAG}"
-echo "Importance file: ${PRECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance base: ${PRECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance used: ${RECOMPUTED_IMPORTANCE_PATH}"
 echo "========================================================"
 echo ""
 
@@ -158,7 +161,7 @@ run_single_eval() {
         RELATIVE_WEIGHT_SCALE=${RELATIVE_WEIGHT_SCALE:-"0.6666667"}
         # Safety clamp to avoid empty masks for very low-weight heads.
         MIN_KEEP_RATIO=${MIN_KEEP_RATIO:-"0.1"}
-        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${PRECOMPUTED_IMPORTANCE_PATH},gqa_weight_mode=${GQA_WEIGHT_MODE},relative_weight_scale=${RELATIVE_WEIGHT_SCALE},min_keep_ratio=${MIN_KEEP_RATIO}"
+        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${RECOMPUTED_IMPORTANCE_PATH},gqa_weight_mode=${GQA_WEIGHT_MODE},relative_weight_scale=${RELATIVE_WEIGHT_SCALE},min_keep_ratio=${MIN_KEEP_RATIO}"
     else
         IMPORTANCE_ARG=""
     fi

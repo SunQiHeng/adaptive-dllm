@@ -19,7 +19,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default follows existing Dream runner)
-GPU_ID=${GPU_ID:-2}
+GPU_ID=${GPU_ID:-4}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -42,13 +42,19 @@ RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 # ---------------------------
 # Attribution dataset
 # ---------------------------
-ATTR_DATASET=${ATTR_DATASET:-"nemotron"}     # nemotron | gsm8k
-SPLIT=${SPLIT:-"test"}                      # gsm8k only
+ATTR_DATASET=${ATTR_DATASET:-"gsm8k"}     # nemotron | gsm8k | mmlu | humaneval
+SPLIT=${SPLIT:-"test"}                      # dataset split name (gsm8k/mmlu); humaneval uses fixed test
 SAMPLES_PER_CATEGORY=${SAMPLES_PER_CATEGORY:-10}  # nemotron only
 NEMOTRON_CATEGORIES=${NEMOTRON_CATEGORIES:-"code,math,science,chat,safety"} # nemotron only
 NEMOTRON_POOL_PER_CATEGORY=${NEMOTRON_POOL_PER_CATEGORY:-1000}
 USE_CHAT_TEMPLATE=${USE_CHAT_TEMPLATE:-1}   # 1 => --use_chat_template
-GSM8K_COMPLETION_MODE=${GSM8K_COMPLETION_MODE:-"final"}  # gsm8k only: final|full
+MMLU_SUBJECT=${MMLU_SUBJECT:-"all"}        # mmlu only
+
+# GSM8K attribution target:
+# - final:      supervise only final answer tokens (after '####')
+# - final_hash: supervise "#### <final>" (closer to lm-eval extraction pattern)
+# - full:       supervise full `answer` field (rationale + final), usually more stable
+GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"full"}
 
 # ---------------------------
 # Core knobs
@@ -76,6 +82,11 @@ GRADIENT_CHECKPOINTING=1
 SHOW_PROGRESS=${SHOW_PROGRESS:-1}                 # 1 => --show_progress
 PROGRESS_UPDATE_EVERY=${PROGRESS_UPDATE_EVERY:-5} # fallback print frequency when tqdm isn't used
 
+# Path mode (Shapley-like IG path)
+PATH_MODE=${PATH_MODE:-"random_threshold"}           # random_threshold | diagonal
+PATH_SAMPLES=${PATH_SAMPLES:-4}               # only used when PATH_MODE=random_threshold
+PATH_SEED=${PATH_SEED:--1}                    # -1 => use mask_seed
+
 # Layer range (inclusive). -1 means last layer.
 LAYER_START=${LAYER_START:-0}
 LAYER_END=${LAYER_END:--1}
@@ -86,8 +97,21 @@ if [ "$BASELINE" = "scalar" ]; then
 fi
 TAG="${TAG}_maskp$(echo "${MASK_PROBS}" | tr ',' '-')_mcs${MASK_SAMPLES_PER_PROB}_${LOSS_NORMALIZE}"
 
-OUT_DIR="${OUT_ROOT}/head_importance_dream_base_${TAG}_seed${SEED}_n${MAX_SAMPLES}_k${IG_STEPS}_L${MAX_LENGTH}"
-OUT_DIR="${OUT_DIR}_dseed${DATA_SEED}_mseed${MASK_SEED}"
+OUT_DIR="${OUT_ROOT}/head_importance_dream"
+
+# Add dataset-specific suffix
+if [ "$ATTR_DATASET" = "nemotron" ]; then
+  CATEGORY_TAG=$(echo "${NEMOTRON_CATEGORIES}" | tr ',' '_')
+  OUT_DIR="${OUT_DIR}_nemotron_${CATEGORY_TAG}"
+elif [ "$ATTR_DATASET" = "gsm8k" ]; then
+  OUT_DIR="${OUT_DIR}_gsm8k_${GSM8K_ANSWER_MODE}"
+elif [ "$ATTR_DATASET" = "mmlu" ]; then
+  SUBJECT_TAG=$(echo "${MMLU_SUBJECT}" | tr '/' '_')
+  OUT_DIR="${OUT_DIR}_mmlu_${SUBJECT_TAG}"
+elif [ "$ATTR_DATASET" = "humaneval" ]; then
+  OUT_DIR="${OUT_DIR}_humaneval"
+fi
+
 OUT_DIR="${OUT_DIR}_ts${RUN_TS}"
 mkdir -p "${OUT_DIR}"
 
@@ -95,11 +119,13 @@ echo "Model: ${MODEL_PATH}"
 echo "Out:   ${OUT_DIR}"
 echo "dataset=${ATTR_DATASET} split=${SPLIT} max_samples=${MAX_SAMPLES} ig_steps=${IG_STEPS} seed=${SEED} data_seed=${DATA_SEED} mask_seed=${MASK_SEED}"
 echo "nemotron: samples_per_category=${SAMPLES_PER_CATEGORY} pool_per_category=${NEMOTRON_POOL_PER_CATEGORY} categories=${NEMOTRON_CATEGORIES}"
+echo "mmlu: subject=${MMLU_SUBJECT}"
 echo "baseline=${BASELINE} baseline_scalar=${BASELINE_SCALAR}"
 echo "mask_probs=${MASK_PROBS} mask_samples_per_prob=${MASK_SAMPLES_PER_PROB} loss_normalize=${LOSS_NORMALIZE}"
 echo "ig_postprocess=${IG_POSTPROCESS} mask_batch_size=${MASK_BATCH_SIZE}"
 echo "gradient_checkpointing=${GRADIENT_CHECKPOINTING}"
 echo "show_progress=${SHOW_PROGRESS} progress_update_every=${PROGRESS_UPDATE_EVERY}"
+echo "gsm8k_answer_mode=${GSM8K_ANSWER_MODE}"
 echo "layers=${LAYER_START}..${LAYER_END}"
 echo "========================================================"
 
@@ -118,16 +144,23 @@ if [ "${SHOW_PROGRESS}" = "1" ]; then
   PROGRESS_FLAG="--show_progress --progress_update_every ${PROGRESS_UPDATE_EVERY}"
 fi
 
+# Set dataset_config based on dataset type
+DATASET_CONFIG="main"
+if [ "$ATTR_DATASET" = "mmlu" ]; then
+  DATASET_CONFIG="${MMLU_SUBJECT}"
+fi
+
 python /home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/loss_attribution/compute_loss_attribution_all_heads.py \
   --model_path "${MODEL_PATH}" \
   --dataset "${ATTR_DATASET}" \
+  --dataset_config "${DATASET_CONFIG}" \
   --split "${SPLIT}" \
   --max_samples "${MAX_SAMPLES}" \
   --samples_per_category "${SAMPLES_PER_CATEGORY}" \
   --nemotron_pool_per_category "${NEMOTRON_POOL_PER_CATEGORY}" \
   --nemotron_categories "${NEMOTRON_CATEGORIES}" \
   ${CHAT_FLAG} \
-  --gsm8k_completion_mode "${GSM8K_COMPLETION_MODE}" \
+  --gsm8k_answer_mode "${GSM8K_ANSWER_MODE}" \
   --seed "${SEED}" \
   --data_seed "${DATA_SEED}" \
   --mask_seed "${MASK_SEED}" \
@@ -140,6 +173,9 @@ python /home/qiheng/Projects/adaptive-dllm/models/Dream/attribution/loss_attribu
   --loss_normalize "${LOSS_NORMALIZE}" \
   --ig_postprocess "${IG_POSTPROCESS}" \
   --mask_batch_size "${MASK_BATCH_SIZE}" \
+  --path_mode "${PATH_MODE}" \
+  --path_samples "${PATH_SAMPLES}" \
+  --path_seed "${PATH_SEED}" \
   ${PROGRESS_FLAG} \
   ${GC_FLAG} \
   --layer_start "${LAYER_START}" \

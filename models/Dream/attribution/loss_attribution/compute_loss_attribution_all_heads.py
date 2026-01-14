@@ -73,6 +73,8 @@ _get_mask_token_id = _base._get_mask_token_id
 _dry_run_check_o_proj_shape = _base._dry_run_check_o_proj_shape
 _build_gsm8k_prompt_and_completion = _base._build_gsm8k_prompt_and_completion
 _build_nemotron_prompt_and_completion = _base._build_nemotron_prompt_and_completion
+_build_mmlu_prompt_and_answer = _base._build_mmlu_prompt_and_answer
+_build_humaneval_prompt_and_completion = _base._build_humaneval_prompt_and_completion
 _tokenize_pair = _base._tokenize_pair
 _build_labels_and_masked_inputs_for_completion_span = _base._build_labels_and_masked_inputs_for_completion_span
 _masked_ce_answer_only_batch = _base._masked_ce_answer_only_batch
@@ -144,7 +146,7 @@ def compute_all_heads_joint_ig(
     use_amp_bf16: bool,
     dataset_name: str,
     dataset_use_chat_template: bool,
-    gsm8k_completion_mode: str,
+    gsm8k_answer_mode: str,
     mask_probs: List[float],
     mask_samples_per_prob: int,
     loss_normalize: str,
@@ -153,6 +155,9 @@ def compute_all_heads_joint_ig(
     mask_batch_size: int,
     show_progress: bool,
     progress_update_every: int,
+    path_mode: str = "diagonal",
+    path_samples: int = 1,
+    path_seed: int = -1,
     debug_gate: bool = False,
 ) -> Dict[int, torch.Tensor]:
     """
@@ -222,10 +227,18 @@ def compute_all_heads_joint_ig(
                     row["answer"],
                     tokenizer=tokenizer,
                     use_chat_template=dataset_use_chat_template,
-                    completion_mode=gsm8k_completion_mode,
+                    answer_mode=gsm8k_answer_mode,
                 )
             elif dataset_name == "nemotron":
                 prompt, completion = _build_nemotron_prompt_and_completion(
+                    row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
+                )
+            elif dataset_name == "mmlu":
+                prompt, completion = _build_mmlu_prompt_and_answer(
+                    row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
+                )
+            elif dataset_name == "humaneval":
+                prompt, completion = _build_humaneval_prompt_and_completion(
                     row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
                 )
             else:
@@ -303,63 +316,74 @@ def compute_all_heads_joint_ig(
             if chunk <= 0:
                 chunk = n_variants
 
-            grads_accum = torch.zeros(total_heads, device=device, dtype=torch.float32)
+            path_mode_ = str(path_mode)
+            ps = int(max(1, path_samples))
+            ig_row_total = torch.zeros(total_heads, device=device, dtype=torch.float32)
+            base_path_seed = int(seed) if int(path_seed) < 0 else int(path_seed)
 
-            for k in range(1, ig_steps + 1):
-                t = float(k) / float(ig_steps)
-                alpha_val = baseline_value + t * (1.0 - baseline_value)
+            for path_i in range(ps):
+                if path_mode_ == "random_threshold":
+                    g_u = torch.Generator()
+                    g_u.manual_seed(_stable_int_seed(int(base_path_seed), int(row_idx), int(path_i)))
+                    u = torch.rand((total_heads,), generator=g_u, dtype=torch.float32).to(device)
+                    denom = torch.clamp(1.0 - u, min=1e-6)
+                else:
+                    u = None
+                    denom = None
 
-                alpha_flat = torch.full(
-                    (total_heads,),
-                    fill_value=alpha_val,
-                    device=device,
-                    dtype=torch.float32,
-                    requires_grad=True,
-                )
-                gate.alpha_flat = alpha_flat
+                ig_accum = torch.zeros(total_heads, device=device, dtype=torch.float32)
+                alpha_prev = torch.full((total_heads,), fill_value=float(baseline_value), device=device, dtype=torch.float32)
 
-                model.zero_grad(set_to_none=True)
+                for k in range(1, ig_steps + 1):
+                    t = float(k) / float(ig_steps)
+                    if path_mode_ == "diagonal":
+                        alpha_vals = float(baseline_value) + float(t) * float(1.0 - baseline_value)
+                        alpha_now = torch.full((total_heads,), fill_value=float(alpha_vals), device=device, dtype=torch.float32)
+                    else:
+                        t_t = torch.full((total_heads,), fill_value=float(t), device=device, dtype=torch.float32)
+                        ramp = torch.clamp((t_t - u) / denom, min=0.0, max=1.0)
+                        alpha_now = float(baseline_value) + ramp * float(1.0 - baseline_value)
 
-                loss_weighted_sum = None
-                total_variants = 0
-                if use_amp_bf16:
-                    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                    delta_alpha = (alpha_now - alpha_prev).to(torch.float32)
+                    alpha_prev = alpha_now
+
+                    alpha_flat = alpha_now.detach().clone().requires_grad_(True)
+                    gate.alpha_flat = alpha_flat
+
+                    model.zero_grad(set_to_none=True)
+                    loss_weighted_sum = None
+                    total_variants = 0
+                    if use_amp_bf16:
+                        with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                            for start in range(0, n_variants, chunk):
+                                end = min(start + chunk, n_variants)
+                                logits = model(all_input_ids[start:end], num_logits_to_keep=num_logits_to_keep).logits
+                                l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
+                                bs = int(end - start)
+                                total_variants += bs
+                                lw = l * float(bs)
+                                loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
+                    else:
                         for start in range(0, n_variants, chunk):
                             end = min(start + chunk, n_variants)
                             logits = model(all_input_ids[start:end], num_logits_to_keep=num_logits_to_keep).logits
-                            l = _masked_ce_answer_only_batch(
-                                logits,
-                                all_labels_tail[start:end],
-                                normalize=loss_normalize,
-                            )
+                            l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
                             bs = int(end - start)
                             total_variants += bs
                             lw = l * float(bs)
                             loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
-                else:
-                    for start in range(0, n_variants, chunk):
-                        end = min(start + chunk, n_variants)
-                        logits = model(all_input_ids[start:end], num_logits_to_keep=num_logits_to_keep).logits
-                        l = _masked_ce_answer_only_batch(
-                            logits,
-                            all_labels_tail[start:end],
-                            normalize=loss_normalize,
-                        )
-                        bs = int(end - start)
-                        total_variants += bs
-                        lw = l * float(bs)
-                        loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
 
-                if loss_weighted_sum is None or total_variants <= 0:
-                    continue
-                loss = loss_weighted_sum / float(total_variants)
+                    if loss_weighted_sum is None or total_variants <= 0:
+                        continue
+                    loss = loss_weighted_sum / float(total_variants)
+                    loss.backward()
+                    if alpha_flat.grad is None:
+                        raise RuntimeError("alpha_flat.grad is None; hook may not be applied correctly.")
+                    ig_accum += alpha_flat.grad.detach().to(torch.float32) * delta_alpha
 
-                loss.backward()
-                if alpha_flat.grad is None:
-                    raise RuntimeError("alpha_flat.grad is None; hook may not be applied correctly.")
-                grads_accum += alpha_flat.grad.detach().to(torch.float32)
+                ig_row_total += ig_accum / float(ps)
 
-            ig_row = scale * (grads_accum / float(ig_steps))
+            ig_row = ig_row_total
             if ig_postprocess == "abs":
                 ig_sum_flat += ig_row.abs()
             elif ig_postprocess == "signed":
@@ -390,7 +414,8 @@ def compute_all_heads_joint_ig(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, required=True)
-    parser.add_argument("--dataset", type=str, default="nemotron", choices=["gsm8k", "nemotron"])
+    parser.add_argument("--dataset", type=str, default="nemotron", choices=["gsm8k", "nemotron", "mmlu", "humaneval"])
+    parser.add_argument("--dataset_config", type=str, default="main", help="gsm8k config or mmlu subject (e.g., 'all').")
     parser.add_argument("--split", type=str, default="test")
     parser.add_argument("--max_samples", type=int, default=200)
     parser.add_argument("--samples_per_category", type=int, default=50)
@@ -398,11 +423,11 @@ def main() -> None:
     parser.add_argument("--nemotron_categories", type=str, default="code,math,science,chat,safety")
     parser.add_argument("--use_chat_template", action="store_true")
     parser.add_argument(
-        "--gsm8k_completion_mode",
+        "--gsm8k_answer_mode",
         type=str,
         default="final",
-        choices=["final", "full"],
-        help="gsm8k only: 'final' uses answer after ####, 'full' uses full solution text.",
+        choices=["final", "final_hash", "full"],
+        help="gsm8k only: 'final' uses answer after ####, 'final_hash' uses '#### <final>', 'full' uses full text.",
     )
 
     parser.add_argument("--seed", type=int, default=47)
@@ -415,6 +440,25 @@ def main() -> None:
     parser.add_argument("--loss_normalize", type=str, default="mean_masked", choices=["sum", "mean_masked"])
     parser.add_argument("--ig_postprocess", type=str, default="abs", choices=["abs", "signed", "relu"])
     parser.add_argument("--mask_batch_size", type=int, default=1)
+    parser.add_argument(
+        "--path_mode",
+        type=str,
+        default="diagonal",
+        choices=["random_threshold", "diagonal"],
+        help="Integrated path mode for joint IG. random_threshold is a Shapley-like randomized path.",
+    )
+    parser.add_argument(
+        "--path_samples",
+        type=int,
+        default=1,
+        help="Number of random paths to average per sample when path_mode=random_threshold.",
+    )
+    parser.add_argument(
+        "--path_seed",
+        type=int,
+        default=-1,
+        help="Seed for random path generation. -1 means use mask_seed.",
+    )
 
     parser.add_argument("--show_progress", action="store_true")
     parser.add_argument("--progress_update_every", type=int, default=20)
@@ -457,7 +501,7 @@ def main() -> None:
     print(f"ig_postprocess={args.ig_postprocess} mask_batch_size={args.mask_batch_size}")
     print(f"use_chat_template={bool(args.use_chat_template)}")
     if str(args.dataset) == "gsm8k":
-        print(f"gsm8k_completion_mode={str(args.gsm8k_completion_mode)}")
+        print(f"gsm8k_answer_mode={str(args.gsm8k_answer_mode)}")
     print(f"gradient_checkpointing={bool(args.gradient_checkpointing)}")
     print("========================================================")
 
@@ -519,7 +563,7 @@ def main() -> None:
 
     # Load dataset (same as original script)
     if str(args.dataset) == "gsm8k":
-        ds = load_dataset("gsm8k", "main", split=args.split)
+        ds = load_dataset("gsm8k", args.dataset_config, split=args.split)
         rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
     elif str(args.dataset) == "nemotron":
         cats = [c.strip() for c in str(args.nemotron_categories).split(",") if c.strip()]
@@ -542,6 +586,15 @@ def main() -> None:
             rows.extend(buf[:take_n])
         if len(rows) > int(args.max_samples):
             rows = rows[: int(args.max_samples)]
+    elif str(args.dataset) == "mmlu":
+        subject = args.dataset_config if str(args.dataset_config) != "main" else "all"
+        print(f"Loading MMLU subject={subject}...")
+        ds = load_dataset("cais/mmlu", subject, split=args.split)
+        rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
+    elif str(args.dataset) == "humaneval":
+        print("Loading HumanEval...")
+        ds = load_dataset("openai_humaneval", split="test")
+        rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
     else:
         raise ValueError(f"Unsupported dataset: {args.dataset}")
 
@@ -591,7 +644,7 @@ def main() -> None:
         use_amp_bf16=bool(args.use_amp_bf16 and device.type == "cuda"),
         dataset_name=str(args.dataset),
         dataset_use_chat_template=bool(args.use_chat_template),
-        gsm8k_completion_mode=str(args.gsm8k_completion_mode),
+        gsm8k_answer_mode=str(args.gsm8k_answer_mode),
         mask_probs=mask_probs,
         mask_samples_per_prob=int(args.mask_samples_per_prob),
         loss_normalize=str(args.loss_normalize),
@@ -600,6 +653,9 @@ def main() -> None:
         mask_batch_size=int(args.mask_batch_size),
         show_progress=bool(args.show_progress),
         progress_update_every=int(args.progress_update_every),
+        path_mode=str(args.path_mode),
+        path_samples=int(args.path_samples),
+        path_seed=int(args.path_seed),
         debug_gate=bool(args.debug_gate),
     )
 
@@ -617,15 +673,22 @@ def main() -> None:
         "metadata": {
             "method": "dream_all_heads_joint_ig_diffusion_masked_ce_answer_only_multit",
             "model_path": args.model_path,
-            "dataset": str(args.dataset),
+            "dataset": (
+                f"gsm8k/{args.dataset_config}"
+                if str(args.dataset) == "gsm8k"
+                else (f"mmlu/{args.dataset_config}" if str(args.dataset) == "mmlu" else str(args.dataset))
+            ),
             "split": str(args.split),
             "max_samples": int(args.max_samples),
             "seed": int(seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),
             "use_chat_template": bool(args.use_chat_template),
-            "gsm8k_completion_mode": str(args.gsm8k_completion_mode) if str(args.dataset) == "gsm8k" else None,
+            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if str(args.dataset) == "gsm8k" else None,
             "ig_steps": int(args.ig_steps),
+            "path_mode": str(args.path_mode),
+            "path_samples": int(args.path_samples),
+            "path_seed": int(mask_seed if int(args.path_seed) < 0 else int(args.path_seed)),
             "mask_probs": mask_probs,
             "mask_samples_per_prob": int(args.mask_samples_per_prob),
             "loss_normalize": str(args.loss_normalize),

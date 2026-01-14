@@ -1,0 +1,57 @@
+\section{Preliminaries: Diffusion Language Models}
+\label{sec:preliminaries}
+
+Diffusion Language Models (DLMs), also referred to as diffusion-based large language models (DLLMs), represent a paradigm shift from conventional autoregressive language modeling approaches. This section formalizes the basic notation for DLMs and their attention mechanisms.
+
+\subsection{Attention Mechanism}
+
+DLMs utilize bidirectional attention where all tokens can attend to each other, regardless of position. The attention mechanism computes attention scores between query-key pairs:
+
+\begin{equation}
+    \text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+    \label{eq:attention}
+\end{equation}
+
+where $Q \in \mathbb{R}^{L \times d_k}$, $K \in \mathbb{R}^{L \times d_k}$, and $V \in \mathbb{R}^{L \times d_v}$ are query, key, and value matrices derived from input embeddings.
+
+In multi-head attention architectures, the attention operation is performed in parallel across multiple heads, each with its own projection matrices:
+
+\begin{equation}
+    \text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\dots,\text{head}_h)W^O
+\end{equation}
+
+where $\text{head}_i = \text{Attention}(QW_i^Q,KW_i^K,VW_i^V)$ and $h$ is the number of attention heads.
+
+This bidirectional attention structure enables DLMs to process the entire sequence context simultaneously during both training and inference. The attention patterns across different heads often exhibit specialization, with each head potentially focusing on different aspects of the input sequence, making head importance analysis particularly relevant for understanding and optimizing DLM performance.
+
+\subsection{Core Framework}
+
+Diffusion Language Models (DLMs) define a model distribution $p_\theta(x_0)$ through two complementary stochastic processes: a \textit{forward process} that progressively corrupts data, and a \textit{reverse process} that iteratively denoises and recovers the original sequence.
+
+Given a sequence $x_0 = (x_{0,1}, \dots, x_{0,L}) \in \mathcal{V}^L$ where $\mathcal{V}$ is the vocabulary and $L$ is sequence length, the forward process gradually introduces noise by replacing tokens with $\texttt{[MASK]}$ according to a noise schedule. For $t \in [0,1]$, the corruption distribution is:
+\begin{equation}
+\begin{split}
+    q_t(x_t | x_0) &= \prod_{i=1}^L q_t(x_{t,i} | x_{0,i}), \\
+    \text{where} \quad q_t(x_{t,i} | x_{0,i}) &= 
+    \begin{cases}
+        1 - \alpha(t) & \text{if } x_{t,i} = x_{0,i}, \\
+        \alpha(t)    & \text{if } x_{t,i} = \texttt{[MASK]}, \\
+        0            & \text{otherwise},
+    \end{cases}
+\end{split}
+\label{eq:forward}
+\end{equation}
+where $\alpha: [0,1] \to [0,1]$ is a monotonically increasing masking (noise) schedule with $\alpha(0) = 0$ and $\alpha(1) = 1$. For example, one may use $\alpha(t)=t$.
+
+The reverse (denoising) model is parameterized by a neural network $f_\theta$ that produces token logits conditioned on the masked sequence $x_t$ and time $t$. The training objective minimizes the reconstruction loss at masked positions:
+\begin{equation}
+    \mathcal{L}(\theta) = -\mathbb{E}_{\substack{t \sim \mathcal{U}[0,1] \\ x_0 \sim p_{\text{data}} \\ x_t \sim q_t(x_t | x_0)}} \left[ \sum_{i=1}^L \mathbf{1}\!\left[x_{t,i} = \texttt{[MASK]}\right] \log p_\theta(x_{0,i} \,|\, x_t, t) \right]
+    \label{eq:loss}
+\end{equation}
+where $p_\theta(x_{0,i} \,|\, x_t, t) = \text{softmax}(f_\theta(x_t, t)_i)$ produces token probabilities at position $i$.
+
+Unlike autoregressive models that generate tokens sequentially, DLMs generate text through an iterative denoising process over discrete timesteps. Let $1=t_T>\cdots>t_1>t_0=0$ be a discretization of $[0,1]$. Starting from $x_{t_T}$ (typically a fully masked sequence), the model progressively reduces the masking level:
+\begin{equation}
+    x_{t_{k-1}} \sim p_\theta(x_{t_{k-1}} \,|\, x_{t_k}, t_k)
+\end{equation}
+This non-autoregressive generation enables parallel token prediction and global context awareness during synthesis.

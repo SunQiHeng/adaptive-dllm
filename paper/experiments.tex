@@ -1,0 +1,135 @@
+% NOTE:
+% This section is written to align with the current codebase:
+% - Head attribution: models/*/attribution/loss_attribution/compute_loss_attribution_all_heads.py
+% - Adaptive sparse attention eval: evaluation/*/run_eval_task.sh
+% - Head masking/pruning eval: evaluation/*/run_eval_mask_head_task.sh
+
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate whether HeadIG yields meaningful head-importance scores for diffusion language models (DLMs/DLLMs). Since attribution scores are only useful insofar as they predict \emph{causal} effects, we adopt two complementary validations: (i) using the scores to drive \emph{adaptive sparse attention} at inference time, and (ii) \emph{importance-based head masking/pruning} tests that directly intervene on heads.
+
+\subsection{Experimental Setup}
+\label{sec:exp:setup}
+
+\paragraph{Models.}
+We consider two representative DLLM families with transformer backbones and diffusion-style masking/denoising generation. Throughout, we keep the method description and metrics model-agnostic; model-specific hyperparameters are only used to reproduce each model family’s standard evaluation protocol.
+
+\paragraph{Tasks and metrics.}
+We evaluate on a mix of reasoning, code, and long-context benchmarks:
+\begin{itemize}
+    \item \textbf{GSM8K}: math reasoning. Metric: exact match (EM) of the extracted final answer.
+    \item \textbf{HumanEval}: code generation. Metric: pass@1 (or equivalent exact functional correctness under the standard evaluator).
+    \item \textbf{MMLU}: multiple-choice. Metric: accuracy.
+    \item \textbf{RULER (optional)}: long-context retrieval and reasoning. Metric: task-specific accuracy.
+\end{itemize}
+Unless otherwise noted, we follow the default evaluation settings used by each model family’s official or commonly adopted eval harness (e.g., decoding temperature, number of steps, and prompt formatting).
+
+\paragraph{Attribution data.}
+We compute head-importance on an attribution dataset that may or may not match the downstream evaluation tasks. Unless otherwise stated, we compute scores on a held-out split of a representative reasoning dataset (e.g., GSM8K) using the masked completion objective in Section~\ref{ch:method}. We report the number of attribution examples $M$ and all HeadIG hyperparameters for reproducibility.
+
+\subsection{HeadIG Configuration}
+\label{sec:exp:headig_config}
+
+\paragraph{Masking schedule and Monte-Carlo sampling.}
+To emulate multiple diffusion timesteps and reduce variance, we use a set of mask probabilities $\{p_t\}_{t=1}^{T}$ and draw $S$ independent mask samples per probability (Section~\ref{sec:method:multi_timestep}).
+
+\paragraph{Integration path.}
+We compare the \textbf{Diagonal Path (DP)} and the \textbf{Stochastic Threshold Path (STP)} (Section~\ref{sec:method:gate}). For STP we average over $P$ random threshold draws. We report IG steps $K$, baseline $\alpha_0$, and post-processing $\phi$.
+
+\paragraph{Layer range.}
+We attribute heads jointly over a layer range $\ell\in\{\ell_{\min},\ldots,\ell_{\max}\}$, producing a score tensor $S\in\mathbb{R}^{N\times H}$. When analyzing layer-wise patterns, we report per-layer normalized scores and global rankings.
+
+\subsection{Validation 1: Adaptive Sparse Attention}
+\label{sec:exp:adaptive}
+
+\paragraph{Setting.}
+We evaluate three inference modes under a fixed generation protocol:
+\begin{itemize}
+    \item \textbf{Standard}: the default dense attention used by the base model.
+    \item \textbf{Uniform sparse}: a fixed sparse attention pattern with a uniform allocation across heads (no attribution).
+    \item \textbf{Adaptive sparse (HeadIG)}: a sparse attention pattern whose head-wise allocation is reweighted using HeadIG scores.
+\end{itemize}
+The adaptive sparse mode uses \textbf{precomputed head importance} (computed once offline) as its importance source.
+
+\paragraph{Budgets and reporting.}
+We sweep sparsity budgets (e.g., keep ratios) and report task metrics as a function of budget. When possible, we also report wall-clock latency or attention FLOPs proxies to quantify efficiency--accuracy trade-offs.
+
+\begin{table}[t]
+\centering
+\caption{Adaptive sparse attention using HeadIG scores. Numbers are placeholders (TBD) to be filled with actual results.}
+\label{tab:adaptive_main}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Model} & \textbf{Task} & \textbf{Standard} & \textbf{Uniform sparse} & \textbf{Adaptive (HeadIG)} \\
+\hline
+Family A & GSM8K (EM) & TBD & TBD & TBD \\
+Family A & HumanEval (pass@1) & TBD & TBD & TBD \\
+Family A & MMLU (acc) & TBD & TBD & TBD \\
+Family B & GSM8K (EM) & TBD & TBD & TBD \\
+Family B & HumanEval (pass@1) & TBD & TBD & TBD \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Hypothesis.}
+If HeadIG correctly identifies functionally important heads, adaptive sparse attention should \emph{degrade more gracefully} than uniform sparse baselines at the same sparsity budget, and in some regimes may approach the standard dense performance with reduced attention computation.
+
+\subsection{Validation 2: Importance-based Head Masking/Pruning}
+\label{sec:exp:masking}
+
+\paragraph{Protocol.}
+We perform causal interventions by pruning a fixed number (or fraction) of heads and measuring downstream performance. We consider:
+\begin{itemize}
+    \item \textbf{Prune-most}: remove the top-$k$ heads by HeadIG importance.
+    \item \textbf{Prune-least}: remove the bottom-$k$ heads by HeadIG importance.
+    \item \textbf{Prune-random}: remove $k$ random heads (averaged over multiple seeds).
+\end{itemize}
+Pruning can be applied globally across the chosen layer range or per-layer; we report the exact convention used.
+
+\paragraph{Reporting.}
+We sweep $k$ (or $k$ as a fraction) and plot performance drop relative to the unpruned baseline. A good attribution should satisfy: \textbf{prune-most} causes substantially larger degradation than \textbf{prune-least}, and \textbf{prune-random} lies in between.
+
+\begin{table}[t]
+\centering
+\caption{Head masking/pruning using HeadIG scores (TBD). Larger performance drop when pruning most-important heads indicates higher causal validity.}
+\label{tab:mask_main}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Model} & \textbf{Task} & \textbf{Prune-most} & \textbf{Prune-least} & \textbf{Prune-random} \\
+\hline
+Family A & GSM8K (EM) & TBD & TBD & TBD \\
+Family A & HumanEval (pass@1) & TBD & TBD & TBD \\
+Family A & MMLU (acc) & TBD & TBD & TBD \\
+Family B & GSM8K (EM) & TBD & TBD & TBD \\
+Family B & HumanEval (pass@1) & TBD & TBD & TBD \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Ablations and Analysis}
+\label{sec:exp:ablations}
+
+\paragraph{DP vs STP.}
+We compare DP and STP while holding other HeadIG hyperparameters fixed. We expect STP to yield more stable rankings and stronger causal separation between prune-most and prune-least, especially when attribution is sensitive to discrete denoising trajectories.
+
+\paragraph{Attribution hyperparameters.}
+We ablate (i) the set of mask probabilities $\{p_t\}$, (ii) the number of MC masks $S$, (iii) IG steps $K$, (iv) baseline $\alpha_0$, and (v) post-processing $\phi$. We report sensitivity of (a) head ranking stability (e.g., Spearman correlation across runs) and (b) downstream causal tests (adaptive sparse / pruning).
+
+\paragraph{Cross-task transfer of importance.}
+We test whether head-importance computed on one attribution dataset transfers to other tasks. This probes whether HeadIG captures general-purpose head utility versus dataset-specific artifacts.
+
+\paragraph{Where are the important heads?}
+We analyze layer-wise distributions of importance, including whether important heads concentrate in middle/late layers and whether the patterns are consistent across model families.
+
+\subsection{Implementation Details}
+\label{sec:exp:impl}
+
+\paragraph{Reproducibility.}
+We fix random seeds for (i) dataset subsampling, (ii) masking randomness, and (iii) STP threshold sampling. We report all seeds and the exact layer range used for gating.
+
+\paragraph{Compute.}
+We report attribution compute cost (number of forward/backward passes per example, scaling with $T\cdot S\cdot K\cdot P$) and evaluation compute (generation steps, block size, and sparsity budget). We recommend reporting both GPU hours and an approximate forward-pass count to aid cross-hardware comparison.
+
+\paragraph{Placeholders.}
+All numerical results in this draft are marked as \texttt{TBD} and should be filled with measured metrics from the evaluation scripts.

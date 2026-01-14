@@ -55,6 +55,8 @@ from models.LLaDA.attribution.loss_attribution.compute_loss_attribution import (
     _get_num_heads,
     _dry_run_check_o_proj_shape,
     _build_gsm8k_prompt_and_answer,
+    _build_mmlu_prompt_and_answer,
+    _build_humaneval_prompt_and_completion,
     _build_nemotron_prompt_and_completion,
     _tokenize_pair,
     _get_mask_token_id,
@@ -148,6 +150,8 @@ def compute_all_heads_joint_ig(
     min_completion_tokens: int,
     debug_gate: bool = False,
     debug_save_per_sample: int = 0,
+    gsm8k_answer_mode: str = "final",
+    gsm8k_fewshot_prefix: str = "",
 ) -> Dict[int, torch.Tensor]:
     """
     Joint IG over all (layer, head) gates at once.
@@ -215,9 +219,18 @@ def compute_all_heads_joint_ig(
         for row_idx, row in iterator:
             total_rows_seen += 1
             if dataset_name == "gsm8k":
-                prompt, completion = _build_gsm8k_prompt_and_answer(row["question"], row["answer"])
+                prompt, completion = _build_gsm8k_prompt_and_answer(
+                    row["question"],
+                    row["answer"],
+                    answer_mode=str(gsm8k_answer_mode),
+                    fewshot_prefix=str(gsm8k_fewshot_prefix),
+                )
             elif dataset_name == "nemotron":
                 prompt, completion = _build_nemotron_prompt_and_completion(row)
+            elif dataset_name == "mmlu":
+                prompt, completion = _build_mmlu_prompt_and_answer(row)
+            elif dataset_name == "humaneval":
+                prompt, completion = _build_humaneval_prompt_and_completion(row)
             else:
                 raise ValueError(f"Unsupported dataset_name: {dataset_name}")
 
@@ -443,8 +456,8 @@ def _row_fingerprint(dataset: str, row: Dict[str, Any]) -> str:
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--model_path", type=str, default="GSAI-ML/LLaDA-8B-Base")
-    p.add_argument("--dataset", type=str, default="gsm8k", choices=["gsm8k", "nemotron"])
-    p.add_argument("--dataset_config", type=str, default="main")
+    p.add_argument("--dataset", type=str, default="gsm8k", choices=["gsm8k", "nemotron", "mmlu", "humaneval"])
+    p.add_argument("--dataset_config", type=str, default="main", help="gsm8k config or mmlu subject (e.g., 'all').")
     p.add_argument("--split", type=str, default="test")
     p.add_argument("--max_samples", type=int, default=200)
     p.add_argument("--dataset_shuffle", action="store_true", default=False)
@@ -499,6 +512,14 @@ def main() -> None:
     p.add_argument("--progress_update_every", type=int, default=10)
     p.add_argument("--baseline", type=str, default="zero", choices=["zero", "scalar"])
     p.add_argument("--baseline_scalar", type=float, default=0.3)
+    p.add_argument(
+        "--gsm8k_answer_mode",
+        type=str,
+        default="final",
+        choices=["final", "final_hash", "full"],
+        help="For GSM8K: supervision target for attribution (final / '#### <final>' / full answer+rationale).",
+    )
+    p.add_argument("--num_fewshot", type=int, default=0, help="For GSM8K: number of few-shot examples to prepend.")
     p.add_argument("--layer_start", type=int, default=0)
     p.add_argument("--layer_end", type=int, default=-1, help="Inclusive. -1 means last layer.")
     p.add_argument("--output_dir", type=str, required=True)
@@ -559,11 +580,22 @@ def main() -> None:
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
 
+    gsm8k_fewshot_prefix = ""
     if args.dataset == "gsm8k":
         ds = load_dataset("gsm8k", args.dataset_config, split=args.split)
         if bool(args.dataset_shuffle):
             ds = ds.shuffle(seed=int(data_seed))
         rows = [ds[i] for i in range(min(args.max_samples, len(ds)))]
+        if int(args.num_fewshot) > 0:
+            print(f"Building {int(args.num_fewshot)}-shot prefix for GSM8K...")
+            ds_train = load_dataset("gsm8k", args.dataset_config, split="train")
+            g = torch.Generator().manual_seed(int(data_seed))
+            idx = torch.randperm(len(ds_train), generator=g)[: int(args.num_fewshot)].tolist()
+            parts = []
+            for i in idx:
+                r = ds_train[int(i)]
+                parts.append(f"Question: {r['question']}\nAnswer: {r['answer']}\n\n")
+            gsm8k_fewshot_prefix = "".join(parts)
     elif args.dataset == "nemotron":
         cats = [c.strip() for c in args.nemotron_categories.split(",") if c.strip()]
         rows = []
@@ -603,6 +635,19 @@ def main() -> None:
         # Global cap after (optional) shuffle, consistent with gsm8k behavior.
         if len(rows) > int(args.max_samples):
             rows = rows[: int(args.max_samples)]
+    elif args.dataset == "mmlu":
+        subject = args.dataset_config if args.dataset_config != "main" else "all"
+        print(f"Loading MMLU subject={subject}...")
+        ds = load_dataset("cais/mmlu", subject, split=args.split)
+        if bool(args.dataset_shuffle):
+            ds = ds.shuffle(seed=int(data_seed))
+        rows = [ds[i] for i in range(min(args.max_samples, len(ds)))]
+    elif args.dataset == "humaneval":
+        print("Loading HumanEval...")
+        ds = load_dataset("openai_humaneval", split="test")
+        if bool(args.dataset_shuffle):
+            ds = ds.shuffle(seed=int(data_seed))
+        rows = [ds[i] for i in range(min(args.max_samples, len(ds)))]
     else:
         raise ValueError(f"Unsupported dataset: {args.dataset}")
 
@@ -691,6 +736,8 @@ def main() -> None:
         min_completion_tokens=int(args.min_completion_tokens),
         debug_gate=bool(args.debug_gate),
         debug_save_per_sample=int(args.debug_save_per_sample),
+        gsm8k_answer_mode=str(args.gsm8k_answer_mode),
+        gsm8k_fewshot_prefix=str(gsm8k_fewshot_prefix),
     )
 
     importance_scores: Dict[int, torch.Tensor] = {
@@ -708,7 +755,11 @@ def main() -> None:
         "metadata": {
             "method": "all_heads_joint_ig_diffusion_masked_ce_answer_only_multit",
             "model_path": args.model_path,
-            "dataset": f"{args.dataset}/{args.dataset_config}" if args.dataset == "gsm8k" else f"{args.dataset}",
+            "dataset": (
+                f"gsm8k/{args.dataset_config}"
+                if args.dataset == "gsm8k"
+                else (f"mmlu/{args.dataset_config}" if args.dataset == "mmlu" else f"{args.dataset}")
+            ),
             "split": args.split,
             "max_samples": int(args.max_samples),
             "rows_loaded": int(len(rows)),
@@ -719,6 +770,8 @@ def main() -> None:
             "samples_per_category": int(args.samples_per_category) if args.dataset == "nemotron" else None,
             "nemotron_pool_per_category": int(args.nemotron_pool_per_category) if args.dataset == "nemotron" else None,
             "nemotron_per_category_counts": per_cat_counts if args.dataset == "nemotron" else None,
+            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if args.dataset == "gsm8k" else None,
+            "gsm8k_num_fewshot": int(args.num_fewshot) if args.dataset == "gsm8k" else 0,
             "ig_steps": int(args.ig_steps),
             "path_mode": str(args.path_mode),
             "path_samples": int(args.path_samples),

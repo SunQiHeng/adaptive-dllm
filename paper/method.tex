@@ -1,0 +1,222 @@
+\section{Head Integrated Gradients for Attention Head Attribution}
+\label{ch:method}
+
+% NOTE (for compilation):
+% The pseudocode below uses the `algorithm2e` package.
+% Please add the following to your main paper preamble (the file with \documentclass):
+% \usepackage[ruled,vlined]{algorithm2e}
+
+We present a head-importance attribution framework for diffusion language models (DLMs/DLLMs) and other mask-predict sequence models. Unlike autoregressive LMs, many DLLMs are trained and evaluated under teacher forcing with random masking over a target span (e.g., the answer), which naturally induces a notion of denoising difficulty via masking strengths and a step-dependent supervision signal.
+
+Our method, \emph{Head Integrated Gradients} (HeadIG), attributes attention heads by integrating gradients with respect to a per-head gating vector inserted into the attention outputs, while optimizing a masked cross-entropy objective over completion/answer tokens only. To improve robustness and better match diffusion-style behavior, we average the objective over multiple masking probabilities and Monte-Carlo masking samples.
+
+\subsection{Diffusion-style Masking and Supervision}
+\label{sec:method:notation}
+
+Let the vocabulary be $\mathcal{V}$ with $|\mathcal{V}|=V$, and let a tokenized sequence be $x \in \mathcal{V}^{L}$. We consider a transformer-like DLLM with $N$ layers and $H$ attention heads per layer. For layer $\ell \in \{1,\dots,N\}$, the head dimension is $d_h$ and the model dimension is $d = H d_h$.
+
+We assume each training/evaluation example can be represented as a \textbf{context/prompt} prefix and a \textbf{completion/answer} suffix. Let $c \in \mathcal{V}^{L_c}$ be the context tokens and $a \in \mathcal{V}^{L_a}$ be the completion tokens, so the full sequence is
+\begin{equation}
+x = [c; a] \in \mathcal{V}^{L}, \qquad L = L_c + L_a,
+\end{equation}
+and the completion span begins at index $s = L_c$ (0-based) or $s=L_c+1$ (1-based), depending on convention.
+
+Let $z(x) \in \mathbb{R}^{B \times L \times V}$ denote the model logits, and
+\begin{equation}
+p_{n,i,v}(x) = \mathrm{softmax}\!\left(z_{n,i,:}(x)\right)_v
+\end{equation}
+the corresponding probabilities.
+
+DLLMs often supervise only a subset of positions by masking them and predicting the original tokens. We define a special mask token \texttt{[MASK]} with id $v_{\text{mask}}$.
+
+\paragraph*{Masking operator over the completion span}
+\label{sec:method:mask_operator}
+
+For a masking probability $p \in [0,1]$, we sample a binary mask vector $m \in \{0,1\}^{L_a}$ over completion indices $i \in \{s,\dots,L-1\}$, where $m_i=1$ means ``masked and supervised''. We then construct:
+\begin{itemize}
+\item \textbf{Masked input} $x^{(p,m)} \in \mathcal{V}^{L}$: for completion positions with $m_i=1$, set $x^{(p,m)}_i = v_{\text{mask}}$; otherwise keep the original token.
+\item \textbf{Labels} $y^{(p,m)} \in (\mathcal{V} \cup \{-100\})^{L}$: set
+\begin{equation}
+y^{(p,m)}_i =
+\begin{cases}
+x_i, & i \in \{s,\dots,L-1\} \ \wedge\ m_i=1,\\
+-100, & \text{otherwise,}
+\end{cases}
+\end{equation}
+where $-100$ denotes an ignored label (no loss).
+\end{itemize}
+We additionally ensure at least one completion token is supervised (i.e., $\sum_i \mathbb{1}[y_i \neq -100] \ge 1$) to avoid degenerate zero-loss samples.
+
+\paragraph*{Masked cross-entropy on answer-only tokens}
+\label{sec:method:loss}
+
+Given logits $z(x^{(p,m)})$, we define the token-level negative log-likelihood for supervised positions:
+\begin{equation}
+\ell_{n,i}(x^{(p,m)}) = -\log p_{n,i, y^{(p,m)}_i}(x^{(p,m)}),
+\qquad
+\end{equation}
+only for $y^{(p,m)}_i \neq -100$.
+The per-example loss aggregates only supervised completion tokens. We support two common normalizations:
+\begin{equation}
+\mathcal{L}_n^{(p,m)} =
+\begin{cases}
+\sum_{i: y^{(p,m)}_i \neq -100} \ell_{n,i}, & \texttt{normalize}=\texttt{sum},\\[6pt]
+\frac{1}{\max(1, |\{i: y^{(p,m)}_i \neq -100\}|)}\sum_{i: y^{(p,m)}_i \neq -100} \ell_{n,i}, & \texttt{normalize}=\texttt{mean\_masked}.
+\end{cases}
+\end{equation}
+We then average over the batch:
+\begin{equation}
+\mathcal{L}^{(p,m)} = \frac{1}{B}\sum_{n=1}^{B} \mathcal{L}_n^{(p,m)}.
+\end{equation}
+
+\paragraph*{Step-wise (multi-timestep) objective}
+\label{sec:method:multi_timestep}
+
+To emulate multiple diffusion time steps and reduce variance, we use a set of mask probabilities $\{p_t\}_{t=1}^{T}$ and draw $S$ independent mask samples for each $p_t$. The overall objective is the mean loss across all variants:
+\begin{equation}
+\mathcal{L} = \frac{1}{TS}\sum_{t=1}^{T}\sum_{s=1}^{S} \mathcal{L}^{(p_t, m_{t,s})}.
+\label{eq:overall_loss}
+\end{equation}
+
+\subsection{Intervention Variable: Per-head Gate at the Attention Output}
+\label{sec:method:gate}
+
+HeadIG attributes heads by inserting a differentiable \textbf{per-head gate} at the attention output of each layer. Let the pre-projection multi-head attention output at layer $\ell$ be
+\begin{equation}
+U^\ell(x) \in \mathbb{R}^{B \times L \times H \times d_h},
+\end{equation}
+i.e., the concatenated hidden fed into the attention output projection is $\mathrm{concat}(U^\ell) \in \mathbb{R}^{B \times L \times d}$.
+
+We introduce a gate vector $\boldsymbol{\alpha}_\ell \in \mathbb{R}^{H}$ and define the gated head output:
+\begin{equation}
+\tilde{U}^\ell_{n,i,h,:}(x;\boldsymbol{\alpha}_\ell) = \alpha_{\ell,h}\, U^\ell_{n,i,h,:}(x).
+\label{eq:gate_def}
+\end{equation}
+The model then proceeds normally by concatenation, output projection, residuals, and subsequent layers. Importantly, we freeze all model parameters and compute gradients only with respect to the gate variables.
+
+In practice we gate \emph{all heads jointly} across a chosen layer range $\ell \in \{\ell_{\min},\dots,\ell_{\max}\}$. Let the full gate tensor be $\boldsymbol{\alpha} \in \mathbb{R}^{N \times H}$ (or restricted to a subset of layers), and let $\mathrm{vec}(\boldsymbol{\alpha}) \in \mathbb{R}^{D}$ denote its flattened form, where $D = (\ell_{\max}-\ell_{\min}+1)\cdot H$.
+
+We compute Integrated Gradients (IG) for $\boldsymbol{\alpha}$ with respect to an objective that \emph{rewards} likelihood (equivalently, penalizes loss). We define:
+\begin{equation}
+J(\boldsymbol{\alpha}) = -\mathcal{L}(\boldsymbol{\alpha}),
+\label{eq:reward_objective}
+\end{equation}
+where $\mathcal{L}$ is the averaged masked cross-entropy in \eqref{eq:overall_loss} computed under the gated forward pass.
+
+\paragraph{Baseline and path}
+
+We use a scalar baseline value $\alpha_0 \in [0,1]$ and integrate to the all-ones gate:
+\begin{equation}
+\boldsymbol{\alpha}(0) = \alpha_0 \mathbf{1},
+\qquad
+\boldsymbol{\alpha}(1) = \mathbf{1}.
+\end{equation}
+Let $\boldsymbol{\alpha}(\tau)$ be a differentiable path from $\alpha_0\mathbf{1}$ to $\mathbf{1}$ for $\tau \in [0,1]$. The IG attribution for dimension $d \in \{1,\dots,D\}$ is:
+\begin{equation}
+\mathrm{IG}_{d} \;=\; \int_{0}^{1} \frac{\partial J(\boldsymbol{\alpha}(\tau))}{\partial \alpha_d}\,\frac{d \alpha_d(\tau)}{d\tau}\, d\tau.
+\label{eq:ig_general}
+\end{equation}
+This form emphasizes that when the path is \emph{vector-valued} (different heads follow different schedules), the correct discrete approximation must weight gradients by the \emph{increment} in each gate dimension.
+
+\paragraph{Integration paths}
+We consider two complementary paths, both starting at $\alpha_0$ and ending at $1$:
+\begin{itemize}
+\item \textbf{Diagonal Path (DP).} All heads share the same schedule,
+\begin{equation}
+\alpha_d(\tau) = \alpha_0 + \tau (1-\alpha_0), \quad \forall d,
+\label{eq:alpha_path_diagonal}
+\end{equation}
+which is the backward-compatible straight-line path.
+\item \textbf{Stochastic Threshold Path (STP).} Each head $d$ samples a random threshold $u_d \sim \mathcal{U}[0,1]$ and then ramps from baseline to $1$ after crossing the threshold:
+\begin{equation}
+\alpha_d(\tau) \;=\; \alpha_0 + (1-\alpha_0)\cdot \mathrm{clip}\!\left(\frac{\tau-u_d}{1-u_d},\,0,\,1\right).
+\label{eq:alpha_path_stp}
+\end{equation}
+We average IG across multiple independent threshold samples to reduce variance. STP is a Shapley-like randomized path that reduces sensitivity to any single head ordering.
+\end{itemize}
+
+\paragraph{Remark (DP as a special case; connection to Shapley).}
+DP can be viewed as a synchronized special case of STP where all heads share an identical threshold (e.g., $u_d \equiv 0$ or, more generally, $u_d$ equal across $d$), so all gates ramp up in lockstep. In contrast, STP assigns different activation thresholds to different heads, inducing a randomized ``turn-on'' ordering along the path; averaging over multiple STP draws thus resembles the Shapley principle of averaging marginal contributions over random permutations, and empirically yields more stable attributions under DLLM trajectory variability.
+
+\paragraph*{Numerical approximation (Riemann average)}
+\label{sec:method:ig_approx}
+
+With $K$ integration steps, we evaluate at $\tau_k = k/K$ for $k=1,\dots,K$ and compute gradients under the gated forward pass:
+\begin{equation}
+g_{d}^{(k)} = \left.\frac{\partial J(\boldsymbol{\alpha}(\tau))}{\partial \alpha_{d}}\right|_{\tau=\tau_k}.
+\end{equation}
+Let $\Delta \alpha_d^{(k)} = \alpha_d(\tau_k)-\alpha_d(\tau_{k-1})$ with $\tau_0=0$. The path-correct discrete approximation is:
+\begin{equation}
+\mathrm{IG}_{d}
+\approx
+\sum_{k=1}^{K} g_{d}^{(k)} \cdot \Delta \alpha_d^{(k)}.
+\label{eq:ig_gate}
+\end{equation}
+For the Diagonal Path, $\Delta \alpha_d^{(k)}=(1-\alpha_0)/K$ for all $d$, which recovers the familiar $(1-\alpha_0)\cdot \frac{1}{K}\sum_k g_d^{(k)}$ form.
+
+\paragraph*{Optional post-processing}
+\label{sec:method:postprocess}
+
+To obtain non-negative importances or control sign, we optionally apply an element-wise post-processing operator $\phi(\cdot)$:
+\begin{equation}
+\hat{s}_{\ell,h} = \phi(\mathrm{IG}_{\ell,h}),
+\qquad
+\phi \in \{\ |\cdot|,\ \mathrm{identity},\ \mathrm{ReLU}\ \}.
+\end{equation}
+
+\paragraph*{Dataset-level Aggregation and Head Ranking}
+\label{sec:method:aggregation}
+
+For each example, we compute $\hat{s}_{\ell,h}$ by averaging the loss across all masking variants (mask probabilities and Monte-Carlo samples), then computing IG as in \eqref{eq:ig_gate}. We aggregate by averaging over $M$ dataset examples:
+\begin{equation}
+S_{\ell,h} = \frac{1}{M}\sum_{j=1}^{M} \hat{s}^{(j)}_{\ell,h}.
+\end{equation}
+Per-layer head ranking is obtained by sorting $\{S_{\ell,h}\}_{h=1}^{H}$ in descending order. A global ranking across layers can be formed by concatenating all $(\ell,h)$ pairs and sorting by $S_{\ell,h}$.
+
+\paragraph*{Practical Considerations}
+Many evaluation tasks care primarily about correctness of the completion/answer. Restricting supervision to the completion span avoids attributing heads to prompt tokens that are not directly optimized by the masked CE objective in this setting. Averaging over multiple mask probabilities $\{p_t\}$ better matches diffusion-style training/evaluation dynamics and reduces sensitivity to any single masking strength. In our implementation, HeadIG is computed \textbf{jointly over heads} (optionally restricted to a layer range), producing a score tensor $S \in \mathbb{R}^{N \times H}$.
+
+\paragraph*{Computation Sketch}
+For clarity, HeadIG proceeds as follows: (i) sample masking variants $(p_t,m_{t,s})$ on the completion span and compute the averaged masked CE loss $\mathcal{L}$; (ii) choose an integration path (DP or STP) and evaluate gradients $\nabla_{\boldsymbol{\alpha}}J$ at $K$ points along the path; (iii) accumulate IG via \eqref{eq:ig_gate} (and average over multiple STP draws if used); (iv) optionally post-process and aggregate over examples to obtain $S_{\ell,h}$.
+
+\begin{algorithm}[t]
+\caption{HeadIG for DLLMs (Loss-based; Diagonal Path or STP)}
+\label{alg:headig}
+\KwIn{Dataset $\mathcal{D}$ of (context $c$, completion $a$); mask token \texttt{[MASK]};\\
+mask probabilities $\{p_t\}_{t=1}^{T}$; MC masks per prob $S$; IG steps $K$; baseline $\alpha_0 \in [0,1]$;\\
+path mode $\in \{\mathrm{DP}, \mathrm{STP}\}$; STP path samples $P$; postprocess $\phi$ (optional).}
+\KwOut{Head importance scores $S_{\ell,h}$ for layers/heads (or a chosen layer range).}
+
+\ForEach{example $(c,a)\in\mathcal{D}$}{
+  Construct full sequence $x=[c;a]$ and completion span indices\;
+  \tcp{Build masking variants (multi-timestep objective)}
+  \For{$t=1$ \KwTo $T$}{
+    \For{$s=1$ \KwTo $S$}{
+      Sample a binary mask $m_{t,s}$ over the completion span with prob. $p_t$\;
+      Construct masked input $x^{(p_t,m_{t,s})}$ and labels $y^{(p_t,m_{t,s})}$\;
+    }
+  }
+  \tcp{Integrated gradients over per-head gates}
+  Initialize $\mathrm{IG} \gets \mathbf{0}$ (one entry per gated head)\;
+  \For{$r=1$ \KwTo $P$}{
+    \If{path mode is STP}{
+      Sample thresholds $u_d \sim \mathcal{U}[0,1]$ for each gate dimension $d$\;
+    }
+    Set $\boldsymbol{\alpha}_{\mathrm{prev}} \gets \alpha_0 \mathbf{1}$\;
+    \For{$k=1$ \KwTo $K$}{
+      $\tau \gets k/K$\;
+      Compute $\boldsymbol{\alpha}_{\mathrm{now}} \gets \boldsymbol{\alpha}(\tau)$ using DP \eqref{eq:alpha_path_diagonal} or STP \eqref{eq:alpha_path_stp}\;
+      $\Delta \boldsymbol{\alpha} \gets \boldsymbol{\alpha}_{\mathrm{now}} - \boldsymbol{\alpha}_{\mathrm{prev}}$; $\boldsymbol{\alpha}_{\mathrm{prev}} \gets \boldsymbol{\alpha}_{\mathrm{now}}$\;
+      Run gated forward passes on all variants to get $\mathcal{L}$ in \eqref{eq:overall_loss}\;
+      $J \gets -\mathcal{L}$ and backprop to obtain $\mathbf{g} \gets \nabla_{\boldsymbol{\alpha}} J$\;
+      $\mathrm{IG} \gets \mathrm{IG} + \mathbf{g} \odot \Delta \boldsymbol{\alpha}$ \tcp*{Eq.~\eqref{eq:ig_gate}}
+    }
+  }
+  $\mathrm{IG} \gets \mathrm{IG}/P$\;
+  Optionally post-process: $\hat{s} \gets \phi(\mathrm{IG})$\;
+  Accumulate $\hat{s}$ for dataset averaging\;
+}
+\Return{$S_{\ell,h}$ by averaging $\hat{s}$ over $\mathcal{D}$ and reshaping to layers/heads.}
+\end{algorithm}
+
+

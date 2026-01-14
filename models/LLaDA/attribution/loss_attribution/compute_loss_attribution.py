@@ -150,12 +150,83 @@ def _parse_gsm8k_final_answer(answer_str: str) -> str:
     return answer_str.strip()
 
 
-def _build_gsm8k_prompt_and_answer(question: str, answer: str) -> Tuple[str, str]:
+def _build_gsm8k_prompt_and_answer(
+    question: str,
+    answer: str,
+    *,
+    answer_mode: str = "final",
+    fewshot_prefix: str = "",
+) -> Tuple[str, str]:
     # Keep prompt minimal and stable.
-    prompt = f"Question: {question}\nAnswer:"
-    final = _parse_gsm8k_final_answer(answer)
-    # Put a leading space so the first answer token is separated from "Answer:".
-    completion = f" {final}"
+    # Allow optional few-shot prefix (already formatted, typically "Question: ...\nAnswer: ...\n\n")
+    prefix = str(fewshot_prefix) if fewshot_prefix is not None else ""
+    prompt = f"{prefix}Question: {question}\nAnswer:"
+
+    mode = str(answer_mode).strip().lower()
+    if mode == "final":
+        final = _parse_gsm8k_final_answer(answer)
+        # Put a leading space so the first answer token is separated from "Answer:".
+        completion = f" {final}"
+    elif mode == "final_hash":
+        final = _parse_gsm8k_final_answer(answer)
+        # Supervise the common lm-eval style suffix "#### <final>".
+        completion = f" #### {final}"
+    elif mode == "full":
+        ans = answer if isinstance(answer, str) else str(answer)
+        completion = ans if ans.startswith((" ", "\n", "\t")) else f" {ans}"
+    else:
+        raise ValueError(f"Unsupported gsm8k answer_mode: {answer_mode!r} (expected: final|final_hash|full)")
+    return prompt, completion
+
+
+def _build_mmlu_prompt_and_answer(row: Dict[str, Any]) -> Tuple[str, str]:
+    """
+    MMLU (cais/mmlu) row schema:
+      - question: str
+      - choices: List[str] (length 4)
+      - answer: int in {0,1,2,3}
+    """
+    q = str(row.get("question", "")).strip()
+    choices = row.get("choices", None)
+    if not isinstance(choices, list) or len(choices) < 4:
+        raise ValueError("MMLU row missing/invalid `choices` (expected list of 4).")
+    ch = [str(c) for c in choices[:4]]
+    letters = ["A", "B", "C", "D"]
+    prompt = (
+        f"Question: {q}\n"
+        f"A. {ch[0]}\n"
+        f"B. {ch[1]}\n"
+        f"C. {ch[2]}\n"
+        f"D. {ch[3]}\n"
+        f"Answer:"
+    )
+    ans = row.get("answer", None)
+    if isinstance(ans, int):
+        idx = int(ans)
+        if idx < 0 or idx > 3:
+            raise ValueError(f"MMLU answer index out of range: {idx}")
+        gold = letters[idx]
+    else:
+        # Sometimes datasets store the letter directly
+        s = str(ans).strip().upper()
+        if s not in letters:
+            raise ValueError(f"MMLU answer is not a valid option letter/index: {ans!r}")
+        gold = s
+    completion = f" {gold}"
+    return prompt, completion
+
+
+def _build_humaneval_prompt_and_completion(row: Dict[str, Any]) -> Tuple[str, str]:
+    """
+    HumanEval (openai_humaneval) row schema:
+      - prompt: str
+      - canonical_solution: str
+    """
+    prompt = str(row.get("prompt", ""))
+    sol = row.get("canonical_solution", "")
+    sol = sol if isinstance(sol, str) else str(sol)
+    # For code, a leading newline is typically most natural (prompt ends with signature/docstring).
+    completion = sol if sol.startswith((" ", "\n", "\t")) else ("\n" + sol)
     return prompt, completion
 
 
