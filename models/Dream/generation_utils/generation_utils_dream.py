@@ -411,6 +411,18 @@ class DreamGenerationMixin:
         # this allows user-defined token control of the intermediate steps
         x = generation_tokens_hook_func(None, x, None)
         for i in range(steps):
+            # Broadcast diffusion step metadata for head-mask warmup (if head masking is enabled).
+            # The attention patch reads `_head_mask_now_step/_head_mask_whole_steps` on each attention module.
+            head_mask_modules = getattr(self, "_head_mask_attn_modules", None)
+            if head_mask_modules is not None:
+                try:
+                    for m in head_mask_modules:
+                        m._head_mask_now_step = i
+                        m._head_mask_whole_steps = steps
+                except Exception:
+                    # Don't break generation if metadata broadcast fails.
+                    pass
+
             # Update now_step for sparse attention
             if SparseD_param is not None:
                 SparseD_param['now_step'] = i

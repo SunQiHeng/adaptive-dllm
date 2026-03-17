@@ -19,7 +19,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default: 4; keep consistent with your existing runner)
-GPU_ID=${GPU_ID:-5}
+GPU_ID=${GPU_ID:-1}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -40,7 +40,7 @@ OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs"}
 RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 
 # Attribution dataset (can differ from downstream eval tasks)
-ATTR_DATASET=${ATTR_DATASET:-"gsm8k"}     # nemotron | gsm8k | mmlu | humaneval
+ATTR_DATASET=${ATTR_DATASET:-"mmlu"}     # nemotron | gsm8k | mmlu | humaneval
 SPLIT=${SPLIT:-"test"}                      # dataset split name (gsm8k/mmlu); humaneval uses fixed test
 SAMPLES_PER_CATEGORY=${SAMPLES_PER_CATEGORY:-10}  # nemotron only
 NEMOTRON_CATEGORIES=${NEMOTRON_CATEGORIES:-"code,math,science,chat,safety"} # nemotron only
@@ -103,7 +103,7 @@ fi
 
 TAG="${TAG}_maskp$(echo "${MASK_PROBS}" | tr ',' '-')_mcs${MASK_SAMPLES_PER_PROB}_${LOSS_NORMALIZE}"
 
-OUT_DIR="${OUT_ROOT}/head_importance_${MODEL_NAME}_${TAG}"
+OUT_DIR="${OUT_ROOT}/head_importance_${MODEL_NAME}"
 
 # Add dataset-specific suffix (avoid confusion when sweeping)
 if [ "$ATTR_DATASET" = "nemotron" ]; then
@@ -118,7 +118,7 @@ elif [ "$ATTR_DATASET" = "humaneval" ]; then
   OUT_DIR="${OUT_DIR}_humaneval"
 fi
 
-OUT_DIR="${OUT_DIR}_ts${RUN_TS}"
+OUT_DIR="${OUT_DIR}_pm${PATH_MODE}_ts${RUN_TS}"
 mkdir -p "${OUT_DIR}"
 
 echo "Model: ${MODEL_PATH}"

@@ -72,12 +72,16 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
         layer_end: int = -1,
         random_prune_seed: int = 1234,
         keep_at_least_one_head=True,
+        # diffusion-style generation warmup (skip head mask for early steps)
+        head_mask_warmup_frac: float = 0.0,
+        prune_scope: str = "global",  # "global" | "layer"
         **kwargs,
     ):
         # 强制 standard（head pruning 的对照最清晰）
         super().__init__(model_path=model_path, model_type="standard", **kwargs)
 
         prune_which = str(prune_which).strip()
+        prune_scope = str(prune_scope).strip().lower()
 
         meta = {}
         if prune_which == "random":
@@ -92,6 +96,7 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
                 layer_end=int(layer_end),
                 seed=int(random_prune_seed),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
+                prune_scope=prune_scope,
             )
         else:
             importance_path = _strip_quotes(importance_path)
@@ -106,6 +111,7 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
                 layer_start=int(layer_start),
                 layer_end=int(layer_end),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
+                prune_scope=prune_scope,
             )
 
         # Patch + apply masks
@@ -114,7 +120,12 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
             dev = next(self.model.parameters()).device
         except StopIteration:
             dev = None
-        apply_head_keep_masks_(self.model, keep_masks, device=dev)
+        apply_head_keep_masks_(
+            self.model,
+            keep_masks,
+            device=dev,
+            head_mask_warmup_frac=float(head_mask_warmup_frac),
+        )
 
         # 打印剪枝概况（全局）
         total_pruned = 0

@@ -44,43 +44,40 @@ fi
 MODEL_PATH=${MODEL_PATH:-"/data/qh_models/Dream-v0-Instruct-7B"}
 MODEL_NAME=${MODEL_NAME:-"dream"}
 
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"loss_gateIG"}  # loss_gateIG | loss_gateIG_neg | loss_gateIG_zero | loss_gateIG_zero_neg | all_ones
-PRECOMPUTED_IMPORTANCE_PATH=""
+# -------------------------
+# Importance score path selection (EDIT ONE LINE)
+# -------------------------
+# Only change the next line (or override via env IMPORTANCE_PATH=...):
+IMPORTANCE_PATH=${IMPORTANCE_PATH:-"/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt"}
 
-if [ "$PRUNE_WHICH" != "random" ]; then
-    if [ "$IMPORTANCE_TAG" = "loss_gateIG" ]; then
-        PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt"
-    elif [ "$IMPORTANCE_TAG" = "loss_gateIG_neg" ]; then
-        SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG/head_importance.pt"
-        NEG_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_loss_gateIG_neg"
-        PRECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-        if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-            echo "➖ Generating negated importance..."
-            python /home/qiheng/Projects/adaptive-dllm/evaluation/dream/generate_negated_importance.py \
-                --in_pt "$SRC_IMPORTANCE_PATH" \
-                --out_dir "$NEG_DIR"
-        fi
-    elif [ "$IMPORTANCE_TAG" = "loss_gateIG_zero" ]; then
-        PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed47_n50_k8_L2048_dseed47_mseed47_ts20251227_191418/head_importance.pt"
-    elif [ "$IMPORTANCE_TAG" = "loss_gateIG_zero_neg" ]; then
-        SRC_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_seed47_n50_k8_L2048_dseed47_mseed47_ts20251227_191418/head_importance.pt"
-        NEG_DIR="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_loss_gateIG_zero_neg"
-        PRECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-        if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-            echo "➖ Generating negated importance..."
-            python /home/qiheng/Projects/adaptive-dllm/evaluation/dream/generate_negated_importance.py \
-                --in_pt "$SRC_IMPORTANCE_PATH" \
-                --out_dir "$NEG_DIR"
-        fi
-    elif [ "$IMPORTANCE_TAG" = "all_ones" ]; then
-        PRECOMPUTED_IMPORTANCE_PATH="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_base_all_ones/head_importance.pt"
-    else
-        echo "ERROR: Unknown IMPORTANCE_TAG='$IMPORTANCE_TAG'."
-        exit 2
+# Whether to negate the scores (0=use original, 1=negate).
+# Keep default aligned with prior behavior of this script (non-neg by default).
+USE_NEGATED=${USE_NEGATED:-0}
+
+# What we actually pass downstream
+USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+
+# Auto-generate negated importance if requested
+if [ "${USE_NEGATED}" = "1" ]; then
+    SRC_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+    NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
+    USED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+    if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
+        echo "➖ Generating negated importance..."
+        python /home/qiheng/Projects/adaptive-dllm/evaluation/dream/generate_negated_importance.py \
+            --in_pt "$SRC_IMPORTANCE_PATH" \
+            --out_dir "$NEG_DIR"
     fi
+fi
 
-    if [ ! -f "$PRECOMPUTED_IMPORTANCE_PATH" ]; then
-        echo "ERROR: importance file not found: ${PRECOMPUTED_IMPORTANCE_PATH}"
+# Tag for output directory naming only (can be overridden)
+DEFAULT_IMPORTANCE_TAG="$(basename "$(dirname "${IMPORTANCE_PATH}")")$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"${DEFAULT_IMPORTANCE_TAG}"}
+
+# In non-random pruning modes, we must have an importance file available.
+if [ "$PRUNE_WHICH" != "random" ]; then
+    if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
+        echo "ERROR: importance file not found: ${USED_IMPORTANCE_PATH}"
         exit 3
     fi
 fi
@@ -121,7 +118,7 @@ echo "========================================================"
 echo "Model:      ${MODEL_PATH}"
 echo "Prune:      which=${PRUNE_WHICH} k=${PRUNE_K:-"(none)"} k_frac=${PRUNE_K_FRAC:-"(none)"} layers=${LAYER_START}..${LAYER_END}"
 echo "Seed:       ${RANDOM_PRUNE_SEED} (random mode only)"
-echo "Importance: ${PRECOMPUTED_IMPORTANCE_PATH} (tag=${IMPORTANCE_TAG})"
+echo "Importance: ${USED_IMPORTANCE_PATH} (tag=${IMPORTANCE_TAG})"
 echo "Tasks:      ${TASKS[*]}"
 echo "Out:        ${RUN_DIR}"
 echo "========================================================"
@@ -164,7 +161,7 @@ run_single_eval() {
     local importance_arg=""
     if [ "$PRUNE_WHICH" != "random" ]; then
         # 不要额外加引号（lm-eval parser 会把引号当字面量）
-        importance_arg=",importance_path=${PRECOMPUTED_IMPORTANCE_PATH}"
+        importance_arg=",importance_path=${USED_IMPORTANCE_PATH}"
     fi
 
     local model_args="model_path=${MODEL_PATH},max_new_tokens=${max_new_tokens},steps=${steps},temperature=${TEMPERATURE},top_p=${TOP_P},alg=${ALG},alg_temp=${ALG_TEMP},block_size=${BLOCK_SIZE}${model_args_extra}${importance_arg},prune_which=${PRUNE_WHICH}${prune_args},random_prune_seed=${RANDOM_PRUNE_SEED},layer_start=${LAYER_START},layer_end=${LAYER_END}"

@@ -69,12 +69,27 @@ def generate(model, prompt, attention_mask=None, steps=128, gen_length=128, bloc
     num_blocks = gen_length // block_length
 
     assert steps % num_blocks == 0
+    whole_steps = int(steps)
     steps = steps // num_blocks
+    steps_per_block = int(steps)
+
+    # If head masking is enabled, the patcher may cache the blocks list here.
+    # We'll broadcast diffusion step metadata so attention can implement warmup ("first X% steps unmasked").
+    head_mask_blocks = getattr(model, "_head_mask_blocks", None)
 
     for num_block in range(num_blocks):
         block_mask_index = (x[:, prompt.shape[1] + num_block * block_length: prompt.shape[1] + (num_block + 1) * block_length:] == mask_id)
         num_transfer_tokens = get_num_transfer_tokens(block_mask_index, steps)
-        for i in range(steps):
+        for i in range(steps_per_block):
+            global_step = int(num_block * steps_per_block + i)
+            if head_mask_blocks is not None:
+                try:
+                    for b in head_mask_blocks:
+                        b._head_mask_now_step = global_step
+                        b._head_mask_whole_steps = whole_steps
+                except Exception:
+                    pass
+
             mask_index = (x == mask_id)
             if cfg_scale > 0.:
                 un_x = x.clone()

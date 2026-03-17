@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=4
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
@@ -30,51 +30,43 @@ mkdir -p logs results
 #   Using chat template here makes the model emit explanations/markdown fences and tanks pass@1.
 # - `humaneval_instruct` is designed for *instruct/chat* models and SHOULD use chat template.
 MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
-MODEL_TYPES=("adaptive")
+MODEL_TYPES=("adaptive" "sparse")
 
 # -------------------------
-# Importance path selection
+# Importance score path selection (EDIT ONE LINE)
 # -------------------------
-# You can manually choose the score file by setting:
-#   PRECOMPUTED_IMPORTANCE_PATH=/path/to/head_importance.pt bash run_eval_task.sh
-#
-# This script will then set:
-#   RECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"<default>"}
-# and (optionally) negate it based on USE_NEGATED.
-#
-# Whether to negate the scores (0=use original, 1=negate)
-USE_NEGATED=${USE_NEGATED:-1}
+# Only change the next line (or override via env IMPORTANCE_PATH=...):
+IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260116_030519/head_importance.pt"}
+TASKS=("gsm8k")
+LIMIT=150
+# Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
+USE_NEGATED=${USE_NEGATED:-0}
 
-# Default base importance (if not provided via env)
-DEFAULT_IMPORTANCE_PATH="${PROJECT_ROOT}/configs/head_importance_dream_loss_gateIG/head_importance.pt"
-
-# Base score path (user-selectable)
-PRECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"${DEFAULT_IMPORTANCE_PATH}"}
-
-# Final score path (what we actually pass downstream)
-RECOMPUTED_IMPORTANCE_PATH=${RECOMPUTED_IMPORTANCE_PATH:-"${PRECOMPUTED_IMPORTANCE_PATH}"}
+# What we actually pass downstream
+USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
 
 # Auto-generate negated importance if requested
 if [ "${USE_NEGATED}" = "1" ]; then
-    SRC_IMPORTANCE_PATH="${RECOMPUTED_IMPORTANCE_PATH}"
+    SRC_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
     NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
-    RECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-    if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
+    USED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+    if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
         echo "➖ Generating negated importance..."
         python "${SCRIPT_DIR}/generate_negated_importance.py" \
             --in_pt "${SRC_IMPORTANCE_PATH}" \
             --out_dir "${NEG_DIR}"
-        if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
-            echo "ERROR: Failed to generate negated importance at: ${RECOMPUTED_IMPORTANCE_PATH}"
+        if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+            echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
             exit 3
         fi
     else
-        echo "➖ Using existing negated importance: ${RECOMPUTED_IMPORTANCE_PATH}"
+        echo "➖ Using existing negated importance: ${USED_IMPORTANCE_PATH}"
     fi
 fi
 
 # Tag for output directory naming only (can be overridden)
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"manual$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"}
+DEFAULT_IMPORTANCE_TAG="$(basename "$(dirname "${IMPORTANCE_PATH}")")$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"${DEFAULT_IMPORTANCE_TAG}"}
 
 echo "========================================================"
 echo "Dream Quick Test Configuration"
@@ -85,8 +77,8 @@ echo "Max New Tokens: 256"
 echo "Block Size: 32"
 echo "Test Samples: 50 per dataset"
 echo "Importance tag: ${IMPORTANCE_TAG}"
-echo "Importance base: ${PRECOMPUTED_IMPORTANCE_PATH}"
-echo "Importance used: ${RECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance base: ${IMPORTANCE_PATH}"
+echo "Importance used: ${USED_IMPORTANCE_PATH}"
 echo "========================================================"
 echo ""
 
@@ -97,7 +89,7 @@ TOP_P=0.9
 ALG="entropy"
 ALG_TEMP=0.0  # Official: 0.0 (NOT 1.5!)
 BLOCK_SIZE=32
-LIMIT=150
+
 
 # Task-specific parameters (will be set per task)
 MAX_NEW_TOKENS=256
@@ -110,7 +102,7 @@ SELECT=0.3
 
 # Tasks to run (can be overridden without editing file):
 #   TASKS_STR="mmlu" bash run_eval_task.sh
-TASKS=("gsm8k" "humaneval")
+
 if [ -n "${TASKS_STR:-}" ]; then
     IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
 fi
@@ -161,7 +153,7 @@ run_single_eval() {
         RELATIVE_WEIGHT_SCALE=${RELATIVE_WEIGHT_SCALE:-"0.6666667"}
         # Safety clamp to avoid empty masks for very low-weight heads.
         MIN_KEEP_RATIO=${MIN_KEEP_RATIO:-"0.1"}
-        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${RECOMPUTED_IMPORTANCE_PATH},gqa_weight_mode=${GQA_WEIGHT_MODE},relative_weight_scale=${RELATIVE_WEIGHT_SCALE},min_keep_ratio=${MIN_KEEP_RATIO}"
+        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${USED_IMPORTANCE_PATH},gqa_weight_mode=${GQA_WEIGHT_MODE},relative_weight_scale=${RELATIVE_WEIGHT_SCALE},min_keep_ratio=${MIN_KEEP_RATIO}"
     else
         IMPORTANCE_ARG=""
     fi

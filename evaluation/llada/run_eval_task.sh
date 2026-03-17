@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=2
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
@@ -26,7 +26,7 @@ MODEL_PATH=${MODEL_PATH:-"/data/qh_models/LLaDA-1.5"}
 MODEL_NAME=${MODEL_NAME:-"llada_1_5"}
 # Model types to run (can be overridden without editing file):
 #   MODEL_TYPES_STR="standard,sparse,adaptive" bash run_eval_task.sh
-MODEL_TYPES=("adaptive")
+MODEL_TYPES=("adaptive" "sparse")
 if [ -n "${MODEL_TYPES_STR:-}" ]; then
     IFS=',' read -r -a MODEL_TYPES <<< "${MODEL_TYPES_STR}"
 fi
@@ -35,81 +35,49 @@ fi
 RESULTS_ROOT="${PROJECT_ROOT}/evaluation/llada/${MODEL_NAME}_results"
 mkdir -p "$RESULTS_ROOT"
 
-# Model-specific head-importance (used for loss_gateIG variants)
-#
-# You can extend this mapping if you add more models.
-# You may also override it directly via env: MODEL_IMPORTANCE_ROOT=/path/to/config_dir
-MODEL_IMPORTANCE_ROOT=${MODEL_IMPORTANCE_ROOT:-""}
-case "$MODEL_NAME" in
-    llada-8b-instruct|LLaDA-8B-Instruct)
-        MODEL_IMPORTANCE_ROOT="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada-8b-instruct_loss_gateIG"
-        ;;
-    llada-base|llada_base|llada|LLaDA-Base|LLaDA-base)
-        MODEL_IMPORTANCE_ROOT="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada_base_loss_gateIG"
-        ;;
-    llada1.5|llada-1.5|llada-1_5|llada_1_5|LLaDA-1.5|LLaDA-1_5)
-        MODEL_IMPORTANCE_ROOT="/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada-1_5_loss_gateIG"
-        ;;
-    *)
-        MODEL_IMPORTANCE_ROOT=""
-        ;;
-esac
-
 # -------------------------
-# Importance path selection
+# Importance score path selection (EDIT ONE LINE)
 # -------------------------
-# You can manually choose the score file by setting:
-#   PRECOMPUTED_IMPORTANCE_PATH=/path/to/head_importance.pt bash run_eval_task.sh
-#
-# This script will then set:
-#   RECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"<default>"}
-# and (optionally) negate it based on USE_NEGATED.
-#
-# Whether to negate the scores (0=use original, 1=negate)
-USE_NEGATED=${USE_NEGATED:-1}
+# Only change the next line (or override via env IMPORTANCE_PATH=...):
 
-# Default base importance (if not provided via env). Prefer model-specific mapping; otherwise fall back to a sensible default.
-DEFAULT_IMPORTANCE_PATH=""
-if [ -n "${MODEL_IMPORTANCE_ROOT}" ]; then
-    DEFAULT_IMPORTANCE_PATH="${MODEL_IMPORTANCE_ROOT}/head_importance.pt"
-else
-    DEFAULT_IMPORTANCE_PATH="${PROJECT_ROOT}/configs/head_importance_llada-1_5_loss_gateIG/head_importance.pt"
-fi
+IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_ts20260116_025153/head_importance.pt"}
+TASKS=("mmlu")
+LIMIT=10
+# Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
+USE_NEGATED=${USE_NEGATED:-0}
 
-# Base score path (user-selectable)
-PRECOMPUTED_IMPORTANCE_PATH=${PRECOMPUTED_IMPORTANCE_PATH:-"${DEFAULT_IMPORTANCE_PATH}"}
-
-# Final score path (what we actually pass downstream)
-RECOMPUTED_IMPORTANCE_PATH=${RECOMPUTED_IMPORTANCE_PATH:-"${PRECOMPUTED_IMPORTANCE_PATH}"}
+# What we actually pass downstream
+USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
 
 # Auto-generate negated importance if requested
 if [ "${USE_NEGATED}" = "1" ]; then
-    SRC_IMPORTANCE_PATH="${RECOMPUTED_IMPORTANCE_PATH}"
+    SRC_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
     NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
-    RECOMPUTED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-    if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
+    USED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
+    if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
         echo "➖ Generating negated importance..."
         python "${SCRIPT_DIR}/generate_negated_importance.py" \
             --in_pt "${SRC_IMPORTANCE_PATH}" \
             --out_dir "${NEG_DIR}"
-        if [ ! -f "${RECOMPUTED_IMPORTANCE_PATH}" ]; then
-            echo "ERROR: Failed to generate negated importance at: ${RECOMPUTED_IMPORTANCE_PATH}"
+        if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+            echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
             exit 3
         fi
     else
-        echo "➖ Using existing negated importance: ${RECOMPUTED_IMPORTANCE_PATH}"
+        echo "➖ Using existing negated importance: ${USED_IMPORTANCE_PATH}"
     fi
 fi
 
 # Tag for output directory naming only (can be overridden)
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"manual$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"}
+DEFAULT_IMPORTANCE_TAG="$(basename "$(dirname "${IMPORTANCE_PATH}")")$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"
+IMPORTANCE_TAG=${IMPORTANCE_TAG:-"${DEFAULT_IMPORTANCE_TAG}"}
 
 # Generation parameters
 GEN_LENGTH=256
 STEPS=256
 BLOCK_LENGTH=32
 BLOCK_SIZE=32
-LIMIT=100
+
 
 # RULER parameters
 # - RULER_LEN_K: max prompt length in K tokens (approx K*1024). Example: 4,8,16.
@@ -130,7 +98,6 @@ fi
 
 # Tasks to run (can be overridden without editing file):
 #   TASKS_STR="mmlu,ruler" bash run_eval_task.sh
-TASKS=("gsm8k" "humaneval" "mmlu" "ruler")
 if [ -n "${TASKS_STR:-}" ]; then
     IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
 fi
@@ -144,8 +111,8 @@ echo "Gen Length: ${GEN_LENGTH}, Steps: ${STEPS}, Block Length: ${BLOCK_LENGTH},
 echo "Limit: ${LIMIT}"
 echo "RULER len_k (if enabled): ${RULER_LEN_K}k"
 echo "Importance tag: ${IMPORTANCE_TAG}"
-echo "Importance base: ${PRECOMPUTED_IMPORTANCE_PATH}"
-echo "Importance used: ${RECOMPUTED_IMPORTANCE_PATH}"
+echo "Importance base: ${IMPORTANCE_PATH}"
+echo "Importance used: ${USED_IMPORTANCE_PATH}"
 echo "========================================================"
 echo ""
 
@@ -192,7 +159,7 @@ run_single_eval() {
     
     # Set importance source for adaptive mode
     if [ "$model_type" = "adaptive" ]; then
-        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${RECOMPUTED_IMPORTANCE_PATH}"
+        IMPORTANCE_ARG=",importance_source=precomputed,precomputed_importance_path=${USED_IMPORTANCE_PATH}"
     else
         IMPORTANCE_ARG=""
     fi
@@ -260,7 +227,7 @@ run_single_eval() {
             --select 0.3 \
             --block_size "${BLOCK_SIZE}" \
             --importance_source precomputed \
-            --precomputed_importance_path "${RECOMPUTED_IMPORTANCE_PATH}" \
+            --precomputed_importance_path "${USED_IMPORTANCE_PATH}" \
             --len_k "${RULER_LEN_K}" \
             --limit "${RULER_LIMIT}" \
             --output_path "${OUTPUT_DIR}/results.json" \

@@ -79,6 +79,9 @@ class LLaDAMaskHeadEvalHarness(LLaDAEvalHarness):
         layer_end: int = -1,
         keep_at_least_one_head=True,
         random_prune_seed: int = 1234,
+        # diffusion-style generation warmup (skip head mask for early steps)
+        head_mask_warmup_frac: float = 0.0,
+        prune_scope: str = "global",  # "global" | "layer"
         # keep super's signature compatible
         **kwargs,
     ):
@@ -86,6 +89,7 @@ class LLaDAMaskHeadEvalHarness(LLaDAEvalHarness):
         super().__init__(model_path=model_path, model_type="standard", **kwargs)
 
         prune_which = str(prune_which).strip()
+        prune_scope = str(prune_scope).strip().lower()
         meta = {}
         if prune_which == "random":
             # Random baseline does not need importance file; uses model config for shapes.
@@ -100,6 +104,7 @@ class LLaDAMaskHeadEvalHarness(LLaDAEvalHarness):
                 layer_end=int(layer_end),
                 seed=int(random_prune_seed),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
+                prune_scope=prune_scope,
             )
         else:
             importance_path = _strip_quotes(importance_path)
@@ -116,6 +121,7 @@ class LLaDAMaskHeadEvalHarness(LLaDAEvalHarness):
                 layer_start=int(layer_start),
                 layer_end=int(layer_end),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
+                prune_scope=prune_scope,
             )
 
         # Patch attention() once and then write masks
@@ -124,7 +130,12 @@ class LLaDAMaskHeadEvalHarness(LLaDAEvalHarness):
             dev = next(self.model.parameters()).device
         except StopIteration:
             dev = None
-        apply_head_keep_masks_(self.model, keep_masks, device=dev)
+        apply_head_keep_masks_(
+            self.model,
+            keep_masks,
+            device=dev,
+            head_mask_warmup_frac=float(head_mask_warmup_frac),
+        )
 
         # 简单打印统计信息，方便在日志里确认配置生效
         total_pruned = 0

@@ -71,9 +71,10 @@ def build_head_keep_masks_global(
     layer_start: int = 0,
     layer_end: int = -1,
     keep_at_least_one_head: bool = True,
+    prune_scope: str = "global",  # "global" | "layer"
 ) -> Dict[int, torch.Tensor]:
     """
-    基于 importance_scores 做 **跨 layer 全局** top-k 剪枝（most/least）。
+    基于 importance_scores 做剪枝（most/least）。
 
     返回：dict[layer_idx] = bool tensor[n_heads]，True=保留，False=剪掉。
     """
@@ -98,48 +99,60 @@ def build_head_keep_masks_global(
         int(li): torch.ones((int(importance_scores[int(li)].numel()),), dtype=torch.bool) for li in layer_ids
     }
 
-    flat_scores = []
-    flat_meta: list[tuple[int, int]] = []  # (layer_idx, head_idx)
-    for li in layer_ids:
-        scores = importance_scores[li].to(torch.float32).flatten()
-        n_heads = int(scores.numel())
-        if n_heads <= 0:
-            raise ValueError(f"Layer {li} has invalid n_heads={n_heads}")
-        if li < layer_start or li > layer_end:
-            continue
-        flat_scores.append(scores)
-        flat_meta.extend([(li, hi) for hi in range(n_heads)])
-
-    if not flat_scores:
-        return keep_masks
-
-    all_scores = torch.cat(flat_scores, dim=0)
-    total_heads = int(all_scores.numel())
-    if total_heads <= 0:
-        return keep_masks
-
-    if k is None:
-        frac = float(k_frac)
-        if not (0.0 <= frac <= 1.0):
-            raise ValueError(f"k_frac must be in [0,1], got {frac}")
-        k_i = int(round(total_heads * frac))
-        k_i = max(1, k_i)
-    else:
-        k_i = int(k)
-
-    if keep_at_least_one_head:
-        k_i = min(k_i, total_heads - 1)
-    else:
-        k_i = min(k_i, total_heads)
-    if k_i <= 0:
-        return keep_masks
-
     largest = True if prune_which == "most" else False
-    _, flat_prune_idx = torch.topk(all_scores, k=k_i, largest=largest)
 
-    for idx in flat_prune_idx.tolist():
-        li, hi = flat_meta[int(idx)]
-        keep_masks[li][hi] = False
+    if prune_scope == "layer":
+        for li in range(layer_start, layer_end + 1):
+            if li not in importance_scores:
+                continue
+            scores = importance_scores[li].to(torch.float32).flatten()
+            n_heads = int(scores.numel())
+            if k is not None:
+                k_i = min(int(k), n_heads)
+            else:
+                k_i = int(round(n_heads * float(k_frac)))
+                k_i = max(1, k_i)
+            if keep_at_least_one_head:
+                k_i = min(k_i, n_heads - 1)
+            
+            if k_i > 0:
+                _, prune_idx = torch.topk(scores, k=k_i, largest=largest)
+                for hi in prune_idx.tolist():
+                    keep_masks[li][hi] = False
+    else:
+        # Global ranking
+        flat_scores = []
+        flat_meta: list[tuple[int, int]] = []  # (layer_idx, head_idx)
+        for li in layer_ids:
+            scores = importance_scores[li].to(torch.float32).flatten()
+            n_heads = int(scores.numel())
+            if li < layer_start or li > layer_end:
+                continue
+            flat_scores.append(scores)
+            flat_meta.extend([(li, hi) for hi in range(n_heads)])
+
+        if not flat_scores:
+            return keep_masks
+
+        all_scores = torch.cat(flat_scores, dim=0)
+        total_heads = int(all_scores.numel())
+        
+        if k is None:
+            k_i = int(round(total_heads * float(k_frac)))
+            k_i = max(1, k_i)
+        else:
+            k_i = int(k)
+
+        if keep_at_least_one_head:
+            k_i = min(k_i, total_heads - 1)
+        else:
+            k_i = min(k_i, total_heads)
+
+        if k_i > 0:
+            _, flat_prune_idx = torch.topk(all_scores, k=k_i, largest=largest)
+            for idx in flat_prune_idx.tolist():
+                li, hi = flat_meta[int(idx)]
+                keep_masks[li][hi] = False
 
     return keep_masks
 
@@ -154,50 +167,58 @@ def build_random_head_keep_masks_global(
     layer_end: int = -1,
     seed: int = 1234,
     keep_at_least_one_head: bool = True,
+    prune_scope: str = "global",
 ) -> Dict[int, torch.Tensor]:
     """
-    Random baseline（global）：在指定 layer 范围内，把所有 heads 当成一个集合，
-    一次性随机抽取 top-k 进行剪掉。
+    Random baseline。
     """
     if (k is None) == (k_frac is None):
         raise ValueError("Exactly one of k or k_frac must be provided.")
-    if n_layers <= 0 or n_heads <= 0:
-        raise ValueError(f"Invalid n_layers/n_heads: n_layers={n_layers}, n_heads={n_heads}")
-    if layer_start < 0:
-        raise ValueError(f"layer_start must be >=0, got {layer_start}")
-
-    layer_end = _resolve_layer_end(layer_end, n_layers)
-    sel_layers = [li for li in range(n_layers) if layer_start <= li <= layer_end]
-    total_heads = int(len(sel_layers) * n_heads)
-    if total_heads <= 0:
-        return {li: torch.ones((n_heads,), dtype=torch.bool) for li in range(n_layers)}
-
-    if k is None:
-        frac = float(k_frac)
-        if not (0.0 <= frac <= 1.0):
-            raise ValueError(f"k_frac must be in [0,1], got {frac}")
-        k_i = int(round(total_heads * frac))
-        k_i = max(1, k_i)
-    else:
-        k_i = int(k)
-
-    if keep_at_least_one_head:
-        k_i = min(k_i, total_heads - 1)
-    else:
-        k_i = min(k_i, total_heads)
-    if k_i <= 0:
-        return {li: torch.ones((n_heads,), dtype=torch.bool) for li in range(n_layers)}
-
-    keep_masks: Dict[int, torch.Tensor] = {li: torch.ones((n_heads,), dtype=torch.bool) for li in range(n_layers)}
-
+    
+    n_layers_total = int(n_layers)
+    n_heads_total = int(n_heads)
+    layer_end = _resolve_layer_end(layer_end, n_layers_total)
+    keep_masks: Dict[int, torch.Tensor] = {li: torch.ones((n_heads_total,), dtype=torch.bool) for li in range(n_layers_total)}
+    
     g = torch.Generator(device="cpu")
     g.manual_seed(int(seed))
-    perm = torch.randperm(total_heads, generator=g)
-    prune_flat = perm[:k_i].tolist()
-    for p in prune_flat:
-        li = sel_layers[int(p) // int(n_heads)]
-        hi = int(p) % int(n_heads)
-        keep_masks[li][hi] = False
+
+    if prune_scope == "layer":
+        for li in range(layer_start, layer_end + 1):
+            if k is not None:
+                k_i = min(int(k), n_heads_total)
+            else:
+                k_i = int(round(n_heads_total * float(k_frac)))
+                k_i = max(1, k_i)
+            if keep_at_least_one_head:
+                k_i = min(k_i, n_heads_total - 1)
+            
+            if k_i > 0:
+                perm = torch.randperm(n_heads_total, generator=g)
+                for hi in perm[:k_i].tolist():
+                    keep_masks[li][hi] = False
+    else:
+        # Global random
+        sel_layers = [li for li in range(n_layers_total) if layer_start <= li <= layer_end]
+        total_heads = int(len(sel_layers) * n_heads_total)
+        
+        if k is None:
+            k_i = int(round(total_heads * float(k_frac)))
+            k_i = max(1, k_i)
+        else:
+            k_i = int(k)
+
+        if keep_at_least_one_head:
+            k_i = min(k_i, total_heads - 1)
+        else:
+            k_i = min(k_i, total_heads)
+
+        if k_i > 0:
+            perm = torch.randperm(total_heads, generator=g)
+            for p in perm[:k_i].tolist():
+                li = sel_layers[int(p) // int(n_heads)]
+                hi = int(p) % int(n_heads)
+                keep_masks[li][hi] = False
 
     return keep_masks
 
@@ -267,8 +288,26 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
         attn_output = torch.matmul(attn_weights, value_states)
 
         # ===== Head mask insertion =====
+        apply_head_mask = True
+        warmup_frac = getattr(self, "_head_mask_warmup_frac", None)
+        if warmup_frac is not None:
+            try:
+                wf = float(warmup_frac)
+            except Exception:
+                wf = 0.0
+            if wf > 0.0:
+                now_step = getattr(self, "_head_mask_now_step", None)
+                whole_steps = getattr(self, "_head_mask_whole_steps", None)
+                if now_step is not None and whole_steps is not None:
+                    try:
+                        warmup_steps = int(float(whole_steps) * wf)
+                        if int(now_step) < max(0, warmup_steps):
+                            apply_head_mask = False
+                    except Exception:
+                        pass
+
         head_keep_mask = getattr(self, "_head_keep_mask_q", None)
-        if head_keep_mask is not None:
+        if apply_head_mask and head_keep_mask is not None:
             if not torch.is_tensor(head_keep_mask):
                 head_keep_mask = torch.tensor(head_keep_mask, device=attn_output.device)
             head_keep_mask = head_keep_mask.to(device=attn_output.device, dtype=attn_output.dtype)
@@ -341,8 +380,26 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
                 )
 
                 # ===== Head mask insertion (B, n_heads, T, head_dim) =====
+                apply_head_mask = True
+                warmup_frac = getattr(self, "_head_mask_warmup_frac", None)
+                if warmup_frac is not None:
+                    try:
+                        wf = float(warmup_frac)
+                    except Exception:
+                        wf = 0.0
+                    if wf > 0.0:
+                        now_step = getattr(self, "_head_mask_now_step", None)
+                        whole_steps = getattr(self, "_head_mask_whole_steps", None)
+                        if now_step is not None and whole_steps is not None:
+                            try:
+                                warmup_steps = int(float(whole_steps) * wf)
+                                if int(now_step) < max(0, warmup_steps):
+                                    apply_head_mask = False
+                            except Exception:
+                                pass
+
                 head_keep_mask = getattr(self, "_head_keep_mask_q", None)
-                if head_keep_mask is not None:
+                if apply_head_mask and head_keep_mask is not None:
                     if not torch.is_tensor(head_keep_mask):
                         head_keep_mask = torch.tensor(head_keep_mask, device=attn_output.device)
                     head_keep_mask = head_keep_mask.to(device=attn_output.device, dtype=attn_output.dtype)
@@ -361,12 +418,19 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
 
         attn._head_mask_patched = True  # type: ignore[attr-defined]
 
+    # Cache attention modules list on model for fast per-step metadata broadcast in diffusion loop.
+    try:
+        dream_model._head_mask_attn_modules = list(iter_dream_attn_modules(dream_model))  # type: ignore[attr-defined]
+    except Exception:
+        pass
+
 
 def apply_head_keep_masks_(
     dream_model: torch.nn.Module,
     keep_masks: Dict[int, torch.Tensor],
     *,
     device: Optional[torch.device] = None,
+    head_mask_warmup_frac: Optional[float] = None,
 ) -> None:
     """
     把 per-layer keep_mask 写入 attention 模块属性 `_head_keep_mask_q`（float 0/1）。
@@ -381,4 +445,7 @@ def apply_head_keep_masks_(
         if device is not None:
             mask = mask.to(device)
         attn._head_keep_mask_q = mask.to(torch.float32)  # type: ignore[attr-defined]
+
+        if head_mask_warmup_frac is not None:
+            attn._head_mask_warmup_frac = float(head_mask_warmup_frac)  # type: ignore[attr-defined]
 
