@@ -33,8 +33,11 @@ from .core import LLaDAConfig, LLaDAModel, LLaDAModelLM, ModelConfig
 # Generation
 from .generation import generate
 
-# Attribution
-from .attribution import BlockwiseIntegratedGradientsAttribution
+# Attribution (optional in some repo snapshots)
+try:
+    from .attribution import BlockwiseIntegratedGradientsAttribution
+except ImportError:
+    BlockwiseIntegratedGradientsAttribution = None
 
 # Sparse
 from .sparse import (
@@ -60,8 +63,6 @@ __all__ = [
     "LLaDAModelLM",
     # Generation
     "generate",
-    # Attribution
-    "BlockwiseIntegratedGradientsAttribution",
     # Sparse (full names)
     "allocate_adaptive_cache_from_importance",
     "get_topk_heads_per_layer",
@@ -75,3 +76,6 @@ __all__ = [
     "get_topk_heads",
     "create_pruning_mask",
 ]
+
+if BlockwiseIntegratedGradientsAttribution is not None:
+    __all__.append("BlockwiseIntegratedGradientsAttribution")

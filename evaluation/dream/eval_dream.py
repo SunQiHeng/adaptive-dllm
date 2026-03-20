@@ -631,7 +631,14 @@ class DreamEvalHarness(LM):
     
     @torch.no_grad()
     def get_logits(self, batch, prompt_index=None, attention_mask=None, position_ids=None):
-        """Get logits from model, with optional sparse parameters"""
+        """Get logits from model, with optional sparse parameters.
+
+        The returned logits are right-shifted to match ``diffusion_generate()``
+        semantics: ``logits[:, j, :]`` predicts ``token[j]`` (same-position).
+        Without this shift the raw ``lm_head`` output predicts ``token[j+1]``
+        (next-token), which is correct for autoregressive LMs but not for
+        Dream's masked-diffusion likelihood scoring.
+        """
         # Construct attention_mask if not provided
         if attention_mask is None:
             # Use bool mask to avoid SDPA dtype issues (align with Dream attribution fixes).
@@ -666,6 +673,11 @@ class DreamEvalHarness(LM):
                 attention_mask=attention_mask,
                 position_ids=position_ids
             ).logits
+        
+        # Dream logits right-shift: align with diffusion_generate() semantics.
+        # raw lm_head output: logits[:, j, :] predicts token[j+1] (next-token).
+        # After shift: logits[:, j, :] predicts token[j] (same-position).
+        logits = torch.cat([logits[:, :1], logits[:, :-1]], dim=1)
         
         return logits[:, :batch.shape[1]]
     

@@ -78,6 +78,7 @@ _build_humaneval_prompt_and_completion = _base._build_humaneval_prompt_and_compl
 _tokenize_pair = _base._tokenize_pair
 _build_labels_and_masked_inputs_for_completion_span = _base._build_labels_and_masked_inputs_for_completion_span
 _masked_ce_answer_only_batch = _base._masked_ce_answer_only_batch
+_apply_dream_logits_shift = _base._apply_dream_logits_shift
 
 
 class _MultiOProjHeadGate:
@@ -142,6 +143,7 @@ def compute_all_heads_joint_ig(
     ig_steps: int,
     baseline_value: float,
     max_length: int,
+    min_completion_tokens: int,
     num_heads_from_config: int,
     use_amp_bf16: bool,
     dataset_name: str,
@@ -159,10 +161,12 @@ def compute_all_heads_joint_ig(
     path_samples: int = 1,
     path_seed: int = -1,
     debug_gate: bool = False,
-) -> Dict[int, torch.Tensor]:
+) -> Tuple[Dict[int, torch.Tensor], Dict[str, Any]]:
     """
     Joint IG over all (layer, head) gates at once (Dream).
-    Returns dict[layer_idx] = tensor[n_heads] (float32 on device).
+    Returns:
+      - dict[layer_idx] = tensor[n_heads] (float32 on device)
+      - diagnostics dict with data-effectiveness counters
     """
     if len(layers) != len(layer_indices):
         raise ValueError("layers and layer_indices must have same length.")
@@ -203,6 +207,10 @@ def compute_all_heads_joint_ig(
     try:
         ig_sum_flat = torch.zeros(total_heads, device=device, dtype=torch.float32)
         total_items = 0
+        total_rows_seen = 0
+        total_rows_skipped_no_completion = 0
+        total_rows_skipped_no_variants = 0
+        completion_lens: List[int] = []
         scale = float(1.0 - baseline_value)
 
         mask_token_id = _get_mask_token_id(model, tokenizer)
@@ -221,6 +229,7 @@ def compute_all_heads_joint_ig(
             )
 
         for row_idx, row in iterator:
+            total_rows_seen += 1
             if dataset_name == "gsm8k":
                 prompt, completion = _build_gsm8k_prompt_and_completion(
                     row["question"],
@@ -250,12 +259,20 @@ def compute_all_heads_joint_ig(
                 completion,
                 device=device,
                 max_length=max_length,
+                min_completion_tokens=int(min_completion_tokens),
             )
 
             # Preserve Dream optimization: only compute logits for completion span (at the end)
             num_logits_to_keep = int(full_input_ids.size(1) - int(completion_start))
+            completion_lens.append(int(max(0, num_logits_to_keep)))
             if num_logits_to_keep <= 0:
+                total_rows_skipped_no_completion += 1
                 continue
+
+            # Dream logits shift: request one extra position so the right-shift
+            # (see _apply_dream_logits_shift) covers the full completion span.
+            _shift_nlk = min(num_logits_to_keep + 1, int(full_input_ids.size(1)))
+            _shift_trim = (_shift_nlk > num_logits_to_keep)
 
             masked_batches: List[Tuple[torch.Tensor, Optional[torch.Tensor], torch.Tensor]] = []
             for prob_idx, prob in enumerate(mask_probs):
@@ -276,6 +293,7 @@ def compute_all_heads_joint_ig(
                     masked_batches.append((input_ids_masked, attention_mask, labels))
 
             if len(masked_batches) == 0:
+                total_rows_skipped_no_variants += 1
                 continue
 
             if debug_gate and (not did_debug_check):
@@ -283,18 +301,20 @@ def compute_all_heads_joint_ig(
                     gate.alpha_flat = torch.ones(total_heads, device=device, dtype=torch.float32)
                     if use_amp_bf16:
                         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                            logits1 = model(masked_batches[0][0], num_logits_to_keep=num_logits_to_keep).logits
+                            _raw1 = model(masked_batches[0][0], num_logits_to_keep=_shift_nlk).logits
                     else:
-                        logits1 = model(masked_batches[0][0], num_logits_to_keep=num_logits_to_keep).logits
+                        _raw1 = model(masked_batches[0][0], num_logits_to_keep=_shift_nlk).logits
+                    logits1 = _apply_dream_logits_shift(_raw1, _shift_trim)
 
                     alpha2 = torch.ones(total_heads, device=device, dtype=torch.float32)
                     alpha2[0] = 0.0
                     gate.alpha_flat = alpha2
                     if use_amp_bf16:
                         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                            logits2 = model(masked_batches[0][0], num_logits_to_keep=num_logits_to_keep).logits
+                            _raw2 = model(masked_batches[0][0], num_logits_to_keep=_shift_nlk).logits
                     else:
-                        logits2 = model(masked_batches[0][0], num_logits_to_keep=num_logits_to_keep).logits
+                        _raw2 = model(masked_batches[0][0], num_logits_to_keep=_shift_nlk).logits
+                    logits2 = _apply_dream_logits_shift(_raw2, _shift_trim)
 
                     delta = (logits1.to(torch.float32) - logits2.to(torch.float32)).abs().mean().item()
                     if delta <= 0.0:
@@ -357,7 +377,8 @@ def compute_all_heads_joint_ig(
                         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                             for start in range(0, n_variants, chunk):
                                 end = min(start + chunk, n_variants)
-                                logits = model(all_input_ids[start:end], num_logits_to_keep=num_logits_to_keep).logits
+                                _raw = model(all_input_ids[start:end], num_logits_to_keep=_shift_nlk).logits
+                                logits = _apply_dream_logits_shift(_raw, _shift_trim)
                                 l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
                                 bs = int(end - start)
                                 total_variants += bs
@@ -366,7 +387,8 @@ def compute_all_heads_joint_ig(
                     else:
                         for start in range(0, n_variants, chunk):
                             end = min(start + chunk, n_variants)
-                            logits = model(all_input_ids[start:end], num_logits_to_keep=num_logits_to_keep).logits
+                            _raw = model(all_input_ids[start:end], num_logits_to_keep=_shift_nlk).logits
+                            logits = _apply_dream_logits_shift(_raw, _shift_trim)
                             l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
                             bs = int(end - start)
                             total_variants += bs
@@ -406,7 +428,16 @@ def compute_all_heads_joint_ig(
         for li in layer_indices:
             off, nh = offsets[int(li)]
             out[int(li)] = ig_mean_flat[off : off + nh].clone()
-        return out
+        diagnostics: Dict[str, Any] = {
+            "total_rows_seen": int(total_rows_seen),
+            "total_items_processed": int(total_items),
+            "total_rows_skipped_no_completion": int(total_rows_skipped_no_completion),
+            "total_rows_skipped_no_variants": int(total_rows_skipped_no_variants),
+            "completion_len_tokens_min": int(min(completion_lens)) if completion_lens else 0,
+            "completion_len_tokens_med": int(sorted(completion_lens)[len(completion_lens) // 2]) if completion_lens else 0,
+            "completion_len_tokens_max": int(max(completion_lens)) if completion_lens else 0,
+        }
+        return out, diagnostics
     finally:
         gate.remove()
 
@@ -435,6 +466,12 @@ def main() -> None:
     parser.add_argument("--mask_seed", type=int, default=None)
     parser.add_argument("--ig_steps", type=int, default=8)
     parser.add_argument("--max_length", type=int, default=2048)
+    parser.add_argument(
+        "--min_completion_tokens",
+        type=int,
+        default=0,
+        help="Ensure at least this many completion tokens survive truncation (by trimming prompt from the left). 0 keeps legacy behavior.",
+    )
     parser.add_argument("--mask_probs", type=str, default="1.0")
     parser.add_argument("--mask_samples_per_prob", type=int, default=1)
     parser.add_argument("--loss_normalize", type=str, default="mean_masked", choices=["sum", "mean_masked"])
@@ -497,6 +534,7 @@ def main() -> None:
     print(f"dataset={args.dataset} split={args.split} max_samples={args.max_samples}")
     print(f"seed={seed} data_seed={data_seed} mask_seed={mask_seed}")
     print(f"ig_steps={args.ig_steps} max_length={args.max_length}")
+    print(f"min_completion_tokens={int(args.min_completion_tokens)}")
     print(f"mask_probs={args.mask_probs} mask_samples_per_prob={args.mask_samples_per_prob} loss_normalize={args.loss_normalize}")
     print(f"ig_postprocess={args.ig_postprocess} mask_batch_size={args.mask_batch_size}")
     print(f"use_chat_template={bool(args.use_chat_template)}")
@@ -630,7 +668,7 @@ def main() -> None:
     selected_layers = [layers_all[i] for i in selected_layer_indices]
     print(f"Selected layers: {layer_start}..{layer_end} (count={len(selected_layer_indices)})")
 
-    scores_device = compute_all_heads_joint_ig(
+    scores_device, diagnostics = compute_all_heads_joint_ig(
         model=model,
         layers=selected_layers,
         layer_indices=selected_layer_indices,
@@ -640,6 +678,7 @@ def main() -> None:
         ig_steps=int(args.ig_steps),
         baseline_value=float(baseline_value),
         max_length=int(args.max_length),
+        min_completion_tokens=int(args.min_completion_tokens),
         num_heads_from_config=int(n_heads_cfg),
         use_amp_bf16=bool(args.use_amp_bf16 and device.type == "cuda"),
         dataset_name=str(args.dataset),
@@ -686,6 +725,7 @@ def main() -> None:
             "use_chat_template": bool(args.use_chat_template),
             "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if str(args.dataset) == "gsm8k" else None,
             "ig_steps": int(args.ig_steps),
+            "min_completion_tokens": int(args.min_completion_tokens),
             "path_mode": str(args.path_mode),
             "path_samples": int(args.path_samples),
             "path_seed": int(mask_seed if int(args.path_seed) < 0 else int(args.path_seed)),
@@ -704,6 +744,13 @@ def main() -> None:
                 "Uses DreamModel.forward(num_logits_to_keep=completion_len) to save memory; "
                 "loss is CE on masked completion positions only, averaged across diffusion mask_probs and MC samples."
             ),
+            "total_rows_seen": int(diagnostics.get("total_rows_seen", 0)),
+            "total_items_processed": int(diagnostics.get("total_items_processed", 0)),
+            "total_rows_skipped_no_completion": int(diagnostics.get("total_rows_skipped_no_completion", 0)),
+            "total_rows_skipped_no_variants": int(diagnostics.get("total_rows_skipped_no_variants", 0)),
+            "completion_len_tokens_min": int(diagnostics.get("completion_len_tokens_min", 0)),
+            "completion_len_tokens_med": int(diagnostics.get("completion_len_tokens_med", 0)),
+            "completion_len_tokens_max": int(diagnostics.get("completion_len_tokens_max", 0)),
         },
     }
 

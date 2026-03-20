@@ -140,6 +140,10 @@ run_single_eval() {
         max_new_tokens=768
         steps=768
     fi
+    if [ "$task" = "gsm8k" ] || [ "$task" = "gsm8k_cot" ]; then
+        # Align with run_eval_task.sh and attribution defaults: Dream-Instruct uses chat formatting.
+        apply_chat="--apply_chat_template"
+    fi
     if [ "$task" = "mmlu" ]; then
         # eval_dream.py MMLU 路径通常走 apply_chat_template + batch_size 1
         apply_chat="--apply_chat_template"

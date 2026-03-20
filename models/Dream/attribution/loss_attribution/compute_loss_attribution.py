@@ -333,6 +333,8 @@ def _tokenize_pair(
     completion: str,
     device: torch.device,
     max_length: int,
+    *,
+    min_completion_tokens: int = 0,
 ) -> Tuple[torch.Tensor, Optional[torch.Tensor], int]:
     """
     Returns:
@@ -346,14 +348,26 @@ def _tokenize_pair(
     prompt_ids = tokenizer(prompt, add_special_tokens=False).input_ids
     answer_ids = tokenizer(completion, add_special_tokens=False).input_ids
 
-    # If prompt already contains chat special tokens (e.g., "<|im_start|>system"),
-    # DO NOT prepend BOS. This keeps attribution tokenization aligned with eval prompts.
+    # Robust BOS handling:
+    # - Prefer token-level check over prompt-string heuristics.
+    # - If prompt tokenization already begins with BOS, avoid double BOS.
     bos = []
-    if (tokenizer.bos_token_id is not None) and ("<|im_start|>" not in prompt):
-        bos = [tokenizer.bos_token_id]
+    bos_id = getattr(tokenizer, "bos_token_id", None)
+    if isinstance(bos_id, int) and bos_id >= 0:
+        if not (len(prompt_ids) > 0 and int(prompt_ids[0]) == int(bos_id)):
+            bos = [int(bos_id)]
 
-    input_ids_list = (bos + prompt_ids + answer_ids)[:max_length]
-    completion_start = min(len(bos) + len(prompt_ids), len(input_ids_list))
+    min_c = int(max(0, min_completion_tokens))
+    if min_c <= 0:
+        input_ids_list = (bos + prompt_ids + answer_ids)[:max_length]
+        completion_start = min(len(bos) + len(prompt_ids), len(input_ids_list))
+    else:
+        # Keep at least a completion prefix; trim prompt from the left if needed.
+        keep_c = min(len(answer_ids), min_c)
+        budget = int(max_length) - len(bos) - keep_c
+        prompt_keep = prompt_ids[-budget:] if budget > 0 else []
+        input_ids_list = (bos + prompt_keep + answer_ids[:keep_c])[:max_length]
+        completion_start = min(len(bos) + len(prompt_keep), len(input_ids_list))
 
     input_ids = torch.tensor([input_ids_list], dtype=torch.long, device=device)
     # IMPORTANT (Dream):
@@ -455,6 +469,24 @@ def _dry_run_check_o_proj_shape(o_proj: torch.nn.Module, hidden_size: int) -> No
             raise ValueError(f"o_proj.in_features={o_proj.in_features} != hidden_size={hidden_size}")
 
 
+def _apply_dream_logits_shift(raw_logits: torch.Tensor, trim_first: bool) -> torch.Tensor:
+    """Apply Dream's logits right-shift to align with ``diffusion_generate()`` semantics.
+
+    Dream's ``lm_head`` retains next-token prediction semantics from the causal
+    LM backbone: ``raw_logits[:, j, :]`` predicts ``token[j+1]``.  The official
+    ``diffusion_generate()`` corrects this via::
+
+        logits = torch.cat([logits[:, :1], logits[:, :-1]], dim=1)
+
+    We apply the identical transform here.  When *trim_first* is True the caller
+    requested one extra position to the left of the completion span, so we drop
+    the duplicated first column to keep the output aligned with the original
+    completion-span labels.
+    """
+    shifted = torch.cat([raw_logits[:, :1], raw_logits[:, :-1]], dim=1)
+    return shifted[:, 1:] if trim_first else shifted
+
+
 def compute_layer_ig(
     model: torch.nn.Module,
     layer: torch.nn.Module,
@@ -466,6 +498,7 @@ def compute_layer_ig(
     ig_steps: int,
     baseline_value: float,
     max_length: int,
+    min_completion_tokens: int,
     num_heads_from_config: int,
     use_amp_bf16: bool,
     dataset_name: str,
@@ -528,12 +561,15 @@ def compute_layer_ig(
     gate.install()
     try:
         def _forward_logits(input_ids: torch.Tensor) -> torch.Tensor:
+            """Forward helper with Dream's generation-aligned logits shift.
+
+            Dream's lm_head predicts next-token (``raw[j]`` → ``token[j+1]``).
+            We request one extra position via ``_shift_nlk`` and apply the same
+            right-shift used in ``diffusion_generate()`` so the attribution loss
+            matches the generation objective.
             """
-            Forward helper.
-            NOTE: We always use the input_ids path here (fast). Gradient checkpointing, if enabled,
-            is handled inside the Dream model (we configure it in main()).
-            """
-            return model(input_ids, num_logits_to_keep=num_logits_to_keep).logits
+            raw = model(input_ids, num_logits_to_keep=_shift_nlk).logits
+            return _apply_dream_logits_shift(raw, _shift_trim)
 
         ig_sum = torch.zeros(n_heads, device=device, dtype=torch.float32)
         total_items = 0
@@ -561,7 +597,7 @@ def compute_layer_ig(
                     row["answer"],
                     tokenizer=tokenizer,
                     use_chat_template=dataset_use_chat_template,
-                    completion_mode=gsm8k_completion_mode,
+                    answer_mode=gsm8k_completion_mode,
                 )
             elif dataset_name == "nemotron":
                 prompt, completion = _build_nemotron_prompt_and_completion(
@@ -576,6 +612,7 @@ def compute_layer_ig(
                 completion,
                 device=device,
                 max_length=max_length,
+                min_completion_tokens=int(min_completion_tokens),
             )
 
             # DreamModel.forward supports `num_logits_to_keep`, which computes logits only for the
@@ -584,6 +621,11 @@ def compute_layer_ig(
             num_logits_to_keep = int(full_input_ids.size(1) - int(completion_start))
             if num_logits_to_keep <= 0:
                 continue
+
+            # Dream logits shift: request one extra position so the right-shift
+            # (see _apply_dream_logits_shift) covers the full completion span.
+            _shift_nlk = min(num_logits_to_keep + 1, int(full_input_ids.size(1)))
+            _shift_trim = (_shift_nlk > num_logits_to_keep)
 
             masked_batches: List[Tuple[torch.Tensor, Optional[torch.Tensor], torch.Tensor]] = []
             for prob_idx, prob in enumerate(mask_probs):
@@ -612,20 +654,22 @@ def compute_layer_ig(
                             if masked_batches[0][1] is None:
                                 logits1 = _forward_logits(masked_batches[0][0])
                             else:
-                                logits1 = model(
+                                _raw1 = model(
                                     masked_batches[0][0],
                                     attention_mask=masked_batches[0][1],
-                                    num_logits_to_keep=num_logits_to_keep,
+                                    num_logits_to_keep=_shift_nlk,
                                 ).logits
+                                logits1 = _apply_dream_logits_shift(_raw1, _shift_trim)
                     else:
                         if masked_batches[0][1] is None:
                             logits1 = _forward_logits(masked_batches[0][0])
                         else:
-                            logits1 = model(
+                            _raw1 = model(
                                 masked_batches[0][0],
                                 attention_mask=masked_batches[0][1],
-                                num_logits_to_keep=num_logits_to_keep,
+                                num_logits_to_keep=_shift_nlk,
                             ).logits
+                            logits1 = _apply_dream_logits_shift(_raw1, _shift_trim)
 
                     alpha2 = torch.ones(n_heads, device=device, dtype=torch.float32)
                     alpha2[0] = 0.0
@@ -635,20 +679,22 @@ def compute_layer_ig(
                             if masked_batches[0][1] is None:
                                 logits2 = _forward_logits(masked_batches[0][0])
                             else:
-                                logits2 = model(
+                                _raw2 = model(
                                     masked_batches[0][0],
                                     attention_mask=masked_batches[0][1],
-                                    num_logits_to_keep=num_logits_to_keep,
+                                    num_logits_to_keep=_shift_nlk,
                                 ).logits
+                                logits2 = _apply_dream_logits_shift(_raw2, _shift_trim)
                     else:
                         if masked_batches[0][1] is None:
                             logits2 = _forward_logits(masked_batches[0][0])
                         else:
-                            logits2 = model(
+                            _raw2 = model(
                                 masked_batches[0][0],
                                 attention_mask=masked_batches[0][1],
-                                num_logits_to_keep=num_logits_to_keep,
+                                num_logits_to_keep=_shift_nlk,
                             ).logits
+                            logits2 = _apply_dream_logits_shift(_raw2, _shift_trim)
 
                     delta = (logits1.to(torch.float32) - logits2.to(torch.float32)).abs().mean().item()
                     if delta <= 0.0:
@@ -825,13 +871,19 @@ def main():
         "--gsm8k_completion_mode",
         type=str,
         default="final",
-        choices=["final", "full"],
-        help="For gsm8k: completion supervision mode. 'final' uses only final numeric answer; 'full' uses full reference answer.",
+        choices=["final", "final_hash", "full"],
+        help="For gsm8k: completion supervision mode. 'final' uses only final answer, 'final_hash' uses '#### <final>', 'full' uses full reference answer.",
     )
 
     # IG controls
     parser.add_argument("--ig_steps", type=int, default=8)
     parser.add_argument("--max_length", type=int, default=2048)
+    parser.add_argument(
+        "--min_completion_tokens",
+        type=int,
+        default=0,
+        help="Ensure at least this many completion tokens survive truncation (by trimming prompt from the left). 0 keeps legacy behavior.",
+    )
     parser.add_argument("--baseline", type=str, default="zero", choices=["zero", "scalar"])
     parser.add_argument("--baseline_scalar", type=float, default=0.3)
 
@@ -883,6 +935,7 @@ def main():
     print(f"dataset={args.dataset} max_samples={args.max_samples} max_length={args.max_length}")
     print(f"seed={seed} data_seed={data_seed} mask_seed={mask_seed}")
     print(f"ig_steps={args.ig_steps} baseline={args.baseline} baseline_scalar={args.baseline_scalar}")
+    print(f"tokenization: max_length={args.max_length} min_completion_tokens={int(args.min_completion_tokens)}")
     print(f"mask_probs={args.mask_probs} mask_samples_per_prob={args.mask_samples_per_prob} loss_normalize={args.loss_normalize}")
     print(f"ig_postprocess={args.ig_postprocess} mask_batch_size={args.mask_batch_size}")
     print(f"layers={args.layer_start}..{args.layer_end}")
@@ -1017,6 +1070,7 @@ def main():
             ig_steps=int(args.ig_steps),
             baseline_value=float(baseline_value),
             max_length=int(args.max_length),
+            min_completion_tokens=int(args.min_completion_tokens),
             num_heads_from_config=int(num_heads_from_config),
             use_amp_bf16=bool(args.use_amp_bf16),
             dataset_name=str(args.dataset),
@@ -1045,6 +1099,7 @@ def main():
             "split": str(args.split),
             "max_samples": int(args.max_samples),
             "max_length": int(args.max_length),
+            "min_completion_tokens": int(args.min_completion_tokens),
             "seed": int(seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),

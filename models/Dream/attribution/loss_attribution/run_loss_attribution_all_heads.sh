@@ -24,7 +24,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default follows existing Dream runners)
-GPU_ID=${GPU_ID:-2}
+GPU_ID=${GPU_ID:-0}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -49,7 +49,7 @@ RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 # ---------------------------
 # Attribution dataset
 # ---------------------------
-ATTR_DATASET=${ATTR_DATASET:-"mmlu"}   # gsm8k | nemotron | mmlu | humaneval
+ATTR_DATASET=${ATTR_DATASET:-"humaneval"}   # gsm8k | nemotron | mmlu | humaneval
 SPLIT=${SPLIT:-"test"}                 # gsm8k/mmlu split; humaneval is fixed test internally
 
 SAMPLES_PER_CATEGORY=${SAMPLES_PER_CATEGORY:-10}           # nemotron only
