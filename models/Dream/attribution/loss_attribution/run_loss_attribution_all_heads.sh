@@ -24,7 +24,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default follows existing Dream runners)
-GPU_ID=${GPU_ID:-0}
+GPU_ID=${GPU_ID:-5}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -49,7 +49,7 @@ RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 # ---------------------------
 # Attribution dataset
 # ---------------------------
-ATTR_DATASET=${ATTR_DATASET:-"humaneval"}   # gsm8k | nemotron | mmlu | humaneval
+ATTR_DATASET=${ATTR_DATASET:-"mmlu"}   # gsm8k | nemotron | mmlu | humaneval
 SPLIT=${SPLIT:-"test"}                 # gsm8k/mmlu split; humaneval is fixed test internally
 
 SAMPLES_PER_CATEGORY=${SAMPLES_PER_CATEGORY:-10}           # nemotron only
@@ -62,11 +62,11 @@ USE_CHAT_TEMPLATE=${USE_CHAT_TEMPLATE:-1}  # 1 => --use_chat_template
 # ---------------------------
 # Core knobs
 # ---------------------------
-MAX_SAMPLES=${MAX_SAMPLES:-50}
+MAX_SAMPLES=${MAX_SAMPLES:-100}
 IG_STEPS=${IG_STEPS:-8}
 MAX_LENGTH=${MAX_LENGTH:-2048}
 
-SEED=${SEED:-47}
+SEED=${SEED:-1234}
 DATA_SEED=${DATA_SEED:-${SEED}}
 MASK_SEED=${MASK_SEED:-${SEED}}
 
@@ -83,7 +83,7 @@ MASK_BATCH_SIZE=${MASK_BATCH_SIZE:-1}            # 0 => all variants in one batc
 
 # Integrated path mode for joint IG (diagonal vs randomized path)
 PATH_MODE=${PATH_MODE:-"random_threshold"}                 # diagonal | random_threshold
-PATH_SAMPLES=${PATH_SAMPLES:-1}                    # >1 only meaningful for random_threshold
+PATH_SAMPLES=${PATH_SAMPLES:-25}                    # >1 only meaningful for random_threshold
 PATH_SEED=${PATH_SEED:--1}                         # -1 => use mask_seed
 
 # Dream: joint attribution still benefits from gradient checkpointing

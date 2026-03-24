@@ -539,9 +539,13 @@ class DreamEvalHarness(LM):
         else:
             self.mask_id = mask_id
         
-        self.mc_num = mc_num
+        self.mc_num = int(mc_num)
         self.batch_size = int(batch_size)
-        assert mc_num % self.batch_size == 0
+        if self.mc_num > 0 and self.batch_size > self.mc_num:
+            self.batch_size = self.mc_num
+        assert self.mc_num % self.batch_size == 0, (
+            f"mc_num ({self.mc_num}) must be divisible by batch_size ({self.batch_size})"
+        )
         self.max_length = max_length
         self.is_check_greedy = is_check_greedy
         self.likelihood_now_step = likelihood_now_step

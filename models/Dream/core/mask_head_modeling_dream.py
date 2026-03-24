@@ -1,15 +1,21 @@
 """
 Dream head masking / pruning utilities.
 
-目标：根据 head importance 分数，对 Dream 的 attention heads 做剪枝验证：
-- prune_which="most":  剪掉全局最重要 top-k heads（跨 layer 全局排序）
-- prune_which="least": 剪掉全局最不重要 top-k heads（跨 layer 全局排序）
-- prune_which="random": 在指定 layer 范围内全局随机剪枝 top-k heads
+Pruning modes:
+- prune_which="most":  prune globally most-important top-k units
+- prune_which="least": prune globally least-important top-k units
+- prune_which="random": random pruning within specified layer range
 
-实现方式：
-1) 加载 importance_scores (layer_idx -> tensor[n_heads])
-2) 生成 per-layer keep_mask (True=保留, False=剪掉)，注意：top-k 是“全局”而不是逐层
-3) 就地 patch DreamAttention / DreamSdpaAttention 的 forward，在 (B, n_heads, T, head_dim) 阶段乘以 keep_mask
+Granularity (mask_granularity):
+- "head":     per query-head (original behaviour)
+- "kv_group": per KV-group (all query heads sharing a KV pair are pruned/kept
+              together; importance averaged within group). Aligns with
+              adaptive sparse ``gqa_weight_mode="kv"``.
+
+Pipeline:
+1) Load importance_scores  (layer_idx -> tensor[n_q_heads])
+2) Build per-layer keep_mask (True=keep, False=prune) via global ranking
+3) Monkey-patch DreamAttention forward to multiply attn_output by keep_mask
 """
 
 from __future__ import annotations
@@ -29,13 +35,16 @@ __all__ = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
 def load_importance_scores_pt(pt_path: Union[str, Path]) -> Tuple[Dict[int, torch.Tensor], Dict[str, Any]]:
-    """
-    加载 head_importance.pt（Dream attribution 产物）：
-      {
-        "importance_scores": {layer_idx: tensor[n_heads], ...},
-        "metadata": {...}
-      }
+    """Load ``head_importance.pt`` produced by Dream attribution.
+
+    Expected schema::
+
+        {"importance_scores": {layer_idx: tensor[n_heads], ...}, "metadata": {...}}
     """
     pt_path = Path(pt_path)
     data = torch.load(str(pt_path), map_location="cpu", weights_only=False)
@@ -62,6 +71,27 @@ def _resolve_layer_end(layer_end: int, n_layers: int) -> int:
     return min(int(layer_end), n_layers - 1)
 
 
+def _to_kv_group_scores(per_head: torch.Tensor, n_kv_heads: int) -> torch.Tensor:
+    """Average per-query-head importance into per-KV-group importance."""
+    n_q = per_head.numel()
+    gs = n_q // n_kv_heads
+    return per_head.view(n_kv_heads, gs).mean(dim=1)
+
+
+def _expand_group_mask(group_mask: torch.Tensor, group_size: int) -> torch.Tensor:
+    """Expand per-KV-group bool mask to per-query-head bool mask."""
+    return group_mask.repeat_interleave(group_size)
+
+
+def _use_kv_group(n_kv_heads: Optional[int], n_q_heads: int) -> bool:
+    """Determine whether KV-group granularity is active."""
+    return (n_kv_heads is not None) and (0 < n_kv_heads < n_q_heads)
+
+
+# ---------------------------------------------------------------------------
+# Build masks (importance-based)
+# ---------------------------------------------------------------------------
+
 def build_head_keep_masks_global(
     importance_scores: Dict[int, torch.Tensor],
     *,
@@ -71,12 +101,19 @@ def build_head_keep_masks_global(
     layer_start: int = 0,
     layer_end: int = -1,
     keep_at_least_one_head: bool = True,
-    prune_scope: str = "global",  # "global" | "layer"
+    prune_scope: str = "global",
+    n_kv_heads: Optional[int] = None,
 ) -> Dict[int, torch.Tensor]:
-    """
-    基于 importance_scores 做剪枝（most/least）。
+    """Build keep-masks based on importance scores.
 
-    返回：dict[layer_idx] = bool tensor[n_heads]，True=保留，False=剪掉。
+    When *n_kv_heads* is given and < n_q_heads, ranking and pruning operate at
+    KV-group granularity: importance within each group is averaged, and all
+    query heads in a pruned group are zeroed together.
+
+    ``k`` / ``k_frac`` always refer to the number / fraction of **prunable
+    units** (groups when using kv_group granularity, heads otherwise).
+
+    Returns dict[layer_idx] -> bool tensor[n_q_heads].
     """
     if prune_which not in {"most", "least"}:
         raise ValueError(f"prune_which must be 'most' or 'least', got: {prune_which}")
@@ -94,68 +131,103 @@ def build_head_keep_masks_global(
     if layer_start > layer_end:
         raise ValueError(f"Invalid layer range: {layer_start}..{layer_end}")
 
-    # Init keep-all masks for all layers present in file
+    # Per-layer number of query heads (usually constant across layers)
+    n_q_per_layer = {int(li): int(importance_scores[int(li)].numel()) for li in layer_ids}
+
+    # Init keep-all masks for every layer in the file
     keep_masks: Dict[int, torch.Tensor] = {
-        int(li): torch.ones((int(importance_scores[int(li)].numel()),), dtype=torch.bool) for li in layer_ids
+        li: torch.ones((n_q_per_layer[li],), dtype=torch.bool) for li in layer_ids
     }
 
-    largest = True if prune_which == "most" else False
+    largest = (prune_which == "most")
+
+    # Decide granularity per layer
+    def _layer_granularity(li: int) -> Tuple[torch.Tensor, int]:
+        """Return (scores_for_ranking, group_size) for a layer."""
+        raw = importance_scores[li].to(torch.float32).flatten()
+        n_q = raw.numel()
+        if _use_kv_group(n_kv_heads, n_q):
+            return _to_kv_group_scores(raw, n_kv_heads), n_q // n_kv_heads  # type: ignore[arg-type]
+        return raw, 1
 
     if prune_scope == "layer":
         for li in range(layer_start, layer_end + 1):
             if li not in importance_scores:
                 continue
-            scores = importance_scores[li].to(torch.float32).flatten()
-            n_heads = int(scores.numel())
+            scores, gs = _layer_granularity(li)
+            n_units = int(scores.numel())
             if k is not None:
-                k_i = min(int(k), n_heads)
+                k_i = min(int(k), n_units)
             else:
-                k_i = int(round(n_heads * float(k_frac)))
-                k_i = max(1, k_i)
+                k_i = max(1, int(round(n_units * float(k_frac))))
             if keep_at_least_one_head:
-                k_i = min(k_i, n_heads - 1)
-            
+                k_i = min(k_i, n_units - 1)
             if k_i > 0:
                 _, prune_idx = torch.topk(scores, k=k_i, largest=largest)
-                for hi in prune_idx.tolist():
-                    keep_masks[li][hi] = False
+                for gi in prune_idx.tolist():
+                    for qi in range(gi * gs, gi * gs + gs):
+                        keep_masks[li][qi] = False
     else:
-        # Global ranking
+        # Global ranking across all selected layers
         flat_scores = []
-        flat_meta: list[tuple[int, int]] = []  # (layer_idx, head_idx)
+        flat_meta: list[tuple[int, int, int]] = []  # (layer_idx, group_idx, group_size)
+        # For KV-group pruning, cap global selection to at most 1 pruned group per layer.
+        # This prevents over-concentrating pruning on early layers where score tails are
+        # often heavy on both positive and negative sides.
+        max_pruned_units_per_layer: Optional[int] = 1 if _use_kv_group(n_kv_heads, next(iter(n_q_per_layer.values()))) else None
         for li in layer_ids:
-            scores = importance_scores[li].to(torch.float32).flatten()
-            n_heads = int(scores.numel())
             if li < layer_start or li > layer_end:
                 continue
+            scores, gs = _layer_granularity(li)
             flat_scores.append(scores)
-            flat_meta.extend([(li, hi) for hi in range(n_heads)])
+            flat_meta.extend([(li, gi, gs) for gi in range(int(scores.numel()))])
 
         if not flat_scores:
             return keep_masks
 
         all_scores = torch.cat(flat_scores, dim=0)
-        total_heads = int(all_scores.numel())
-        
+        total_units = int(all_scores.numel())
+
         if k is None:
-            k_i = int(round(total_heads * float(k_frac)))
-            k_i = max(1, k_i)
+            k_i = max(1, int(round(total_units * float(k_frac))))
         else:
             k_i = int(k)
 
         if keep_at_least_one_head:
-            k_i = min(k_i, total_heads - 1)
+            k_i = min(k_i, total_units - 1)
         else:
-            k_i = min(k_i, total_heads)
+            k_i = min(k_i, total_units)
 
         if k_i > 0:
-            _, flat_prune_idx = torch.topk(all_scores, k=k_i, largest=largest)
-            for idx in flat_prune_idx.tolist():
-                li, hi = flat_meta[int(idx)]
-                keep_masks[li][hi] = False
+            if max_pruned_units_per_layer is None:
+                _, flat_prune_idx = torch.topk(all_scores, k=k_i, largest=largest)
+                selected = flat_prune_idx.tolist()
+            else:
+                # Enforce per-layer cap by selecting from globally ranked candidates.
+                sorted_idx = torch.argsort(all_scores, descending=largest).tolist()
+                selected: list[int] = []
+                pruned_count_per_layer: Dict[int, int] = {}
+                for idx in sorted_idx:
+                    li, _, _ = flat_meta[int(idx)]
+                    used = pruned_count_per_layer.get(li, 0)
+                    if used >= max_pruned_units_per_layer:
+                        continue
+                    selected.append(int(idx))
+                    pruned_count_per_layer[li] = used + 1
+                    if len(selected) >= k_i:
+                        break
+
+            for idx in selected:
+                li, gi, gs = flat_meta[int(idx)]
+                for qi in range(gi * gs, gi * gs + gs):
+                    keep_masks[li][qi] = False
 
     return keep_masks
 
+
+# ---------------------------------------------------------------------------
+# Build masks (random baseline)
+# ---------------------------------------------------------------------------
 
 def build_random_head_keep_masks_global(
     *,
@@ -168,66 +240,95 @@ def build_random_head_keep_masks_global(
     seed: int = 1234,
     keep_at_least_one_head: bool = True,
     prune_scope: str = "global",
+    n_kv_heads: Optional[int] = None,
 ) -> Dict[int, torch.Tensor]:
-    """
-    Random baseline。
+    """Random pruning baseline.
+
+    When *n_kv_heads* is given and < *n_heads*, random selection operates at
+    KV-group level so entire groups are pruned together.
     """
     if (k is None) == (k_frac is None):
         raise ValueError("Exactly one of k or k_frac must be provided.")
-    
+
     n_layers_total = int(n_layers)
-    n_heads_total = int(n_heads)
+    n_q = int(n_heads)
     layer_end = _resolve_layer_end(layer_end, n_layers_total)
-    keep_masks: Dict[int, torch.Tensor] = {li: torch.ones((n_heads_total,), dtype=torch.bool) for li in range(n_layers_total)}
-    
+    keep_masks: Dict[int, torch.Tensor] = {
+        li: torch.ones((n_q,), dtype=torch.bool) for li in range(n_layers_total)
+    }
+
+    use_group = _use_kv_group(n_kv_heads, n_q)
+    n_units_per_layer = (n_kv_heads if use_group else n_q)  # type: ignore[arg-type]
+    gs = (n_q // n_kv_heads) if use_group else 1  # type: ignore[operator]
+
     g = torch.Generator(device="cpu")
     g.manual_seed(int(seed))
 
     if prune_scope == "layer":
         for li in range(layer_start, layer_end + 1):
             if k is not None:
-                k_i = min(int(k), n_heads_total)
+                k_i = min(int(k), n_units_per_layer)
             else:
-                k_i = int(round(n_heads_total * float(k_frac)))
-                k_i = max(1, k_i)
+                k_i = max(1, int(round(n_units_per_layer * float(k_frac))))
             if keep_at_least_one_head:
-                k_i = min(k_i, n_heads_total - 1)
-            
+                k_i = min(k_i, n_units_per_layer - 1)
             if k_i > 0:
-                perm = torch.randperm(n_heads_total, generator=g)
-                for hi in perm[:k_i].tolist():
-                    keep_masks[li][hi] = False
+                perm = torch.randperm(n_units_per_layer, generator=g)
+                for ui in perm[:k_i].tolist():
+                    for qi in range(ui * gs, ui * gs + gs):
+                        keep_masks[li][qi] = False
     else:
-        # Global random
         sel_layers = [li for li in range(n_layers_total) if layer_start <= li <= layer_end]
-        total_heads = int(len(sel_layers) * n_heads_total)
-        
+        total_units = len(sel_layers) * n_units_per_layer
+        max_pruned_units_per_layer: Optional[int] = 1 if use_group else None
+
         if k is None:
-            k_i = int(round(total_heads * float(k_frac)))
-            k_i = max(1, k_i)
+            k_i = max(1, int(round(total_units * float(k_frac))))
         else:
             k_i = int(k)
 
         if keep_at_least_one_head:
-            k_i = min(k_i, total_heads - 1)
+            k_i = min(k_i, total_units - 1)
         else:
-            k_i = min(k_i, total_heads)
+            k_i = min(k_i, total_units)
+
+        if max_pruned_units_per_layer is not None:
+            k_i = min(k_i, len(sel_layers) * max_pruned_units_per_layer)
 
         if k_i > 0:
-            perm = torch.randperm(total_heads, generator=g)
-            for p in perm[:k_i].tolist():
-                li = sel_layers[int(p) // int(n_heads)]
-                hi = int(p) % int(n_heads)
-                keep_masks[li][hi] = False
+            if max_pruned_units_per_layer is None:
+                perm = torch.randperm(total_units, generator=g)
+                selected = perm[:k_i].tolist()
+            else:
+                perm = torch.randperm(total_units, generator=g).tolist()
+                selected = []
+                pruned_count_per_layer: Dict[int, int] = {}
+                for p in perm:
+                    li = sel_layers[int(p) // n_units_per_layer]
+                    used = pruned_count_per_layer.get(li, 0)
+                    if used >= max_pruned_units_per_layer:
+                        continue
+                    selected.append(int(p))
+                    pruned_count_per_layer[li] = used + 1
+                    if len(selected) >= k_i:
+                        break
+
+            for p in selected:
+                li = sel_layers[int(p) // n_units_per_layer]
+                ui = int(p) % n_units_per_layer
+                for qi in range(ui * gs, ui * gs + gs):
+                    keep_masks[li][qi] = False
 
     return keep_masks
 
 
+# ---------------------------------------------------------------------------
+# Model patching
+# ---------------------------------------------------------------------------
+
 def iter_dream_attn_modules(dream_model: torch.nn.Module) -> Iterable[torch.nn.Module]:
-    """
-    遍历模型中所有 DreamAttention 系列模块（包括 DreamSdpaAttention / DreamAttention）。
-    """
-    from models.Dream.core.modeling_dream import DreamAttention  # local import to avoid circulars
+    """Iterate over all DreamAttention-family modules in the model."""
+    from models.Dream.core.modeling_dream import DreamAttention
 
     for m in dream_model.modules():
         if isinstance(m, DreamAttention):
@@ -235,15 +336,15 @@ def iter_dream_attn_modules(dream_model: torch.nn.Module) -> Iterable[torch.nn.M
 
 
 def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None:
-    """
-    就地 patch DreamAttention / DreamSdpaAttention.forward，在 head 维度应用 mask。
-    mask 存在模块属性 `_head_keep_mask_q`：shape (n_heads,) float(0/1)。
+    """Monkey-patch DreamAttention / DreamSdpaAttention forward to apply head masks.
+
+    The mask is stored per-module as ``_head_keep_mask_q``: shape ``(n_q_heads,)``
+    with float 0/1 values.
     """
     from models.Dream.core.modeling_dream import DreamAttention, DreamSdpaAttention, apply_rotary_pos_emb, repeat_kv
     import math
     import torch.nn.functional as F
 
-    # 1. 先定义通用的手动 attention 逻辑（带 mask）
     def _attn_forward_masked(
         self,
         hidden_states: torch.Tensor,
@@ -287,7 +388,7 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
         attn_weights = torch.nn.functional.dropout(attn_weights, p=self.attention_dropout, training=self.training)
         attn_output = torch.matmul(attn_weights, value_states)
 
-        # ===== Head mask insertion =====
+        # ===== Head mask =====
         apply_head_mask = True
         warmup_frac = getattr(self, "_head_mask_warmup_frac", None)
         if warmup_frac is not None:
@@ -321,13 +422,11 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
             attn_weights = None
         return attn_output, attn_weights, past_key_value
 
-    # 2. 遍历并应用 patch
     for attn in iter_dream_attn_modules(dream_model):
         if getattr(attn, "_head_mask_patched", False):
             continue
 
         if isinstance(attn, DreamSdpaAttention):
-            # Copy of DreamSdpaAttention.forward with one-line head mask insertion.
             def _sdpa_forward_masked(
                 self,
                 hidden_states: torch.Tensor,
@@ -340,7 +439,6 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
                 position_embeddings: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
             ):
                 if output_attentions:
-                    # 如果需要 output_attentions，转而调用我们上面定义的手动带 mask 的逻辑
                     return _attn_forward_masked(self, hidden_states, attention_mask, position_ids, past_key_value, output_attentions, use_cache, cache_position, position_embeddings)
 
                 bsz, q_len, _ = hidden_states.size()
@@ -379,7 +477,7 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
                     is_causal=False,
                 )
 
-                # ===== Head mask insertion (B, n_heads, T, head_dim) =====
+                # ===== Head mask (B, n_heads, T, head_dim) =====
                 apply_head_mask = True
                 warmup_frac = getattr(self, "_head_mask_warmup_frac", None)
                 if warmup_frac is not None:
@@ -413,12 +511,10 @@ def patch_dream_attention_for_head_masking(dream_model: torch.nn.Module) -> None
             attn.forward = _sdpa_forward_masked.__get__(attn, attn.__class__)  # type: ignore[method-assign]
 
         elif isinstance(attn, DreamAttention):
-            # 直接使用上面定义好的 _attn_forward_masked
             attn.forward = _attn_forward_masked.__get__(attn, attn.__class__)  # type: ignore[method-assign]
 
         attn._head_mask_patched = True  # type: ignore[attr-defined]
 
-    # Cache attention modules list on model for fast per-step metadata broadcast in diffusion loop.
     try:
         dream_model._head_mask_attn_modules = list(iter_dream_attn_modules(dream_model))  # type: ignore[attr-defined]
     except Exception:
@@ -432,9 +528,7 @@ def apply_head_keep_masks_(
     device: Optional[torch.device] = None,
     head_mask_warmup_frac: Optional[float] = None,
 ) -> None:
-    """
-    把 per-layer keep_mask 写入 attention 模块属性 `_head_keep_mask_q`（float 0/1）。
-    """
+    """Write per-layer keep_mask into each attention module as ``_head_keep_mask_q``."""
     for attn in iter_dream_attn_modules(dream_model):
         li = int(getattr(attn, "layer_idx", -1))
         if li < 0:
@@ -448,4 +542,3 @@ def apply_head_keep_masks_(
 
         if head_mask_warmup_frac is not None:
             attn._head_mask_warmup_frac = float(head_mask_warmup_frac)  # type: ignore[attr-defined]
-

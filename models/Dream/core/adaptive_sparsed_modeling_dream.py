@@ -388,8 +388,16 @@ class AdaptiveDreamAttention(DreamAttention):
         )
     
     def _apply_rotary_pos_emb(self, q, k, cos, sin):
-        """Apply rotary position embedding."""
-        # Simplified RoPE application
+        """Apply rotary position embedding.
+
+        cos/sin from DreamRotaryEmbedding have shape (B, T, head_dim).
+        q has shape (B, n_heads, T, head_dim) and k has (B, n_kv_heads, T, head_dim).
+        We must unsqueeze dim-1 so that cos/sin broadcast across the head dimension.
+        Without the unsqueeze, batch_size=1 accidentally works (1 broadcasts), but
+        batch_size>1 raises a shape mismatch error.
+        """
+        cos = cos.unsqueeze(1)  # (B, 1, T, head_dim)
+        sin = sin.unsqueeze(1)  # (B, 1, T, head_dim)
         q_embed = (q * cos) + (self._rotate_half(q) * sin)
         k_embed = (k * cos) + (self._rotate_half(k) * sin)
         return q_embed, k_embed

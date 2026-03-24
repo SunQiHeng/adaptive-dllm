@@ -1,0 +1,4254 @@
+{
+  "results": {
+    "mmlu": {
+      "acc,none": 0.23421052631578948,
+      "acc_stderr,none": 0.012543359216202412,
+      "alias": "mmlu"
+    },
+    "mmlu_humanities": {
+      "acc,none": 0.2846153846153846,
+      "acc_stderr,none": 0.028042100306472337,
+      "alias": " - humanities"
+    },
+    "mmlu_formal_logic": {
+      "alias": "  - formal_logic",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.11239029738980327
+    },
+    "mmlu_high_school_european_history": {
+      "alias": "  - high_school_european_history",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_high_school_us_history": {
+      "alias": "  - high_school_us_history",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_high_school_world_history": {
+      "alias": "  - high_school_world_history",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.11239029738980327
+    },
+    "mmlu_international_law": {
+      "alias": "  - international_law",
+      "acc,none": 0.45,
+      "acc_stderr,none": 0.11413288653790232
+    },
+    "mmlu_jurisprudence": {
+      "alias": "  - jurisprudence",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_logical_fallacies": {
+      "alias": "  - logical_fallacies",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.08191780219091252
+    },
+    "mmlu_moral_disputes": {
+      "alias": "  - moral_disputes",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.11239029738980327
+    },
+    "mmlu_moral_scenarios": {
+      "alias": "  - moral_scenarios",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_philosophy": {
+      "alias": "  - philosophy",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_prehistory": {
+      "alias": "  - prehistory",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.0917662935482247
+    },
+    "mmlu_professional_law": {
+      "alias": "  - professional_law",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.10942433098048308
+    },
+    "mmlu_world_religions": {
+      "alias": "  - world_religions",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_other": {
+      "acc,none": 0.19230769230769232,
+      "acc_stderr,none": 0.024196846635601513,
+      "alias": " - other"
+    },
+    "mmlu_business_ethics": {
+      "alias": "  - business_ethics",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.08191780219091252
+    },
+    "mmlu_clinical_knowledge": {
+      "alias": "  - clinical_knowledge",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.0917662935482247
+    },
+    "mmlu_college_medicine": {
+      "alias": "  - college_medicine",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.0819178021909125
+    },
+    "mmlu_global_facts": {
+      "alias": "  - global_facts",
+      "acc,none": 0.05,
+      "acc_stderr,none": 0.04999999999999999
+    },
+    "mmlu_human_aging": {
+      "alias": "  - human_aging",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_management": {
+      "alias": "  - management",
+      "acc,none": 0.05,
+      "acc_stderr,none": 0.04999999999999999
+    },
+    "mmlu_marketing": {
+      "alias": "  - marketing",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.10513149660756933
+    },
+    "mmlu_medical_genetics": {
+      "alias": "  - medical_genetics",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.0819178021909125
+    },
+    "mmlu_miscellaneous": {
+      "alias": "  - miscellaneous",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.0917662935482247
+    },
+    "mmlu_nutrition": {
+      "alias": "  - nutrition",
+      "acc,none": 0.45,
+      "acc_stderr,none": 0.11413288653790232
+    },
+    "mmlu_professional_accounting": {
+      "alias": "  - professional_accounting",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_professional_medicine": {
+      "alias": "  - professional_medicine",
+      "acc,none": 0.1,
+      "acc_stderr,none": 0.06882472016116853
+    },
+    "mmlu_virology": {
+      "alias": "  - virology",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.0917662935482247
+    },
+    "mmlu_social_sciences": {
+      "acc,none": 0.2708333333333333,
+      "acc_stderr,none": 0.028851682631057664,
+      "alias": " - social sciences"
+    },
+    "mmlu_econometrics": {
+      "alias": "  - econometrics",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.0819178021909125
+    },
+    "mmlu_high_school_geography": {
+      "alias": "  - high_school_geography",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.10513149660756933
+    },
+    "mmlu_high_school_government_and_politics": {
+      "alias": "  - high_school_government_and_politics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.1094243309804831
+    },
+    "mmlu_high_school_macroeconomics": {
+      "alias": "  - high_school_macroeconomics",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_high_school_microeconomics": {
+      "alias": "  - high_school_microeconomics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.10942433098048311
+    },
+    "mmlu_high_school_psychology": {
+      "alias": "  - high_school_psychology",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.11239029738980327
+    },
+    "mmlu_human_sexuality": {
+      "alias": "  - human_sexuality",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_professional_psychology": {
+      "alias": "  - professional_psychology",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.10942433098048308
+    },
+    "mmlu_public_relations": {
+      "alias": "  - public_relations",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.0917662935482247
+    },
+    "mmlu_security_studies": {
+      "alias": "  - security_studies",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.10513149660756933
+    },
+    "mmlu_sociology": {
+      "alias": "  - sociology",
+      "acc,none": 0.1,
+      "acc_stderr,none": 0.06882472016116853
+    },
+    "mmlu_us_foreign_policy": {
+      "alias": "  - us_foreign_policy",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.10513149660756933
+    },
+    "mmlu_stem": {
+      "acc,none": 0.20526315789473684,
+      "acc_stderr,none": 0.02101797701787438,
+      "alias": " - stem"
+    },
+    "mmlu_abstract_algebra": {
+      "alias": "  - abstract_algebra",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_anatomy": {
+      "alias": "  - anatomy",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.10513149660756933
+    },
+    "mmlu_astronomy": {
+      "alias": "  - astronomy",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_college_biology": {
+      "alias": "  - college_biology",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_college_chemistry": {
+      "alias": "  - college_chemistry",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.0819178021909125
+    },
+    "mmlu_college_computer_science": {
+      "alias": "  - college_computer_science",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_college_mathematics": {
+      "alias": "  - college_mathematics",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_college_physics": {
+      "alias": "  - college_physics",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09933992677987828
+    },
+    "mmlu_computer_security": {
+      "alias": "  - computer_security",
+      "acc,none": 0.1,
+      "acc_stderr,none": 0.06882472016116853
+    },
+    "mmlu_conceptual_physics": {
+      "alias": "  - conceptual_physics",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_electrical_engineering": {
+      "alias": "  - electrical_engineering",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_elementary_mathematics": {
+      "alias": "  - elementary_mathematics",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_high_school_biology": {
+      "alias": "  - high_school_biology",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.08191780219091252
+    },
+    "mmlu_high_school_chemistry": {
+      "alias": "  - high_school_chemistry",
+      "acc,none": 0.1,
+      "acc_stderr,none": 0.06882472016116853
+    },
+    "mmlu_high_school_computer_science": {
+      "alias": "  - high_school_computer_science",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.10942433098048308
+    },
+    "mmlu_high_school_mathematics": {
+      "alias": "  - high_school_mathematics",
+      "acc,none": 0.15,
+      "acc_stderr,none": 0.08191780219091252
+    },
+    "mmlu_high_school_physics": {
+      "alias": "  - high_school_physics",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_high_school_statistics": {
+      "alias": "  - high_school_statistics",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    },
+    "mmlu_machine_learning": {
+      "alias": "  - machine_learning",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471
+    }
+  },
+  "groups": {
+    "mmlu": {
+      "acc,none": 0.23421052631578948,
+      "acc_stderr,none": 0.012543359216202412,
+      "alias": "mmlu"
+    },
+    "mmlu_humanities": {
+      "acc,none": 0.2846153846153846,
+      "acc_stderr,none": 0.028042100306472337,
+      "alias": " - humanities"
+    },
+    "mmlu_other": {
+      "acc,none": 0.19230769230769232,
+      "acc_stderr,none": 0.024196846635601513,
+      "alias": " - other"
+    },
+    "mmlu_social_sciences": {
+      "acc,none": 0.2708333333333333,
+      "acc_stderr,none": 0.028851682631057664,
+      "alias": " - social sciences"
+    },
+    "mmlu_stem": {
+      "acc,none": 0.20526315789473684,
+      "acc_stderr,none": 0.02101797701787438,
+      "alias": " - stem"
+    }
+  },
+  "group_subtasks": {
+    "mmlu_humanities": [
+      "mmlu_moral_scenarios",
+      "mmlu_professional_law",
+      "mmlu_high_school_european_history",
+      "mmlu_formal_logic",
+      "mmlu_logical_fallacies",
+      "mmlu_jurisprudence",
+      "mmlu_world_religions",
+      "mmlu_high_school_us_history",
+      "mmlu_philosophy",
+      "mmlu_moral_disputes",
+      "mmlu_international_law",
+      "mmlu_high_school_world_history",
+      "mmlu_prehistory"
+    ],
+    "mmlu_social_sciences": [
+      "mmlu_high_school_geography",
+      "mmlu_professional_psychology",
+      "mmlu_security_studies",
+      "mmlu_high_school_psychology",
+      "mmlu_us_foreign_policy",
+      "mmlu_high_school_microeconomics",
+      "mmlu_human_sexuality",
+      "mmlu_sociology",
+      "mmlu_public_relations",
+      "mmlu_econometrics",
+      "mmlu_high_school_macroeconomics",
+      "mmlu_high_school_government_and_politics"
+    ],
+    "mmlu_other": [
+      "mmlu_global_facts",
+      "mmlu_marketing",
+      "mmlu_medical_genetics",
+      "mmlu_business_ethics",
+      "mmlu_college_medicine",
+      "mmlu_human_aging",
+      "mmlu_clinical_knowledge",
+      "mmlu_nutrition",
+      "mmlu_professional_medicine",
+      "mmlu_virology",
+      "mmlu_professional_accounting",
+      "mmlu_management",
+      "mmlu_miscellaneous"
+    ],
+    "mmlu_stem": [
+      "mmlu_electrical_engineering",
+      "mmlu_astronomy",
+      "mmlu_high_school_statistics",
+      "mmlu_high_school_mathematics",
+      "mmlu_high_school_computer_science",
+      "mmlu_high_school_biology",
+      "mmlu_anatomy",
+      "mmlu_abstract_algebra",
+      "mmlu_high_school_physics",
+      "mmlu_college_mathematics",
+      "mmlu_elementary_mathematics",
+      "mmlu_high_school_chemistry",
+      "mmlu_college_computer_science",
+      "mmlu_college_chemistry",
+      "mmlu_conceptual_physics",
+      "mmlu_machine_learning",
+      "mmlu_college_biology",
+      "mmlu_computer_security",
+      "mmlu_college_physics"
+    ],
+    "mmlu": [
+      "mmlu_stem",
+      "mmlu_other",
+      "mmlu_social_sciences",
+      "mmlu_humanities"
+    ]
+  },
+  "configs": {
+    "mmlu_abstract_algebra": {
+      "task": "mmlu_abstract_algebra",
+      "task_alias": "abstract_algebra",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "abstract_algebra",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about abstract algebra.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_anatomy": {
+      "task": "mmlu_anatomy",
+      "task_alias": "anatomy",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "anatomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about anatomy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_astronomy": {
+      "task": "mmlu_astronomy",
+      "task_alias": "astronomy",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "astronomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about astronomy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_business_ethics": {
+      "task": "mmlu_business_ethics",
+      "task_alias": "business_ethics",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "business_ethics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about business ethics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_clinical_knowledge": {
+      "task": "mmlu_clinical_knowledge",
+      "task_alias": "clinical_knowledge",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "clinical_knowledge",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about clinical knowledge.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_biology": {
+      "task": "mmlu_college_biology",
+      "task_alias": "college_biology",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_biology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college biology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_chemistry": {
+      "task": "mmlu_college_chemistry",
+      "task_alias": "college_chemistry",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_chemistry",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college chemistry.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_computer_science": {
+      "task": "mmlu_college_computer_science",
+      "task_alias": "college_computer_science",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_computer_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college computer science.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_mathematics": {
+      "task": "mmlu_college_mathematics",
+      "task_alias": "college_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_medicine": {
+      "task": "mmlu_college_medicine",
+      "task_alias": "college_medicine",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_medicine",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college medicine.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_college_physics": {
+      "task": "mmlu_college_physics",
+      "task_alias": "college_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_computer_security": {
+      "task": "mmlu_computer_security",
+      "task_alias": "computer_security",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "computer_security",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about computer security.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_conceptual_physics": {
+      "task": "mmlu_conceptual_physics",
+      "task_alias": "conceptual_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "conceptual_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about conceptual physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_econometrics": {
+      "task": "mmlu_econometrics",
+      "task_alias": "econometrics",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "econometrics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about econometrics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_electrical_engineering": {
+      "task": "mmlu_electrical_engineering",
+      "task_alias": "electrical_engineering",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "electrical_engineering",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about electrical engineering.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_elementary_mathematics": {
+      "task": "mmlu_elementary_mathematics",
+      "task_alias": "elementary_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "elementary_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about elementary mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_formal_logic": {
+      "task": "mmlu_formal_logic",
+      "task_alias": "formal_logic",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "formal_logic",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about formal logic.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_global_facts": {
+      "task": "mmlu_global_facts",
+      "task_alias": "global_facts",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "global_facts",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about global facts.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_biology": {
+      "task": "mmlu_high_school_biology",
+      "task_alias": "high_school_biology",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_biology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school biology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_chemistry": {
+      "task": "mmlu_high_school_chemistry",
+      "task_alias": "high_school_chemistry",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_chemistry",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school chemistry.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_computer_science": {
+      "task": "mmlu_high_school_computer_science",
+      "task_alias": "high_school_computer_science",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_computer_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school computer science.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_european_history": {
+      "task": "mmlu_high_school_european_history",
+      "task_alias": "high_school_european_history",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_european_history",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school european history.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_geography": {
+      "task": "mmlu_high_school_geography",
+      "task_alias": "high_school_geography",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_geography",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school geography.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_government_and_politics": {
+      "task": "mmlu_high_school_government_and_politics",
+      "task_alias": "high_school_government_and_politics",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_government_and_politics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school government and politics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_macroeconomics": {
+      "task": "mmlu_high_school_macroeconomics",
+      "task_alias": "high_school_macroeconomics",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_macroeconomics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school macroeconomics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_mathematics": {
+      "task": "mmlu_high_school_mathematics",
+      "task_alias": "high_school_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_microeconomics": {
+      "task": "mmlu_high_school_microeconomics",
+      "task_alias": "high_school_microeconomics",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_microeconomics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school microeconomics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_physics": {
+      "task": "mmlu_high_school_physics",
+      "task_alias": "high_school_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_psychology": {
+      "task": "mmlu_high_school_psychology",
+      "task_alias": "high_school_psychology",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_psychology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school psychology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_statistics": {
+      "task": "mmlu_high_school_statistics",
+      "task_alias": "high_school_statistics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_statistics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school statistics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_us_history": {
+      "task": "mmlu_high_school_us_history",
+      "task_alias": "high_school_us_history",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_us_history",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school us history.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_high_school_world_history": {
+      "task": "mmlu_high_school_world_history",
+      "task_alias": "high_school_world_history",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_world_history",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school world history.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_human_aging": {
+      "task": "mmlu_human_aging",
+      "task_alias": "human_aging",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "human_aging",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about human aging.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_human_sexuality": {
+      "task": "mmlu_human_sexuality",
+      "task_alias": "human_sexuality",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "human_sexuality",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about human sexuality.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_international_law": {
+      "task": "mmlu_international_law",
+      "task_alias": "international_law",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "international_law",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about international law.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_jurisprudence": {
+      "task": "mmlu_jurisprudence",
+      "task_alias": "jurisprudence",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "jurisprudence",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about jurisprudence.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_logical_fallacies": {
+      "task": "mmlu_logical_fallacies",
+      "task_alias": "logical_fallacies",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "logical_fallacies",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about logical fallacies.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_machine_learning": {
+      "task": "mmlu_machine_learning",
+      "task_alias": "machine_learning",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "machine_learning",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about machine learning.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_management": {
+      "task": "mmlu_management",
+      "task_alias": "management",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "management",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about management.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_marketing": {
+      "task": "mmlu_marketing",
+      "task_alias": "marketing",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "marketing",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about marketing.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_medical_genetics": {
+      "task": "mmlu_medical_genetics",
+      "task_alias": "medical_genetics",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "medical_genetics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about medical genetics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_miscellaneous": {
+      "task": "mmlu_miscellaneous",
+      "task_alias": "miscellaneous",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "miscellaneous",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about miscellaneous.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_moral_disputes": {
+      "task": "mmlu_moral_disputes",
+      "task_alias": "moral_disputes",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "moral_disputes",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about moral disputes.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_moral_scenarios": {
+      "task": "mmlu_moral_scenarios",
+      "task_alias": "moral_scenarios",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "moral_scenarios",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about moral scenarios.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_nutrition": {
+      "task": "mmlu_nutrition",
+      "task_alias": "nutrition",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "nutrition",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about nutrition.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_philosophy": {
+      "task": "mmlu_philosophy",
+      "task_alias": "philosophy",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "philosophy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about philosophy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_prehistory": {
+      "task": "mmlu_prehistory",
+      "task_alias": "prehistory",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "prehistory",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about prehistory.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_professional_accounting": {
+      "task": "mmlu_professional_accounting",
+      "task_alias": "professional_accounting",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "professional_accounting",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about professional accounting.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_professional_law": {
+      "task": "mmlu_professional_law",
+      "task_alias": "professional_law",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "professional_law",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about professional law.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_professional_medicine": {
+      "task": "mmlu_professional_medicine",
+      "task_alias": "professional_medicine",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "professional_medicine",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about professional medicine.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_professional_psychology": {
+      "task": "mmlu_professional_psychology",
+      "task_alias": "professional_psychology",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "professional_psychology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about professional psychology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_public_relations": {
+      "task": "mmlu_public_relations",
+      "task_alias": "public_relations",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "public_relations",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about public relations.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_security_studies": {
+      "task": "mmlu_security_studies",
+      "task_alias": "security_studies",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "security_studies",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about security studies.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_sociology": {
+      "task": "mmlu_sociology",
+      "task_alias": "sociology",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "sociology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about sociology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_us_foreign_policy": {
+      "task": "mmlu_us_foreign_policy",
+      "task_alias": "us_foreign_policy",
+      "tag": "mmlu_social_sciences_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "us_foreign_policy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about us foreign policy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_virology": {
+      "task": "mmlu_virology",
+      "task_alias": "virology",
+      "tag": "mmlu_other_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "virology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about virology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    },
+    "mmlu_world_religions": {
+      "task": "mmlu_world_religions",
+      "task_alias": "world_religions",
+      "tag": "mmlu_humanities_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "world_religions",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about world religions.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "block_size": 32,
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt",
+        "prune_which": "most",
+        "prune_k_frac": 0.25,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group"
+      }
+    }
+  },
+  "versions": {
+    "mmlu": 2,
+    "mmlu_abstract_algebra": 1.0,
+    "mmlu_anatomy": 1.0,
+    "mmlu_astronomy": 1.0,
+    "mmlu_business_ethics": 1.0,
+    "mmlu_clinical_knowledge": 1.0,
+    "mmlu_college_biology": 1.0,
+    "mmlu_college_chemistry": 1.0,
+    "mmlu_college_computer_science": 1.0,
+    "mmlu_college_mathematics": 1.0,
+    "mmlu_college_medicine": 1.0,
+    "mmlu_college_physics": 1.0,
+    "mmlu_computer_security": 1.0,
+    "mmlu_conceptual_physics": 1.0,
+    "mmlu_econometrics": 1.0,
+    "mmlu_electrical_engineering": 1.0,
+    "mmlu_elementary_mathematics": 1.0,
+    "mmlu_formal_logic": 1.0,
+    "mmlu_global_facts": 1.0,
+    "mmlu_high_school_biology": 1.0,
+    "mmlu_high_school_chemistry": 1.0,
+    "mmlu_high_school_computer_science": 1.0,
+    "mmlu_high_school_european_history": 1.0,
+    "mmlu_high_school_geography": 1.0,
+    "mmlu_high_school_government_and_politics": 1.0,
+    "mmlu_high_school_macroeconomics": 1.0,
+    "mmlu_high_school_mathematics": 1.0,
+    "mmlu_high_school_microeconomics": 1.0,
+    "mmlu_high_school_physics": 1.0,
+    "mmlu_high_school_psychology": 1.0,
+    "mmlu_high_school_statistics": 1.0,
+    "mmlu_high_school_us_history": 1.0,
+    "mmlu_high_school_world_history": 1.0,
+    "mmlu_human_aging": 1.0,
+    "mmlu_human_sexuality": 1.0,
+    "mmlu_humanities": 2,
+    "mmlu_international_law": 1.0,
+    "mmlu_jurisprudence": 1.0,
+    "mmlu_logical_fallacies": 1.0,
+    "mmlu_machine_learning": 1.0,
+    "mmlu_management": 1.0,
+    "mmlu_marketing": 1.0,
+    "mmlu_medical_genetics": 1.0,
+    "mmlu_miscellaneous": 1.0,
+    "mmlu_moral_disputes": 1.0,
+    "mmlu_moral_scenarios": 1.0,
+    "mmlu_nutrition": 1.0,
+    "mmlu_other": 2,
+    "mmlu_philosophy": 1.0,
+    "mmlu_prehistory": 1.0,
+    "mmlu_professional_accounting": 1.0,
+    "mmlu_professional_law": 1.0,
+    "mmlu_professional_medicine": 1.0,
+    "mmlu_professional_psychology": 1.0,
+    "mmlu_public_relations": 1.0,
+    "mmlu_security_studies": 1.0,
+    "mmlu_social_sciences": 2,
+    "mmlu_sociology": 1.0,
+    "mmlu_stem": 2,
+    "mmlu_us_foreign_policy": 1.0,
+    "mmlu_virology": 1.0,
+    "mmlu_world_religions": 1.0
+  },
+  "n-shot": {
+    "mmlu_abstract_algebra": 5,
+    "mmlu_anatomy": 5,
+    "mmlu_astronomy": 5,
+    "mmlu_business_ethics": 5,
+    "mmlu_clinical_knowledge": 5,
+    "mmlu_college_biology": 5,
+    "mmlu_college_chemistry": 5,
+    "mmlu_college_computer_science": 5,
+    "mmlu_college_mathematics": 5,
+    "mmlu_college_medicine": 5,
+    "mmlu_college_physics": 5,
+    "mmlu_computer_security": 5,
+    "mmlu_conceptual_physics": 5,
+    "mmlu_econometrics": 5,
+    "mmlu_electrical_engineering": 5,
+    "mmlu_elementary_mathematics": 5,
+    "mmlu_formal_logic": 5,
+    "mmlu_global_facts": 5,
+    "mmlu_high_school_biology": 5,
+    "mmlu_high_school_chemistry": 5,
+    "mmlu_high_school_computer_science": 5,
+    "mmlu_high_school_european_history": 5,
+    "mmlu_high_school_geography": 5,
+    "mmlu_high_school_government_and_politics": 5,
+    "mmlu_high_school_macroeconomics": 5,
+    "mmlu_high_school_mathematics": 5,
+    "mmlu_high_school_microeconomics": 5,
+    "mmlu_high_school_physics": 5,
+    "mmlu_high_school_psychology": 5,
+    "mmlu_high_school_statistics": 5,
+    "mmlu_high_school_us_history": 5,
+    "mmlu_high_school_world_history": 5,
+    "mmlu_human_aging": 5,
+    "mmlu_human_sexuality": 5,
+    "mmlu_international_law": 5,
+    "mmlu_jurisprudence": 5,
+    "mmlu_logical_fallacies": 5,
+    "mmlu_machine_learning": 5,
+    "mmlu_management": 5,
+    "mmlu_marketing": 5,
+    "mmlu_medical_genetics": 5,
+    "mmlu_miscellaneous": 5,
+    "mmlu_moral_disputes": 5,
+    "mmlu_moral_scenarios": 5,
+    "mmlu_nutrition": 5,
+    "mmlu_philosophy": 5,
+    "mmlu_prehistory": 5,
+    "mmlu_professional_accounting": 5,
+    "mmlu_professional_law": 5,
+    "mmlu_professional_medicine": 5,
+    "mmlu_professional_psychology": 5,
+    "mmlu_public_relations": 5,
+    "mmlu_security_studies": 5,
+    "mmlu_sociology": 5,
+    "mmlu_us_foreign_policy": 5,
+    "mmlu_virology": 5,
+    "mmlu_world_religions": 5
+  },
+  "higher_is_better": {
+    "mmlu": {
+      "acc": true
+    },
+    "mmlu_abstract_algebra": {
+      "acc": true
+    },
+    "mmlu_anatomy": {
+      "acc": true
+    },
+    "mmlu_astronomy": {
+      "acc": true
+    },
+    "mmlu_business_ethics": {
+      "acc": true
+    },
+    "mmlu_clinical_knowledge": {
+      "acc": true
+    },
+    "mmlu_college_biology": {
+      "acc": true
+    },
+    "mmlu_college_chemistry": {
+      "acc": true
+    },
+    "mmlu_college_computer_science": {
+      "acc": true
+    },
+    "mmlu_college_mathematics": {
+      "acc": true
+    },
+    "mmlu_college_medicine": {
+      "acc": true
+    },
+    "mmlu_college_physics": {
+      "acc": true
+    },
+    "mmlu_computer_security": {
+      "acc": true
+    },
+    "mmlu_conceptual_physics": {
+      "acc": true
+    },
+    "mmlu_econometrics": {
+      "acc": true
+    },
+    "mmlu_electrical_engineering": {
+      "acc": true
+    },
+    "mmlu_elementary_mathematics": {
+      "acc": true
+    },
+    "mmlu_formal_logic": {
+      "acc": true
+    },
+    "mmlu_global_facts": {
+      "acc": true
+    },
+    "mmlu_high_school_biology": {
+      "acc": true
+    },
+    "mmlu_high_school_chemistry": {
+      "acc": true
+    },
+    "mmlu_high_school_computer_science": {
+      "acc": true
+    },
+    "mmlu_high_school_european_history": {
+      "acc": true
+    },
+    "mmlu_high_school_geography": {
+      "acc": true
+    },
+    "mmlu_high_school_government_and_politics": {
+      "acc": true
+    },
+    "mmlu_high_school_macroeconomics": {
+      "acc": true
+    },
+    "mmlu_high_school_mathematics": {
+      "acc": true
+    },
+    "mmlu_high_school_microeconomics": {
+      "acc": true
+    },
+    "mmlu_high_school_physics": {
+      "acc": true
+    },
+    "mmlu_high_school_psychology": {
+      "acc": true
+    },
+    "mmlu_high_school_statistics": {
+      "acc": true
+    },
+    "mmlu_high_school_us_history": {
+      "acc": true
+    },
+    "mmlu_high_school_world_history": {
+      "acc": true
+    },
+    "mmlu_human_aging": {
+      "acc": true
+    },
+    "mmlu_human_sexuality": {
+      "acc": true
+    },
+    "mmlu_humanities": {
+      "acc": true
+    },
+    "mmlu_international_law": {
+      "acc": true
+    },
+    "mmlu_jurisprudence": {
+      "acc": true
+    },
+    "mmlu_logical_fallacies": {
+      "acc": true
+    },
+    "mmlu_machine_learning": {
+      "acc": true
+    },
+    "mmlu_management": {
+      "acc": true
+    },
+    "mmlu_marketing": {
+      "acc": true
+    },
+    "mmlu_medical_genetics": {
+      "acc": true
+    },
+    "mmlu_miscellaneous": {
+      "acc": true
+    },
+    "mmlu_moral_disputes": {
+      "acc": true
+    },
+    "mmlu_moral_scenarios": {
+      "acc": true
+    },
+    "mmlu_nutrition": {
+      "acc": true
+    },
+    "mmlu_other": {
+      "acc": true
+    },
+    "mmlu_philosophy": {
+      "acc": true
+    },
+    "mmlu_prehistory": {
+      "acc": true
+    },
+    "mmlu_professional_accounting": {
+      "acc": true
+    },
+    "mmlu_professional_law": {
+      "acc": true
+    },
+    "mmlu_professional_medicine": {
+      "acc": true
+    },
+    "mmlu_professional_psychology": {
+      "acc": true
+    },
+    "mmlu_public_relations": {
+      "acc": true
+    },
+    "mmlu_security_studies": {
+      "acc": true
+    },
+    "mmlu_social_sciences": {
+      "acc": true
+    },
+    "mmlu_sociology": {
+      "acc": true
+    },
+    "mmlu_stem": {
+      "acc": true
+    },
+    "mmlu_us_foreign_policy": {
+      "acc": true
+    },
+    "mmlu_virology": {
+      "acc": true
+    },
+    "mmlu_world_religions": {
+      "acc": true
+    }
+  },
+  "n-samples": {
+    "mmlu_electrical_engineering": {
+      "original": 145,
+      "effective": 20
+    },
+    "mmlu_astronomy": {
+      "original": 152,
+      "effective": 20
+    },
+    "mmlu_high_school_statistics": {
+      "original": 216,
+      "effective": 20
+    },
+    "mmlu_high_school_mathematics": {
+      "original": 270,
+      "effective": 20
+    },
+    "mmlu_high_school_computer_science": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_high_school_biology": {
+      "original": 310,
+      "effective": 20
+    },
+    "mmlu_anatomy": {
+      "original": 135,
+      "effective": 20
+    },
+    "mmlu_abstract_algebra": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_high_school_physics": {
+      "original": 151,
+      "effective": 20
+    },
+    "mmlu_college_mathematics": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_elementary_mathematics": {
+      "original": 378,
+      "effective": 20
+    },
+    "mmlu_high_school_chemistry": {
+      "original": 203,
+      "effective": 20
+    },
+    "mmlu_college_computer_science": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_college_chemistry": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_conceptual_physics": {
+      "original": 235,
+      "effective": 20
+    },
+    "mmlu_machine_learning": {
+      "original": 112,
+      "effective": 20
+    },
+    "mmlu_college_biology": {
+      "original": 144,
+      "effective": 20
+    },
+    "mmlu_computer_security": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_college_physics": {
+      "original": 102,
+      "effective": 20
+    },
+    "mmlu_global_facts": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_marketing": {
+      "original": 234,
+      "effective": 20
+    },
+    "mmlu_medical_genetics": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_business_ethics": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_college_medicine": {
+      "original": 173,
+      "effective": 20
+    },
+    "mmlu_human_aging": {
+      "original": 223,
+      "effective": 20
+    },
+    "mmlu_clinical_knowledge": {
+      "original": 265,
+      "effective": 20
+    },
+    "mmlu_nutrition": {
+      "original": 306,
+      "effective": 20
+    },
+    "mmlu_professional_medicine": {
+      "original": 272,
+      "effective": 20
+    },
+    "mmlu_virology": {
+      "original": 166,
+      "effective": 20
+    },
+    "mmlu_professional_accounting": {
+      "original": 282,
+      "effective": 20
+    },
+    "mmlu_management": {
+      "original": 103,
+      "effective": 20
+    },
+    "mmlu_miscellaneous": {
+      "original": 783,
+      "effective": 20
+    },
+    "mmlu_high_school_geography": {
+      "original": 198,
+      "effective": 20
+    },
+    "mmlu_professional_psychology": {
+      "original": 612,
+      "effective": 20
+    },
+    "mmlu_security_studies": {
+      "original": 245,
+      "effective": 20
+    },
+    "mmlu_high_school_psychology": {
+      "original": 545,
+      "effective": 20
+    },
+    "mmlu_us_foreign_policy": {
+      "original": 100,
+      "effective": 20
+    },
+    "mmlu_high_school_microeconomics": {
+      "original": 238,
+      "effective": 20
+    },
+    "mmlu_human_sexuality": {
+      "original": 131,
+      "effective": 20
+    },
+    "mmlu_sociology": {
+      "original": 201,
+      "effective": 20
+    },
+    "mmlu_public_relations": {
+      "original": 110,
+      "effective": 20
+    },
+    "mmlu_econometrics": {
+      "original": 114,
+      "effective": 20
+    },
+    "mmlu_high_school_macroeconomics": {
+      "original": 390,
+      "effective": 20
+    },
+    "mmlu_high_school_government_and_politics": {
+      "original": 193,
+      "effective": 20
+    },
+    "mmlu_moral_scenarios": {
+      "original": 895,
+      "effective": 20
+    },
+    "mmlu_professional_law": {
+      "original": 1534,
+      "effective": 20
+    },
+    "mmlu_high_school_european_history": {
+      "original": 165,
+      "effective": 20
+    },
+    "mmlu_formal_logic": {
+      "original": 126,
+      "effective": 20
+    },
+    "mmlu_logical_fallacies": {
+      "original": 163,
+      "effective": 20
+    },
+    "mmlu_jurisprudence": {
+      "original": 108,
+      "effective": 20
+    },
+    "mmlu_world_religions": {
+      "original": 171,
+      "effective": 20
+    },
+    "mmlu_high_school_us_history": {
+      "original": 204,
+      "effective": 20
+    },
+    "mmlu_philosophy": {
+      "original": 311,
+      "effective": 20
+    },
+    "mmlu_moral_disputes": {
+      "original": 346,
+      "effective": 20
+    },
+    "mmlu_international_law": {
+      "original": 121,
+      "effective": 20
+    },
+    "mmlu_high_school_world_history": {
+      "original": 237,
+      "effective": 20
+    },
+    "mmlu_prehistory": {
+      "original": 324,
+      "effective": 20
+    }
+  },
+  "config": {
+    "model": "dream_mask_head_eval",
+    "model_args": "model_path=/data/qh_models/Dream-v0-Instruct-7B,max_new_tokens=256,steps=256,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,block_size=32,mc_num=1,likelihood_now_step=256,recompute_mask_each_call=true,importance_path=/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260320_024344/head_importance.pt,prune_which=most,prune_k_frac=0.25,random_prune_seed=1234,layer_start=0,layer_end=27,mask_granularity=kv_group",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": 20.0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "5c743cf",
+  "date": 1774087440.6370158,
+  "pretty_env_info": "PyTorch version: 2.6.0+cu124\nIs debug build: False\nCUDA used to build PyTorch: 12.4\nROCM used to build PyTorch: N/A\n\nOS: Ubuntu 22.04.5 LTS (x86_64)\nGCC version: (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nClang version: 14.0.0-1ubuntu1.1\nCMake version: version 3.22.1\nLibc version: glibc-2.35\n\nPython version: 3.10.15 (main, Oct  3 2024, 07:27:34) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-6.8.0-101-generic-x86_64-with-glibc2.35\nIs CUDA available: True\nCUDA runtime version: 12.1.66\nCUDA_MODULE_LOADING set to: LAZY\nGPU models and configuration: \nGPU 0: NVIDIA H100 NVL\nGPU 1: NVIDIA H100 NVL\nGPU 2: NVIDIA H100 NVL\nGPU 3: NVIDIA H100 NVL\nGPU 4: NVIDIA H100 NVL\nGPU 5: NVIDIA H100 NVL\n\nNvidia driver version: 580.105.08\ncuDNN version: Could not collect\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  192\nOn-line CPU(s) list:                     0-191\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Platinum 8457C\nCPU family:                              6\nModel:                                   143\nThread(s) per core:                      2\nCore(s) per socket:                      48\nSocket(s):                               2\nStepping:                                8\nCPU max MHz:                             3800.0000\nCPU min MHz:                             800.0000\nBogoMIPS:                                5200.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cat_l2 cdp_l3 intel_ppin cdp_l2 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect user_shstk avx_vnni avx512_bf16 wbnoinvd dtherm ida arat pln pts vnmi avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq la57 rdpid bus_lock_detect cldemote movdiri movdir64b enqcmd fsrm md_clear serialize tsxldtrk pconfig arch_lbr ibt amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities ibpb_exit_to_user\nVirtualization:                          VT-x\nL1d cache:                               4.5 MiB (96 instances)\nL1i cache:                               3 MiB (96 instances)\nL2 cache:                                192 MiB (96 instances)\nL3 cache:                                195 MiB (2 instances)\nNUMA node(s):                            2\nNUMA node0 CPU(s):                       0-47,96-143\nNUMA node1 CPU(s):                       48-95,144-191\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n\nVersions of relevant libraries:\n[pip3] numpy==1.23.5\n[pip3] nvidia-cublas-cu12==12.4.5.8\n[pip3] nvidia-cuda-cupti-cu12==12.4.127\n[pip3] nvidia-cuda-nvrtc-cu12==12.4.127\n[pip3] nvidia-cuda-runtime-cu12==12.4.127\n[pip3] nvidia-cudnn-cu12==9.1.0.70\n[pip3] nvidia-cufft-cu12==11.2.1.3\n[pip3] nvidia-curand-cu12==10.3.5.147\n[pip3] nvidia-cusolver-cu12==11.6.1.9\n[pip3] nvidia-cusparse-cu12==12.3.1.170\n[pip3] nvidia-cusparselt-cu12==0.6.2\n[pip3] nvidia-nccl-cu12==2.21.5\n[pip3] nvidia-nvjitlink-cu12==12.4.127\n[pip3] nvidia-nvtx-cu12==12.4.127\n[pip3] nvtx==0.2.10\n[pip3] torch==2.6.0\n[pip3] torchaudio==2.5.1\n[pip3] torchvision==0.21.0\n[pip3] triton==3.2.0\n[conda] blas                       1.0              mkl\n[conda] cuda-cudart                12.1.105         0                             nvidia\n[conda] cuda-cupti                 12.1.105         0                             nvidia\n[conda] cuda-libraries             12.1.0           0                             nvidia\n[conda] cuda-nvrtc                 12.1.105         0                             nvidia\n[conda] cuda-nvtx                  12.1.105         0                             nvidia\n[conda] cuda-opencl                12.9.19          0                             nvidia\n[conda] cuda-runtime               12.1.0           0                             nvidia\n[conda] ffmpeg                     4.3              hf484d3e_0                    pytorch\n[conda] libcublas                  12.1.0.26        0                             nvidia\n[conda] libcufft                   11.0.2.4         0                             nvidia\n[conda] libcurand                  10.3.10.19       0                             nvidia\n[conda] libcusolver                11.4.4.55        0                             nvidia\n[conda] libcusparse                12.0.2.55        0                             nvidia\n[conda] libjpeg-turbo              2.0.0            h9bf148f_0                    pytorch\n[conda] libnvjitlink               12.1.105         0                             nvidia\n[conda] mkl                        2023.1.0         h213fc3f_46344\n[conda] mkl-service                2.4.0            py310h5eee18b_2\n[conda] mkl_fft                    1.3.11           py310h5eee18b_0\n[conda] mkl_random                 1.2.8            py310h1128e8f_0\n[conda] numpy                      1.23.5           pypi_0                        pypi\n[conda] nvtx                       0.2.10           pypi_0                        pypi\n[conda] pytorch                    2.5.1            py3.10_cuda12.1_cudnn9.1.0_0  pytorch\n[conda] pytorch-cuda               12.1             ha16c6d3_6                    pytorch\n[conda] pytorch-mutex              1.0              cuda                          pytorch\n[conda] torchaudio                 2.5.1            py310_cu121                   pytorch\n[conda] torchtriton                3.1.0            py310                         pytorch\n[conda] torchvision                0.20.1           py310_cu121                   pytorch",
+  "transformers_version": "4.54.0",
+  "lm_eval_version": "0.4.9.1",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_bos_token": [
+    "<|beginoftext|>",
+    "151665"
+  ],
+  "eot_token_id": null,
+  "max_length": 4096,
+  "task_hashes": {
+    "mmlu_electrical_engineering": "582741527d821c8f784442f0c2eea53d95504da4a08a7e670cadd2b16d22f0b8",
+    "mmlu_astronomy": "0691703d11474f9ce57bce28b4e10d9d4d7fa65f475269b2970b60b2f1d4ac8f",
+    "mmlu_high_school_statistics": "7b3bd5c7e63db0d9e2adf73bd0dd13d5f19bea9e8d662c0c468cd8a3932bae64",
+    "mmlu_high_school_mathematics": "0e886cae3ea63af4edc650ad45dda99813bbfa01318eacf3b0542f2f2ac9315d",
+    "mmlu_high_school_computer_science": "227c96ab5847a58bd8b29f7315db7e432d6409f8bd06a90e50259e2f4fa4b831",
+    "mmlu_high_school_biology": "37f1dad5b7d898e84bf31d5df57351195d57abf36dfedf3608bb170fa46f4ba2",
+    "mmlu_anatomy": "89e91c5621d60912e474f2093e92260fec9e8577f90755f0775dc1ae319a385d",
+    "mmlu_abstract_algebra": "67da12e357ff264472c5bb1c5e477e60ed046c3037754c82495752495c988f7b",
+    "mmlu_high_school_physics": "89d0c2b1ad527af9676fedc22b067eefe48b06ad06a2c578956d9bd4cc2d8199",
+    "mmlu_college_mathematics": "b5856d18933eda2ed553598bc321f83ffbda96f5eb587c25afc6ba39a9225bad",
+    "mmlu_elementary_mathematics": "bd8dd99e7b874c7345735b2e0a99d65811b8724bd185ce3fc601f175f5f08dc9",
+    "mmlu_high_school_chemistry": "a9826767461be23f5db9dd6ca1dbd6efb4646449355dbb06e3d368d43092ff00",
+    "mmlu_college_computer_science": "e695bf498acfcaaddfb3f72855f42074693279ff3aaf564c49149717f14a2be0",
+    "mmlu_college_chemistry": "6038ad45c97de8a66674b53590287549058939ce24323d91238858d23c775249",
+    "mmlu_conceptual_physics": "b7144fcc5e5ec5832e439ec4f5b6295b9618bb0d71785c6f48399d4ceb21304e",
+    "mmlu_machine_learning": "fe062048241e2db9cada260d662f3e34a58bc644289d88e14f4e659bec58849a",
+    "mmlu_college_biology": "2813fbe9afd69b0c26baf9994c0d4d73d9418d285da7892974f5a351fe72d22d",
+    "mmlu_computer_security": "4e6a1b3cbf71d79d0e12549c4740e9de078e837329fc02350230e7f82a841f55",
+    "mmlu_college_physics": "d8e3e799f347b60c78c534bc00c33129a9239a6ea6ab4efb12159c0414db48b2",
+    "mmlu_global_facts": "52d95a1563d0910d9afaf23dfccc84dc8593efd2cf9f5adbb701a5b0519cf194",
+    "mmlu_marketing": "4b327db727e3bc6cac38ec240f6cc12e65367c237a8638bf2ea09cc4b4f2413b",
+    "mmlu_medical_genetics": "9beaccc0b11254a33e2fb313797390293500672cf9f4a6a2611731da95393848",
+    "mmlu_business_ethics": "acaf757b406c0764a8836da7f247883ece5b289db4a52e2594794f2e747b8137",
+    "mmlu_college_medicine": "8d10b182ac550f9fdf1317d34ceb504155d127f31cb6042aaf86d52dfccbe902",
+    "mmlu_human_aging": "e3c58ba782f4052fd7be27fdbe5497cac23f38c2e1b5abef8a718fd1ff67832c",
+    "mmlu_clinical_knowledge": "e1008acab474fe809a3648b3197aae9119243a0158aa44ce0340ab294d745cb9",
+    "mmlu_nutrition": "05db63fcb7b591a873523af11b0550e3b077d1295d46fb27d2a574a2c5d7c09b",
+    "mmlu_professional_medicine": "100b953d270c5399ca467a9f7e0ef190172570616137790969b80ba96cb3975f",
+    "mmlu_virology": "a2792cd13d9266b38d3d36261bda0daa220238968f744e53fc78543ce63a4e6c",
+    "mmlu_professional_accounting": "f6a771224a03c8d7b09bd2480f86f2c1501ba22573f0b7a570cab0c7a73f2a95",
+    "mmlu_management": "13f6b9256e6bd15a6d91d158991d7d1154b020247f6ca2d70278c4dd2b616a5f",
+    "mmlu_miscellaneous": "37967bbe59f342dc807d97faadb1847077cfc4f7ec48b5cdd22cd69c5038abb9",
+    "mmlu_high_school_geography": "56ef17645884567b4cc37ae05f255297ecac834bec376b7dada9678151cd2a4d",
+    "mmlu_professional_psychology": "bbb0c55eeb19494a6a3a614d8af10eb7dcd5861cda1ea7b01eb687ba528bab5c",
+    "mmlu_security_studies": "86fc79c8285a9a64d0db38346eea4798199962afea4c8a2cc527ef6cef3dce10",
+    "mmlu_high_school_psychology": "6717b82430c7b691f83489387e633577d7e59517e033898bd72c6ea4c944248a",
+    "mmlu_us_foreign_policy": "3ae7bdd7ee5030c7aafbdf1597128d9a81750899d11546701dd1027c9fd98d43",
+    "mmlu_high_school_microeconomics": "5063e2ad392004594987cd0f0e169863a207f9c0738d17fa42a5a229741fc253",
+    "mmlu_human_sexuality": "a7a7200c5e49c83cb4cd998fca04f2fe2664a5338f43ab3b597cc8fa86026215",
+    "mmlu_sociology": "dd99505f224f8d6e0842712af97053442ccea9aedbb97ee62fc90b05b24b9195",
+    "mmlu_public_relations": "8d73726f24f9a2392fa3a81a7b72908987fe268e1f0d282800422dcc6b420ae2",
+    "mmlu_econometrics": "9229f461d72e70f0515b86ce8006779ef3116bef65d14b6a95f1a8ef281533cf",
+    "mmlu_high_school_macroeconomics": "88203478bb274bc7dd1f62126a7a2649e2e8e55c1fdea9d5f9a7efd2314cd508",
+    "mmlu_high_school_government_and_politics": "4741fd8214897631a81ac959c95d6e5b63d03b086e2b98dcb23249cd2722db92",
+    "mmlu_moral_scenarios": "bdf52d2a57ce645ba3302eeef03bffcc82ded92f28fc71662afac6c5f43670e3",
+    "mmlu_professional_law": "5cf9de438db98bf816a4658e21a6c654ba22590695c82b2efa1673f1b025ca4d",
+    "mmlu_high_school_european_history": "2796fac97d080c8bbb3cae43c07afa4bd41803e25b647782bde96bde7282d801",
+    "mmlu_formal_logic": "89e6ed626ae842ff51ec7dabd089f69d534e9d5de370049a8412aa44767053da",
+    "mmlu_logical_fallacies": "b0af86f5b1d52d04099375653ce62090b1c5bfb62312346f749da0e6611f5bcf",
+    "mmlu_jurisprudence": "9d829718a220132c720599705f0c017a5e464538f174173019096c4cf9bebefa",
+    "mmlu_world_religions": "74c482ba2dba952cf6b39683a81124bc9aeef41a71e7784269b19e8e66ab227b",
+    "mmlu_high_school_us_history": "e03f8a9ca167b094a2d13793b96c5fe3fafd9e57f5a6a444ac932db2a77bd115",
+    "mmlu_philosophy": "f22085a4d4817732a2a493cf6b63c3db5bbcaa60bc5491ad6e208ce9e10b41a9",
+    "mmlu_moral_disputes": "1e53d1fe541d1c0cd14adadefbd4bdf7fc474b287efeb85898785202c1d26f5c",
+    "mmlu_international_law": "93e8bb8ed8b9f2d510699a73c4da718013cbb7848d0e2c6a3194db042c44bd87",
+    "mmlu_high_school_world_history": "3c62e0c989b4f2d5743ee6bb2ac99cbc3640f07be8e328cc707cdfa2dadaf49b",
+    "mmlu_prehistory": "edeac662fa409a4ee64965c51b6233cb838a5edda6c85ac25517b2d9fff5dfad"
+  },
+  "model_source": "dream_mask_head_eval",
+  "model_name": "/data/qh_models/Dream-v0-Instruct-7B",
+  "model_name_sanitized": "__data__qh_models__Dream-v0-Instruct-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "start_time": 1320644.585560028,
+  "end_time": 1320911.793300546,
+  "total_evaluation_time_seconds": "267.20774051803164"
+}

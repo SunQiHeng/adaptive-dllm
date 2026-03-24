@@ -2,18 +2,19 @@
 """
 Dream head pruning / masking evaluation with lm-eval-harness.
 
-注册新 model：
+Registered model:
   --model dream_mask_head_eval
 
---model_args 支持：
+--model_args:
 - model_path=...
 - prune_which=most|least|random
-- prune_k=... 或 prune_k_frac=... （二选一）
+- prune_k=... or prune_k_frac=... (mutually exclusive)
 - layer_start=0, layer_end=...
 - random_prune_seed=...
-- importance_path=/path/to/head_importance.pt  （random 模式可不传）
+- importance_path=/path/to/head_importance.pt  (not needed for random)
+- mask_granularity=kv_group|head  (default: kv_group)
 
-其余 generation / MC 参数沿用 `evaluation/dream/eval_dream.py:DreamEvalHarness`。
+All other generation / MC params are inherited from DreamEvalHarness.
 """
 
 from __future__ import annotations
@@ -57,9 +58,7 @@ def _strip_quotes(s: Any) -> str:
 
 @register_model("dream_mask_head_eval")
 class DreamMaskHeadEvalHarness(DreamEvalHarness):
-    """
-    在 Dream standard attention 上做 head 剪枝验证。
-    """
+    """Head pruning verification on Dream standard attention."""
 
     def __init__(
         self,
@@ -72,24 +71,37 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
         layer_end: int = -1,
         random_prune_seed: int = 1234,
         keep_at_least_one_head=True,
-        # diffusion-style generation warmup (skip head mask for early steps)
         head_mask_warmup_frac: float = 0.0,
-        prune_scope: str = "global",  # "global" | "layer"
+        prune_scope: str = "global",
+        mask_granularity: str = "kv_group",  # "kv_group" | "head"
         **kwargs,
     ):
-        # 强制 standard（head pruning 的对照最清晰）
         super().__init__(model_path=model_path, model_type="standard", **kwargs)
 
         prune_which = str(prune_which).strip()
         prune_scope = str(prune_scope).strip().lower()
+        mask_granularity = str(mask_granularity).strip().lower()
+
+        n_layers = int(getattr(self.model.config, "num_hidden_layers"))
+        n_q_heads = int(getattr(self.model.config, "num_attention_heads"))
+        n_kv_heads_cfg = int(getattr(self.model.config, "num_key_value_heads", n_q_heads))
+
+        # Determine effective n_kv_heads for mask building
+        n_kv_heads: int | None = None
+        if mask_granularity == "kv_group" and n_kv_heads_cfg < n_q_heads:
+            n_kv_heads = n_kv_heads_cfg
+            group_size = n_q_heads // n_kv_heads
+            print(f"[head_prune] mask_granularity=kv_group  n_q_heads={n_q_heads}  n_kv_heads={n_kv_heads}  group_size={group_size}")
+        else:
+            if mask_granularity == "kv_group" and n_kv_heads_cfg == n_q_heads:
+                print(f"[head_prune] mask_granularity=kv_group requested but model is MHA (n_kv_heads==n_q_heads={n_q_heads}), falling back to per-head")
+            print(f"[head_prune] mask_granularity=head  n_q_heads={n_q_heads}")
 
         meta = {}
         if prune_which == "random":
-            n_layers = int(getattr(self.model.config, "num_hidden_layers"))
-            n_heads = int(getattr(self.model.config, "num_attention_heads"))
             keep_masks = build_random_head_keep_masks_global(
                 n_layers=n_layers,
-                n_heads=n_heads,
+                n_heads=n_q_heads,
                 k=int(prune_k) if prune_k is not None else None,
                 k_frac=float(prune_k_frac) if prune_k_frac is not None else None,
                 layer_start=int(layer_start),
@@ -97,6 +109,7 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
                 seed=int(random_prune_seed),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
                 prune_scope=prune_scope,
+                n_kv_heads=n_kv_heads,
             )
         else:
             importance_path = _strip_quotes(importance_path)
@@ -112,9 +125,9 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
                 layer_end=int(layer_end),
                 keep_at_least_one_head=_str_to_bool(keep_at_least_one_head),
                 prune_scope=prune_scope,
+                n_kv_heads=n_kv_heads,
             )
 
-        # Patch + apply masks
         patch_dream_attention_for_head_masking(self.model)
         try:
             dev = next(self.model.parameters()).device
@@ -127,7 +140,7 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
             head_mask_warmup_frac=float(head_mask_warmup_frac),
         )
 
-        # 打印剪枝概况（全局）
+        # Print pruning summary
         total_pruned = 0
         total_heads = 0
         for li, m in sorted(keep_masks.items()):
@@ -135,7 +148,8 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
             pruned = int((~m).sum().item())
             total_pruned += pruned
             total_heads += n
-        print(f"[head_prune] mode={prune_which} total_pruned={total_pruned}/{total_heads} ({(total_pruned/max(1,total_heads))*100:.1f}%)")
+        granularity_tag = f"kv_group(gs={n_q_heads // (n_kv_heads or n_q_heads)})" if n_kv_heads else "head"
+        print(f"[head_prune] mode={prune_which}  granularity={granularity_tag}  pruned={total_pruned}/{total_heads} ({(total_pruned/max(1,total_heads))*100:.1f}%)")
         if meta:
             print(f"[head_prune] importance metadata keys: {sorted(list(meta.keys()))[:20]}")
 
@@ -143,4 +157,3 @@ class DreamMaskHeadEvalHarness(DreamEvalHarness):
 if __name__ == "__main__":
     set_seed(1234)
     cli_evaluate()
-

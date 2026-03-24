@@ -81,6 +81,18 @@ _masked_ce_answer_only_batch = _base._masked_ce_answer_only_batch
 _apply_dream_logits_shift = _base._apply_dream_logits_shift
 
 
+def _take_seeded_rows(ds, *, max_samples: int, data_seed: int) -> List[Dict[str, Any]]:
+    """
+    Deterministically shuffle a map-style HF dataset with `data_seed` before taking
+    the first `max_samples` rows. This makes changing SEED/DATA_SEED actually change
+    the attribution data subset for gsm8k/mmlu/humaneval.
+    """
+    if len(ds) > 1:
+        ds = ds.shuffle(seed=int(data_seed))
+    take_n = len(ds) if int(max_samples) <= 0 else min(int(max_samples), len(ds))
+    return [ds[i] for i in range(take_n)]
+
+
 class _MultiOProjHeadGate:
     """
     Register forward_pre_hook on multiple Dream attention o_proj modules.
@@ -599,10 +611,12 @@ def main() -> None:
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
 
-    # Load dataset (same as original script)
+    # Load dataset.
+    # For map-style datasets we shuffle with data_seed before taking max_samples,
+    # so changing SEED/DATA_SEED changes the actual attribution rows.
     if str(args.dataset) == "gsm8k":
         ds = load_dataset("gsm8k", args.dataset_config, split=args.split)
-        rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
+        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
     elif str(args.dataset) == "nemotron":
         cats = [c.strip() for c in str(args.nemotron_categories).split(",") if c.strip()]
         rows: List[Dict[str, Any]] = []
@@ -628,11 +642,11 @@ def main() -> None:
         subject = args.dataset_config if str(args.dataset_config) != "main" else "all"
         print(f"Loading MMLU subject={subject}...")
         ds = load_dataset("cais/mmlu", subject, split=args.split)
-        rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
+        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
     elif str(args.dataset) == "humaneval":
         print("Loading HumanEval...")
         ds = load_dataset("openai_humaneval", split="test")
-        rows = [ds[i] for i in range(min(int(args.max_samples), len(ds)))]
+        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
     else:
         raise ValueError(f"Unsupported dataset: {args.dataset}")
 

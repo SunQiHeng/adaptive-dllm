@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES=3
+export CUDA_VISIBLE_DEVICES=1
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
@@ -30,13 +30,13 @@ mkdir -p logs results
 #   Using chat template here makes the model emit explanations/markdown fences and tanks pass@1.
 # - `humaneval_instruct` is designed for *instruct/chat* models and SHOULD use chat template.
 MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
-MODEL_TYPES=("sparse")
+MODEL_TYPES=("adaptive")
 
 # -------------------------
 # Importance score path selection (EDIT ONE LINE)
 # -------------------------
 # Only change the next line (or override via env IMPORTANCE_PATH=...):
-IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/gsm8k_head_importance_dream_gsm8k_full_pmrandom_threshold_ts20260319_040656/head_importance.pt"}
+IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_dream_gsm8k_full_pmrandom_threshold_ts20260319_040656/head_importance.pt"}
 TASKS=("gsm8k")
 LIMIT=150
 # Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
