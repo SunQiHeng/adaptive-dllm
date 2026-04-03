@@ -1,0 +1,3 @@
+dataset_name: null
+include: _gpqa_local_n_shot_yaml
+task: gpqa_main_n_shot

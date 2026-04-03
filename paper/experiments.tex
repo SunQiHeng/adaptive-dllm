@@ -35,7 +35,7 @@ We compute head-importance on an attribution dataset that may or may not match t
 To emulate multiple diffusion timesteps and reduce variance, we use a set of mask probabilities $\{p_t\}_{t=1}^{T}$ and draw $S$ independent mask samples per probability (Section~\ref{sec:method:multi_timestep}).
 
 \paragraph{Integration path.}
-We compare the \textbf{Diagonal Path (DP)} and the \textbf{Stochastic Threshold Path (STP)} (Section~\ref{sec:method:gate}). For STP we average over $P$ random threshold draws. We report IG steps $K$, baseline $\alpha_0$, and post-processing $\phi$.
+We compare the \textbf{Diagonal Path (DP)} and the \textbf{Stochastic Threshold Path (STP)} (Section~\ref{sec:method:path}). For STP we average over $P$ random threshold draws. We report IG steps $K$ and post-processing $\phi$.
 
 \paragraph{Layer range.}
 We attribute heads jointly over a layer range $\ell\in\{\ell_{\min},\ldots,\ell_{\max}\}$, producing a score tensor $S\in\mathbb{R}^{N\times H}$. When analyzing layer-wise patterns, we report per-layer normalized scores and global rankings.
@@ -114,7 +114,7 @@ Family B & HumanEval (pass@1) & TBD & TBD & TBD \\
 We compare DP and STP while holding other HeadIG hyperparameters fixed. We expect STP to yield more stable rankings and stronger causal separation between prune-most and prune-least, especially when attribution is sensitive to discrete denoising trajectories.
 
 \paragraph{Attribution hyperparameters.}
-We ablate (i) the set of mask probabilities $\{p_t\}$, (ii) the number of MC masks $S$, (iii) IG steps $K$, (iv) baseline $\alpha_0$, and (v) post-processing $\phi$. We report sensitivity of (a) head ranking stability (e.g., Spearman correlation across runs) and (b) downstream causal tests (adaptive sparse / pruning).
+We ablate (i) the set of mask probabilities $\{p_t\}$, (ii) the number of MC masks $S$, (iii) IG steps $K$, and (iv) post-processing $\phi$. We report sensitivity of (a) head ranking stability (e.g., Spearman correlation across runs) and (b) downstream causal tests (adaptive sparse / pruning).
 
 \paragraph{Cross-task transfer of importance.}
 We test whether head-importance computed on one attribution dataset transfers to other tasks. This probes whether HeadIG captures general-purpose head utility versus dataset-specific artifacts.

@@ -117,6 +117,8 @@ class DreamGenerationConfig(GenerationConfig):
         self.steps: int = kwargs.pop("steps", 512)
         self.alg: str = kwargs.pop("alg", 'origin')
         self.alg_temp: Optional[float] = kwargs.pop("alg_temp", None)
+        self.diffusion_mode: str = kwargs.pop("diffusion_mode", "global")
+        self.block_length: Optional[int] = kwargs.pop("block_length", None)
 
         # Parameters that define the output variables of `generate`
         self.num_return_sequences: int = kwargs.pop("num_return_sequences", 1)

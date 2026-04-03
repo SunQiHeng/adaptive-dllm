@@ -1,0 +1,24 @@
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files:
+    train: ["/home/qiheng/Projects/adaptive-dllm/evaluation/local_tasks/test_gpqa.jsonl"]
+tag: gpqa
+output_type: multiple_choice
+process_docs: !function utils.process_docs
+training_split: train
+validation_split: train
+test_split: null
+description: "Here are some example questions from experts. Answer the final question yourself, following the format of the previous questions exactly.\n"
+doc_to_text: "Question: {{Question if Question is defined else question}}\nChoices:\n(A) {{choice1}}\n(B) {{choice2}}\n(C) {{choice3}}\n(D) {{choice4}}\nAnswer:"
+doc_to_target: answer
+doc_to_choice: ["(A)", "(B)", "(C)", "(D)"]
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+  - metric: acc_norm
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 2.0

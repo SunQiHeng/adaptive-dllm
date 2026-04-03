@@ -209,6 +209,7 @@ def main() -> int:
     ap.add_argument("--steps", type=int, default=256)
     ap.add_argument("--gen_length", type=int, default=64)
     ap.add_argument("--block_length", type=int, default=32)
+    ap.add_argument("--diffusion_mode", choices=["semi", "global"], default="semi")
     ap.add_argument("--remasking", default="low_confidence")
     ap.add_argument("--cfg", type=float, default=0.0)
     ap.add_argument("--skip", type=float, default=0.2)
@@ -258,6 +259,7 @@ def main() -> int:
         steps=args.steps,
         gen_length=args.gen_length,
         block_length=args.block_length,
+        diffusion_mode=args.diffusion_mode,
         remasking=args.remasking,
         cfg=args.cfg,
         skip=args.skip,
@@ -306,6 +308,7 @@ def main() -> int:
                     steps=lm.steps,
                     gen_length=lm.gen_length,
                     block_length=lm.block_length,
+                    diffusion_mode=lm.diffusion_mode,
                     temperature=0,
                     cfg_scale=lm.cfg,
                     remasking=lm.remasking,
@@ -319,6 +322,7 @@ def main() -> int:
                     steps=lm.steps,
                     gen_length=lm.gen_length,
                     block_length=lm.block_length,
+                    diffusion_mode=lm.diffusion_mode,
                     temperature=0,
                     cfg_scale=lm.cfg,
                     remasking=lm.remasking,
@@ -333,6 +337,7 @@ def main() -> int:
                     steps=lm.steps,
                     gen_length=lm.gen_length,
                     block_length=lm.block_length,
+                    diffusion_mode=lm.diffusion_mode,
                     temperature=0,
                     cfg_scale=lm.cfg,
                     remasking=lm.remasking,
@@ -411,6 +416,7 @@ def main() -> int:
         "gen_length": args.gen_length,
         "steps": args.steps,
         "block_length": args.block_length,
+        "diffusion_mode": args.diffusion_mode,
         "select": args.select,
         "skip": args.skip,
         "block_size": args.block_size,

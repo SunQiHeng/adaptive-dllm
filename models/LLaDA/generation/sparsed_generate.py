@@ -47,21 +47,38 @@ def get_num_transfer_tokens(mask_index, steps):
     return num_transfer_tokens
 
 
+def _resolve_diffusion_block_length(diffusion_mode, gen_length, block_length):
+    mode = str(diffusion_mode).strip().lower()
+    if mode not in {"semi", "global"}:
+        raise ValueError(f"Unsupported diffusion_mode={diffusion_mode!r}. Expected 'semi' or 'global'.")
+    if mode == "global":
+        return gen_length, mode
+    if block_length is None:
+        raise ValueError("block_length is required when diffusion_mode='semi'")
+    block_length = int(block_length)
+    if block_length <= 0:
+        raise ValueError(f"block_length must be positive, got {block_length}")
+    return block_length, mode
+
+
 @ torch.no_grad()
 def generate(model, prompt, steps=128, gen_length=128, block_length=128, temperature=0.,
-             cfg_scale=0., remasking='low_confidence', mask_id=126336, SparseD_param=None):
+             cfg_scale=0., remasking='low_confidence', mask_id=126336, SparseD_param=None,
+             diffusion_mode='semi'):
     '''
     Args:
         model: Mask predictor.
         prompt: A tensor of shape (1, L).
         steps: Sampling steps, less than or equal to gen_length.
         gen_length: Generated answer length.
-        block_length: Block length, less than or equal to gen_length. If less than gen_length, it means using semi_autoregressive remasking.
+        block_length: Block length, less than or equal to gen_length. Used when diffusion_mode='semi'.
         temperature: Categorical distribution sampling temperature.
         cfg_scale: Unsupervised classifier-free guidance scale.
         remasking: Remasking strategy. 'low_confidence' or 'random'.
         mask_id: The toke id of [MASK] is 126336.
+        diffusion_mode: 'semi' for block-wise diffusion, 'global' for whole-sequence diffusion.
     '''
+    block_length, _ = _resolve_diffusion_block_length(diffusion_mode, gen_length, block_length)
     x = torch.full((1, prompt.shape[1] + gen_length), mask_id, dtype=torch.long).to(model.device)
     x[:, :prompt.shape[1]] = prompt.clone()
 

@@ -12,6 +12,7 @@ import torch
 import random
 import numpy as np
 import torch.nn.functional as F
+import time
 from datasets import Dataset
 from lm_eval.__main__ import cli_evaluate
 from lm_eval.api.instance import Instance
@@ -32,6 +33,24 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+
+def _iter_with_progress(items, *, desc: str, enable: bool = True, update_every: int = 10, label: str = ""):
+    total = len(items)
+    use_tqdm = bool(enable and sys.stderr.isatty())
+    full_desc = f"{label} | {desc}" if label else desc
+    if use_tqdm:
+        yield from tqdm(items, desc=full_desc, total=total)
+        return
+    start_time = time.time()
+    for idx, item in enumerate(items, 1):
+        yield item
+        if enable and update_every > 0 and ((idx % int(update_every)) == 0 or idx == total):
+            elapsed = int(time.time() - start_time)
+            if label:
+                print(f"[progress][{label}][elapsed={elapsed}s] {desc} {idx}/{total}")
+            else:
+                print(f"[progress][elapsed={elapsed}s] {desc} {idx}/{total}")
 
 
 def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, model_name="Model"):
@@ -205,6 +224,7 @@ class LLaDAEvalHarness(LM):
         steps=1024,
         gen_length=1024,
         block_length=1024,
+        diffusion_mode='semi',  # 'semi' or 'global'
         remasking='low_confidence',
         # Sparse params
         skip=0.2,
@@ -230,6 +250,7 @@ class LLaDAEvalHarness(LM):
         # - recompute_mask_each_call: True (masks depend on content; caching across examples is wrong)
         likelihood_now_step=None,
         recompute_mask_each_call=False,
+        progress_label="",
         device="cuda",
         **kwargs,
     ):
@@ -426,6 +447,8 @@ class LLaDAEvalHarness(LM):
         self.mc_num = mc_num
         self.batch_size = int(batch_size)
         assert mc_num % self.batch_size == 0
+        self.progress_update_every = 10
+        self.progress_label = str(progress_label).strip()
         self.max_length = max_length
         self.is_check_greedy = is_check_greedy
         
@@ -433,6 +456,7 @@ class LLaDAEvalHarness(LM):
         self.steps = steps
         self.gen_length = gen_length
         self.block_length = block_length
+        self.diffusion_mode = str(diffusion_mode).strip().lower()
         self.remasking = remasking
         self.likelihood_now_step = likelihood_now_step
         self.recompute_mask_each_call = recompute_mask_each_call
@@ -442,7 +466,7 @@ class LLaDAEvalHarness(LM):
         print(f"{'='*70}")
         print(f"Model type: {model_type}")
         print(f"Model path: {model_path}")
-        print(f"Steps: {steps}, Gen length: {gen_length}, Block length: {block_length}")
+        print(f"Steps: {steps}, Gen length: {gen_length}, Block length: {block_length}, Diffusion mode: {self.diffusion_mode}")
         if model_type in ['sparse', 'adaptive']:
             print(f"Sparse params: skip={skip}, select={select}, block_size={block_size}")
         print(f"{'='*70}\n")
@@ -571,7 +595,12 @@ class LLaDAEvalHarness(LM):
         
         out = []
         with torch.no_grad():
-            for elem in tqdm(ds, desc="Computing likelihood..."):
+            for elem in _iter_with_progress(
+                ds,
+                desc="Computing likelihood...",
+                update_every=self.progress_update_every,
+                label=self.progress_label,
+            ):
                 prefix = elem["prefix"]
                 target = elem["target"]
                 ll = self.get_loglikelihood(prefix, target)
@@ -598,7 +627,12 @@ class LLaDAEvalHarness(LM):
         ds = ds.with_format("torch")
         
         out = []
-        for elem in tqdm(ds, desc="Generating..."):
+        for elem in _iter_with_progress(
+            ds,
+            desc="Generating...",
+            update_every=self.progress_update_every,
+            label=self.progress_label,
+        ):
             prompt = elem["question"].unsqueeze(0).to(self.device)
             stop_tokens = elem["until"]
             
@@ -609,6 +643,7 @@ class LLaDAEvalHarness(LM):
                     steps=self.steps,
                     gen_length=self.gen_length,
                     block_length=self.block_length,
+                    diffusion_mode=self.diffusion_mode,
                     temperature=0,
                     cfg_scale=self.cfg,
                     remasking=self.remasking,
@@ -620,6 +655,7 @@ class LLaDAEvalHarness(LM):
                     steps=self.steps,
                     gen_length=self.gen_length,
                     block_length=self.block_length,
+                    diffusion_mode=self.diffusion_mode,
                     temperature=0,
                     cfg_scale=self.cfg,
                     remasking=self.remasking,
@@ -632,6 +668,7 @@ class LLaDAEvalHarness(LM):
                     steps=self.steps,
                     gen_length=self.gen_length,
                     block_length=self.block_length,
+                    diffusion_mode=self.diffusion_mode,
                     temperature=0,
                     cfg_scale=self.cfg,
                     remasking=self.remasking,

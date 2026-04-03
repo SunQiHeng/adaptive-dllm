@@ -14,6 +14,7 @@ import numpy as np
 import torch.nn.functional as F
 import re
 import json
+import time
 from datasets import Dataset
 from lm_eval.__main__ import cli_evaluate
 from lm_eval.api.instance import Instance
@@ -29,6 +30,24 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+
+def _iter_with_progress(items, *, desc: str, enable: bool = True, update_every: int = 10, label: str = ""):
+    total = len(items)
+    use_tqdm = bool(enable and sys.stderr.isatty())
+    full_desc = f"{label} | {desc}" if label else desc
+    if use_tqdm:
+        yield from tqdm(items, desc=full_desc, total=total)
+        return
+    start_time = time.time()
+    for idx, item in enumerate(items, 1):
+        yield item
+        if enable and update_every > 0 and ((idx % int(update_every)) == 0 or idx == total):
+            elapsed = int(time.time() - start_time)
+            if label:
+                print(f"[progress][{label}][elapsed={elapsed}s] {desc} {idx}/{total}")
+            else:
+                print(f"[progress][elapsed={elapsed}s] {desc} {idx}/{total}")
 
 
 _CODE_FENCE_RE = re.compile(r"```(?:python)?\n([\s\S]*?)```", re.IGNORECASE)
@@ -229,6 +248,8 @@ class DreamEvalHarness(LM):
         eps=1e-3,
         alg='entropy',
         alg_temp=0.0,  # Official default: 0.0
+        diffusion_mode='global',  # 'global' or 'semi'
+        block_length=32,          # Used when diffusion_mode='semi'
         # Sparse params
         skip=0.2,
         select=0.3,
@@ -246,6 +267,7 @@ class DreamEvalHarness(LM):
         # Likelihood eval params (for multiple-choice tasks like MMLU)
         likelihood_now_step=None,         # Set > warmup to trigger sparse attention in likelihood scoring
         recompute_mask_each_call=False,  # Recompute masks for each forward (needed for dynamic sequences)
+        progress_label="",
         device="cuda",
         **kwargs,
     ):
@@ -550,6 +572,8 @@ class DreamEvalHarness(LM):
         self.is_check_greedy = is_check_greedy
         self.likelihood_now_step = likelihood_now_step
         self.recompute_mask_each_call = recompute_mask_each_call
+        self.progress_update_every = 10
+        self.progress_label = str(progress_label).strip()
         
         # Dream generation config
         from models.Dream.generation_utils.generation_utils_dream import DreamGenerationConfig
@@ -562,6 +586,8 @@ class DreamEvalHarness(LM):
             steps=steps,
             alg=alg,
             alg_temp=alg_temp,
+            diffusion_mode=str(diffusion_mode).strip().lower(),
+            block_length=int(block_length) if block_length is not None else None,
             mask_token_id=self.mask_id,  # Use self.mask_id which was set from tokenizer
             pad_token_id=self.tokenizer.pad_token_id if hasattr(self.tokenizer, 'pad_token_id') else None,
             bos_token_id=self.tokenizer.bos_token_id if hasattr(self.tokenizer, 'bos_token_id') else None,
@@ -574,6 +600,7 @@ class DreamEvalHarness(LM):
         print(f"Model type: {model_type}")
         print(f"Model path: {model_path}")
         print(f"Steps: {steps}, Max new tokens: {max_new_tokens}")
+        print(f"Diffusion mode: {self.generation_config.diffusion_mode}, Block length: {self.generation_config.block_length}")
         print(f"Temperature: {temperature}, Top-p: {top_p}, Top-k: {top_k}")
         if model_type in ['sparse', 'adaptive']:
             print(f"Sparse params: skip={skip}, select={select}, block_size={block_size}")
@@ -770,7 +797,12 @@ class DreamEvalHarness(LM):
         
         out = []
         with torch.no_grad():
-            for elem in tqdm(ds, desc="Computing likelihood..."):
+            for elem in _iter_with_progress(
+                ds,
+                desc="Computing likelihood...",
+                update_every=self.progress_update_every,
+                label=self.progress_label,
+            ):
                 prefix = elem["prefix"]
                 target = elem["target"]
                 ll = self.get_loglikelihood(prefix, target)
@@ -787,7 +819,12 @@ class DreamEvalHarness(LM):
         """Generate text until stop tokens"""
         out = []
         
-        for req in tqdm(requests, desc="Generating..."):
+        for req in _iter_with_progress(
+            requests,
+            desc="Generating...",
+            update_every=self.progress_update_every,
+            label=self.progress_label,
+        ):
             # Get prompt and generation kwargs
             context = req.args[0]
             gen_kwargs = req.args[1]
@@ -818,6 +855,8 @@ class DreamEvalHarness(LM):
                     output_history=False,
                     return_dict_in_generate=True,
                     steps=self.generation_config.steps,
+                    diffusion_mode=self.generation_config.diffusion_mode,
+                    block_length=self.generation_config.block_length,
                     temperature=self.generation_config.temperature,
                     top_p=self.generation_config.top_p,
                     top_k=self.generation_config.top_k,
@@ -834,6 +873,8 @@ class DreamEvalHarness(LM):
                     output_history=False,
                     return_dict_in_generate=True,
                     steps=self.generation_config.steps,
+                    diffusion_mode=self.generation_config.diffusion_mode,
+                    block_length=self.generation_config.block_length,
                     temperature=self.generation_config.temperature,
                     top_p=self.generation_config.top_p,
                     top_k=self.generation_config.top_k,

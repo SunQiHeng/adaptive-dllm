@@ -27,6 +27,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -47,6 +48,11 @@ from datasets import load_dataset
 
 from models.LLaDA.core.modeling import LLaDAModelLM
 from models.LLaDA.core.configuration import ActivationCheckpointingStrategy
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
+
+def _should_use_tqdm(show_progress: bool) -> bool:
+    return bool(show_progress and (tqdm is not None) and sys.stderr.isatty())
+
 
 # Reuse helper utilities from the layer-wise implementation to keep logic identical.
 from models.LLaDA.attribution.loss_attribution.compute_loss_attribution import (  # noqa: E402
@@ -152,6 +158,7 @@ def compute_all_heads_joint_ig(
     debug_save_per_sample: int = 0,
     gsm8k_answer_mode: str = "final",
     gsm8k_fewshot_prefix: str = "",
+    progress_label: str = "",
 ) -> Dict[int, torch.Tensor]:
     """
     Joint IG over all (layer, head) gates at once.
@@ -207,18 +214,20 @@ def compute_all_heads_joint_ig(
         did_debug_check = False
 
         iterator = enumerate(dataset_rows)
-        if show_progress and tqdm is not None:
+        use_tqdm = _should_use_tqdm(show_progress)
+        start_time = time.time()
+        if use_tqdm:
             iterator = tqdm(
                 iterator,
                 total=len(dataset_rows),
-                desc="all_heads_joint",
+                desc=(f"{progress_label} | all_heads_joint" if progress_label else "all_heads_joint"),
                 dynamic_ncols=True,
                 leave=False,
             )
 
         for row_idx, row in iterator:
             total_rows_seen += 1
-            if dataset_name == "gsm8k":
+            if dataset_name in {"gsm8k", "minerva_math"}:
                 prompt, completion = _build_gsm8k_prompt_and_answer(
                     row["question"],
                     row["answer"],
@@ -227,9 +236,9 @@ def compute_all_heads_joint_ig(
                 )
             elif dataset_name == "nemotron":
                 prompt, completion = _build_nemotron_prompt_and_completion(row)
-            elif dataset_name == "mmlu":
+            elif dataset_name in {"mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot"}:
                 prompt, completion = _build_mmlu_prompt_and_answer(row)
-            elif dataset_name == "humaneval":
+            elif dataset_name in {"humaneval", "mbpp"}:
                 prompt, completion = _build_humaneval_prompt_and_completion(row)
             else:
                 raise ValueError(f"Unsupported dataset_name: {dataset_name}")
@@ -408,9 +417,13 @@ def compute_all_heads_joint_ig(
                 raise ValueError(f"Unsupported ig_postprocess: {ig_postprocess}")
 
             total_items += 1
-            if show_progress and tqdm is None and progress_update_every > 0:
+            if show_progress and (not use_tqdm) and progress_update_every > 0:
                 if (total_items % int(progress_update_every)) == 0:
-                    print(f"[progress] all_heads_joint processed={total_items}/{len(dataset_rows)}")
+                    elapsed = int(time.time() - start_time)
+                    if progress_label:
+                        print(f"[progress][{progress_label}][elapsed={elapsed}s] all_heads_joint processed={total_items}/{len(dataset_rows)}")
+                    else:
+                        print(f"[progress][elapsed={elapsed}s] all_heads_joint processed={total_items}/{len(dataset_rows)}")
 
         if total_items == 0:
             raise RuntimeError("No valid samples were processed; cannot compute attribution.")
@@ -456,9 +469,15 @@ def _row_fingerprint(dataset: str, row: Dict[str, Any]) -> str:
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--model_path", type=str, default="GSAI-ML/LLaDA-8B-Base")
-    p.add_argument("--dataset", type=str, default="gsm8k", choices=["gsm8k", "nemotron", "mmlu", "humaneval"])
+    p.add_argument(
+        "--dataset",
+        type=str,
+        default="gsm8k",
+        choices=["gsm8k", "minerva_math", "nemotron", "mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot", "humaneval", "mbpp"],
+    )
     p.add_argument("--dataset_config", type=str, default="main", help="gsm8k config or mmlu subject (e.g., 'all').")
     p.add_argument("--split", type=str, default="test")
+    p.add_argument("--data_path", type=str, default=None, help="Optional local .json/.jsonl file or directory for attribution rows.")
     p.add_argument("--max_samples", type=int, default=200)
     p.add_argument("--dataset_shuffle", action="store_true", default=False)
     p.add_argument("--samples_per_category", type=int, default=50)
@@ -523,6 +542,7 @@ def main() -> None:
     p.add_argument("--layer_start", type=int, default=0)
     p.add_argument("--layer_end", type=int, default=-1, help="Inclusive. -1 means last layer.")
     p.add_argument("--output_dir", type=str, required=True)
+    p.add_argument("--progress_label", type=str, default="")
     p.add_argument("--device", type=str, default="cuda")
     p.add_argument("--use_amp_bf16", action="store_true", default=True)
     p.add_argument("--debug_gate", action="store_true", default=False)
@@ -547,7 +567,9 @@ def main() -> None:
     print("LLaDA Loss-based Head Attribution (All-heads Joint IG)")
     print("=" * 80)
     print(f"Model: {args.model_path}")
-    print(f"Dataset: {args.dataset}/{args.dataset_config} split={args.split} max_samples={args.max_samples}")
+    dataset_name = normalize_dataset_name(str(args.dataset))
+    print(f"Dataset: {dataset_name}/{args.dataset_config} split={args.split} max_samples={args.max_samples}")
+    print(f"Local data_path: {args.data_path}")
     print(f"Seeds: base={base_seed} data_seed={data_seed} mask_seed={mask_seed}")
     print(f"IG steps: {args.ig_steps}")
     print(f"Baseline: {args.baseline} (scalar={args.baseline_scalar})")
@@ -556,7 +578,7 @@ def main() -> None:
     print(f"Path: mode={args.path_mode} samples={args.path_samples} seed={args.path_seed}")
     print(f"Tokenization: min_completion_tokens={int(args.min_completion_tokens)} max_length={int(args.max_length)}")
     print(f"Activation checkpointing: {args.activation_checkpointing}")
-    print(f"Progress: {'disabled' if bool(args.no_progress) else ('tqdm' if tqdm is not None else 'print')}")
+    print(f"Progress: {'disabled' if bool(args.no_progress) else ('tqdm' if _should_use_tqdm(True) else f'print_every_{int(args.progress_update_every)}')}")
     print(f"Output dir: {args.output_dir}")
     print("=" * 80)
 
@@ -581,7 +603,16 @@ def main() -> None:
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
 
     gsm8k_fewshot_prefix = ""
-    if args.dataset == "gsm8k":
+    if args.data_path:
+        rows = load_local_rows(
+            args.data_path,
+            max_samples=int(args.max_samples),
+            data_seed=int(data_seed),
+            split=str(args.split),
+            dataset_name=dataset_name,
+        )
+        per_cat_counts: Dict[str, int] = {}
+    elif dataset_name == "gsm8k":
         ds = load_dataset("gsm8k", args.dataset_config, split=args.split)
         if bool(args.dataset_shuffle):
             ds = ds.shuffle(seed=int(data_seed))
@@ -596,7 +627,8 @@ def main() -> None:
                 r = ds_train[int(i)]
                 parts.append(f"Question: {r['question']}\nAnswer: {r['answer']}\n\n")
             gsm8k_fewshot_prefix = "".join(parts)
-    elif args.dataset == "nemotron":
+        per_cat_counts = {}
+    elif dataset_name == "nemotron":
         cats = [c.strip() for c in args.nemotron_categories.split(",") if c.strip()]
         rows = []
         per_cat_counts: Dict[str, int] = {}
@@ -635,27 +667,21 @@ def main() -> None:
         # Global cap after (optional) shuffle, consistent with gsm8k behavior.
         if len(rows) > int(args.max_samples):
             rows = rows[: int(args.max_samples)]
-    elif args.dataset == "mmlu":
-        subject = args.dataset_config if args.dataset_config != "main" else "all"
-        print(f"Loading MMLU subject={subject}...")
-        ds = load_dataset("cais/mmlu", subject, split=args.split)
-        if bool(args.dataset_shuffle):
-            ds = ds.shuffle(seed=int(data_seed))
-        rows = [ds[i] for i in range(min(args.max_samples, len(ds)))]
-    elif args.dataset == "humaneval":
-        print("Loading HumanEval...")
-        ds = load_dataset("openai_humaneval", split="test")
-        if bool(args.dataset_shuffle):
-            ds = ds.shuffle(seed=int(data_seed))
-        rows = [ds[i] for i in range(min(args.max_samples, len(ds)))]
     else:
-        raise ValueError(f"Unsupported dataset: {args.dataset}")
+        rows = load_hf_rows(
+            dataset_name,
+            dataset_config=str(args.dataset_config),
+            split=str(args.split),
+            max_samples=int(args.max_samples),
+            data_seed=int(data_seed),
+        )
+        per_cat_counts = {}
 
     # Data diagnostics (crucial for debugging "1 sample vs many samples" behavior)
     print("-" * 80)
     print("[data] sampling summary")
-    print(f"[data] dataset={args.dataset} max_samples={int(args.max_samples)} dataset_shuffle={bool(args.dataset_shuffle)}")
-    if args.dataset == "nemotron":
+    print(f"[data] dataset={dataset_name} max_samples={int(args.max_samples)} dataset_shuffle={bool(args.dataset_shuffle)}")
+    if dataset_name == "nemotron":
         print(f"[data] nemotron_categories={args.nemotron_categories}")
         print(f"[data] samples_per_category={int(args.samples_per_category)} nemotron_pool_per_category={int(args.nemotron_pool_per_category)} pool_per_category_used={int(pool_per_category)}")
         print(f"[data] per_category_counts={per_cat_counts}")
@@ -667,7 +693,7 @@ def main() -> None:
         for i in range(n):
             r = rows[i]
             if isinstance(r, dict):
-                fp = _row_fingerprint(str(args.dataset), r)
+                fp = _row_fingerprint(str(dataset_name), r)
                 cat = r.get("__nemotron_cat__", None)
                 in_len = len(str(r.get("input", "")))
                 out_len = len(str(r.get("output", "")))
@@ -721,7 +747,7 @@ def main() -> None:
         max_length=int(args.max_length),
         num_heads_from_config=int(n_heads_cfg),
         use_amp_bf16=bool(args.use_amp_bf16 and device.type == "cuda"),
-        dataset_name=str(args.dataset),
+        dataset_name=dataset_name,
         mask_probs=mask_probs,
         mask_samples_per_prob=int(args.mask_samples_per_prob),
         loss_normalize=str(args.loss_normalize),
@@ -738,6 +764,7 @@ def main() -> None:
         debug_save_per_sample=int(args.debug_save_per_sample),
         gsm8k_answer_mode=str(args.gsm8k_answer_mode),
         gsm8k_fewshot_prefix=str(gsm8k_fewshot_prefix),
+        progress_label=str(args.progress_label),
     )
 
     importance_scores: Dict[int, torch.Tensor] = {
@@ -756,10 +783,11 @@ def main() -> None:
             "method": "all_heads_joint_ig_diffusion_masked_ce_answer_only_multit",
             "model_path": args.model_path,
             "dataset": (
-                f"gsm8k/{args.dataset_config}"
-                if args.dataset == "gsm8k"
-                else (f"mmlu/{args.dataset_config}" if args.dataset == "mmlu" else f"{args.dataset}")
+                f"{dataset_name}/{args.dataset_config}"
+                if dataset_name in {"gsm8k", "mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot", "mbpp"}
+                else dataset_name
             ),
+            "data_path": str(args.data_path) if args.data_path else None,
             "split": args.split,
             "max_samples": int(args.max_samples),
             "rows_loaded": int(len(rows)),
@@ -767,11 +795,11 @@ def main() -> None:
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),
             "dataset_shuffle": bool(args.dataset_shuffle),
-            "samples_per_category": int(args.samples_per_category) if args.dataset == "nemotron" else None,
-            "nemotron_pool_per_category": int(args.nemotron_pool_per_category) if args.dataset == "nemotron" else None,
-            "nemotron_per_category_counts": per_cat_counts if args.dataset == "nemotron" else None,
-            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if args.dataset == "gsm8k" else None,
-            "gsm8k_num_fewshot": int(args.num_fewshot) if args.dataset == "gsm8k" else 0,
+            "samples_per_category": int(args.samples_per_category) if dataset_name == "nemotron" else None,
+            "nemotron_pool_per_category": int(args.nemotron_pool_per_category) if dataset_name == "nemotron" else None,
+            "nemotron_per_category_counts": per_cat_counts if dataset_name == "nemotron" else None,
+            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if dataset_name in {"gsm8k", "minerva_math"} else None,
+            "gsm8k_num_fewshot": int(args.num_fewshot) if dataset_name in {"gsm8k", "minerva_math"} else 0,
             "ig_steps": int(args.ig_steps),
             "path_mode": str(args.path_mode),
             "path_samples": int(args.path_samples),

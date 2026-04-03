@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import time
 from datetime import datetime
 from functools import partial
 from typing import Any, Dict, List, Optional, Tuple
@@ -46,6 +47,7 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 
 from models.Dream.core.modeling_dream import DreamModel
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
 
 # -----------------------------------------------------------------------------
 # IMPORTANT:
@@ -173,6 +175,7 @@ def compute_all_heads_joint_ig(
     path_samples: int = 1,
     path_seed: int = -1,
     debug_gate: bool = False,
+    progress_label: str = "",
 ) -> Tuple[Dict[int, torch.Tensor], Dict[str, Any]]:
     """
     Joint IG over all (layer, head) gates at once (Dream).
@@ -231,18 +234,19 @@ def compute_all_heads_joint_ig(
         iterator = enumerate(dataset_rows)
         # Keep Dream's behavior: avoid tqdm in nohup/non-tty logs
         use_tqdm = bool(show_progress and (tqdm is not None) and sys.stderr.isatty())
+        start_time = time.time()
         if use_tqdm:
             iterator = tqdm(  # type: ignore[assignment]
                 iterator,
                 total=len(dataset_rows),
-                desc="all_heads_joint",
+                desc=(f"{progress_label} | all_heads_joint" if progress_label else "all_heads_joint"),
                 dynamic_ncols=True,
                 leave=False,
             )
 
         for row_idx, row in iterator:
             total_rows_seen += 1
-            if dataset_name == "gsm8k":
+            if dataset_name in {"gsm8k", "minerva_math"}:
                 prompt, completion = _build_gsm8k_prompt_and_completion(
                     row["question"],
                     row["answer"],
@@ -254,11 +258,11 @@ def compute_all_heads_joint_ig(
                 prompt, completion = _build_nemotron_prompt_and_completion(
                     row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
                 )
-            elif dataset_name == "mmlu":
+            elif dataset_name in {"mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot"}:
                 prompt, completion = _build_mmlu_prompt_and_answer(
                     row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
                 )
-            elif dataset_name == "humaneval":
+            elif dataset_name in {"humaneval", "mbpp"}:
                 prompt, completion = _build_humaneval_prompt_and_completion(
                     row, tokenizer=tokenizer, use_chat_template=dataset_use_chat_template
                 )
@@ -430,7 +434,11 @@ def compute_all_heads_joint_ig(
             total_items += 1
             if show_progress and (not use_tqdm) and progress_update_every > 0:
                 if (total_items % int(progress_update_every)) == 0:
-                    print(f"[progress] all_heads_joint processed={total_items}/{len(dataset_rows)}")
+                    elapsed = int(time.time() - start_time)
+                    if progress_label:
+                        print(f"[progress][{progress_label}][elapsed={elapsed}s] all_heads_joint processed={total_items}/{len(dataset_rows)}")
+                    else:
+                        print(f"[progress][elapsed={elapsed}s] all_heads_joint processed={total_items}/{len(dataset_rows)}")
 
         if total_items == 0:
             raise RuntimeError("No valid samples were processed; cannot compute attribution.")
@@ -457,9 +465,15 @@ def compute_all_heads_joint_ig(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, required=True)
-    parser.add_argument("--dataset", type=str, default="nemotron", choices=["gsm8k", "nemotron", "mmlu", "humaneval"])
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default="nemotron",
+        choices=["gsm8k", "minerva_math", "nemotron", "mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot", "humaneval", "mbpp"],
+    )
     parser.add_argument("--dataset_config", type=str, default="main", help="gsm8k config or mmlu subject (e.g., 'all').")
     parser.add_argument("--split", type=str, default="test")
+    parser.add_argument("--data_path", type=str, default=None, help="Optional local .json/.jsonl file or directory for attribution rows.")
     parser.add_argument("--max_samples", type=int, default=200)
     parser.add_argument("--samples_per_category", type=int, default=50)
     parser.add_argument("--nemotron_pool_per_category", type=int, default=1000)
@@ -510,7 +524,7 @@ def main() -> None:
     )
 
     parser.add_argument("--show_progress", action="store_true")
-    parser.add_argument("--progress_update_every", type=int, default=20)
+    parser.add_argument("--progress_update_every", type=int, default=10)
     parser.add_argument("--debug_gate", action="store_true")
 
     # Keep arg for compatibility with runner; joint version still benefits from model checkpointing
@@ -525,6 +539,7 @@ def main() -> None:
     parser.add_argument("--layer_start", type=int, default=0)
     parser.add_argument("--layer_end", type=int, default=-1)
     parser.add_argument("--output_dir", type=str, required=True)
+    parser.add_argument("--progress_label", type=str, default="")
     parser.add_argument("--use_amp_bf16", action="store_true")
 
     args = parser.parse_args()
@@ -543,7 +558,9 @@ def main() -> None:
     print(f"Started at: {datetime.now().isoformat()}")
     print(f"device={device}")
     print(f"model_path={args.model_path}")
-    print(f"dataset={args.dataset} split={args.split} max_samples={args.max_samples}")
+    dataset_name = normalize_dataset_name(str(args.dataset))
+    print(f"dataset={dataset_name} split={args.split} max_samples={args.max_samples}")
+    print(f"data_path={args.data_path}")
     print(f"seed={seed} data_seed={data_seed} mask_seed={mask_seed}")
     print(f"ig_steps={args.ig_steps} max_length={args.max_length}")
     print(f"min_completion_tokens={int(args.min_completion_tokens)}")
@@ -614,10 +631,15 @@ def main() -> None:
     # Load dataset.
     # For map-style datasets we shuffle with data_seed before taking max_samples,
     # so changing SEED/DATA_SEED changes the actual attribution rows.
-    if str(args.dataset) == "gsm8k":
-        ds = load_dataset("gsm8k", args.dataset_config, split=args.split)
-        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
-    elif str(args.dataset) == "nemotron":
+    if args.data_path:
+        rows = load_local_rows(
+            args.data_path,
+            max_samples=int(args.max_samples),
+            data_seed=int(data_seed),
+            split=str(args.split),
+            dataset_name=dataset_name,
+        )
+    elif dataset_name == "nemotron":
         cats = [c.strip() for c in str(args.nemotron_categories).split(",") if c.strip()]
         rows: List[Dict[str, Any]] = []
         pool_per_category = max(int(args.samples_per_category), int(args.nemotron_pool_per_category))
@@ -638,17 +660,14 @@ def main() -> None:
             rows.extend(buf[:take_n])
         if len(rows) > int(args.max_samples):
             rows = rows[: int(args.max_samples)]
-    elif str(args.dataset) == "mmlu":
-        subject = args.dataset_config if str(args.dataset_config) != "main" else "all"
-        print(f"Loading MMLU subject={subject}...")
-        ds = load_dataset("cais/mmlu", subject, split=args.split)
-        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
-    elif str(args.dataset) == "humaneval":
-        print("Loading HumanEval...")
-        ds = load_dataset("openai_humaneval", split="test")
-        rows = _take_seeded_rows(ds, max_samples=int(args.max_samples), data_seed=int(data_seed))
     else:
-        raise ValueError(f"Unsupported dataset: {args.dataset}")
+        rows = load_hf_rows(
+            dataset_name,
+            dataset_config=str(args.dataset_config),
+            split=str(args.split),
+            max_samples=int(args.max_samples),
+            data_seed=int(data_seed),
+        )
 
     layers_all = _find_layers(model)
     n_layers = len(layers_all)
@@ -695,7 +714,7 @@ def main() -> None:
         min_completion_tokens=int(args.min_completion_tokens),
         num_heads_from_config=int(n_heads_cfg),
         use_amp_bf16=bool(args.use_amp_bf16 and device.type == "cuda"),
-        dataset_name=str(args.dataset),
+        dataset_name=dataset_name,
         dataset_use_chat_template=bool(args.use_chat_template),
         gsm8k_answer_mode=str(args.gsm8k_answer_mode),
         mask_probs=mask_probs,
@@ -710,6 +729,7 @@ def main() -> None:
         path_samples=int(args.path_samples),
         path_seed=int(args.path_seed),
         debug_gate=bool(args.debug_gate),
+        progress_label=str(args.progress_label),
     )
 
     importance_scores: Dict[int, torch.Tensor] = {
@@ -727,17 +747,18 @@ def main() -> None:
             "method": "dream_all_heads_joint_ig_diffusion_masked_ce_answer_only_multit",
             "model_path": args.model_path,
             "dataset": (
-                f"gsm8k/{args.dataset_config}"
-                if str(args.dataset) == "gsm8k"
-                else (f"mmlu/{args.dataset_config}" if str(args.dataset) == "mmlu" else str(args.dataset))
+                f"{dataset_name}/{args.dataset_config}"
+                if dataset_name in {"gsm8k", "mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot", "mbpp"}
+                else dataset_name
             ),
+            "data_path": str(args.data_path) if args.data_path else None,
             "split": str(args.split),
             "max_samples": int(args.max_samples),
             "seed": int(seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),
             "use_chat_template": bool(args.use_chat_template),
-            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if str(args.dataset) == "gsm8k" else None,
+            "gsm8k_answer_mode": str(args.gsm8k_answer_mode) if dataset_name in {"gsm8k", "minerva_math"} else None,
             "ig_steps": int(args.ig_steps),
             "min_completion_tokens": int(args.min_completion_tokens),
             "path_mode": str(args.path_mode),

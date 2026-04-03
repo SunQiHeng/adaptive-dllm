@@ -108,6 +108,8 @@ class DreamGenerationConfig(GenerationConfig):
         self.steps: int = kwargs.pop("steps", 512)
         self.alg: str = kwargs.pop("alg", 'origin')
         self.alg_temp: Optional[float] = kwargs.pop("alg_temp", None)
+        self.diffusion_mode: str = kwargs.pop("diffusion_mode", "global")
+        self.block_length: Optional[int] = kwargs.pop("block_length", None)
 
         # Parameters that define the output variables of `generate`
         self.num_return_sequences: int = kwargs.pop("num_return_sequences", 1)
@@ -293,6 +295,33 @@ class DreamGenerationMixin:
         generation_config._pad_token_tensor = pad_token_tensor
         generation_config._mask_token_tensor = mask_token_tensor
 
+    def _broadcast_head_mask_metadata(self, step: int, whole_steps: int):
+        """Expose diffusion step metadata to optional head-mask patches."""
+        head_mask_modules = getattr(self, "_head_mask_attn_modules", None)
+        if head_mask_modules is None:
+            return
+        try:
+            for m in head_mask_modules:
+                m._head_mask_now_step = step
+                m._head_mask_whole_steps = whole_steps
+        except Exception:
+            # Don't break generation if metadata broadcast fails.
+            pass
+
+    def _compute_diffusion_logits(
+        self,
+        x: torch.LongTensor,
+        attention_mask: Optional[torch.LongTensor],
+        tok_idx: Optional[torch.LongTensor],
+        SparseD_param: Optional[dict] = None,
+    ) -> torch.Tensor:
+        """Run one model forward and right-shift logits to same-position semantics."""
+        if SparseD_param is not None:
+            logits = self(x, attention_mask, tok_idx, SparseD_param=SparseD_param).logits
+        else:
+            logits = self(x, attention_mask, tok_idx).logits
+        return torch.cat([logits[:, :1], logits[:, :-1]], dim=1)
+
     @torch.no_grad()
     def diffusion_generate(
         self,
@@ -373,6 +402,19 @@ class DreamGenerationMixin:
         generation_logits_hook_func,
         SparseD_param: Optional[dict] = None
     ) -> Union[DreamModelOutput, torch.LongTensor]:
+        diffusion_mode = str(getattr(generation_config, "diffusion_mode", "global")).strip().lower()
+        if diffusion_mode not in {"global", "semi"}:
+            raise ValueError(f"Unsupported diffusion_mode={diffusion_mode!r}. Expected 'global' or 'semi'.")
+        if diffusion_mode == "semi":
+            return self._sample_semi(
+                input_ids,
+                attention_mask=attention_mask,
+                generation_config=generation_config,
+                generation_tokens_hook_func=generation_tokens_hook_func,
+                generation_logits_hook_func=generation_logits_hook_func,
+                SparseD_param=SparseD_param,
+            )
+
         # init values
         output_history = generation_config.output_history
         return_dict_in_generate = generation_config.return_dict_in_generate
@@ -411,17 +453,7 @@ class DreamGenerationMixin:
         # this allows user-defined token control of the intermediate steps
         x = generation_tokens_hook_func(None, x, None)
         for i in range(steps):
-            # Broadcast diffusion step metadata for head-mask warmup (if head masking is enabled).
-            # The attention patch reads `_head_mask_now_step/_head_mask_whole_steps` on each attention module.
-            head_mask_modules = getattr(self, "_head_mask_attn_modules", None)
-            if head_mask_modules is not None:
-                try:
-                    for m in head_mask_modules:
-                        m._head_mask_now_step = i
-                        m._head_mask_whole_steps = steps
-                except Exception:
-                    # Don't break generation if metadata broadcast fails.
-                    pass
+            self._broadcast_head_mask_metadata(i, steps)
 
             # Update now_step for sparse attention
             if SparseD_param is not None:
@@ -433,12 +465,7 @@ class DreamGenerationMixin:
                 # This shouldn't happen, but handle it gracefully
                 raise RuntimeError(f"mask_index is not a tensor: type={type(mask_index)}, x.shape={x.shape if isinstance(x, torch.Tensor) else type(x)}, mask_token_id={mask_token_id}")
             
-            # Call model with SparseD_param if provided
-            if SparseD_param is not None:
-                logits = self(x, attention_mask, tok_idx, SparseD_param=SparseD_param).logits
-            else:
-                logits = self(x, attention_mask, tok_idx).logits
-            logits = torch.cat([logits[:,:1], logits[:, :-1]], dim=1)
+            logits = self._compute_diffusion_logits(x, attention_mask, tok_idx, SparseD_param=SparseD_param)
 
             # this allows user-defined logits control of the intermediate steps
             logits = generation_logits_hook_func(i, x, logits)
@@ -491,3 +518,164 @@ class DreamGenerationMixin:
             )
         else:
             return x
+
+    def _sample_semi(
+        self,
+        input_ids: torch.LongTensor,
+        attention_mask: Optional[torch.LongTensor],
+        generation_config: DreamGenerationConfig,
+        generation_tokens_hook_func,
+        generation_logits_hook_func,
+        SparseD_param: Optional[dict] = None,
+    ) -> Union[DreamModelOutput, torch.LongTensor]:
+        """Block-wise semi-diffusion generation for Dream."""
+        output_history = generation_config.output_history
+        return_dict_in_generate = generation_config.return_dict_in_generate
+        max_length = generation_config.max_length
+        mask_token_id = generation_config.mask_token_id
+        steps = generation_config.steps
+        eps = generation_config.eps
+        alg = generation_config.alg
+        alg_temp = generation_config.alg_temp
+        temperature = generation_config.temperature
+        top_p = generation_config.top_p
+        top_k = generation_config.top_k
+
+        histories = [] if (return_dict_in_generate and output_history) else None
+
+        prompt_length = input_ids.shape[1]
+        x = F.pad(input_ids, (0, max_length - prompt_length), value=mask_token_id)
+
+        if attention_mask is not None and torch.any(attention_mask == 0.0):
+            attention_mask = F.pad(attention_mask, (0, max_length - attention_mask.shape[1]), value=1.0)
+            tok_idx = attention_mask.long().cumsum(-1) - 1
+            tok_idx.masked_fill_(attention_mask == 0, 1)
+            attention_mask = torch.logical_and(
+                attention_mask.unsqueeze(1).unsqueeze(-2),
+                attention_mask.unsqueeze(1).unsqueeze(-1),
+            )
+        else:
+            tok_idx = None
+            attention_mask = "full"
+
+        gen_length = max_length - prompt_length
+        block_length = generation_config.block_length if generation_config.block_length is not None else gen_length
+        block_length = int(block_length)
+        if block_length <= 0:
+            raise ValueError(f"block_length must be positive for semi diffusion, got {block_length}")
+        if gen_length % block_length != 0:
+            raise ValueError(
+                f"gen_length ({gen_length}) must be divisible by block_length ({block_length}) when diffusion_mode='semi'"
+            )
+
+        num_blocks = gen_length // block_length
+        if steps % num_blocks != 0:
+            raise ValueError(
+                f"steps ({steps}) must be divisible by num_blocks ({num_blocks}) when diffusion_mode='semi'"
+            )
+        steps_per_block = steps // num_blocks
+        local_timesteps = torch.linspace(1, eps, steps_per_block + 1, device=x.device)
+
+        x = generation_tokens_hook_func(None, x, None)
+        for num_block in range(num_blocks):
+            block_end = prompt_length + (num_block + 1) * block_length
+            for i in range(steps_per_block):
+                global_step = num_block * steps_per_block + i
+                self._broadcast_head_mask_metadata(global_step, steps)
+
+                if SparseD_param is not None:
+                    SparseD_param['now_step'] = global_step
+
+                mask_index = (x == mask_token_id)
+                if not isinstance(mask_index, torch.Tensor):
+                    raise RuntimeError(
+                        f"mask_index is not a tensor: type={type(mask_index)}, "
+                        f"x.shape={x.shape if isinstance(x, torch.Tensor) else type(x)}, mask_token_id={mask_token_id}"
+                    )
+
+                eligible_mask = mask_index.clone()
+                eligible_mask[:, block_end:] = False
+
+                logits = self._compute_diffusion_logits(x, attention_mask, tok_idx, SparseD_param=SparseD_param)
+                logits = generation_logits_hook_func(global_step, x, logits)
+
+                t = local_timesteps[i]
+                s = local_timesteps[i + 1]
+
+                if alg == 'origin':
+                    candidate_tokens = torch.zeros_like(x, device=self.device, dtype=torch.long) + mask_token_id
+                    if torch.any(eligible_mask):
+                        _, sampled_tokens = sample_tokens(
+                            logits[eligible_mask],
+                            temperature=temperature,
+                            top_p=top_p,
+                            top_k=top_k,
+                        )
+                        candidate_tokens[eligible_mask] = sampled_tokens
+
+                    if i < steps_per_block - 1:
+                        p_transfer = 1 - s / t
+                        transfer_mask = torch.zeros_like(mask_index, dtype=torch.bool)
+                        random_keep = torch.rand(int(eligible_mask.sum().item()), device=self.device) < p_transfer
+                        transfer_mask[eligible_mask] = random_keep
+                    else:
+                        transfer_mask = eligible_mask
+
+                    x[transfer_mask] = candidate_tokens[transfer_mask]
+                else:
+                    mask_logits = logits[mask_index]
+                    if alg == 'maskgit_plus':
+                        confidence, x0 = sample_tokens(mask_logits, temperature=temperature, top_p=top_p, top_k=top_k)
+                    elif alg == 'topk_margin':
+                        confidence, x0 = sample_tokens(
+                            mask_logits,
+                            temperature=temperature,
+                            top_p=top_p,
+                            top_k=top_k,
+                            margin_confidence=True,
+                        )
+                    elif alg == 'entropy':
+                        confidence, x0 = sample_tokens(
+                            mask_logits,
+                            temperature,
+                            top_p=top_p,
+                            top_k=top_k,
+                            neg_entropy=True,
+                        )
+                    else:
+                        raise RuntimeError(f"Unknown alg: {alg}")
+
+                    num_mask_token = eligible_mask.sum() / eligible_mask.shape[0]
+                    number_transfer_tokens = (
+                        int(num_mask_token * (1 - s / t)) if i < steps_per_block - 1 else int(num_mask_token)
+                    )
+                    full_confidence = torch.full_like(x, -torch.inf, device=self.device, dtype=logits.dtype)
+                    full_confidence[mask_index] = confidence
+                    full_confidence = torch.where(
+                        eligible_mask,
+                        full_confidence,
+                        torch.full_like(full_confidence, -torch.inf),
+                    )
+                    if number_transfer_tokens > 0:
+                        if alg_temp is None or alg_temp == 0:
+                            _, transfer_index = torch.topk(full_confidence, number_transfer_tokens)
+                        else:
+                            full_confidence = full_confidence / alg_temp
+                            full_confidence = F.softmax(full_confidence, dim=-1)
+                            transfer_index = torch.multinomial(full_confidence, num_samples=number_transfer_tokens)
+                        x_ = torch.zeros_like(x, device=self.device, dtype=torch.long) + mask_token_id
+                        x_[mask_index] = x0.clone()
+                        row_indices = torch.arange(x.size(0), device=self.device).unsqueeze(1).expand_as(transfer_index)
+                        x[row_indices, transfer_index] = x_[row_indices, transfer_index]
+
+                x = generation_tokens_hook_func(global_step, x, logits)
+
+                if histories is not None:
+                    histories.append(x.clone())
+
+        if return_dict_in_generate:
+            return DreamModelOutput(
+                sequences=x,
+                history=histories,
+            )
+        return x

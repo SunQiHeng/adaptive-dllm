@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-2}"
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
@@ -42,7 +42,7 @@ mkdir -p "$RESULTS_ROOT"
 
 IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_ts20260116_025153/head_importance.pt"}
 TASKS=("mmlu")
-LIMIT=10
+LIMIT=${LIMIT:-10}
 # Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
 USE_NEGATED=${USE_NEGATED:-0}
 
@@ -77,6 +77,7 @@ GEN_LENGTH=256
 STEPS=256
 BLOCK_LENGTH=32
 BLOCK_SIZE=32
+DIFFUSION_MODE=${DIFFUSION_MODE:-"semi"}
 
 
 # RULER parameters
@@ -90,10 +91,16 @@ RULER_DATA_PATH=${RULER_DATA_PATH:-""}
 RULER_HF_DATASET=${RULER_HF_DATASET:-""}
 RULER_HF_CONFIG=${RULER_HF_CONFIG:-""}
 RULER_SPLIT=${RULER_SPLIT:-"validation"}
+GPQA_DATA_PATH=${GPQA_DATA_PATH:-""}
+LOCAL_TASK_ROOT="${PROJECT_ROOT}/evaluation/local_tasks/generated"
+DEFAULT_GPQA_DATA_PATH="${PROJECT_ROOT}/evaluation/local_data/gpqa/gpqa_main.jsonl"
 
 # Default to local exported JSONL if present
 if [ -z "$RULER_DATA_PATH" ] && [ -d "/data/qh_models/ruler/jsonl/${RULER_SPLIT}" ]; then
     RULER_DATA_PATH="/data/qh_models/ruler/jsonl/${RULER_SPLIT}"
+fi
+if [ -z "${GPQA_DATA_PATH}" ] && [ -f "${DEFAULT_GPQA_DATA_PATH}" ]; then
+    GPQA_DATA_PATH="${DEFAULT_GPQA_DATA_PATH}"
 fi
 
 # Tasks to run (can be overridden without editing file):
@@ -102,12 +109,89 @@ if [ -n "${TASKS_STR:-}" ]; then
     IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
 fi
 
+check_minerva_math_deps() {
+    python - <<'PY'
+import importlib
+missing = []
+for mod in ("antlr4", "sympy", "math_verify"):
+    try:
+        importlib.import_module(mod)
+    except Exception:
+        missing.append(mod)
+if missing:
+    print("ERROR: minerva_math requires additional math evaluation dependencies.")
+    print("Missing modules:", ", ".join(missing))
+    print("Install with: pip install antlr4-python3-runtime==4.11 sympy math_verify")
+    raise SystemExit(2)
+PY
+}
+
+check_gpqa_access() {
+    python - <<'PY'
+from datasets import load_dataset_builder
+try:
+    load_dataset_builder("Idavidrein/gpqa", "gpqa_main")
+except Exception as e:
+    msg = str(e)
+    if "gated" in msg.lower() or "access" in msg.lower():
+        print("ERROR: gpqa_main_n_shot requires access to the gated HF dataset 'Idavidrein/gpqa'.")
+        print("Request access on Hugging Face or switch to a locally exported dataset/task implementation.")
+        raise SystemExit(2)
+    raise
+PY
+}
+
+prepare_gpqa_local_task() {
+    if [ -z "${GPQA_DATA_PATH}" ]; then
+        return 1
+    fi
+    local gpqa_task_dir="${LOCAL_TASK_ROOT}/gpqa_local"
+    mkdir -p "${LOCAL_TASK_ROOT}"
+    python "${PROJECT_ROOT}/evaluation/local_tasks/prepare_gpqa_local_task.py" \
+        --data_path "${GPQA_DATA_PATH}" \
+        --output_dir "${gpqa_task_dir}"
+}
+
+get_gpqa_local_row_count() {
+    python - <<'PY'
+import json
+from pathlib import Path
+import os
+
+data_path = Path(os.environ["GPQA_DATA_PATH"])
+count = 0
+files = [data_path] if data_path.is_file() else sorted(
+    p for p in data_path.rglob("*") if p.is_file() and p.suffix.lower() in {".json", ".jsonl"}
+)
+for path in files:
+    if path.suffix.lower() == ".jsonl":
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    count += 1
+    else:
+        with path.open("r", encoding="utf-8") as f:
+            obj = json.load(f)
+        if isinstance(obj, list):
+            count += len(obj)
+        elif isinstance(obj, dict):
+            for key in ("train", "validation", "test", "rows", "data", "examples"):
+                if isinstance(obj.get(key), list):
+                    count += len(obj[key])
+                    break
+            else:
+                count += 1
+print(count)
+PY
+}
+
 echo "========================================================"
 echo "Quick Test Configuration"
 echo "========================================================"
 echo "Tasks: ${TASKS[*]}"
-echo "Model Types: standard, sparse, adaptive"
-echo "Gen Length: ${GEN_LENGTH}, Steps: ${STEPS}, Block Length: ${BLOCK_LENGTH}, Block Size: ${BLOCK_SIZE}"
+echo "Model Types: ${MODEL_TYPES[*]}"
+echo "Default Gen Length/Steps: ${GEN_LENGTH}/${STEPS} (task overrides apply for minerva_math and mbpp)"
+echo "Block Length: ${BLOCK_LENGTH}, Block Size: ${BLOCK_SIZE}, Diffusion Mode: ${DIFFUSION_MODE}"
 echo "Limit: ${LIMIT}"
 echo "RULER len_k (if enabled): ${RULER_LEN_K}k"
 echo "Importance tag: ${IMPORTANCE_TAG}"
@@ -138,6 +222,7 @@ fi
 run_single_eval() {
     local task=$1
     local model_type=$2
+    local task_name="${task}"
     
     echo ""
     echo "========================================"
@@ -151,11 +236,37 @@ run_single_eval() {
 
     OUTPUT_DIR="${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}"
     mkdir -p "$OUTPUT_DIR"
+    local progress_label="${task}|${model_type}|${task_tag}_${IMPORTANCE_TAG}"
     
+    # Task-specific generation lengths (override global GEN_LENGTH/STEPS for tasks that need more tokens)
+    local local_gen_length=${GEN_LENGTH}
+    local local_steps=${STEPS}
+    case "$task" in
+        mbpp)
+            local_gen_length=${MBPP_GEN_LENGTH:-1024}
+            local_steps=${MBPP_STEPS:-${local_gen_length}}
+            ;;
+        minerva_math)
+            local_gen_length=${MINERVA_MATH_GEN_LENGTH:-1024}
+            local_steps=${MINERVA_MATH_STEPS:-${local_gen_length}}
+            ;;
+    esac
+
+    case "$task" in
+        minerva_math)
+            check_minerva_math_deps || return $?
+            ;;
+        gpqa_main_n_shot)
+            if [ -z "${GPQA_DATA_PATH}" ]; then
+                check_gpqa_access || return $?
+            fi
+            ;;
+    esac
+
     # Record start time
     START_TIME=$(date +%s)
     
-    echo "Params: gen_length=${GEN_LENGTH}, steps=${STEPS}, block_length=${BLOCK_LENGTH}, block_size=${BLOCK_SIZE}, limit=${LIMIT}"
+    echo "Params: gen_length=${local_gen_length}, steps=${local_steps}, block_length=${BLOCK_LENGTH}, block_size=${BLOCK_SIZE}, diffusion_mode=${DIFFUSION_MODE}, limit=${LIMIT}"
     
     # Set importance source for adaptive mode
     if [ "$model_type" = "adaptive" ]; then
@@ -165,36 +276,37 @@ run_single_eval() {
     fi
 
     # Task-specific settings
-    #
-    # Notes:
-    # - Previously this script did not pass --num_fewshot, so tasks used lm-eval defaults (often 0-shot).
-    # - For multiple-choice likelihood tasks like MMLU, LLaDAEvalHarness uses internal MC sampling (mc_num/batch_size).
-    #   Setting mc_num=1 and using lm-eval's --batch_size 1 makes MMLU runs much faster and matches eval_llada.sh usage.
     NUM_FEWSHOT=""
     MODEL_ARGS_EXTRA=""
     EVAL_BATCH_SIZE=""
     ENV_PREFIX=()
+    INCLUDE_PATH_ARGS=()
     case "$task" in
-        mmlu|cmmlu|ceval-valid)
+        mmlu|cmmlu|ceval-valid|gpqa_main_n_shot)
             NUM_FEWSHOT=${MMLU_FEWSHOT:-5}
-            # IMPORTANT: don't pass batch_size via --model_args; lm-eval already passes batch_size to the model ctor.
-            # Passing it twice triggers: "got multiple values for keyword argument 'batch_size'".
+            if [ "$task" = "gpqa_main_n_shot" ]; then
+                NUM_FEWSHOT=${GPQA_FEWSHOT:-5}
+                if [ -n "${GPQA_DATA_PATH}" ]; then
+                    GPQA_TASK_DIR="$(prepare_gpqa_local_task)" || return $?
+                    INCLUDE_PATH_ARGS=(--include_path "${GPQA_TASK_DIR}")
+                    task_name="gpqa_main_n_shot_local"
+                    GPQA_LOCAL_ROWS="$(get_gpqa_local_row_count)" || return $?
+                    GPQA_LOCAL_MAX_FEWSHOT=$(( GPQA_LOCAL_ROWS > 1 ? GPQA_LOCAL_ROWS - 1 : 0 ))
+                    if [ "${NUM_FEWSHOT}" -gt "${GPQA_LOCAL_MAX_FEWSHOT}" ]; then
+                        echo "[gpqa_local] Requested num_fewshot=${NUM_FEWSHOT}, but local dataset has only ${GPQA_LOCAL_ROWS} rows. Clamping to ${GPQA_LOCAL_MAX_FEWSHOT}."
+                        NUM_FEWSHOT=${GPQA_LOCAL_MAX_FEWSHOT}
+                    fi
+                fi
+            fi
             EVAL_BATCH_SIZE=1
-            # MMLU uses loglikelihood scoring; enable sparse/adaptive effects by setting now_step > warmup
-            # and recomputing masks each forward (masks depend on content).
-            MODEL_ARGS_EXTRA=",mc_num=1,cfg=0.0,is_check_greedy=False,likelihood_now_step=${STEPS},recompute_mask_each_call=true"
-            # Make MMLU robust to HF Hub flakiness (502) by default: use cached datasets only.
-            # NOTE: we must use `env` here; `FOO=bar` produced by variable expansion is NOT treated as assignment by bash.
-            # You can disable this via: MMLU_OFFLINE=0 bash run_eval_task.sh
+            MODEL_ARGS_EXTRA=",mc_num=1,cfg=0.0,is_check_greedy=False,likelihood_now_step=${local_steps},recompute_mask_each_call=true"
             if [ "${MMLU_OFFLINE:-1}" = "1" ]; then
                 ENV_PREFIX=(env HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1)
             fi
             ;;
         ruler)
-            # Handled by eval_ruler_llada.py below (not lm-eval tasks)
             ;;
         *)
-            # Keep lm-eval defaults unless you extend this case block.
             ;;
     esac
     
@@ -223,6 +335,7 @@ run_single_eval() {
             --steps "${STEPS}" \
             --gen_length "${GEN_LENGTH}" \
             --block_length "${BLOCK_LENGTH}" \
+            --diffusion_mode "${DIFFUSION_MODE}" \
             --skip 0.2 \
             --select 0.3 \
             --block_size "${BLOCK_SIZE}" \
@@ -235,12 +348,13 @@ run_single_eval() {
             "${RULER_ARGS[@]}" \
             2>&1 | tee "${OUTPUT_DIR}/eval.log"
         CMD_RC=${PIPESTATUS[0]}
-    elif [ "$task" = "humaneval" ]; then
-        # HumanEval requires --confirm_run_unsafe_code
+    elif [ "$task" = "humaneval" ] || [ "$task" = "mbpp" ]; then
+        # Code-generation tasks require --confirm_run_unsafe_code.
         ${ENV_PREFIX[@]} python -m accelerate.commands.launch --num_processes=1 eval_llada.py \
             --model llada_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE}${IMPORTANCE_ARG}${MODEL_ARGS_EXTRA} \
-            --tasks "${task}" \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${local_gen_length},steps=${local_steps},block_length=${BLOCK_LENGTH},diffusion_mode=${DIFFUSION_MODE},skip=0.2,select=0.3,block_size=${BLOCK_SIZE},progress_label="${progress_label}"${IMPORTANCE_ARG}${MODEL_ARGS_EXTRA} \
+            --tasks "${task_name}" \
+            "${INCLUDE_PATH_ARGS[@]}" \
             ${NUM_FEWSHOT:+--num_fewshot ${NUM_FEWSHOT}} \
             ${EVAL_BATCH_SIZE:+--batch_size ${EVAL_BATCH_SIZE}} \
             --limit ${LIMIT} \
@@ -253,8 +367,9 @@ run_single_eval() {
         # GSM8K and other generation tasks
         ${ENV_PREFIX[@]} python -m accelerate.commands.launch --num_processes=1 eval_llada.py \
             --model llada_eval \
-            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${GEN_LENGTH},steps=${STEPS},block_length=${BLOCK_LENGTH},skip=0.2,select=0.3,block_size=${BLOCK_SIZE}${IMPORTANCE_ARG}${MODEL_ARGS_EXTRA} \
-            --tasks "${task}" \
+            --model_args model_path="${MODEL_PATH}",model_type="${model_type}",gen_length=${local_gen_length},steps=${local_steps},block_length=${BLOCK_LENGTH},diffusion_mode=${DIFFUSION_MODE},skip=0.2,select=0.3,block_size=${BLOCK_SIZE},progress_label="${progress_label}"${IMPORTANCE_ARG}${MODEL_ARGS_EXTRA} \
+            --tasks "${task_name}" \
+            "${INCLUDE_PATH_ARGS[@]}" \
             ${NUM_FEWSHOT:+--num_fewshot ${NUM_FEWSHOT}} \
             ${EVAL_BATCH_SIZE:+--batch_size ${EVAL_BATCH_SIZE}} \
             --limit ${LIMIT} \
@@ -325,11 +440,15 @@ echo ""
 echo "📈 Summary:"
 echo ""
 for task in "${TASKS[@]}"; do
+    task_tag="${task}"
+    if [ "$task" = "ruler" ]; then
+        task_tag="ruler_${RULER_LEN_K}k"
+    fi
     echo "Task: ${task}"
     for model_type in "${MODEL_TYPES[@]}"; do
-        RESULT_FILE="${RESULTS_ROOT}/${model_type}/${task}_${IMPORTANCE_TAG}/results.json"
+        RESULT_FILE="${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}/results.json"
         if [ -f "$RESULT_FILE" ]; then
-            echo "  ✅ ${model_type}: ${RESULTS_ROOT}/${model_type}/${task}_${IMPORTANCE_TAG}/"
+            echo "  ✅ ${model_type}: ${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}/"
         else
             echo "  ❌ ${model_type}: FAILED"
         fi

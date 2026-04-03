@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-4}"
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
@@ -26,21 +26,109 @@ mkdir -p logs results
 
 # Model configuration (matching attribution script)
 # NOTE:
-# - `humaneval` is a *code completion* task (expects raw function body continuation).
-#   Using chat template here makes the model emit explanations/markdown fences and tanks pass@1.
-# - `humaneval_instruct` is designed for *instruct/chat* models and SHOULD use chat template.
-MODEL_PATH="/data/qh_models/Dream-v0-Instruct-7B"
+# - `humaneval` is a code-completion task (expects raw function body continuation).
+# - `mbpp` is also treated as a code task and uses the unsafe-code evaluator.
+# - `humaneval_instruct` is designed for instruct/chat models and SHOULD use chat template.
+MODEL_PATH=${MODEL_PATH:-"/data/qh_models/Dream-v0-Instruct-7B"}
 MODEL_TYPES=("adaptive")
+if [ -n "${MODEL_TYPES_STR:-}" ]; then
+    IFS=',' read -r -a MODEL_TYPES <<< "${MODEL_TYPES_STR}"
+fi
 
 # -------------------------
 # Importance score path selection (EDIT ONE LINE)
 # -------------------------
 # Only change the next line (or override via env IMPORTANCE_PATH=...):
-IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_dream_gsm8k_full_pmrandom_threshold_ts20260319_040656/head_importance.pt"}
-TASKS=("gsm8k")
-LIMIT=150
+IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260323_224941/head_importance.pt"}
+TASKS=("mmlu")
+if [ -n "${TASKS_STR:-}" ]; then
+    IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
+fi
+LIMIT=${LIMIT:-10}
+GPQA_DATA_PATH=${GPQA_DATA_PATH:-""}
+LOCAL_TASK_ROOT="${PROJECT_ROOT}/evaluation/local_tasks/generated"
+DEFAULT_GPQA_DATA_PATH="${PROJECT_ROOT}/evaluation/local_data/gpqa/gpqa_main.jsonl"
+if [ -z "${GPQA_DATA_PATH}" ] && [ -f "${DEFAULT_GPQA_DATA_PATH}" ]; then
+    GPQA_DATA_PATH="${DEFAULT_GPQA_DATA_PATH}"
+fi
+
+check_minerva_math_deps() {
+    python - <<'PY'
+import importlib
+missing = []
+for mod in ("antlr4", "sympy", "math_verify"):
+    try:
+        importlib.import_module(mod)
+    except Exception:
+        missing.append(mod)
+if missing:
+    print("ERROR: minerva_math requires additional math evaluation dependencies.")
+    print("Missing modules:", ", ".join(missing))
+    print("Install with: pip install antlr4-python3-runtime==4.11 sympy math_verify")
+    raise SystemExit(2)
+PY
+}
+
+check_gpqa_access() {
+    python - <<'PY'
+from datasets import load_dataset_builder
+try:
+    load_dataset_builder("Idavidrein/gpqa", "gpqa_main")
+except Exception as e:
+    msg = str(e)
+    if "gated" in msg.lower() or "access" in msg.lower():
+        print("ERROR: gpqa_main_n_shot requires access to the gated HF dataset 'Idavidrein/gpqa'.")
+        print("Request access on Hugging Face or switch to a locally exported dataset/task implementation.")
+        raise SystemExit(2)
+    raise
+PY
+}
+
+prepare_gpqa_local_task() {
+    if [ -z "${GPQA_DATA_PATH}" ]; then
+        return 1
+    fi
+    local gpqa_task_dir="${LOCAL_TASK_ROOT}/gpqa_local"
+    mkdir -p "${LOCAL_TASK_ROOT}"
+    python "${PROJECT_ROOT}/evaluation/local_tasks/prepare_gpqa_local_task.py" \
+        --data_path "${GPQA_DATA_PATH}" \
+        --output_dir "${gpqa_task_dir}"
+}
+
+get_gpqa_local_row_count() {
+    python - <<'PY'
+import json
+from pathlib import Path
+import os
+
+data_path = Path(os.environ["GPQA_DATA_PATH"])
+count = 0
+files = [data_path] if data_path.is_file() else sorted(
+    p for p in data_path.rglob("*") if p.is_file() and p.suffix.lower() in {".json", ".jsonl"}
+)
+for path in files:
+    if path.suffix.lower() == ".jsonl":
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    count += 1
+    else:
+        with path.open("r", encoding="utf-8") as f:
+            obj = json.load(f)
+        if isinstance(obj, list):
+            count += len(obj)
+        elif isinstance(obj, dict):
+            for key in ("train", "validation", "test", "rows", "data", "examples"):
+                if isinstance(obj.get(key), list):
+                    count += len(obj[key])
+                    break
+            else:
+                count += 1
+print(count)
+PY
+}
 # Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
-USE_NEGATED=${USE_NEGATED:-0}
+USE_NEGATED=${USE_NEGATED:-1}
 
 # What we actually pass downstream
 USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
@@ -72,10 +160,10 @@ echo "========================================================"
 echo "Dream Quick Test Configuration"
 echo "========================================================"
 echo "Tasks: ${TASKS[*]}"
-echo "Model Types: standard, sparse, adaptive"
-echo "Max New Tokens: 256"
+echo "Model Types: ${MODEL_TYPES[*]}"
+echo "Default Max New Tokens/Steps: 256/256 (task overrides apply for humaneval, mbpp, and minerva_math)"
 echo "Block Size: 32"
-echo "Test Samples: 50 per dataset"
+echo "Limit: ${LIMIT}"
 echo "Importance tag: ${IMPORTANCE_TAG}"
 echo "Importance base: ${IMPORTANCE_PATH}"
 echo "Importance used: ${USED_IMPORTANCE_PATH}"
@@ -89,6 +177,8 @@ TOP_P=0.9
 ALG="entropy"
 ALG_TEMP=0.0  # Official: 0.0 (NOT 1.5!)
 BLOCK_SIZE=32
+BLOCK_LENGTH=${BLOCK_LENGTH:-32}
+DIFFUSION_MODE=${DIFFUSION_MODE:-"global"}
 
 
 # Task-specific parameters (will be set per task)
@@ -101,16 +191,13 @@ SELECT=0.3
 
 
 # Tasks to run (can be overridden without editing file):
-#   TASKS_STR="mmlu" bash run_eval_task.sh
-
-if [ -n "${TASKS_STR:-}" ]; then
-    IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
-fi
+#   TASKS_STR="mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp" bash run_eval_task.sh
 
 # Function to run evaluation for one model type on one task
 run_single_eval() {
     local task=$1
     local model_type=$2
+    local task_name="${task}"
     
     echo ""
     echo "========================================"
@@ -119,12 +206,15 @@ run_single_eval() {
     
     # Task tag for output directory (avoid overwriting when toggling chat template, etc.)
     TASK_TAG="${task}"
-    if [ "${task}" = "mmlu" ]; then
-        TASK_TAG="mmlu_chat"
-    fi
+    case "${task}" in
+        mmlu|cmmlu|ceval-valid|gpqa_main_n_shot)
+            TASK_TAG="${task}_chat"
+            ;;
+    esac
 
     OUTPUT_DIR="results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}"
     mkdir -p "$OUTPUT_DIR"
+    local progress_label="${task}|${model_type}|${TASK_TAG}_${IMPORTANCE_TAG}"
     
     # Record start time
     START_TIME=$(date +%s)
@@ -133,15 +223,32 @@ run_single_eval() {
     if [ "$task" = "humaneval" ] || [ "$task" = "humaneval_instruct" ]; then
         MAX_NEW_TOKENS=768
         STEPS=768
+    elif [ "$task" = "mbpp" ]; then
+        MAX_NEW_TOKENS=${MBPP_MAX_NEW_TOKENS:-512}
+        STEPS=${MBPP_STEPS:-${MAX_NEW_TOKENS}}
     elif [ "$task" = "gsm8k" ] || [ "$task" = "gsm8k_cot" ]; then
         MAX_NEW_TOKENS=256
         STEPS=256
+    elif [ "$task" = "minerva_math" ]; then
+        MAX_NEW_TOKENS=${MINERVA_MATH_MAX_NEW_TOKENS:-512}
+        STEPS=${MINERVA_MATH_STEPS:-${MAX_NEW_TOKENS}}
     else
         MAX_NEW_TOKENS=256
         STEPS=256
     fi
+
+    case "$task" in
+        minerva_math)
+            check_minerva_math_deps || return $?
+            ;;
+        gpqa_main_n_shot)
+            if [ -z "${GPQA_DATA_PATH}" ]; then
+                check_gpqa_access || return $?
+            fi
+            ;;
+    esac
     
-    echo "Params: max_new_tokens=${MAX_NEW_TOKENS}, steps=${STEPS}, temperature=${TEMPERATURE}, alg_temp=${ALG_TEMP}, block_size=${BLOCK_SIZE}, limit=${LIMIT}"
+    echo "Params: max_new_tokens=${MAX_NEW_TOKENS}, steps=${STEPS}, temperature=${TEMPERATURE}, alg_temp=${ALG_TEMP}, block_size=${BLOCK_SIZE}, block_length=${BLOCK_LENGTH}, diffusion_mode=${DIFFUSION_MODE}, limit=${LIMIT}"
     
     # Set importance source for adaptive mode
     if [ "$model_type" = "adaptive" ]; then
@@ -157,6 +264,13 @@ run_single_eval() {
     else
         IMPORTANCE_ARG=""
     fi
+    INCLUDE_PATH_ARGS=()
+    if [ "$task" = "gpqa_main_n_shot" ] && [ -n "${GPQA_DATA_PATH}" ]; then
+        GPQA_TASK_DIR="$(prepare_gpqa_local_task)" || return $?
+        INCLUDE_PATH_ARGS=(--include_path "${GPQA_TASK_DIR}")
+        task_name="gpqa_main_n_shot_local"
+        GPQA_LOCAL_ROWS="$(get_gpqa_local_row_count)" || return $?
+    fi
     
     # Build a concrete command (and persist it) so we can diff runs reliably.
     # NOTE: lm-eval logs `Initializing dream_eval model, with arguments: {...}` which is the *authoritative*
@@ -164,7 +278,7 @@ run_single_eval() {
     # IMPORTANT: Do NOT embed extra quotes inside model_args values.
     # lm-eval's arg-string parser does not strip them, so model_type would become '\"sparse\"' and fail.
     # Shell quoting around the whole --model_args string is sufficient.
-    MODEL_ARGS_STR="model_path=${MODEL_PATH},model_type=${model_type},max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg=${ALG},alg_temp=${ALG_TEMP},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE}${IMPORTANCE_ARG}"
+    MODEL_ARGS_STR="model_path=${MODEL_PATH},model_type=${model_type},max_new_tokens=${MAX_NEW_TOKENS},steps=${STEPS},temperature=${TEMPERATURE},top_p=${TOP_P},alg=${ALG},alg_temp=${ALG_TEMP},diffusion_mode=${DIFFUSION_MODE},block_length=${BLOCK_LENGTH},skip=${SKIP},select=${SELECT},block_size=${BLOCK_SIZE},progress_label=${progress_label}${IMPORTANCE_ARG}"
 
     # Record environment signature alongside the command (helps diagnose version-induced drift).
     {
@@ -189,9 +303,9 @@ PY
     } > "${OUTPUT_DIR}/run_env.txt" 2>&1
 
     # Build the command based on task
-    if [ "$task" = "humaneval" ]; then
+    if [ "$task" = "humaneval" ] || [ "$task" = "mbpp" ]; then
         # HumanEval (non-instruct) expects raw code completion; DO NOT apply chat template.
-        # HumanEval requires --confirm_run_unsafe_code
+        # MBPP also uses code execution-based evaluation.
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
             --model dream_eval
             --model_args "${MODEL_ARGS_STR}"
@@ -202,18 +316,27 @@ PY
             --log_samples
             --confirm_run_unsafe_code
         )
-    elif [ "$task" = "mmlu" ]; then
-        # MMLU is a multiple-choice likelihood task. Follow eval_dream.sh:
-        # - use few-shot (default 5)
-        # - batch_size=1 (passed via lm-eval CLI, NOT via --model_args to avoid duplicate kwarg)
-        # - Apply chat template by default to align with attribution context
-        # - For sparse/adaptive: enable likelihood_now_step and recompute_mask_each_call to trigger sparse attention
-        MMLU_FEWSHOT=${MMLU_FEWSHOT:-5}
+    elif [ "$task" = "mmlu" ] || [ "$task" = "cmmlu" ] || [ "$task" = "ceval-valid" ] || [ "$task" = "gpqa_main_n_shot" ]; then
+        # Multiple-choice likelihood tasks share the same fast sparse/adaptive-compatible setup.
+        # Use 5-shot by default to match the official scripts for MMLU-family tasks and GPQA.
+        if [ "$task" = "gpqa_main_n_shot" ]; then
+            NUM_FEWSHOT_LOCAL=${GPQA_FEWSHOT:-5}
+            if [ -n "${GPQA_DATA_PATH}" ]; then
+                GPQA_LOCAL_MAX_FEWSHOT=$(( GPQA_LOCAL_ROWS > 1 ? GPQA_LOCAL_ROWS - 1 : 0 ))
+                if [ "${NUM_FEWSHOT_LOCAL}" -gt "${GPQA_LOCAL_MAX_FEWSHOT}" ]; then
+                    echo "[gpqa_local] Requested num_fewshot=${NUM_FEWSHOT_LOCAL}, but local dataset has only ${GPQA_LOCAL_ROWS} rows. Clamping to ${GPQA_LOCAL_MAX_FEWSHOT}."
+                    NUM_FEWSHOT_LOCAL=${GPQA_LOCAL_MAX_FEWSHOT}
+                fi
+            fi
+        else
+            NUM_FEWSHOT_LOCAL=${MMLU_FEWSHOT:-5}
+        fi
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
             --model dream_eval
             --model_args "${MODEL_ARGS_STR},mc_num=1,likelihood_now_step=${STEPS},recompute_mask_each_call=true"
-            --tasks "${task}"
-            --num_fewshot "${MMLU_FEWSHOT}"
+            --tasks "${task_name}"
+            "${INCLUDE_PATH_ARGS[@]}"
+            --num_fewshot "${NUM_FEWSHOT_LOCAL}"
             --batch_size 1
             --limit "${LIMIT}"
             --output_path "${OUTPUT_DIR}/results.json"
@@ -225,7 +348,8 @@ PY
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
             --model dream_eval
             --model_args "${MODEL_ARGS_STR}"
-            --tasks "${task}"
+            --tasks "${task_name}"
+            "${INCLUDE_PATH_ARGS[@]}"
             --num_fewshot 0
             --limit "${LIMIT}"
             --output_path "${OUTPUT_DIR}/results.json"
@@ -233,17 +357,28 @@ PY
             --apply_chat_template
             --confirm_run_unsafe_code
         )
-    else
-        # GSM8K and other generation tasks
+    elif [ "$task" = "gsm8k" ] || [ "$task" = "gsm8k_cot" ] || [ "$task" = "minerva_math" ]; then
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
             --model dream_eval
             --model_args "${MODEL_ARGS_STR}"
-            --tasks "${task}"
+            --tasks "${task_name}"
+            "${INCLUDE_PATH_ARGS[@]}"
             --num_fewshot 0
             --limit "${LIMIT}"
             --output_path "${OUTPUT_DIR}/results.json"
             --log_samples
             --apply_chat_template
+        )
+    else
+        CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
+            --model dream_eval
+            --model_args "${MODEL_ARGS_STR}"
+            --tasks "${task_name}"
+            "${INCLUDE_PATH_ARGS[@]}"
+            --num_fewshot 0
+            --limit "${LIMIT}"
+            --output_path "${OUTPUT_DIR}/results.json"
+            --log_samples
         )
     fi
 
@@ -321,11 +456,17 @@ echo ""
 echo "📈 Summary:"
 echo ""
 for task in "${TASKS[@]}"; do
+    TASK_TAG="${task}"
+    case "${task}" in
+        mmlu|cmmlu|ceval-valid|gpqa_main_n_shot)
+            TASK_TAG="${task}_chat"
+            ;;
+    esac
     echo "Task: ${task}"
     for model_type in "${MODEL_TYPES[@]}"; do
-        RESULT_FILE="results/${model_type}/${task}_${IMPORTANCE_TAG}/results.json"
+        RESULT_FILE="results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/results.json"
         if [ -f "$RESULT_FILE" ]; then
-            echo "  ✅ ${model_type}: results/${model_type}/${task}_${IMPORTANCE_TAG}/"
+            echo "  ✅ ${model_type}: results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/"
         else
             echo "  ❌ ${model_type}: FAILED"
         fi
