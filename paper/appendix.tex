@@ -1,0 +1,21 @@
+\section{Appendix}
+\subsection{Implementation Details}
+\label{app:implementation}
+
+\paragraph{Reproducibility.}
+For all attribution methods, we fix random seeds for dataset subsampling, masking randomness, and any additional Monte-Carlo sampling used by the estimator. We report the exact attribution dataset, the number of attribution examples $M$, the attributed layer range, and the final score post-processing rule used in each experiment.
+
+\paragraph{HeadIG configuration.}
+For HeadIG and PolyHeadIG, we report the masking rates $\{\rho_t\}_{t=1}^{T}$, the number of mask samples per rate $S$, the number of IG steps $K$, the number of path samples $P$, and the post-processing function $\phi$. When reporting path ablations, we distinguish among DP, single-path STP, and the final PolyHeadIG configuration.
+
+\paragraph{Attribution baselines.}
+For AttnLRP and Shapley values, we report the exact implementation choices, any estimator-specific hyperparameters, and the computational budget used to produce one attribution score per head. All three attribution methods are evaluated over the same layer range so that downstream comparisons remain matched.
+
+\paragraph{Adaptive sparse inference protocol.}
+For adaptive sparse inference, we report the dense baseline, the sparsity budgets that are swept, and the exact mechanism used to convert head-importance scores into sparse allocation weights. We also report the evaluation harness settings used for each model family and task, including generation length, diffusion steps, prompt formatting, and answer extraction.
+
+\paragraph{Head masking and pruning protocol.}
+For head masking and pruning, we report the intervention granularity, the pruning budget, and whether pruning is applied globally or under another explicitly stated convention. For each attribution method, we evaluate prune-most, prune-least, and prune-random under the same intervention pipeline.
+
+\paragraph{Compute and reporting.}
+We report attribution cost in terms of forward/backward evaluations per example, together with an approximate scaling law in $T\cdot S\cdot K\cdot P$ for HeadIG-based methods. For downstream evaluation, we report the generation budget and, when available, wall-clock latency or attention-FLOPs proxies. All tables in the current draft are placeholders and should be populated with measured values once the final runs are complete.

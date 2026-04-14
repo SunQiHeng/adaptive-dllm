@@ -223,7 +223,11 @@ def load_hf_rows(
         return [canonicalize_row_for_dataset(row, dataset_name) for row in rows]
 
     if dataset_name == "minerva_math":
-        ds = load_dataset("knoveleng/Minerva-Math", split=split)
+        # `knoveleng/Minerva-Math` currently exposes only a `train` split on HF.
+        # The attribution/eval runners use `test` as a unified default, so map it
+        # here to the dataset's actual available split instead of failing at load time.
+        split_name = "train" if str(split).strip() in {"", "main", "test"} else str(split)
+        ds = load_dataset("knoveleng/Minerva-Math", split=split_name)
         rows = [dict(ds[i]) for i in _sample_indices(len(ds), max_samples, data_seed)]
         return [canonicalize_row_for_dataset(row, dataset_name) for row in rows]
 

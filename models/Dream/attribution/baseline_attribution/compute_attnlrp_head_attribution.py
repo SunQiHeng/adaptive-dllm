@@ -53,6 +53,18 @@ def _should_use_tqdm(show_progress: bool) -> bool:
     return bool(show_progress and (tqdm is not None) and sys.stderr.isatty())
 
 
+def _sanitize_generation_config(model: torch.nn.Module) -> None:
+    gen_cfg = getattr(model, "generation_config", None)
+    if gen_cfg is None:
+        return
+    if hasattr(gen_cfg, "temperature"):
+        gen_cfg.temperature = None
+    if hasattr(gen_cfg, "top_p"):
+        gen_cfg.top_p = None
+    if hasattr(gen_cfg, "top_k"):
+        gen_cfg.top_k = None
+
+
 def _load_module(path: str, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
@@ -211,16 +223,18 @@ def compute_all_heads_joint_relevance(
                 completion,
                 device=device,
                 max_length=max_length,
-                mask_token_id=mask_token_id,
                 min_completion_tokens=int(min_completion_tokens),
             )
-            completion_len = int(full_input_ids.size(1) - int(completion_start))
-            if completion_len <= 0:
+            num_logits_to_keep = int(full_input_ids.size(1) - int(completion_start))
+            completion_len = int(max(0, num_logits_to_keep))
+            if num_logits_to_keep <= 0:
                 total_rows_skipped_no_completion += 1
                 continue
             completion_lens.append(completion_len)
+            shift_nlk = min(num_logits_to_keep + 1, int(full_input_ids.size(1)))
+            shift_trim = shift_nlk > num_logits_to_keep
 
-            masked_batches: List[Tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = []
+            masked_batches: List[Tuple[torch.Tensor, torch.Tensor]] = []
             for prob_idx, prob in enumerate(mask_probs):
                 for s in range(int(mask_samples_per_prob)):
                     gen = torch.Generator(device=device)
@@ -235,7 +249,7 @@ def compute_all_heads_joint_relevance(
                     n_masked = int((labels != -100).sum().item())
                     if n_masked <= 0:
                         continue
-                    masked_batches.append((input_ids_masked, labels, attention_mask))
+                    masked_batches.append((input_ids_masked, labels))
 
             if len(masked_batches) == 0:
                 total_rows_skipped_no_variants += 1
@@ -243,8 +257,7 @@ def compute_all_heads_joint_relevance(
 
             all_input_ids = torch.cat([x[0] for x in masked_batches], dim=0)
             all_labels = torch.cat([x[1] for x in masked_batches], dim=0)
-            all_attn_1d = torch.cat([x[2] for x in masked_batches], dim=0)
-            all_labels_tail = all_labels[:, 1:]
+            all_labels_tail = all_labels[:, -num_logits_to_keep:]
 
             n_variants = int(all_input_ids.size(0))
             chunk = n_variants if int(mask_batch_size) <= 0 else max(1, int(mask_batch_size))
@@ -255,9 +268,6 @@ def compute_all_heads_joint_relevance(
             model.zero_grad(set_to_none=True)
             loss_weighted_sum = None
             total_variants = 0
-            shift_nlk = max(1, completion_len)
-            shift_trim = shift_nlk - 1
-
             if use_amp_bf16:
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                     for start in range(0, n_variants, chunk):
@@ -384,12 +394,17 @@ def main() -> None:
     print(f"gradient_checkpointing={bool(args.gradient_checkpointing)}")
     print("========================================================")
 
+    import transformers as _hf_mod
+    _orig_verbosity = _hf_mod.logging.get_verbosity()
+    _hf_mod.logging.set_verbosity_error()
     model = DreamModel.from_pretrained(
         args.model_path,
         torch_dtype=torch.bfloat16,
         trust_remote_code=True,
         device_map="auto",
     )
+    _hf_mod.logging.set_verbosity(_orig_verbosity)
+    _sanitize_generation_config(model)
 
     if bool(args.gradient_checkpointing):
         attn_do = float(getattr(getattr(model, "config", None), "attention_dropout", 0.0) or 0.0)
@@ -409,6 +424,11 @@ def main() -> None:
             )
         if hasattr(model, "model") and hasattr(model.model, "gradient_checkpointing"):
             model.model.gradient_checkpointing = True
+        if hasattr(model, "config"):
+            model.config.use_cache = False
+        gen_cfg = getattr(model, "generation_config", None)
+        if gen_cfg is not None and hasattr(gen_cfg, "use_cache"):
+            gen_cfg.use_cache = False
         model.train()
     else:
         model.eval()

@@ -1,202 +1,166 @@
 \section{Stochastic Path Design and Practical Estimation}
 \label{sec:method:path}
 
-The choice of integration path significantly affects the attribution. We then introduce the \emph{Stochastic Threshold Path} (STP) as our default alternative.
+The choice of integration path significantly affects the resulting attribution. In HeadIG, a single path specifies how the head-gate vector moves from the all-zero baseline to the all-one target. Our final method, \emph{PolyHeadIG}, derives its name from this multi-path construction: ``Poly'' highlights that we aggregate attributions across multiple sampled paths rather than relying on a single synchronized trajectory. We therefore use this section to define the stochastic path family employed in practice and the resulting multi-path estimator.
 
 
-Stochastic Threshold Path (STP) uses randomized head-wise activation times. For each head $j$, we sample a threshold $u_j \sim \mathcal{U}[0,1]$ and define the gate schedule:
+\paragraph{Stochastic Threshold Path.}
+We use \emph{stochastic threshold paths} as the basic path family. For each threshold vector $\mathbf{u}=(u_1,\dots,u_D)$ with i.i.d.\ $u_j \sim \mathcal{U}[0,1]$, we define a path $\boldsymbol{\gamma}_{\mathbf{u}} : [0,1] \to [0,1]^D$ whose $j$-th coordinate is
 \begin{equation}
-\alpha_j(\tau; u_j) \;=\; \mathrm{clip}\!\left(\frac{\tau-u_j}{1-u_j},\,0,\,1\right).
+[\boldsymbol{\gamma}_{\mathbf{u}}(\tau)]_j
+\;=\;
+\gamma_{\mathbf{u},j}(\tau)
+\;=\;
+\mathrm{clip}\!\left(\frac{\tau-u_j}{1-u_j},\,0,\,1\right).
 \label{eq:alpha_path_stp}
 \end{equation}
-The denominator vanishes at $u_j=1$, but under $u_j\sim\mathcal{U}[0,1]$ we have $P(u_j=1)=0$, so the schedule is well defined almost surely (equivalently, implementations may draw $u_j\sim\mathcal{U}[0,1)$).
-Intuitively, head $j$ stays at the zero baseline until $\tau = u_j$, then ramps linearly to $1$ by $\tau = 1$. Different heads ``turn on'' at different times, determined by their random thresholds. The STP attribution averages over $P$ independent threshold draws:
-\begin{equation}
-\mathrm{STP}\text{-}\mathrm{IG}_j(J)
-\;=\;
-\mathbb{E}_{\mathbf{u}}\!\left[ \mathrm{IG}_j[\boldsymbol{\alpha}(\cdot;\mathbf{u})] \right],
-\label{eq:stp_ig_def}
-\end{equation}
-estimated via Monte-Carlo sampling.
-DP can be viewed as the special case where all heads activate immediately and follow the same schedule. While STP is slightly more expensive due to path averaging, it better captures order variability among heads.
+The denominator vanishes at $u_j=1$, but under $u_j\sim\mathcal{U}[0,1]$ we have $P(u_j=1)=0$, so the path is well defined almost surely (equivalently, implementations may draw $u_j\sim\mathcal{U}[0,1)$). Intuitively, head $j$ stays at the zero baseline until $\tau = u_j$, then ramps linearly to $1$ by $\tau = 1$. Different heads therefore ``turn on'' at different times, determined by their random thresholds.
 
-\paragraph{Definitions for theoretical analysis.}
-To formalize the advantage of STP over the standard diagonal-path IG, we analyze which regions of the gate space each path can actually probe.
-
-\emph{Diagonal path.} The standard integrated-gradients path is
+For fixed $\mathbf{u}$, the corresponding pathwise STP attribution is
 \begin{equation}
-\boldsymbol{\alpha}^{\mathrm{diag}}(\tau)=\tau \mathbf{1},
-\qquad \tau\in[0,1].
-\label{eq:diag_path}
-\end{equation}
-All coordinates move synchronously, so the path is restricted to the one-dimensional diagonal of $[0,1]^D$.
-
-\emph{STP path.} For $\mathbf{u}=(u_1,\dots,u_D)$ with i.i.d.\ $u_j\sim\mathcal U[0,1]$, we use the same practical STP path as in \eqref{eq:alpha_path_stp}. For fixed $\mathbf{u}$, the corresponding pathwise STP attribution is
-\begin{equation}
-\mathrm{IG}^{\mathrm{STP}}_j(J;\mathbf{u})
-=
-\mathrm{IG}_j[\boldsymbol{\alpha}(\cdot;\mathbf{u})]
+\mathrm{IG}_j(J;\mathbf{u})
+:=
+\mathrm{IG}_j[\boldsymbol{\gamma}_{\mathbf{u}}]
 =
 \int_0^1
-\frac{\partial J(\boldsymbol{\alpha}(\tau;\mathbf{u}))}{\partial \alpha_j}
-\dot{\alpha}_j(\tau;u_j)\,d\tau.
+\frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))}{\partial \gamma_j}
+\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau.
 \label{eq:stp_ig_theory}
 \end{equation}
-Since $\alpha_j(\tau;u_j)$ is absolutely continuous, we have
+Since $\gamma_{\mathbf{u},j}(\tau)$ is absolutely continuous, we have
 \begin{equation}
-\dot{\alpha}_j(\tau;u_j)=\frac{1}{1-u_j}\,\mathbf{1}\{\tau>u_j\}
+\dot{\gamma}_{\mathbf{u},j}(\tau)=\frac{1}{1-u_j}\,\mathbf{1}\{\tau>u_j\}
 \qquad \text{for a.e. }\tau\in[0,1].
 \label{eq:stp_derivative}
 \end{equation}
+PolyHeadIG is obtained by aggregating these pathwise attributions over the threshold distribution. The corresponding population-level PolyIG attribution is
+\begin{equation}
+\mathrm{PolyIG}_j(J)
+=
+\mathbb{E}_{\mathbf{u}}\!\left[ \mathrm{IG}_j(J;\mathbf{u}) \right],
+\label{eq:stp_ig_def}
+\end{equation}
+and in practice PolyHeadIG estimates \eqref{eq:stp_ig_def} by Monte Carlo with $P$ independent threshold draws:
+\begin{equation}
+\widehat{\mathrm{PolyIG}}_j(J)
+:=
+\frac{1}{P}\sum_{p=1}^{P}\mathrm{IG}_j(J;\mathbf{u}^{(p)}).
+\label{eq:stp_mc_estimator}
+\end{equation}
 
-\paragraph{Theorem 1 (Diagonal-path blindness).}
-Assume that $J:[0,1]^D\to\mathbb{R}$ is continuously differentiable. Then diagonal-path IG depends only on the values of $\nabla J$ along the synchronized diagonal
-\[
-\Delta=\{\tau\mathbf{1}:\tau\in[0,1]\}.
-\]
-Consequently, DP is invariant to any continuously differentiable interaction term that is invisible on this diagonal, even if that term is nonzero away from the synchronized path. Thus DP cannot distinguish objectives that differ only through such off-diagonal interactions.
-
-\paragraph{Example.}
-In two dimensions, the term
-\[
-H(\alpha_1,\alpha_2)=(\alpha_1-\alpha_2)^2\alpha_1
-\]
-vanishes on the diagonal $\alpha_1=\alpha_2=\tau$, and its partial derivatives also vanish there. It therefore captures an interaction that appears only when coordinates evolve asynchronously. Since DP enforces $\alpha_1=\cdots=\alpha_D$ throughout the path, it is completely insensitive to this type of off-diagonal structure.
+\paragraph{Theorem 2 (STP induces full-dimensional asynchronous coverage for PolyIG).}
+Assume that $J:[0,1]^D\to\mathbb{R}$ is continuously differentiable. Then, for each coordinate $j$, there exists a probability measure $\nu_j$ on $[0,1]^D$ such that $\mathrm{PolyIG}_j(J)$ admits the representation in \eqref{eq:stp_measure_repr}, and every open neighborhood of every interior point $\mathbf{g}^{\star}\in(0,1)^D$ receives positive $\nu_j$-mass. Consequently, the PolyIG attribution is not confined to a single synchronized trajectory; it aggregates $\partial_j J$ over a full-dimensional family of asynchronous gate configurations.
 
 \paragraph{Proof.}
-Substituting the diagonal path $\boldsymbol{\alpha}^{\mathrm{diag}}(\tau)=\tau\mathbf{1}$ into \eqref{eq:ig_general} gives $d\alpha_j/d\tau=1$ for every $j$, hence
-\[
-\mathrm{IG}^{\mathrm{DP}}_j(J)
-=
-\int_0^1
-\frac{\partial J(\boldsymbol{\alpha}^{\mathrm{diag}}(\tau))}{\partial \alpha_j}
-\frac{d\alpha_j^{\mathrm{diag}}(\tau)}{d\tau}\,d\tau
-=
-\int_0^1 \frac{\partial J(\tau\mathbf{1})}{\partial \alpha_j}\,d\tau,
-\]
-which shows that DP depends only on $\nabla J$ restricted to $\Delta$. Now let $H:[0,1]^D\to\mathbb{R}$ be continuously differentiable and suppose that
+Define $\nu_j$ on $[0,1]^D$ by
 \begin{equation}
-\frac{\partial H(\tau\mathbf{1})}{\partial \alpha_j}=0
-\qquad
-\text{for all }\tau\in[0,1],\ j\in[D].
-\label{eq:diag_blind_condition}
-\end{equation}
-Then $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$ for every $j$, and by linearity of IG,
-\begin{equation}
-\mathrm{IG}^{\mathrm{DP}}(J+H)=\mathrm{IG}^{\mathrm{DP}}(J).
-\label{eq:diag_blindness}
-\end{equation}
-This proves the claimed blindness property. \qed
-
-\paragraph{Theorem 2 (STP explores full-dimensional asynchronous configurations).}
-Assume that $J:[0,1]^D\to\mathbb{R}$ is continuously differentiable. Then, for each coordinate $j$, there exists a probability measure $\mu_j^{\mathrm{STP}}$ on $[0,1]^D$ such that every open neighborhood of every interior point $\boldsymbol{\alpha}^{\star}\in(0,1)^D$ receives positive $\mu_j^{\mathrm{STP}}$-mass. Consequently, expected STP attribution is not confined to a single synchronized trajectory; it aggregates $\partial_j J$ over a full-dimensional family of asynchronous gate configurations.
-
-\paragraph{Proof.}
-Define $\mu_j^{\mathrm{STP}}$ on $[0,1]^D$ by
-\begin{equation}
-\mu_j^{\mathrm{STP}}(A)
+\nu_j(A)
 =
 \mathbb{E}_{\mathbf{u}}\!\left[
 \int_0^1
-\mathbf{1}\{\boldsymbol{\alpha}(\tau;\mathbf{u})\in A\}
-\dot{\alpha}_j(\tau;u_j)\,d\tau
+\mathbf{1}\{\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in A\}
+\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau
 \right]
 \label{eq:stp_measure}
 \end{equation}
 for every Borel set $A\subseteq[0,1]^D$, where
 \[
-\dot{\alpha}_j(\tau;u_j)=\frac{1}{1-u_j}\,\mathbf{1}\{\tau>u_j\}
+\dot{\gamma}_{\mathbf{u},j}(\tau)=\frac{1}{1-u_j}\,\mathbf{1}\{\tau>u_j\}
 \]
-for almost every $\tau\in[0,1]$ under the STP path \eqref{eq:alpha_path_stp}. We first show that $\mu_j^{\mathrm{STP}}$ is a probability measure. Taking $A=[0,1]^D$ in \eqref{eq:stp_measure} and using absolute continuity,
-\[
-\mu_j^{\mathrm{STP}}([0,1]^D)
+for almost every $\tau\in[0,1]$ under the STP path \eqref{eq:alpha_path_stp}.
+
+We first show that $\nu_j$ is a probability measure. Taking $A=[0,1]^D$ in \eqref{eq:stp_measure} and using absolute continuity,
+\[\nu_j([0,1]^D)
 =
-\mathbb{E}_{\mathbf{u}}\!\left[\int_0^1 \dot{\alpha}_j(\tau;u_j)\,d\tau\right]
+\mathbb{E}_{\mathbf{u}}\!\left[\int_0^1 \dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau\right]
 =
-\mathbb{E}_{\mathbf{u}}\!\left[\alpha_j(1;u_j)-\alpha_j(0;u_j)\right]
+\mathbb{E}_{\mathbf{u}}\!\left[\gamma_{\mathbf{u},j}(1)-\gamma_{\mathbf{u},j}(0)\right]
 =1,
 \]
-so $\mu_j^{\mathrm{STP}}$ is a probability measure. Moreover, by \eqref{eq:stp_ig_def}, \eqref{eq:stp_ig_theory}, and the definition \eqref{eq:stp_measure},
+so $\nu_j$ is a probability measure.
+
+Next, by \eqref{eq:stp_ig_def}, \eqref{eq:stp_ig_theory}, and the definition \eqref{eq:stp_measure}, we obtain the representation
 \begin{equation}
-\mathrm{STP}\text{-}\mathrm{IG}_j(J)
+\mathrm{PolyIG}_j(J)
 =
 \int_{[0,1]^D}
-\frac{\partial J(\boldsymbol{\alpha})}{\partial \alpha_j}\,
-d\mu_j^{\mathrm{STP}}(\boldsymbol{\alpha}).
+\frac{\partial J(\mathbf{g})}{\partial g_j}\,
+d\nu_j(\mathbf{g}).
 \label{eq:stp_measure_repr}
 \end{equation}
 
-It remains to prove \eqref{eq:positive_mass}. Fix $\boldsymbol{\alpha}^{\star}\in(0,1)^D$ and let $O$ be any open neighborhood of $\boldsymbol{\alpha}^{\star}$. Since $\boldsymbol{\alpha}^{\star}\in(0,1)^D$, we have $\alpha_j^{\star}>0$ for every $j$. Choose
+It remains to prove the support property: for every interior point $\mathbf{g}^{\star}\in(0,1)^D$ and every open neighborhood $O$ of $\mathbf{g}^{\star}$,
 \begin{equation}
-\tau^{\star}=\frac{1+\max_i \alpha_i^{\star}}{2},
+\nu_j(O)>0.
+\label{eq:positive_mass}
+\end{equation}
+
+Fix $\mathbf{g}^{\star}\in(0,1)^D$ and let $O$ be any open neighborhood of $\mathbf{g}^{\star}$. Since $\mathbf{g}^{\star}\in(0,1)^D$, we have $g_i^{\star}>0$ for every $i$. Choose
+\begin{equation}
+\tau^{\star}=\frac{1+\max_i g_i^{\star}}{2},
 \label{eq:tau_star_def}
 \end{equation}
-so that $\tau^{\star}\in(\max_i \alpha_i^{\star},1)$. Define
+so that $\tau^{\star}\in(\max_i g_i^{\star},1)$. Define
 \begin{equation}
-u_i^{\star}=\frac{\tau^{\star}-\alpha_i^{\star}}{1-\alpha_i^{\star}},
+u_i^{\star}=\frac{\tau^{\star}-g_i^{\star}}{1-g_i^{\star}},
 \qquad i=1,\dots,D.
 \label{eq:u_star_def}
 \end{equation}
-Because $0<\alpha_i^{\star}<\tau^{\star}<1$, we have $0<u_i^{\star}<1$ for every $i$. A direct substitution into \eqref{eq:alpha_path_stp} gives
+Because $0<g_i^{\star}<\tau^{\star}<1$, we have $0<u_i^{\star}<1$ for every $i$. A direct substitution into \eqref{eq:alpha_path_stp} gives
 \[
-\alpha_i(\tau^{\star};u_i^{\star})=\alpha_i^{\star}
+\gamma_{\mathbf{u}^{\star},i}(\tau^{\star})=g_i^{\star}
 \qquad \text{for all }i.
 \]
 Moreover, because $u_j^{\star}<\tau^{\star}$, \eqref{eq:stp_derivative} yields
 \[
-\dot{\alpha}_j(\tau^{\star};u_j^{\star})=\frac{1}{1-u_j^{\star}}>0.
+\dot{\gamma}_{\mathbf{u}^{\star},j}(\tau^{\star})=\frac{1}{1-u_j^{\star}}>0.
 \]
-The map $(\tau,\mathbf{u})\mapsto \boldsymbol{\alpha}(\tau;\mathbf{u})$ is continuous at $(\tau^{\star},\mathbf{u}^{\star})$, so there exists a neighborhood $B$ of $(\tau^{\star},\mathbf{u}^{\star})$ and a constant $c>0$ such that $\boldsymbol{\alpha}(\tau;\mathbf{u})\in O$ and $\dot{\alpha}_j(\tau;u_j)\ge c$ throughout $B$. Since $\tau$ is integrated against Lebesgue measure and $\mathbf{u}$ has a density positive on $[0,1]^D$, the set $B$ has positive product measure. Plugging this into \eqref{eq:stp_measure} gives
-\begin{equation}
-\mu_j^{\mathrm{STP}}(O)>0.
-\label{eq:positive_mass}
-\end{equation}
-This proves the claimed support property. \qed
+The map $(\tau,\mathbf{u})\mapsto \boldsymbol{\gamma}_{\mathbf{u}}(\tau)$ is continuous at $(\tau^{\star},\mathbf{u}^{\star})$, so there exists a neighborhood $B$ of $(\tau^{\star},\mathbf{u}^{\star})$ and a constant $c>0$ such that $\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in O$ and $\dot{\gamma}_{\mathbf{u},j}(\tau)\ge c$ throughout $B$. Since $\tau$ is integrated against Lebesgue measure and $\mathbf{u}$ has a density positive on $[0,1]^D$, the set $B$ has positive product measure. Plugging this into \eqref{eq:stp_measure} gives \eqref{eq:positive_mass}. This proves the theorem. \qed
 
 \paragraph{Corollary (STP can capture off-diagonal interactions missed by DP).}
-Let $H:[0,1]^D\to\mathbb{R}$ be a continuously differentiable interaction term that is invisible to DP but has strictly positive $j$-th partial derivative on some open region $O\subset(0,1)^D$. Then DP assigns zero attribution to $H$, whereas STP assigns strictly positive attribution weight to that region.
+Let $H:[0,1]^D\to\mathbb{R}$ be a continuously differentiable interaction term that is invisible to DP but has strictly positive $j$-th partial derivative on some open region $O\subset(0,1)^D$. Then DP assigns zero attribution to $H$, whereas PolyIG assigns strictly positive attribution weight to that region.
 
 \paragraph{Proof.}
 The diagonal-path statement follows directly from Theorem~1. To make the assumptions explicit, suppose that
 \begin{equation}
-\frac{\partial H(\tau\mathbf{1})}{\partial \alpha_j}=0
+\frac{\partial H(\tau\mathbf{1}_{D})}{\partial g_j}=0
 \qquad
 \text{for all }\tau\in[0,1],\ j\in[D],
 \end{equation}
 and that there exist an open set $O\subset(0,1)^D$ and a constant $c>0$ such that
 \begin{equation}
-\frac{\partial H(\boldsymbol{\alpha})}{\partial \alpha_j}\ge c
+\frac{\partial H(\mathbf{g})}{\partial g_j}\ge c
 \qquad
-\text{for all }\boldsymbol{\alpha}\in O.
+\text{for all }\mathbf{g}\in O.
 \label{eq:stp_detectable}
 \end{equation}
-Fix any $\boldsymbol{\alpha}^{\star}\in O$. Since $O\subset(0,1)^D$, we have $\boldsymbol{\alpha}^{\star}\in(0,1)^D$, so Theorem~2 applies and yields $\mu_j^{\mathrm{STP}}(O)>0$. Combining this with \eqref{eq:stp_detectable} yields
+Fix any $\mathbf{g}^{\star}\in O$. Since $O\subset(0,1)^D$, we have $\mathbf{g}^{\star}\in(0,1)^D$, so Theorem~2 applies and yields $\nu_j(O)>0$. Combining this with \eqref{eq:stp_detectable} yields
 \[
-\int_O \frac{\partial H(\boldsymbol{\alpha})}{\partial \alpha_j}\,
-d\mu_j^{\mathrm{STP}}(\boldsymbol{\alpha})
+\int_O \frac{\partial H(\mathbf{g})}{\partial g_j}\,
+d\nu_j(\mathbf{g})
 \ge
-c\,\mu_j^{\mathrm{STP}}(O)
+c\,\nu_j(O)
 >
 0.
 \]
-Thus $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$ while STP assigns strictly positive attribution weight to the region $O$. \qed
+Thus $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$ while PolyIG assigns strictly positive attribution weight to the region $O$. \qed
 
 \paragraph{Remark (interpretation and practical implementation).}
-Theorem~1 shows that standard IG along the diagonal path suffers from a structural synchronization degeneracy: it only observes gradients on the line $\alpha_1=\cdots=\alpha_D$. Theorem~2 shows that the practical STP used in this paper removes this restriction by spreading attribution mass over the interior of the gate cube. The corollary should therefore be read as a support result: STP can place nonzero attribution weight on interaction regions that are invisible to a single synchronized path, while still providing a smooth and numerically stable Monte-Carlo estimator.
+Theorem~1 shows that standard IG along the diagonal path suffers from a structural synchronization degeneracy: it only observes gradients on the line $\gamma_1=\cdots=\gamma_D$. Theorem~2 shows that the STP-based construction used in this paper removes this restriction by inducing a PolyIG measure that spreads attribution mass over the interior of the gate cube. The corollary should therefore be read as a support result: PolyIG can place nonzero attribution weight on interaction regions that are invisible to a single synchronized path, while still providing a smooth and numerically stable Monte-Carlo estimator.
 
 \paragraph*{Numerical approximation.}
-We approximate the integral in \eqref{eq:ig_general} using $K$ discrete steps. At $\tau_k = k/K$ for $k = 1, \dots, K$, we compute:
+We approximate the pathwise integral \eqref{eq:stp_ig_theory} using $K$ discrete steps. At $\tau_k = k/K$ for $k = 1, \dots, K$, we compute:
 \begin{equation}
-\mathrm{IG}_{j}[\boldsymbol{\alpha}] \approx \sum_{k=1}^{K} \frac{\partial J(\boldsymbol{\alpha}(\tau_k))}{\partial \alpha_{j}} \cdot \Delta \alpha_j^{(k)},
-\qquad \Delta \alpha_j^{(k)} = \alpha_j(\tau_k)-\alpha_j(\tau_{k-1}).
+\mathrm{IG}_{j}(J;\mathbf{u}) \approx \sum_{k=1}^{K} \frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau_k))}{\partial \gamma_{j}} \cdot \Delta \gamma_{\mathbf{u},j}^{(k)},
+\qquad \Delta \gamma_{\mathbf{u},j}^{(k)} = \gamma_{\mathbf{u},j}(\tau_k)-\gamma_{\mathbf{u},j}(\tau_{k-1}).
 \label{eq:ig_gate}
 \end{equation}
-For DP, $\Delta \alpha_j^{(k)} = 1/K$ for all $j$ and $k$, recovering the standard IG Riemann sum. For STP, $\Delta \alpha_j^{(k)}$ varies across heads and steps according to \eqref{eq:alpha_path_stp}.
+For DP, $\Delta \gamma_j^{(k)} = 1/K$ for all $j$ and $k$, recovering the standard IG Riemann sum. For STP, $\Delta \gamma_{\mathbf{u},j}^{(k)}$ varies across heads and steps according to \eqref{eq:alpha_path_stp}, and the final estimator is obtained by averaging the resulting pathwise attributions as in \eqref{eq:stp_mc_estimator}.
 
 \paragraph*{Post-processing and aggregation.}
 To obtain non-negative importance scores, we optionally apply an element-wise post-processing function $\phi \in \{|\cdot|, \mathrm{ReLU}, \mathrm{identity}\}$. For each example, we compute
 \begin{equation}
-\hat{s}_{\ell,h} = \phi\big(\mathrm{STP}\text{-}\mathrm{IG}_{(\ell,h)}\big).
+\hat{s}_{\ell,h} = \phi\big(\widehat{\mathrm{PolyIG}}_{(\ell,h)}\big).
 \end{equation}
 The final head importance score $S_{\ell,h}$ is obtained by averaging $\hat{s}_{\ell,h}$ over $M$ dataset examples:
 \begin{equation}
@@ -207,24 +171,24 @@ Heads are ranked within each layer by sorting $\{S_{\ell,h}\}_{h=1}^{H}$ in desc
 \begin{algorithm}[h]
 \caption{HeadIG for DLLMs (STP with path averaging)}
 \label{alg:headig}
-\KwIn{Dataset $\mathcal{D}$; mask probabilities $\{p_t\}_{t=1}^{T}$; mask samples per probability $S$; IG steps $K$; path samples $P$; post-process $\phi$.}
+\KwIn{Dataset $\mathcal{D}$; masking rates $\{\rho_t\}_{t=1}^{T}$; mask samples per rate $S$; IG steps $K$; path samples $P$; post-process $\phi$.}
 \KwOut{Head importance scores $S_{\ell,h}$.}
 
-\ForEach{example $(c,a)\in\mathcal{D}$}{
+\ForEach{example $(\mathbf{c},\mathbf{a})\in\mathcal{D}$}{
   \tcp{Build masking variants}
   \For{$t=1$ \KwTo $T$, $s=1$ \KwTo $S$}{
-    Sample mask $m_{t,s}$ on completion with prob $p_t$; compute masked input $x^{(t,s)}$\;
+    Sample mask $\mathbf{m}_{t,s}$ on completion with rate $\rho_t$; compute masked input $\tilde{\mathbf{x}}_{t,s}$\;
   }
   \tcp{Integrated gradients with STP}
   $\mathrm{IG} \gets \mathbf{0}$\;
   \For{$p=1$ \KwTo $P$}{
     Sample thresholds $u_j \sim \mathcal{U}[0,1]$ for each head $j$\;
-    $\boldsymbol{\alpha}_{\mathrm{prev}} \gets \mathbf{0}$\;
+    $\boldsymbol{\gamma}_{\mathrm{prev}} \gets \mathbf{0}_{D}$\;
     \For{$k=1$ \KwTo $K$}{
-      $\boldsymbol{\alpha}_{\mathrm{now}} \gets \boldsymbol{\alpha}(k/K; \mathbf{u})$ via \eqref{eq:alpha_path_stp}\;
-      $\Delta \boldsymbol{\alpha} \gets \boldsymbol{\alpha}_{\mathrm{now}} - \boldsymbol{\alpha}_{\mathrm{prev}}$; $\boldsymbol{\alpha}_{\mathrm{prev}} \gets \boldsymbol{\alpha}_{\mathrm{now}}$\;
-      Compute $\mathcal{L}$ on all variants with gated forward; $\mathbf{g} \gets \nabla_{\boldsymbol{\alpha}} (-\mathcal{L})$\;
-      $\mathrm{IG} \gets \mathrm{IG} + \mathbf{g} \odot \Delta \boldsymbol{\alpha}$\;
+      $\boldsymbol{\gamma}_{\mathrm{now}} \gets \boldsymbol{\gamma}_{\mathbf{u}}(k/K)$ via \eqref{eq:alpha_path_stp}\;
+      $\Delta \boldsymbol{\gamma} \gets \boldsymbol{\gamma}_{\mathrm{now}} - \boldsymbol{\gamma}_{\mathrm{prev}}$; $\boldsymbol{\gamma}_{\mathrm{prev}} \gets \boldsymbol{\gamma}_{\mathrm{now}}$\;
+      Compute $\mathcal{L}$ on all variants with gated forward; $\mathbf{r} \gets \nabla_{\boldsymbol{\gamma}} (-\mathcal{L})$\;
+      $\mathrm{IG} \gets \mathrm{IG} + \mathbf{r} \odot \Delta \boldsymbol{\gamma}$\;
     }
   }
   $\mathrm{IG} \gets \mathrm{IG}/P$; apply $\phi$; accumulate for averaging\;

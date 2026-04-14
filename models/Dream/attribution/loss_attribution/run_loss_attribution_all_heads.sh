@@ -25,7 +25,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default follows existing Dream runners)
-GPU_ID=${GPU_ID:-5}
+GPU_ID=${GPU_ID:-3}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -45,7 +45,7 @@ MODEL_PATH=${MODEL_PATH:-"/data/qh_models/Dream-v0-Instruct-7B"}
 MODEL_NAME=${MODEL_NAME:-"dream"}
 DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
 
-OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs"}
+OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs/aconfigs"}
 RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 
 # ---------------------------
@@ -63,17 +63,18 @@ NEMOTRON_POOL_PER_CATEGORY=${NEMOTRON_POOL_PER_CATEGORY:-1000}             # nem
 MMLU_SUBJECT=${MMLU_SUBJECT:-"all"}                         # mmlu only
 
 USE_CHAT_TEMPLATE=${USE_CHAT_TEMPLATE:-1}  # 1 => --use_chat_template
+GLOBAL_MAX_SAMPLES=${MAX_SAMPLES:-""}
 
 default_max_samples_for_dataset() {
   case "$1" in
-    mmlu) echo "${MMLU_MAX_SAMPLES:-200}" ;;
-    cmmlu) echo "${CMMLU_MAX_SAMPLES:-200}" ;;
-    ceval-valid) echo "${CEVAL_VALID_MAX_SAMPLES:-200}" ;;
-    gpqa_main_n_shot) echo "${GPQA_MAX_SAMPLES:-200}" ;;
-    gsm8k) echo "${GSM8K_MAX_SAMPLES:-100}" ;;
-    minerva_math) echo "${MINERVA_MATH_MAX_SAMPLES:-100}" ;;
-    humaneval) echo "${HUMANEVAL_MAX_SAMPLES:-100}" ;;
-    mbpp) echo "${MBPP_MAX_SAMPLES:-100}" ;;
+    mmlu) echo "${MMLU_MAX_SAMPLES:-40}" ;;
+    cmmlu) echo "${CMMLU_MAX_SAMPLES:-40}" ;;
+    ceval-valid) echo "${CEVAL_VALID_MAX_SAMPLES:-40}" ;;
+    gpqa_main_n_shot) echo "${GPQA_MAX_SAMPLES:-40}" ;;
+    gsm8k) echo "${GSM8K_MAX_SAMPLES:-30}" ;;
+    minerva_math) echo "${MINERVA_MATH_MAX_SAMPLES:-30}" ;;
+    humaneval) echo "${HUMANEVAL_MAX_SAMPLES:-30}" ;;
+    mbpp) echo "${MBPP_MAX_SAMPLES:-30}" ;;
     nemotron) echo "${NEMOTRON_MAX_SAMPLES:-50}" ;;
     *) echo "${DEFAULT_MAX_SAMPLES:-100}" ;;
   esac
@@ -91,7 +92,6 @@ fi
 # ---------------------------
 # Core knobs
 # ---------------------------
-GLOBAL_MAX_SAMPLES=${MAX_SAMPLES:-""}
 IG_STEPS=${IG_STEPS:-8}
 MAX_LENGTH=${MAX_LENGTH:-2048}
 
@@ -112,7 +112,7 @@ MASK_BATCH_SIZE=${MASK_BATCH_SIZE:-1}            # 0 => all variants in one batc
 
 # Integrated path mode for joint IG (diagonal vs randomized path)
 PATH_MODE=${PATH_MODE:-"random_threshold"}                 # diagonal | random_threshold
-PATH_SAMPLES=${PATH_SAMPLES:-25}                    # >1 only meaningful for random_threshold
+PATH_SAMPLES=${PATH_SAMPLES:-4}                     # >1 only meaningful for random_threshold
 PATH_SEED=${PATH_SEED:--1}                         # -1 => use mask_seed
 
 # Dream: joint attribution still benefits from gradient checkpointing
@@ -265,6 +265,12 @@ echo "========================================================"
     --output_dir "${OUT_DIR}" \
     --use_amp_bf16
 } 2>&1 | tee "${OUT_DIR}/run.log"
+local rc=${PIPESTATUS[0]}
+if [ "${rc}" -ne 0 ]; then
+  echo "[runner] FAILED rc=${rc}"
+  echo "[runner] Log: ${OUT_DIR}/run.log"
+  return "${rc}"
+fi
 
 echo "========================================================"
 echo "Finished at: $(date)"

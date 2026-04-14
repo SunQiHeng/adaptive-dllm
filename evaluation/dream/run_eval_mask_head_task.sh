@@ -9,14 +9,17 @@
 
 set -o pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
+
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
-export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-4}
+export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
 
 source ~/miniconda3/bin/activate adaptive-dllm
 
-cd /home/qiheng/Projects/adaptive-dllm/evaluation/dream
+cd "${PROJECT_ROOT}/evaluation/dream"
 
 # ===========================================================================
 # Config
@@ -45,18 +48,100 @@ if [ -n "$PRUNE_K" ] && [ -n "$PRUNE_K_FRAC" ]; then
 fi
 
 # --- Importance ---
-IMPORTANCE_PATH=${IMPORTANCE_PATH:-"/home/qiheng/Projects/adaptive-dllm/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260323_224941/head_importance.pt"}
-USE_NEGATED=${USE_NEGATED:-0}
+# Preferred interface:
+#   Single dataset: MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR=ceval-valid_all
+#   Multi dataset:  MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR="mmlu_all,cmmlu_all"
+# You can still override with IMPORTANCE_PATH directly.
+USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
+ATTR_MODEL_NAME=${MODEL_NAME:-"dream"}
+# ATTR_METHOD candidates:
+#   headig | attnlrp | shapley
+ATTR_METHOD=${ATTR_METHOD:-"shapley"}
+# ATTR_DATASETS_STR candidates:
+#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k_full | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k_full,minerva_math,gpqa_main_n_shot_all,humaneval,mbpp"}
+IFS=',' read -r -a ATTR_DATASETS <<< "${ATTR_DATASETS_STR}"
+FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
+
+build_default_importance_path() {
+    local attr_dataset="$1"
+    echo "${PROJECT_ROOT}/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
+}
+# Negation modes:
+#   USE_NEGATED_MODES_STR="0"   -> only original importance
+#   USE_NEGATED_MODES_STR="1"   -> only negated importance
+#   USE_NEGATED_MODES_STR="0,1" -> run both original and negated importance
+USE_NEGATED_MODES_STR=${USE_NEGATED_MODES_STR:-"0"}
+IFS=',' read -r -a USE_NEGATED_MODES <<< "${USE_NEGATED_MODES_STR}"
+IMPORTANCE_TAG_OVERRIDE=${IMPORTANCE_TAG:-""}
 
 # --- Tasks ---
-TASKS=("mmlu")
+default_task_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo "mmlu" ;;
+        cmmlu_all) echo "cmmlu" ;;
+        ceval-valid_all) echo "ceval-valid" ;;
+        gsm8k_full) echo "gsm8k" ;;
+        minerva_math) echo "minerva_math" ;;
+        gpqa_main_n_shot_all) echo "gpqa_main_n_shot" ;;
+        humaneval) echo "humaneval" ;;
+        mbpp) echo "mbpp" ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default task mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+DEFAULT_TASK="$(default_task_for_attr_dataset "${FIRST_ATTR_DATASET}")" || exit $?
+TASKS=("${DEFAULT_TASK}")
 if [ -n "${TASKS_STR:-}" ]; then
     IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
 fi
-LIMIT=${LIMIT:-20}
+# Recommended LIMIT values for task-specific evals (stability vs runtime trade-off):
+#   mmlu_all: 40
+#   cmmlu_all: 40
+#   ceval-valid_all: 200
+#   gpqa_main_n_shot_all: 200
+#   gsm8k_full: 200
+#   minerva_math: 200
+#   humaneval: 200
+#   mbpp: 200
+default_limit_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo 40 ;;
+        cmmlu_all) echo 40 ;;
+        ceval-valid_all) echo 200 ;;
+        gpqa_main_n_shot_all) echo 200 ;;
+        gsm8k_full) echo 200 ;;
+        minerva_math) echo 200 ;;
+        humaneval) echo 200 ;;
+        mbpp) echo 200 ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default limit mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+resolve_attr_dataset_context() {
+    local attr_dataset="$(echo "$1" | xargs)"
+    CURRENT_ATTR_DATASET="${attr_dataset}"
+    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(build_default_importance_path "${CURRENT_ATTR_DATASET}")}"
+    if [ -n "${TASKS_STR:-}" ]; then
+        IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
+    else
+        TASKS=("$(default_task_for_attr_dataset "${CURRENT_ATTR_DATASET}")") || return $?
+    fi
+    LIMIT="${LIMIT_OVERRIDE:-$(default_limit_for_attr_dataset "${CURRENT_ATTR_DATASET}")}" || return $?
+}
+
+LIMIT_OVERRIDE=${LIMIT:-""}
+CURRENT_ATTR_DATASET=""
+resolve_attr_dataset_context "${FIRST_ATTR_DATASET}" || exit $?
 GPQA_DATA_PATH=${GPQA_DATA_PATH:-""}
-LOCAL_TASK_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/local_tasks/generated"
-DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
+LOCAL_TASK_ROOT="${PROJECT_ROOT}/evaluation/local_tasks/generated"
+DEFAULT_GPQA_DATA_PATH="${PROJECT_ROOT}/evaluation/local_data/gpqa/gpqa_main.jsonl"
 if [ -z "${GPQA_DATA_PATH}" ] && [ -f "${DEFAULT_GPQA_DATA_PATH}" ]; then
     GPQA_DATA_PATH="${DEFAULT_GPQA_DATA_PATH}"
 fi
@@ -138,20 +223,46 @@ PY
 }
 
 USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
-if [ "${USE_NEGATED}" = "1" ]; then
-    SRC_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
-    NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
-    USED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-    if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
-        echo "[prep] Generating negated importance..."
-        python /home/qiheng/Projects/adaptive-dllm/evaluation/dream/generate_negated_importance.py \
-            --in_pt "$SRC_IMPORTANCE_PATH" \
-            --out_dir "$NEG_DIR"
-    fi
-fi
+IMPORTANCE_TAG=""
 
-DEFAULT_IMPORTANCE_TAG="$(basename "$(dirname "${IMPORTANCE_PATH}")")$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"${DEFAULT_IMPORTANCE_TAG}"}
+resolve_importance_variant() {
+    local use_negated="$1"
+    local tag_suffix=""
+
+    USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+    if [ "${use_negated}" = "1" ]; then
+        local src_importance_path="${IMPORTANCE_PATH}"
+        local neg_dir="${NEG_DIR:-"$(dirname "${src_importance_path}")_neg"}"
+        USED_IMPORTANCE_PATH="${neg_dir}/head_importance.pt"
+        if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+            echo "[prep] Generating negated importance..."
+            python "${SCRIPT_DIR}/generate_negated_importance.py" \
+                --in_pt "${src_importance_path}" \
+                --out_dir "${neg_dir}"
+            if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+                echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
+                exit 3
+            fi
+        fi
+        tag_suffix="_neg"
+    fi
+
+    local default_importance_tag
+    default_importance_tag="$(basename "$(dirname "${IMPORTANCE_PATH}")")${tag_suffix}"
+    if [ -n "${IMPORTANCE_TAG_OVERRIDE}" ]; then
+        if [ "${#USE_NEGATED_MODES[@]}" -gt 1 ]; then
+            if [ "${use_negated}" = "1" ]; then
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_neg"
+            else
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_orig"
+            fi
+        else
+            IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}"
+        fi
+    else
+        IMPORTANCE_TAG="${default_importance_tag}"
+    fi
+}
 
 
 # --- Generation params (match official Dream eval) ---
@@ -161,7 +272,7 @@ ALG=${ALG:-"entropy"}
 ALG_TEMP=${ALG_TEMP:-0.0}
 BLOCK_SIZE=${BLOCK_SIZE:-32}
 BLOCK_LENGTH=${BLOCK_LENGTH:-32}
-DIFFUSION_MODE=${DIFFUSION_MODE:-"global"}
+DIFFUSION_MODE=${DIFFUSION_MODE:-"semi"}
 
 # --- Output ---
 RESULTS_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/dream/results/mask_head"
@@ -191,13 +302,13 @@ run_single_eval() {
     local env_prefix=()
 
     if [ "$task" = "humaneval" ] || [ "$task" = "humaneval_instruct" ]; then
-        max_new_tokens=768
-        steps=768
+        max_new_tokens=${HUMANEVAL_MAX_NEW_TOKENS:-768}
+        steps=${HUMANEVAL_STEPS:-${max_new_tokens}}
     elif [ "$task" = "mbpp" ]; then
-        max_new_tokens=${MBPP_MAX_NEW_TOKENS:-512}
+        max_new_tokens=${MBPP_MAX_NEW_TOKENS:-1024}
         steps=${MBPP_STEPS:-${max_new_tokens}}
     elif [ "$task" = "minerva_math" ]; then
-        max_new_tokens=${MINERVA_MATH_MAX_NEW_TOKENS:-512}
+        max_new_tokens=${MINERVA_MATH_MAX_NEW_TOKENS:-1024}
         steps=${MINERVA_MATH_STEPS:-${max_new_tokens}}
     fi
 
@@ -293,6 +404,9 @@ run_single_eval() {
 # ===========================================================================
 
 IFS=',' read -r -a PRUNE_MODES <<< "${PRUNE_WHICH_LIST}"
+TASKS_PER_DATASET=${#TASKS[@]}
+TOTAL_TASKS=$((${#ATTR_DATASETS[@]} * ${#USE_NEGATED_MODES[@]} * ${#PRUNE_MODES[@]} * ${TASKS_PER_DATASET}))
+CURRENT_TASK=0
 
 echo "========================================================"
 echo "Dream Mask-Head / Pruning Eval"
@@ -304,46 +418,61 @@ echo "Prune frac:  k=${PRUNE_K:-"(none)"} k_frac=${PRUNE_K_FRAC:-"(none)"}  laye
 echo "Diffusion:   mode=${DIFFUSION_MODE} block_length=${BLOCK_LENGTH}"
 echo "HeadMask:    warmup_frac=${HEAD_MASK_WARMUP_FRAC}"
 echo "Seed:        ${RANDOM_PRUNE_SEED} (random mode only)"
-echo "Importance:  ${USED_IMPORTANCE_PATH} (tag=${IMPORTANCE_TAG})"
-echo "Tasks:       ${TASKS[*]}"
-echo "Limit:       ${LIMIT}"
+echo "Attr datasets: ${ATTR_DATASETS[*]}"
+if [ -n "${USER_IMPORTANCE_PATH}" ]; then
+    echo "Importance base: ${USER_IMPORTANCE_PATH} (manual override for all datasets)"
+else
+    echo "Importance base: auto-resolved per item in ATTR_DATASETS_STR"
+fi
 echo "Timestamp:   ${RUN_TS}"
 echo "========================================================"
 
 FAIL=0
 
-for prune_which in "${PRUNE_MODES[@]}"; do
-    # Validate importance file for non-random modes
-    if [ "$prune_which" != "random" ]; then
-        if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
-            echo "ERROR: importance file not found: ${USED_IMPORTANCE_PATH}"
-            exit 3
+for attr_dataset in "${ATTR_DATASETS[@]}"; do
+    resolve_attr_dataset_context "${attr_dataset}" || exit $?
+    echo "[dataset] attr_dataset=${CURRENT_ATTR_DATASET} tasks=${TASKS[*]} limit=${LIMIT}"
+    for use_negated_mode in "${USE_NEGATED_MODES[@]}"; do
+        use_negated_mode="$(echo "${use_negated_mode}" | xargs)"
+        if [ "${use_negated_mode}" != "0" ] && [ "${use_negated_mode}" != "1" ]; then
+            echo "ERROR: USE_NEGATED_MODES_STR only supports 0 or 1, got: ${use_negated_mode}"
+            exit 2
         fi
-    fi
 
-    # Build per-mode output directory
-    if [ -n "$PRUNE_K" ]; then
-        PRUNE_TAG="prune_${prune_which}_k${PRUNE_K}"
-    else
-        PRUNE_TAG="prune_${prune_which}_kfrac$(echo "${PRUNE_K_FRAC}" | tr '.' 'p')"
-    fi
-    MODE_DIR="${RESULTS_ROOT}/${IMPORTANCE_TAG}/${PRUNE_TAG}_${MASK_GRANULARITY}_L${LAYER_START}-${LAYER_END}_${RUN_TS}"
-    mkdir -p "$MODE_DIR"
+        resolve_importance_variant "${use_negated_mode}"
+        negation_label="$( [ "${use_negated_mode}" = "1" ] && echo "negated" || echo "original" )"
+        echo "[importance] variant=${negation_label} tag=${IMPORTANCE_TAG} path=${USED_IMPORTANCE_PATH}"
 
-    echo ""
-    echo "========================================"
-    echo "Prune mode: ${prune_which}  ->  ${MODE_DIR}"
-    echo "========================================"
+        for prune_which in "${PRUNE_MODES[@]}"; do
+            # Validate importance file for non-random modes
+            if [ "$prune_which" != "random" ]; then
+                if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
+                    echo "ERROR: importance file not found: ${USED_IMPORTANCE_PATH}"
+                    exit 3
+                fi
+            fi
 
-    for task in "${TASKS[@]}"; do
-        echo ""
-        echo "--- ${prune_which} / ${task} ---"
-        if run_single_eval "$task" "$prune_which" "$MODE_DIR"; then
-            echo "[ok] ${prune_which} / ${task}"
-        else
-            echo "[FAIL] ${prune_which} / ${task}  (see ${MODE_DIR}/${task}/eval.log)"
-            FAIL=1
-        fi
+            # Build per-mode output directory
+            if [ -n "$PRUNE_K" ]; then
+                PRUNE_TAG="prune_${prune_which}_k${PRUNE_K}"
+            else
+                PRUNE_TAG="prune_${prune_which}_kfrac$(echo "${PRUNE_K_FRAC}" | tr '.' 'p')"
+            fi
+            MODE_DIR="${RESULTS_ROOT}/${IMPORTANCE_TAG}/${PRUNE_TAG}_${MASK_GRANULARITY}_L${LAYER_START}-${LAYER_END}_${RUN_TS}"
+            mkdir -p "$MODE_DIR"
+
+            for task in "${TASKS[@]}"; do
+                CURRENT_TASK=$((CURRENT_TASK + 1))
+                CURRENT_RUN_LABEL="[${CURRENT_TASK}/${TOTAL_TASKS}] dataset=${CURRENT_ATTR_DATASET} variant=${negation_label} prune=${prune_which} task=${task}"
+                echo "[start] ${CURRENT_RUN_LABEL} limit=${LIMIT} out=${MODE_DIR}/${task}"
+                if run_single_eval "$task" "$prune_which" "$MODE_DIR"; then
+                    echo "[done]  ${CURRENT_RUN_LABEL}"
+                else
+                    echo "[fail]  ${CURRENT_RUN_LABEL} log=${MODE_DIR}/${task}/eval.log"
+                    FAIL=1
+                fi
+            done
+        done
     done
 done
 

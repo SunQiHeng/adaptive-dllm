@@ -2,7 +2,7 @@ dataset_path: json
 dataset_name: null
 dataset_kwargs:
   data_files:
-    train: ["/home/qiheng/Projects/adaptive-dllm/evaluation/local_tasks/test_gpqa.jsonl"]
+    train: ["/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"]
 tag: gpqa
 output_type: multiple_choice
 process_docs: !function utils.process_docs

@@ -20,7 +20,7 @@ echo "Host: $(hostname)"
 echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
-GPU_ID=${GPU_ID:-2}
+GPU_ID=${GPU_ID:-3}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -34,7 +34,7 @@ export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:${PYTHONPATH:-}
 
 MODEL_PATH=${MODEL_PATH:-"/data/qh_models/Dream-v0-Instruct-7B"}
 MODEL_NAME=${MODEL_NAME:-"dream"}
-OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs"}
+OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs/aconfigs"}
 RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
 
@@ -184,6 +184,12 @@ LAST_OUT_DIR="${OUT_DIR}"
     --output_dir "${OUT_DIR}" \
     --use_amp_bf16
 } 2>&1 | tee "${OUT_DIR}/run.log"
+local rc=${PIPESTATUS[0]}
+if [ "${rc}" -ne 0 ]; then
+  echo "[runner] FAILED rc=${rc}"
+  echo "[runner] Log: ${OUT_DIR}/run.log"
+  return "${rc}"
+fi
 
 echo "========================================================"
 echo "Finished at: $(date)"

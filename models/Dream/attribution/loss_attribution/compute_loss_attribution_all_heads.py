@@ -95,6 +95,18 @@ def _take_seeded_rows(ds, *, max_samples: int, data_seed: int) -> List[Dict[str,
     return [ds[i] for i in range(take_n)]
 
 
+def _sanitize_generation_config(model: torch.nn.Module) -> None:
+    gen_cfg = getattr(model, "generation_config", None)
+    if gen_cfg is None:
+        return
+    if hasattr(gen_cfg, "temperature"):
+        gen_cfg.temperature = None
+    if hasattr(gen_cfg, "top_p"):
+        gen_cfg.top_p = None
+    if hasattr(gen_cfg, "top_k"):
+        gen_cfg.top_k = None
+
+
 class _MultiOProjHeadGate:
     """
     Register forward_pre_hook on multiple Dream attention o_proj modules.
@@ -572,13 +584,19 @@ def main() -> None:
     print(f"gradient_checkpointing={bool(args.gradient_checkpointing)}")
     print("========================================================")
 
-    # Load model
+    # Load model – suppress HF GenerationConfig.validate() warnings triggered by
+    # Dream's generation_config.json (temperature=0.0 with do_sample=False).
+    import transformers as _hf_mod
+    _orig_verbosity = _hf_mod.logging.get_verbosity()
+    _hf_mod.logging.set_verbosity_error()
     model = DreamModel.from_pretrained(
         args.model_path,
         torch_dtype=torch.bfloat16,
         trust_remote_code=True,
         device_map="auto",
     )
+    _hf_mod.logging.set_verbosity(_orig_verbosity)
+    _sanitize_generation_config(model)
 
     # Activate checkpointing.
     #
@@ -612,6 +630,11 @@ def main() -> None:
             )
         if hasattr(model, "model") and hasattr(model.model, "gradient_checkpointing"):
             model.model.gradient_checkpointing = True
+        if hasattr(model, "config"):
+            model.config.use_cache = False
+        gen_cfg = getattr(model, "generation_config", None)
+        if gen_cfg is not None and hasattr(gen_cfg, "use_cache"):
+            gen_cfg.use_cache = False
 
         if attn_do > 0.0:
             print(

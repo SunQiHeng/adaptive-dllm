@@ -13,7 +13,7 @@ set -o pipefail
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-1}
 
 source ~/miniconda3/bin/activate adaptive-dllm
 
@@ -23,18 +23,95 @@ cd /home/qiheng/Projects/adaptive-dllm/evaluation/llada
 # Model config
 # -----------------------
 MODEL_PATH=${MODEL_PATH:-"/data/qh_models/LLaDA-1.5"}
-MODEL_NAME=${MODEL_NAME:-"llada_1_5"}
+# Result directory label for the evaluated model.
+EVAL_MODEL_NAME=${EVAL_MODEL_NAME:-"llada_1_5"}
 
 # -----------------------
 # Pruning / Importance config
 # -----------------------
 # 现在支持一次运行多个模式，用逗号分隔，例如: MODES="most,least,random"
-MODES_STR=${MODES:-"most"}
+MODES_STR=${MODES:-"most,least,random"}
 IFS=',' read -r -a MODES <<< "${MODES_STR}"
 
 PRUNE_SCOPE=${PRUNE_SCOPE:-"layer"} # global|layer (全局排序剪枝 vs 每层按相同比例剪枝)
-# 修改这里即可更换分数路径
-IMPORTANCE_PATH=${IMPORTANCE_PATH:-"/home/qiheng/Projects/adaptive-dllm/configs/head_importance_llada-1_5_gsm8k_full_ts20260115_024826/head_importance.pt"}
+# Preferred interface:
+#   Single dataset: MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR=ceval-valid_all
+#   Multi dataset:  MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR="mmlu_all,cmmlu_all"
+# You can still override with IMPORTANCE_PATH directly.
+ATTR_MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
+# ATTR_METHOD candidates:
+#   headig | attnlrp | shapley
+ATTR_METHOD=${ATTR_METHOD:-"shapley"}
+# ATTR_DATASETS_STR candidates:
+#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k_full | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k_full,minerva_math,gpqa_main_n_shot_all,humaneval,mbpp"}
+IFS=',' read -r -a ATTR_DATASETS <<< "${ATTR_DATASETS_STR}"
+FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
+USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
+build_default_importance_path() {
+    local attr_dataset="$1"
+    echo "/home/qiheng/Projects/adaptive-dllm/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
+}
+# Recommended LIMIT values for task-specific evals (stability vs runtime trade-off):
+#   mmlu_all: 40
+#   cmmlu_all: 40
+#   ceval-valid_all: 200
+#   gpqa_main_n_shot_all: 200
+#   gsm8k_full: 200
+#   minerva_math: 200
+#   humaneval: 200
+#   mbpp: 200
+# Negation modes:
+#   USE_NEGATED_MODES_STR="0"   -> only original importance
+#   USE_NEGATED_MODES_STR="1"   -> only negated importance
+#   USE_NEGATED_MODES_STR="0,1" -> run both original and negated importance
+USE_NEGATED_MODES_STR=${USE_NEGATED_MODES_STR:-"0"}
+IFS=',' read -r -a USE_NEGATED_MODES <<< "${USE_NEGATED_MODES_STR}"
+IMPORTANCE_TAG_OVERRIDE=${IMPORTANCE_TAG:-""}
+
+USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+IMPORTANCE_TAG=""
+
+resolve_importance_variant() {
+    local use_negated="$1"
+    local tag_suffix=""
+
+    USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+    if [ "${use_negated}" = "1" ]; then
+        local src_importance_path="${IMPORTANCE_PATH}"
+        local neg_dir="${NEG_DIR:-"$(dirname "${src_importance_path}")_neg"}"
+        USED_IMPORTANCE_PATH="${neg_dir}/head_importance.pt"
+        if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+            echo "➖ Generating negated importance..."
+            python "${SCRIPT_DIR}/generate_negated_importance.py" \
+                --in_pt "${src_importance_path}" \
+                --out_dir "${neg_dir}"
+            if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+                echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
+                exit 3
+            fi
+        else
+            echo "➖ Using existing negated importance: ${USED_IMPORTANCE_PATH}"
+        fi
+        tag_suffix="_neg"
+    fi
+
+    local default_importance_tag
+    default_importance_tag="$(basename "$(dirname "${IMPORTANCE_PATH}")")${tag_suffix}"
+    if [ -n "${IMPORTANCE_TAG_OVERRIDE}" ]; then
+        if [ "${#USE_NEGATED_MODES[@]}" -gt 1 ]; then
+            if [ "${use_negated}" = "1" ]; then
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_neg"
+            else
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_orig"
+            fi
+        else
+            IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}"
+        fi
+    else
+        IMPORTANCE_TAG="${default_importance_tag}"
+    fi
+}
 
 PRUNE_K_FRAC=${PRUNE_K_FRAC:-"0.2"}
 LAYER_START=${LAYER_START:-0}
@@ -45,10 +122,56 @@ HEAD_MASK_WARMUP_FRAC=${HEAD_MASK_WARMUP_FRAC:-0.2}
 # -----------------------
 # Eval tasks / params
 # -----------------------
-TASKS=("gsm8k")
-if [ -n "${TASKS_STR:-}" ]; then
-    IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
-fi
+default_task_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo "mmlu" ;;
+        cmmlu_all) echo "cmmlu" ;;
+        ceval-valid_all) echo "ceval-valid" ;;
+        gsm8k_full) echo "gsm8k" ;;
+        minerva_math) echo "minerva_math" ;;
+        gpqa_main_n_shot_all) echo "gpqa_main_n_shot" ;;
+        humaneval) echo "humaneval" ;;
+        mbpp) echo "mbpp" ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default task mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+default_limit_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo 40 ;;
+        cmmlu_all) echo 40 ;;
+        ceval-valid_all) echo 200 ;;
+        gpqa_main_n_shot_all) echo 200 ;;
+        gsm8k_full) echo 200 ;;
+        minerva_math) echo 200 ;;
+        humaneval) echo 200 ;;
+        mbpp) echo 200 ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default limit mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+resolve_attr_dataset_context() {
+    local attr_dataset="$(echo "$1" | xargs)"
+    CURRENT_ATTR_DATASET="${attr_dataset}"
+    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(build_default_importance_path "${CURRENT_ATTR_DATASET}")}"
+    if [ -n "${TASKS_STR:-}" ]; then
+        IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
+    else
+        TASKS=("$(default_task_for_attr_dataset "${CURRENT_ATTR_DATASET}")") || return $?
+    fi
+    LIMIT="${LIMIT_OVERRIDE:-$(default_limit_for_attr_dataset "${CURRENT_ATTR_DATASET}")}" || return $?
+}
+
+LIMIT_OVERRIDE=${LIMIT:-""}
+CURRENT_ATTR_DATASET=""
+resolve_attr_dataset_context "${FIRST_ATTR_DATASET}" || exit $?
+
 GPQA_DATA_PATH=${GPQA_DATA_PATH:-""}
 LOCAL_TASK_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/local_tasks/generated"
 DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
@@ -136,35 +259,50 @@ GEN_LENGTH=${GEN_LENGTH:-256}
 STEPS=${STEPS:-256}
 BLOCK_LENGTH=${BLOCK_LENGTH:-32}
 DIFFUSION_MODE=${DIFFUSION_MODE:-"semi"}
-LIMIT=${LIMIT:-20}
+
 NUM_FEWSHOT=${NUM_FEWSHOT:-0}
 
 # -----------------------
 # Run Loop
 # -----------------------
-for current_mode in "${MODES[@]}"; do
-    PRUNE_WHICH=$current_mode
-    
-    # -----------------------
-    # Output config
-    # -----------------------
-    RESULTS_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/llada/${MODEL_NAME}_results/mask_head"
-    PRUNE_TAG="prune_${PRUNE_WHICH}_scope_${PRUNE_SCOPE}_kfrac$(echo "${PRUNE_K_FRAC}" | tr '.' 'p')"
-    RUN_TS=$(date +"%Y-%m-%dT%H-%M-%S")
-    RUN_DIR="${RESULTS_ROOT}/${PRUNE_TAG}_L${LAYER_START}-${LAYER_END}_${RUN_TS}"
-    mkdir -p "$RUN_DIR"
+# -----------------------
+echo "Attr datasets: ${ATTR_DATASETS[*]}"
+if [ -n "${USER_IMPORTANCE_PATH}" ]; then
+    echo "Importance base: ${USER_IMPORTANCE_PATH} (manual override for all datasets)"
+else
+    echo "Importance base: auto-resolved per item in ATTR_DATASETS_STR"
+fi
 
-    echo "========================================================"
-    echo "LLaDA Mask-Head / Pruning Eval | MODE: ${PRUNE_WHICH}"
-    echo "========================================================"
-    echo "Model:       ${MODEL_PATH}"
-    echo "Importance:  ${IMPORTANCE_PATH}"
-    echo "Prune:       which=${PRUNE_WHICH} scope=${PRUNE_SCOPE} k_frac=${PRUNE_K_FRAC}"
-    echo "Tasks:       ${TASKS[*]}"
-    echo "Diffusion:   mode=${DIFFUSION_MODE} block_length=${BLOCK_LENGTH}"
-    echo "HeadMask:    warmup_frac=${HEAD_MASK_WARMUP_FRAC}"
-    echo "Out:         ${RUN_DIR}"
-    echo "========================================================"
+TASKS_PER_DATASET=${#TASKS[@]}
+TOTAL_TASKS=$((${#ATTR_DATASETS[@]} * ${#USE_NEGATED_MODES[@]} * ${#MODES[@]} * ${TASKS_PER_DATASET}))
+CURRENT_TASK=0
+
+for attr_dataset in "${ATTR_DATASETS[@]}"; do
+    resolve_attr_dataset_context "${attr_dataset}" || exit $?
+    echo "[dataset] attr_dataset=${CURRENT_ATTR_DATASET} tasks=${TASKS[*]} limit=${LIMIT}"
+
+    for use_negated_mode in "${USE_NEGATED_MODES[@]}"; do
+        use_negated_mode="$(echo "${use_negated_mode}" | xargs)"
+        if [ "${use_negated_mode}" != "0" ] && [ "${use_negated_mode}" != "1" ]; then
+            echo "ERROR: USE_NEGATED_MODES_STR only supports 0 or 1, got: ${use_negated_mode}"
+            exit 2
+        fi
+
+        resolve_importance_variant "${use_negated_mode}"
+        negation_label="$( [ "${use_negated_mode}" = "1" ] && echo "negated" || echo "original" )"
+        echo "[importance] variant=${negation_label} tag=${IMPORTANCE_TAG} path=${USED_IMPORTANCE_PATH}"
+
+        for current_mode in "${MODES[@]}"; do
+            PRUNE_WHICH=$current_mode
+            
+            # -----------------------
+            # Output config
+            # -----------------------
+            RESULTS_ROOT="/home/qiheng/Projects/adaptive-dllm/evaluation/llada/${EVAL_MODEL_NAME}_results/mask_head"
+            PRUNE_TAG="prune_${PRUNE_WHICH}_scope_${PRUNE_SCOPE}_kfrac$(echo "${PRUNE_K_FRAC}" | tr '.' 'p')"
+            RUN_TS=$(date +"%Y-%m-%dT%H-%M-%S")
+            RUN_DIR="${RESULTS_ROOT}/${IMPORTANCE_TAG}/${PRUNE_TAG}_L${LAYER_START}-${LAYER_END}_${RUN_TS}"
+            mkdir -p "$RUN_DIR"
 
     run_single_eval() {
         local task=$1
@@ -176,6 +314,10 @@ for current_mode in "${MODES[@]}"; do
         local local_gen_length=${GEN_LENGTH}
         local local_steps=${STEPS}
         case "$task" in
+            humaneval)
+                local_gen_length=${HUMANEVAL_GEN_LENGTH:-768}
+                local_steps=${HUMANEVAL_STEPS:-${local_gen_length}}
+                ;;
             mbpp)
                 local_gen_length=${MBPP_GEN_LENGTH:-1024}
                 local_steps=${MBPP_STEPS:-${local_gen_length}}
@@ -229,12 +371,12 @@ for current_mode in "${MODES[@]}"; do
         esac
 
         local importance_arg=""
-        if [ "${PRUNE_WHICH}" != "random" ]; then
-            if [ ! -f "$IMPORTANCE_PATH" ]; then
-                echo "ERROR: importance file not found: ${IMPORTANCE_PATH}"
+            if [ "${PRUNE_WHICH}" != "random" ]; then
+                if [ ! -f "$USED_IMPORTANCE_PATH" ]; then
+                    echo "ERROR: importance file not found: ${USED_IMPORTANCE_PATH}"
                 exit 3
             fi
-            importance_arg=",importance_path=${IMPORTANCE_PATH}"
+                importance_arg=",importance_path=${USED_IMPORTANCE_PATH}"
         fi
 
         local common_args="model_path=${MODEL_PATH}${importance_arg},prune_which=${PRUNE_WHICH},prune_k_frac=${PRUNE_K_FRAC},prune_scope=${PRUNE_SCOPE},random_prune_seed=${RANDOM_PRUNE_SEED},layer_start=${LAYER_START},layer_end=${LAYER_END},gen_length=${local_gen_length},steps=${local_steps},block_length=${BLOCK_LENGTH},diffusion_mode=${DIFFUSION_MODE},head_mask_warmup_frac=${HEAD_MASK_WARMUP_FRAC},progress_label=${progress_label}${model_args_extra}"
@@ -255,15 +397,19 @@ for current_mode in "${MODES[@]}"; do
         return ${PIPESTATUS[0]}
     }
 
-    FAIL=0
-    for task in "${TASKS[@]}"; do
-        echo -e "\nRunning ${PRUNE_WHICH}: ${task}..."
-        if run_single_eval "$task"; then
-            echo "✅ Done: ${task}"
-        else
-            echo "❌ Failed: ${task}"
-            FAIL=1
-        fi
+            FAIL=0
+            for task in "${TASKS[@]}"; do
+                CURRENT_TASK=$((CURRENT_TASK + 1))
+                CURRENT_RUN_LABEL="[${CURRENT_TASK}/${TOTAL_TASKS}] dataset=${CURRENT_ATTR_DATASET} variant=${negation_label} prune=${PRUNE_WHICH} task=${task}"
+                echo "[start] ${CURRENT_RUN_LABEL} limit=${LIMIT} out=${RUN_DIR}/${task}"
+                if run_single_eval "$task"; then
+                    echo "[done]  ${CURRENT_RUN_LABEL}"
+                else
+                    echo "[fail]  ${CURRENT_RUN_LABEL} log=${RUN_DIR}/${task}/eval.log"
+                    FAIL=1
+                fi
+            done
+        done
     done
 done
 

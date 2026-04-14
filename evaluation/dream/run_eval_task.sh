@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-4}"
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-1}"
 
 # Activate environment
 # source ~/miniconda3/bin/activate adaptive-dllm
@@ -35,16 +35,102 @@ if [ -n "${MODEL_TYPES_STR:-}" ]; then
     IFS=',' read -r -a MODEL_TYPES <<< "${MODEL_TYPES_STR}"
 fi
 
+# Negation selection:
+# - Backward compatible: USE_NEGATED=0 or USE_NEGATED=1
+# - Batch mode: USE_NEGATED_MODES_STR="0,1" runs both original and negated scores in one invocation
+USE_NEGATED=${USE_NEGATED:-1}
+USE_NEGATED_MODES_STR=${USE_NEGATED_MODES_STR:-"${USE_NEGATED}"}
+IFS=',' read -r -a USE_NEGATED_MODES <<< "${USE_NEGATED_MODES_STR}"
+IMPORTANCE_TAG_OVERRIDE=${IMPORTANCE_TAG:-""}
+
+# Resolved per negation mode before each run batch.
+USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+IMPORTANCE_TAG=""
+
 # -------------------------
-# Importance score path selection (EDIT ONE LINE)
+# Importance score path selection
 # -------------------------
-# Only change the next line (or override via env IMPORTANCE_PATH=...):
-IMPORTANCE_PATH=${IMPORTANCE_PATH:-"${PROJECT_ROOT}/configs/head_importance_dream_mmlu_all_pmrandom_threshold_ts20260323_224941/head_importance.pt"}
-TASKS=("mmlu")
-if [ -n "${TASKS_STR:-}" ]; then
-    IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
-fi
-LIMIT=${LIMIT:-10}
+# Preferred interface:
+#   Single dataset: MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR=ceval-valid_all
+#   Multi dataset:  MODEL_NAME=dream ATTR_METHOD=headig ATTR_DATASETS_STR="mmlu_all,cmmlu_all"
+# This resolves to:
+#   ${PROJECT_ROOT}/configs/dream_headig_ceval-valid_all/head_importance.pt
+#
+# You can still override everything directly with IMPORTANCE_PATH=...
+USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
+ATTR_MODEL_NAME=${MODEL_NAME:-"dream"}
+# ATTR_METHOD candidates:
+#   headig | attnlrp | shapley
+ATTR_METHOD=${ATTR_METHOD:-"shapley"}
+# ATTR_DATASETS_STR candidates:
+#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k_full | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k_full,minerva_math,gpqa_main_n_shot_all,humaneval,mbpp"}
+IFS=',' read -r -a ATTR_DATASETS <<< "${ATTR_DATASETS_STR}"
+FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
+
+build_default_importance_path() {
+    local attr_dataset="$1"
+    echo "${PROJECT_ROOT}/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
+}
+
+default_task_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo "mmlu" ;;
+        cmmlu_all) echo "cmmlu" ;;
+        ceval-valid_all) echo "ceval-valid" ;;
+        gsm8k_full) echo "gsm8k" ;;
+        minerva_math) echo "minerva_math" ;;
+        gpqa_main_n_shot_all) echo "gpqa_main_n_shot" ;;
+        humaneval) echo "humaneval" ;;
+        mbpp) echo "mbpp" ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default task mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+# Recommended LIMIT values for task-specific evals (stability vs runtime trade-off):
+#   mmlu_all: 40
+#   cmmlu_all: 40
+#   ceval-valid_all: 200
+#   gpqa_main_n_shot_all: 200
+#   gsm8k_full: 200
+#   minerva_math: 200
+#   humaneval: 200
+#   mbpp: 200
+default_limit_for_attr_dataset() {
+    case "$1" in
+        mmlu_all) echo 40 ;;
+        cmmlu_all) echo 40 ;;
+        ceval-valid_all) echo 200 ;;
+        gpqa_main_n_shot_all) echo 200 ;;
+        gsm8k_full) echo 200 ;;
+        minerva_math) echo 200 ;;
+        humaneval) echo 200 ;;
+        mbpp) echo 200 ;;
+        *)
+            echo "ERROR: Unsupported attr dataset for default limit mapping: $1" >&2
+            return 2
+            ;;
+    esac
+}
+
+resolve_attr_dataset_context() {
+    local attr_dataset="$(echo "$1" | xargs)"
+    CURRENT_ATTR_DATASET="${attr_dataset}"
+    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(build_default_importance_path "${CURRENT_ATTR_DATASET}")}"
+    if [ -n "${TASKS_STR:-}" ]; then
+        IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
+    else
+        TASKS=("$(default_task_for_attr_dataset "${CURRENT_ATTR_DATASET}")") || return $?
+    fi
+    LIMIT="${LIMIT_OVERRIDE:-$(default_limit_for_attr_dataset "${CURRENT_ATTR_DATASET}")}" || return $?
+}
+
+LIMIT_OVERRIDE=${LIMIT:-""}
+CURRENT_ATTR_DATASET=""
+resolve_attr_dataset_context "${FIRST_ATTR_DATASET}" || exit $?
 GPQA_DATA_PATH=${GPQA_DATA_PATH:-""}
 LOCAL_TASK_ROOT="${PROJECT_ROOT}/evaluation/local_tasks/generated"
 DEFAULT_GPQA_DATA_PATH="${PROJECT_ROOT}/evaluation/local_data/gpqa/gpqa_main.jsonl"
@@ -127,46 +213,62 @@ for path in files:
 print(count)
 PY
 }
-# Whether to negate the scores (0=use original, 1=negate). Keep default aligned with prior behavior.
-USE_NEGATED=${USE_NEGATED:-1}
 
-# What we actually pass downstream
-USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
 
-# Auto-generate negated importance if requested
-if [ "${USE_NEGATED}" = "1" ]; then
-    SRC_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
-    NEG_DIR=${NEG_DIR:-"$(dirname "${SRC_IMPORTANCE_PATH}")_neg"}
-    USED_IMPORTANCE_PATH="${NEG_DIR}/head_importance.pt"
-    if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
-        echo "➖ Generating negated importance..."
-        python "${SCRIPT_DIR}/generate_negated_importance.py" \
-            --in_pt "${SRC_IMPORTANCE_PATH}" \
-            --out_dir "${NEG_DIR}"
+resolve_importance_variant() {
+    local use_negated="$1"
+    local tag_suffix=""
+
+    USED_IMPORTANCE_PATH="${IMPORTANCE_PATH}"
+    if [ "${use_negated}" = "1" ]; then
+        local src_importance_path="${IMPORTANCE_PATH}"
+        local neg_dir="${NEG_DIR:-"$(dirname "${src_importance_path}")_neg"}"
+        USED_IMPORTANCE_PATH="${neg_dir}/head_importance.pt"
         if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
-            echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
-            exit 3
+            echo "➖ Generating negated importance..."
+            python "${SCRIPT_DIR}/generate_negated_importance.py" \
+                --in_pt "${src_importance_path}" \
+                --out_dir "${neg_dir}"
+            if [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+                echo "ERROR: Failed to generate negated importance at: ${USED_IMPORTANCE_PATH}"
+                exit 3
+            fi
+        else
+            echo "➖ Using existing negated importance: ${USED_IMPORTANCE_PATH}"
+        fi
+        tag_suffix="_neg"
+    fi
+
+    local default_importance_tag
+    default_importance_tag="$(basename "$(dirname "${IMPORTANCE_PATH}")")${tag_suffix}"
+    if [ -n "${IMPORTANCE_TAG_OVERRIDE}" ]; then
+        if [ "${#USE_NEGATED_MODES[@]}" -gt 1 ]; then
+            if [ "${use_negated}" = "1" ]; then
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_neg"
+            else
+                IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}_orig"
+            fi
+        else
+            IMPORTANCE_TAG="${IMPORTANCE_TAG_OVERRIDE}"
         fi
     else
-        echo "➖ Using existing negated importance: ${USED_IMPORTANCE_PATH}"
+        IMPORTANCE_TAG="${default_importance_tag}"
     fi
-fi
-
-# Tag for output directory naming only (can be overridden)
-DEFAULT_IMPORTANCE_TAG="$(basename "$(dirname "${IMPORTANCE_PATH}")")$( [ "${USE_NEGATED}" = "1" ] && echo "_neg" )"
-IMPORTANCE_TAG=${IMPORTANCE_TAG:-"${DEFAULT_IMPORTANCE_TAG}"}
+}
 
 echo "========================================================"
 echo "Dream Quick Test Configuration"
 echo "========================================================"
-echo "Tasks: ${TASKS[*]}"
+echo "Attr datasets: ${ATTR_DATASETS[*]}"
 echo "Model Types: ${MODEL_TYPES[*]}"
+echo "Negation modes: ${USE_NEGATED_MODES[*]}"
 echo "Default Max New Tokens/Steps: 256/256 (task overrides apply for humaneval, mbpp, and minerva_math)"
 echo "Block Size: 32"
-echo "Limit: ${LIMIT}"
-echo "Importance tag: ${IMPORTANCE_TAG}"
-echo "Importance base: ${IMPORTANCE_PATH}"
-echo "Importance used: ${USED_IMPORTANCE_PATH}"
+if [ -n "${USER_IMPORTANCE_PATH}" ]; then
+    echo "Importance base: ${USER_IMPORTANCE_PATH} (manual override for all datasets)"
+else
+    echo "Importance base: auto-resolved per item in ATTR_DATASETS_STR"
+fi
 echo "========================================================"
 echo ""
 
@@ -178,7 +280,7 @@ ALG="entropy"
 ALG_TEMP=0.0  # Official: 0.0 (NOT 1.5!)
 BLOCK_SIZE=32
 BLOCK_LENGTH=${BLOCK_LENGTH:-32}
-DIFFUSION_MODE=${DIFFUSION_MODE:-"global"}
+DIFFUSION_MODE=${DIFFUSION_MODE:-"semi"}
 
 
 # Task-specific parameters (will be set per task)
@@ -198,12 +300,7 @@ run_single_eval() {
     local task=$1
     local model_type=$2
     local task_name="${task}"
-    
-    echo ""
-    echo "========================================"
-    echo "Running: ${model_type} on ${task}"
-    echo "========================================"
-    
+
     # Task tag for output directory (avoid overwriting when toggling chat template, etc.)
     TASK_TAG="${task}"
     case "${task}" in
@@ -221,16 +318,16 @@ run_single_eval() {
     
     # Set task-specific parameters (matching official Dream eval)
     if [ "$task" = "humaneval" ] || [ "$task" = "humaneval_instruct" ]; then
-        MAX_NEW_TOKENS=768
-        STEPS=768
+        MAX_NEW_TOKENS=${HUMANEVAL_MAX_NEW_TOKENS:-768}
+        STEPS=${HUMANEVAL_STEPS:-${MAX_NEW_TOKENS}}
     elif [ "$task" = "mbpp" ]; then
-        MAX_NEW_TOKENS=${MBPP_MAX_NEW_TOKENS:-512}
+        MAX_NEW_TOKENS=${MBPP_MAX_NEW_TOKENS:-1024}
         STEPS=${MBPP_STEPS:-${MAX_NEW_TOKENS}}
     elif [ "$task" = "gsm8k" ] || [ "$task" = "gsm8k_cot" ]; then
         MAX_NEW_TOKENS=256
         STEPS=256
     elif [ "$task" = "minerva_math" ]; then
-        MAX_NEW_TOKENS=${MINERVA_MATH_MAX_NEW_TOKENS:-512}
+        MAX_NEW_TOKENS=${MINERVA_MATH_MAX_NEW_TOKENS:-1024}
         STEPS=${MINERVA_MATH_STEPS:-${MAX_NEW_TOKENS}}
     else
         MAX_NEW_TOKENS=256
@@ -248,8 +345,15 @@ run_single_eval() {
             ;;
     esac
     
-    echo "Params: max_new_tokens=${MAX_NEW_TOKENS}, steps=${STEPS}, temperature=${TEMPERATURE}, alg_temp=${ALG_TEMP}, block_size=${BLOCK_SIZE}, block_length=${BLOCK_LENGTH}, diffusion_mode=${DIFFUSION_MODE}, limit=${LIMIT}"
+    echo "[start] ${CURRENT_RUN_LABEL} max_new_tokens=${MAX_NEW_TOKENS} steps=${STEPS} limit=${LIMIT} out=${OUTPUT_DIR}"
     
+    # Fail early with a clear error if adaptive mode resolves to a missing importance file.
+    if [ "$model_type" = "adaptive" ] && [ ! -f "${USED_IMPORTANCE_PATH}" ]; then
+        echo "ERROR: adaptive mode requires an importance file, but it was not found:"
+        echo "  ${USED_IMPORTANCE_PATH}"
+        return 3
+    fi
+
     # Set importance source for adaptive mode
     if [ "$model_type" = "adaptive" ]; then
         # GQA weighting granularity for Dream adaptive attention:
@@ -388,8 +492,6 @@ PY
         printf "%q " "${CMD[@]}"
         echo
     } > "${OUTPUT_DIR}/run_cmd.sh"
-    echo "[run] saved command to ${OUTPUT_DIR}/run_cmd.sh"
-    echo "[run] saved env to ${OUTPUT_DIR}/run_env.txt"
 
     # Execute
     "${CMD[@]}" 2>&1 | tee "${OUTPUT_DIR}/eval.log"
@@ -406,13 +508,10 @@ PY
     echo "$(date '+%Y-%m-%d %H:%M:%S') - ${model_type} - ${task} - ${ELAPSED}s (${ELAPSED_MIN}m ${ELAPSED_SEC}s)" >> "results/timing_log.txt"
     
     if [ "${CMD_RC}" -eq 0 ]; then
-        echo "✅ Completed ${model_type} on ${task}"
+        echo "[done]  ${CURRENT_RUN_LABEL} elapsed=${ELAPSED}s"
     else
-        echo "❌ Failed ${model_type} on ${task} (exit=${CMD_RC})"
-        echo "   See: ${OUTPUT_DIR}/eval.log"
+        echo "[fail]  ${CURRENT_RUN_LABEL} exit=${CMD_RC} elapsed=${ELAPSED}s log=${OUTPUT_DIR}/eval.log"
     fi
-    echo "⏱️  Running time: ${ELAPSED_MIN}m ${ELAPSED_SEC}s (${ELAPSED}s total)"
-    echo ""
 
     return "${CMD_RC}"
 }
@@ -423,22 +522,36 @@ echo "Started at: $(date)"
 echo ""
 
 # Total tasks counter
-TOTAL_TASKS=$((${#TASKS[@]} * ${#MODEL_TYPES[@]}))
+if [ -n "${TASKS_STR:-}" ]; then
+    IFS=',' read -r -a TASKS_OVERRIDE <<< "${TASKS_STR}"
+    TASKS_PER_DATASET=${#TASKS_OVERRIDE[@]}
+else
+    TASKS_PER_DATASET=1
+fi
+TOTAL_TASKS=$((${#ATTR_DATASETS[@]} * ${TASKS_PER_DATASET} * ${#MODEL_TYPES[@]} * ${#USE_NEGATED_MODES[@]}))
 CURRENT_TASK=0
 
 # Run all combinations
-for task in "${TASKS[@]}"; do
-    echo ""
-    echo "================================================"
-    echo "📊 Task: ${task^^}"
-    echo "================================================"
-    
-    for model_type in "${MODEL_TYPES[@]}"; do
-        CURRENT_TASK=$((CURRENT_TASK + 1))
-        echo ""
-        echo "Progress: [${CURRENT_TASK}/${TOTAL_TASKS}]"
-        
-        run_single_eval "$task" "$model_type" || exit $?
+for attr_dataset in "${ATTR_DATASETS[@]}"; do
+    resolve_attr_dataset_context "${attr_dataset}" || exit $?
+    echo "[dataset] attr_dataset=${CURRENT_ATTR_DATASET} tasks=${TASKS[*]} limit=${LIMIT}"
+    for use_negated_mode in "${USE_NEGATED_MODES[@]}"; do
+        use_negated_mode="$(echo "${use_negated_mode}" | xargs)"
+        if [ "${use_negated_mode}" != "0" ] && [ "${use_negated_mode}" != "1" ]; then
+            echo "ERROR: USE_NEGATED_MODES_STR only supports 0 or 1, got: ${use_negated_mode}"
+            exit 2
+        fi
+
+        resolve_importance_variant "${use_negated_mode}"
+        negation_label="$( [ "${use_negated_mode}" = "1" ] && echo "negated" || echo "original" )"
+        echo "[importance] variant=${negation_label} tag=${IMPORTANCE_TAG} path=${USED_IMPORTANCE_PATH}"
+        for task in "${TASKS[@]}"; do
+            for model_type in "${MODEL_TYPES[@]}"; do
+                CURRENT_TASK=$((CURRENT_TASK + 1))
+                CURRENT_RUN_LABEL="[${CURRENT_TASK}/${TOTAL_TASKS}] dataset=${CURRENT_ATTR_DATASET} variant=${negation_label} task=${task} model=${model_type}"
+                run_single_eval "$task" "$model_type" || exit $?
+            done
+        done
     done
 done
 
@@ -455,22 +568,31 @@ echo ""
 # Generate a summary
 echo "📈 Summary:"
 echo ""
-for task in "${TASKS[@]}"; do
-    TASK_TAG="${task}"
-    case "${task}" in
-        mmlu|cmmlu|ceval-valid|gpqa_main_n_shot)
-            TASK_TAG="${task}_chat"
-            ;;
-    esac
-    echo "Task: ${task}"
-    for model_type in "${MODEL_TYPES[@]}"; do
-        RESULT_FILE="results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/results.json"
-        if [ -f "$RESULT_FILE" ]; then
-            echo "  ✅ ${model_type}: results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/"
-        else
-            echo "  ❌ ${model_type}: FAILED"
-        fi
+for attr_dataset in "${ATTR_DATASETS[@]}"; do
+    resolve_attr_dataset_context "${attr_dataset}" || exit $?
+    echo "Attr dataset: ${CURRENT_ATTR_DATASET} (tasks=${TASKS[*]}, limit=${LIMIT})"
+    for use_negated_mode in "${USE_NEGATED_MODES[@]}"; do
+        use_negated_mode="$(echo "${use_negated_mode}" | xargs)"
+        resolve_importance_variant "${use_negated_mode}"
+        echo "Importance variant: $( [ "${use_negated_mode}" = "1" ] && echo "negated" || echo "original" )"
+        for task in "${TASKS[@]}"; do
+            TASK_TAG="${task}"
+            case "${task}" in
+                mmlu|cmmlu|ceval-valid|gpqa_main_n_shot)
+                    TASK_TAG="${task}_chat"
+                    ;;
+            esac
+            echo "Task: ${task}"
+            for model_type in "${MODEL_TYPES[@]}"; do
+                RESULT_FILE="results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/results.json"
+                if [ -f "$RESULT_FILE" ]; then
+                    echo "  ✅ ${model_type}: results/${model_type}/${TASK_TAG}_${IMPORTANCE_TAG}/"
+                else
+                    echo "  ❌ ${model_type}: FAILED"
+                fi
+            done
+            echo ""
+        done
     done
-    echo ""
 done
 

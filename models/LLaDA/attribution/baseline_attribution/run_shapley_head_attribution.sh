@@ -34,7 +34,7 @@ export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:${PYTHONPATH:-}
 
 MODEL_PATH=${MODEL_PATH:-"/data/qh_models/LLaDA-1.5"}
 MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
-OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs"}
+OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs/aconfigs"}
 RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
 
@@ -183,6 +183,12 @@ LAST_OUT_DIR="${OUT_DIR}"
     --use_amp_bf16 \
     --debug_dump_samples "${DEBUG_DUMP_SAMPLES}"
 } 2>&1 | tee "${OUT_DIR}/run.log"
+local rc=${PIPESTATUS[0]}
+if [ "${rc}" -ne 0 ]; then
+  echo "[runner] FAILED rc=${rc}"
+  echo "[runner] Log: ${OUT_DIR}/run.log"
+  return "${rc}"
+fi
 
 echo "========================================================"
 echo "Finished at: $(date)"

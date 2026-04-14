@@ -25,7 +25,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default: 4; keep consistent with your existing runner)
-GPU_ID=${GPU_ID:-0}
+GPU_ID=${GPU_ID:-2}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -43,7 +43,7 @@ MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
 DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_data/gpqa/gpqa_main.jsonl"
 
 # Where to write results
-OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs"}
+OUT_ROOT=${OUT_ROOT:-"/home/qiheng/Projects/adaptive-dllm/configs/aconfigs"}
 RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 
 # Attribution dataset (can differ from downstream eval tasks)
@@ -257,6 +257,12 @@ fi
     --debug_dump_samples "${DEBUG_DUMP_SAMPLES}" \
     --debug_save_per_sample "${DEBUG_SAVE_PER_SAMPLE}"
 } 2>&1 | tee "${OUT_DIR}/run.log"
+local rc=${PIPESTATUS[0]}
+if [ "${rc}" -ne 0 ]; then
+  echo "[runner] FAILED rc=${rc}"
+  echo "[runner] Log: ${OUT_DIR}/run.log"
+  return "${rc}"
+fi
 
 echo "========================================================"
 echo "Finished at: $(date)"
