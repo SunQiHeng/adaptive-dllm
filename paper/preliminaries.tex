@@ -87,7 +87,8 @@
     This immediately yields a blindness phenomenon for diagonal-path IG: if an interaction term is invisible on $\Delta$, then straight-line IG cannot detect it even when it is nonzero away from the diagonal.
 
     \begin{theorem}[Diagonal blindness of straight-line IG]
-    Let $F,H:[0,1]^D\to\mathbb{R}$ be continuously differentiable. Assume that
+    \label{thm:diag_blind}
+    Let $H:[0,1]^D\to\mathbb{R}$ be continuously differentiable with
     \begin{equation}
         \frac{\partial H(\alpha\mathbf{1}_D)}{\partial x_j}=0
         \qquad
@@ -96,25 +97,27 @@
     \end{equation}
     Then
     \begin{equation}
-        \mathrm{IG}_j(F+H;\mathbf{1}_D,\mathbf{0}_D)
-        =
-        \mathrm{IG}_j(F;\mathbf{1}_D,\mathbf{0}_D)
+        \mathrm{IG}_j(H;\mathbf{1}_D,\mathbf{0}_D)
+        =0
         \qquad
-        \text{for all }j\in[D].
+        \text{for all }j\in[D],
         \label{eq:ig_blind_result}
     \end{equation}
+    regardless of the magnitude of $\partial H/\partial x_j$ away from the diagonal $\Delta$.
     \end{theorem}
 
     \begin{proof}
-    Substituting $F+H$ into \eqref{eq:ig_diagonal} and using linearity of the integral gives
+    Substituting $H$ into \eqref{eq:ig_diagonal} gives
     \[
-    \mathrm{IG}_j(F+H;\mathbf{1}_D,\mathbf{0}_D)
+    \mathrm{IG}_j(H;\mathbf{1}_D,\mathbf{0}_D)
     =
-    \mathrm{IG}_j(F;\mathbf{1}_D,\mathbf{0}_D)
-    +
-    \int_0^1 \frac{\partial H(\alpha\mathbf{1}_D)}{\partial x_j}\,d\alpha.
+    \int_0^1 \frac{\partial H(\alpha\mathbf{1}_D)}{\partial x_j}\,d\alpha
+    =0,
     \]
-    The last term vanishes by \eqref{eq:ig_blind_condition}, proving \eqref{eq:ig_blind_result}.
+    where the last equality follows from \eqref{eq:ig_blind_condition}.
     \end{proof}
+
+    \paragraph{Example.}
+    Consider $D=2$ with base function $F(g_1,g_2)=g_1+g_2$ and interaction $H(g_1,g_2)=(g_1-g_2)^3$. Since $\partial_1 H=3(g_1-g_2)^2$ and $\partial_2 H=-3(g_1-g_2)^2$ both vanish on $g_1=g_2$, condition~\eqref{eq:ig_blind_condition} is satisfied. Set $J=F+H$. Because $H(\mathbf{0}_2)=H(\mathbf{1}_2)=0$, the total change $J(\mathbf{1}_2)-J(\mathbf{0}_2)=2$ is the same as for $F$ alone, yet the per-coordinate picture changes dramatically: $J(1,0)=2$ (head~1 alone achieves the full target performance) while $J(0,1)=0$ (head~2 alone achieves nothing). Head~1 is clearly more important. However, on the diagonal $\partial_1 J(\alpha,\alpha)=\partial_2 J(\alpha,\alpha)=1$, so straight-line IG gives $\mathrm{IG}_1=\mathrm{IG}_2=1$, treating both heads as equally important. The asymmetric interaction $(g_1-g_2)^3$ is identically zero on $g_1=g_2$, so the diagonal path never encounters the configurations in which head~1 dominates.
 
     This limitation motivates moving beyond a single synchronized path when IG is applied to structured attribution problems. In the sequel, we instantiate IG in attention-head gate space and then generalize from the standard straight-line path to a family of paths better suited to asynchronous head interactions.

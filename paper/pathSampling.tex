@@ -14,7 +14,7 @@ We use \emph{stochastic threshold paths} as the basic path family. For each thre
 \mathrm{clip}\!\left(\frac{\tau-u_j}{1-u_j},\,0,\,1\right).
 \label{eq:alpha_path_stp}
 \end{equation}
-The denominator vanishes at $u_j=1$, but under $u_j\sim\mathcal{U}[0,1]$ we have $P(u_j=1)=0$, so the path is well defined almost surely (equivalently, implementations may draw $u_j\sim\mathcal{U}[0,1)$). Intuitively, head $j$ stays at the zero baseline until $\tau = u_j$, then ramps linearly to $1$ by $\tau = 1$. Different heads therefore ``turn on'' at different times, determined by their random thresholds.
+The denominator vanishes at $u_j=1$; we adopt the convention $\gamma_{\mathbf{u},j}\equiv 0$ when $u_j=1$. Since $P(u_j=1)=0$ under the uniform distribution, this convention does not affect any expectation (equivalently, one may draw $u_j\sim\mathcal{U}[0,1)$). Intuitively, head $j$ stays at the zero baseline until $\tau = u_j$, then ramps linearly to $1$ by $\tau = 1$. Different heads therefore ``turn on'' at different times, determined by their random thresholds.
 
 For fixed $\mathbf{u}$, the corresponding pathwise STP attribution is
 \begin{equation}
@@ -23,7 +23,7 @@ For fixed $\mathbf{u}$, the corresponding pathwise STP attribution is
 \mathrm{IG}_j[\boldsymbol{\gamma}_{\mathbf{u}}]
 =
 \int_0^1
-\frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))}{\partial \gamma_j}
+\frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))}{\partial g_j}
 \dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau.
 \label{eq:stp_ig_theory}
 \end{equation}
@@ -49,10 +49,19 @@ and in practice PolyHeadIG estimates \eqref{eq:stp_ig_def} by Monte Carlo with $
 \end{equation}
 
 \paragraph{Theorem 2 (STP induces full-dimensional asynchronous coverage for PolyIG).}
-Assume that $J:[0,1]^D\to\mathbb{R}$ is continuously differentiable. Then, for each coordinate $j$, there exists a probability measure $\nu_j$ on $[0,1]^D$ such that $\mathrm{PolyIG}_j(J)$ admits the representation in \eqref{eq:stp_measure_repr}, and every open neighborhood of every interior point $\mathbf{g}^{\star}\in(0,1)^D$ receives positive $\nu_j$-mass. Consequently, the PolyIG attribution is not confined to a single synchronized trajectory; it aggregates $\partial_j J$ over a full-dimensional family of asynchronous gate configurations.
+Assume that $J:[0,1]^D\to\mathbb{R}$ is continuously differentiable. Then, for each coordinate $j$, there exists a Borel probability measure $\nu_j$ on $[0,1]^D$ (depending only on the STP distribution, not on $J$) that represents $\mathrm{PolyIG}_j(J)$ as a weighted average of $\partial J/\partial g_j$, and that assigns strictly positive mass to every open neighborhood of every interior point $\mathbf{g}^{\star}\in(0,1)^D$. Consequently, the PolyIG attribution is not confined to a single synchronized trajectory; it aggregates $\partial_j J$ over a full-dimensional family of asynchronous gate configurations.
 
 \paragraph{Proof.}
-Define $\nu_j$ on $[0,1]^D$ by
+The proof has three steps. Step~1 defines a candidate measure $\nu_j$ on $[0,1]^D$ and verifies that it is a Borel probability measure. Step~2 establishes the identity
+\[
+\mathrm{PolyIG}_j(J)
+=
+\int_{[0,1]^D}\frac{\partial J(\mathbf{g})}{\partial g_j}\,d\nu_j(\mathbf{g}),
+\]
+which is the bridge of the proof: it says that $\nu_j$ is not an auxiliary object but exactly the weighting measure of $\mathrm{PolyIG}_j(J)$, so any property of $\nu_j$ translates directly into a property of $\mathrm{PolyIG}_j(J)$. Step~3 proves the support property, i.e.\ that every open neighborhood of every interior point has strictly positive $\nu_j$-mass, and the theorem's conclusion follows by feeding this support property into the identity of Step~2.
+
+\emph{Step 1 (definition and probability-measure property).}
+Define $\nu_j$ on Borel sets $A\subseteq[0,1]^D$ by
 \begin{equation}
 \nu_j(A)
 =
@@ -60,42 +69,59 @@ Define $\nu_j$ on $[0,1]^D$ by
 \int_0^1
 \mathbf{1}\{\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in A\}
 \dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau
-\right]
+\right],
 \label{eq:stp_measure}
 \end{equation}
-for every Borel set $A\subseteq[0,1]^D$, where
-\[
-\dot{\gamma}_{\mathbf{u},j}(\tau)=\frac{1}{1-u_j}\,\mathbf{1}\{\tau>u_j\}
-\]
-for almost every $\tau\in[0,1]$ under the STP path \eqref{eq:alpha_path_stp}.
+where $\dot{\gamma}_{\mathbf{u},j}$ is the a.e.\ derivative in \eqref{eq:stp_derivative}. The integrand in \eqref{eq:stp_measure} is nonnegative and jointly measurable in $(\mathbf{u},\tau)$, so for any sequence of pairwise disjoint Borel sets $\{A_n\}_{n\ge 1}$ the indicator of their union equals the pointwise sum of the individual indicators; monotone convergence then gives $\nu_j(\bigcup_n A_n)=\sum_n \nu_j(A_n)$. Hence $\nu_j$ is a Borel measure on $[0,1]^D$.
 
-We first show that $\nu_j$ is a probability measure. Taking $A=[0,1]^D$ in \eqref{eq:stp_measure} and using absolute continuity,
-\[\nu_j([0,1]^D)
+To see that $\nu_j$ has total mass one, take $A=[0,1]^D$ in \eqref{eq:stp_measure}. Since $\gamma_{\mathbf{u},j}$ is absolutely continuous with $\gamma_{\mathbf{u},j}(0)=0$ and $\gamma_{\mathbf{u},j}(1)=1$,
+\[
+\nu_j([0,1]^D)
 =
 \mathbb{E}_{\mathbf{u}}\!\left[\int_0^1 \dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau\right]
 =
 \mathbb{E}_{\mathbf{u}}\!\left[\gamma_{\mathbf{u},j}(1)-\gamma_{\mathbf{u},j}(0)\right]
-=1,
+=1.
 \]
-so $\nu_j$ is a probability measure.
+Hence $\nu_j$ is a Borel probability measure on $[0,1]^D$.
 
-Next, by \eqref{eq:stp_ig_def}, \eqref{eq:stp_ig_theory}, and the definition \eqref{eq:stp_measure}, we obtain the representation
+\emph{Step 2 (representation formula: $\nu_j$ is the weighting measure of $\mathrm{PolyIG}_j$).}
+By itself, the measure $\nu_j$ built in Step~1 lives on $[0,1]^D$ and is not yet tied to $\mathrm{PolyIG}_j(J)$ in any way. We now show that $\nu_j$ is exactly the measure against which $\partial_j J$ is averaged to produce $\mathrm{PolyIG}_j(J)$; this identification is what lets Step~3 say anything about PolyIG rather than merely about $\nu_j$.
+Because $J$ is continuously differentiable on the compact set $[0,1]^D$, its partial derivative $\partial_j J$ is bounded; write $M:=\sup_{\mathbf{g}\in[0,1]^D}|\partial_j J(\mathbf{g})|<\infty$. Combining this bound with $\int_0^1\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau=1$ (a.s.\ in $\mathbf{u}$),
+\[
+\mathbb{E}_{\mathbf{u}}\!\left[
+\int_0^1
+\bigl|\partial_j J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))\bigr|
+\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau
+\right]
+\le M<\infty,
+\]
+so the signed integrand $\partial_j J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))\,\dot{\gamma}_{\mathbf{u},j}(\tau)$ is absolutely integrable on the product space of $(\mathbf{u},\tau)$. Starting from the population-level definition of PolyIG in \eqref{eq:stp_ig_def} and the pathwise formula \eqref{eq:stp_ig_theory}, and then applying Fubini's theorem together with the definition \eqref{eq:stp_measure},
 \begin{equation}
 \mathrm{PolyIG}_j(J)
+=
+\mathbb{E}_{\mathbf{u}}\!\left[
+\int_0^1
+\partial_j J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau))
+\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau
+\right]
 =
 \int_{[0,1]^D}
 \frac{\partial J(\mathbf{g})}{\partial g_j}\,
 d\nu_j(\mathbf{g}).
 \label{eq:stp_measure_repr}
 \end{equation}
+Identity \eqref{eq:stp_measure_repr} is the bridge the rest of the proof rests on: for any Borel set $A\subseteq[0,1]^D$ on which $\partial_j J\ge c$, it guarantees that the contribution of $A$ to $\mathrm{PolyIG}_j(J)$ satisfies $\int_A\partial_j J\,d\nu_j\ge c\,\nu_j(A)$. In particular, once Step~3 shows that $\nu_j$ places positive mass on every open neighborhood of every interior point, \eqref{eq:stp_measure_repr} turns that support statement into the conclusion of the theorem about $\mathrm{PolyIG}_j(J)$ itself.
 
-It remains to prove the support property: for every interior point $\mathbf{g}^{\star}\in(0,1)^D$ and every open neighborhood $O$ of $\mathbf{g}^{\star}$,
+\emph{Step 3 (positive mass on every interior neighborhood).}
+Let $\mathbf{g}^{\star}\in(0,1)^D$ and let $O$ be any open neighborhood of $\mathbf{g}^{\star}$. We show that
 \begin{equation}
 \nu_j(O)>0.
 \label{eq:positive_mass}
 \end{equation}
+The idea is to exhibit a pair $(\tau^{\star},\mathbf{u}^{\star})$ for which the path $\boldsymbol{\gamma}_{\mathbf{u}^{\star}}(\tau^{\star})$ hits $\mathbf{g}^{\star}$ while the derivative $\dot{\gamma}_{\mathbf{u}^{\star},j}(\tau^{\star})$ is strictly positive, and then to use continuity to turn this single point into a small neighborhood of positive product measure.
 
-Fix $\mathbf{g}^{\star}\in(0,1)^D$ and let $O$ be any open neighborhood of $\mathbf{g}^{\star}$. Since $\mathbf{g}^{\star}\in(0,1)^D$, we have $g_i^{\star}>0$ for every $i$. Choose
+Since $\mathbf{g}^{\star}\in(0,1)^D$, we have $0<g_i^{\star}<1$ for every $i$. Choose
 \begin{equation}
 \tau^{\star}=\frac{1+\max_i g_i^{\star}}{2},
 \label{eq:tau_star_def}
@@ -106,44 +132,83 @@ u_i^{\star}=\frac{\tau^{\star}-g_i^{\star}}{1-g_i^{\star}},
 \qquad i=1,\dots,D.
 \label{eq:u_star_def}
 \end{equation}
-Because $0<g_i^{\star}<\tau^{\star}<1$, we have $0<u_i^{\star}<1$ for every $i$. A direct substitution into \eqref{eq:alpha_path_stp} gives
+Each $u_i^{\star}\in(0,1)$, and a direct computation gives
 \[
-\gamma_{\mathbf{u}^{\star},i}(\tau^{\star})=g_i^{\star}
-\qquad \text{for all }i.
+\tau^{\star}-u_i^{\star}
+=\frac{g_i^{\star}(1-\tau^{\star})}{1-g_i^{\star}}>0,
 \]
-Moreover, because $u_j^{\star}<\tau^{\star}$, \eqref{eq:stp_derivative} yields
+so $\tau^{\star}>u_i^{\star}$ strictly for every $i$. Substituting $(\tau^{\star},\mathbf{u}^{\star})$ into \eqref{eq:alpha_path_stp} yields $\gamma_{\mathbf{u}^{\star},i}(\tau^{\star})=g_i^{\star}$ for every $i$, i.e.\ $\boldsymbol{\gamma}_{\mathbf{u}^{\star}}(\tau^{\star})=\mathbf{g}^{\star}$.
+
+Because the inequality $\tau>u_i$ holds strictly at $(\tau^{\star},\mathbf{u}^{\star})$ for every $i$, there exist an open interval $I\subset(0,1)$ containing $\tau^{\star}$ and an open box $U\subset(0,1)^D$ containing $\mathbf{u}^{\star}$ such that
 \[
-\dot{\gamma}_{\mathbf{u}^{\star},j}(\tau^{\star})=\frac{1}{1-u_j^{\star}}>0.
+\tau>u_i
+\qquad
+\text{for every }(\tau,\mathbf{u})\in I\times U\text{ and every }i\in[D].
 \]
-The map $(\tau,\mathbf{u})\mapsto \boldsymbol{\gamma}_{\mathbf{u}}(\tau)$ is continuous at $(\tau^{\star},\mathbf{u}^{\star})$, so there exists a neighborhood $B$ of $(\tau^{\star},\mathbf{u}^{\star})$ and a constant $c>0$ such that $\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in O$ and $\dot{\gamma}_{\mathbf{u},j}(\tau)\ge c$ throughout $B$. Since $\tau$ is integrated against Lebesgue measure and $\mathbf{u}$ has a density positive on $[0,1]^D$, the set $B$ has positive product measure. Plugging this into \eqref{eq:stp_measure} gives \eqref{eq:positive_mass}. This proves the theorem. \qed
+On this set the clipping in \eqref{eq:alpha_path_stp} is inactive, and each coordinate of the path reduces to the linear expression
+\[
+\gamma_{\mathbf{u},i}(\tau)=\frac{\tau-u_i}{1-u_i},
+\]
+which is jointly continuous in $(\tau,\mathbf{u})$ on $I\times U$. Since $\boldsymbol{\gamma}_{\mathbf{u}^{\star}}(\tau^{\star})=\mathbf{g}^{\star}\in O$ and $O$ is open, by shrinking $I$ and $U$ if necessary we may additionally assume
+\[
+\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in O
+\qquad
+\text{for every }(\tau,\mathbf{u})\in I\times U.
+\]
+The same inequalities $\tau>u_j$ on $I\times U$, together with \eqref{eq:stp_derivative}, give the pointwise lower bound
+\[
+\dot{\gamma}_{\mathbf{u},j}(\tau)=\frac{1}{1-u_j}\ge 1
+\qquad
+\text{for every }(\tau,\mathbf{u})\in I\times U.
+\]
+
+Finally, $\mathbf{u}$ has a density that is strictly positive on $(0,1)^D$, so $\mathbb{P}(\mathbf{u}\in U)>0$ since $U\subset(0,1)^D$ is a nonempty open box, and $|I|>0$. Restricting the expectation and the $\tau$-integral in \eqref{eq:stp_measure} to $I\times U$ and using the pointwise bounds just established,
+\[
+\nu_j(O)
+\ge
+\mathbb{E}_{\mathbf{u}}\!\left[
+\mathbf{1}\{\mathbf{u}\in U\}
+\int_I
+\mathbf{1}\{\boldsymbol{\gamma}_{\mathbf{u}}(\tau)\in O\}
+\dot{\gamma}_{\mathbf{u},j}(\tau)\,d\tau
+\right]
+\ge
+\mathbb{P}(\mathbf{u}\in U)\cdot|I|>0,
+\]
+which proves \eqref{eq:positive_mass}. Since $\mathbf{g}^{\star}$ and $O$ were arbitrary, every open neighborhood of every interior point has strictly positive $\nu_j$-mass, completing the proof of the theorem. \qed
 
 \paragraph{Corollary (STP can capture off-diagonal interactions missed by DP).}
-Let $H:[0,1]^D\to\mathbb{R}$ be a continuously differentiable interaction term that is invisible to DP but has strictly positive $j$-th partial derivative on some open region $O\subset(0,1)^D$. Then DP assigns zero attribution to $H$, whereas PolyIG assigns strictly positive attribution weight to that region.
-
-\paragraph{Proof.}
-The diagonal-path statement follows directly from Theorem~1. To make the assumptions explicit, suppose that
+Let $H:[0,1]^D\to\mathbb{R}$ be continuously differentiable, and assume that $H$ is invisible to the diagonal path in coordinate $j$, i.e.
 \begin{equation}
-\frac{\partial H(\tau\mathbf{1}_{D})}{\partial g_j}=0
+\frac{\partial H(\tau\mathbf{1}_D)}{\partial g_j}=0
 \qquad
-\text{for all }\tau\in[0,1],\ j\in[D],
+\text{for all }\tau\in[0,1].
+\label{eq:diag_blind_cor}
 \end{equation}
-and that there exist an open set $O\subset(0,1)^D$ and a constant $c>0$ such that
+Assume furthermore that there exist a nonempty open set $O\subset(0,1)^D$ and a constant $c>0$ such that
 \begin{equation}
 \frac{\partial H(\mathbf{g})}{\partial g_j}\ge c
 \qquad
 \text{for all }\mathbf{g}\in O.
 \label{eq:stp_detectable}
 \end{equation}
-Fix any $\mathbf{g}^{\star}\in O$. Since $O\subset(0,1)^D$, we have $\mathbf{g}^{\star}\in(0,1)^D$, so Theorem~2 applies and yields $\nu_j(O)>0$. Combining this with \eqref{eq:stp_detectable} yields
+Then $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$, whereas the PolyIG contribution from the region $O$ satisfies
 \[
-\int_O \frac{\partial H(\mathbf{g})}{\partial g_j}\,
-d\nu_j(\mathbf{g})
+\int_O \frac{\partial H(\mathbf{g})}{\partial g_j}\,d\nu_j(\mathbf{g})
+\ge c\,\nu_j(O)>0.
+\]
+
+\paragraph{Proof.}
+For the diagonal-path statement, assumption \eqref{eq:diag_blind_cor} says that the integrand in the straight-line representation of $\mathrm{IG}^{\mathrm{DP}}_j(H)$ vanishes identically on $[0,1]$, so Theorem~1 immediately gives $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$.
+
+For the off-diagonal statement, $O$ is a nonempty open subset of $(0,1)^D$, so Theorem~2 (applied to any $\mathbf{g}^{\star}\in O$, for which $O$ is itself an open neighborhood) yields $\nu_j(O)>0$. Combining this with \eqref{eq:stp_detectable},
+\[
+\int_O \frac{\partial H(\mathbf{g})}{\partial g_j}\,d\nu_j(\mathbf{g})
 \ge
 c\,\nu_j(O)
->
-0.
+>0,
 \]
-Thus $\mathrm{IG}^{\mathrm{DP}}_j(H)=0$ while PolyIG assigns strictly positive attribution weight to the region $O$. \qed
+so PolyIG assigns strictly positive attribution weight to the off-diagonal region $O$. This proves the corollary. \qed
 
 \paragraph{Remark (interpretation and practical implementation).}
 Theorem~1 shows that standard IG along the diagonal path suffers from a structural synchronization degeneracy: it only observes gradients on the line $\gamma_1=\cdots=\gamma_D$. Theorem~2 shows that the STP-based construction used in this paper removes this restriction by inducing a PolyIG measure that spreads attribution mass over the interior of the gate cube. The corollary should therefore be read as a support result: PolyIG can place nonzero attribution weight on interaction regions that are invisible to a single synchronized path, while still providing a smooth and numerically stable Monte-Carlo estimator.
@@ -151,7 +216,7 @@ Theorem~1 shows that standard IG along the diagonal path suffers from a structur
 \paragraph*{Numerical approximation.}
 We approximate the pathwise integral \eqref{eq:stp_ig_theory} using $K$ discrete steps. At $\tau_k = k/K$ for $k = 1, \dots, K$, we compute:
 \begin{equation}
-\mathrm{IG}_{j}(J;\mathbf{u}) \approx \sum_{k=1}^{K} \frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau_k))}{\partial \gamma_{j}} \cdot \Delta \gamma_{\mathbf{u},j}^{(k)},
+\mathrm{IG}_{j}(J;\mathbf{u}) \approx \sum_{k=1}^{K} \frac{\partial J(\boldsymbol{\gamma}_{\mathbf{u}}(\tau_k))}{\partial g_{j}} \cdot \Delta \gamma_{\mathbf{u},j}^{(k)},
 \qquad \Delta \gamma_{\mathbf{u},j}^{(k)} = \gamma_{\mathbf{u},j}(\tau_k)-\gamma_{\mathbf{u},j}(\tau_{k-1}).
 \label{eq:ig_gate}
 \end{equation}
@@ -195,5 +260,7 @@ Heads are ranked within each layer by sorting $\{S_{\ell,h}\}_{h=1}^{H}$ in desc
 }
 \Return{$S_{\ell,h}$ by averaging over $\mathcal{D}$.}
 \end{algorithm}
+
+
 
 

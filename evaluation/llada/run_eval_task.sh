@@ -14,7 +14,7 @@ PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
-export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-3}"
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-4}"
 
 # Activate environment
 source ~/miniconda3/bin/activate adaptive-dllm
@@ -62,11 +62,12 @@ IMPORTANCE_TAG=""
 USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
 ATTR_MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
 # ATTR_METHOD candidates:
-#   headig | attnlrp | shapley
-ATTR_METHOD=${ATTR_METHOD:-"shapley"}
+#   headig | attnlrp | shapley | attarr
+ATTR_METHOD=${ATTR_METHOD:-"headig"}
 # ATTR_DATASETS_STR candidates:
-#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k_full | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
-ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k_full,minerva_math,gpqa_main_n_shot_all,humaneval,mbpp"}
+#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
+# ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k,gpqa_main_n_shot_all,humaneval,mbpp"}
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"gsm8k,gpqa_main_n_shot_all"}
 IFS=',' read -r -a ATTR_DATASETS <<< "${ATTR_DATASETS_STR}"
 FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
 
@@ -74,12 +75,68 @@ build_default_importance_path() {
     local attr_dataset="$1"
     echo "${PROJECT_ROOT}/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
 }
+
+build_aconfig_importance_path() {
+    local attr_dataset="$1"
+    python - "$PROJECT_ROOT" "$ATTR_MODEL_NAME" "$ATTR_METHOD" "$attr_dataset" <<'PY'
+from pathlib import Path
+import sys
+
+project_root = Path(sys.argv[1])
+model_name = sys.argv[2]
+attr_method = sys.argv[3]
+attr_dataset = sys.argv[4]
+root = project_root / "configs" / "aconfigs"
+if not root.is_dir():
+    print("")
+    raise SystemExit(0)
+
+if attr_method == "headig":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_pm")
+elif attr_method == "attnlrp":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attnlrp_")
+elif attr_method == "shapley":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_shapley_")
+elif attr_method == "attarr":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attarr_")
+else:
+    print("")
+    raise SystemExit(0)
+
+candidates = [p for p in root.iterdir() if p.is_dir() and matches(p.name) and (p / "head_importance.pt").is_file()]
+candidates.sort(key=lambda p: (p.stat().st_mtime, p.name), reverse=True)
+print(str(candidates[0] / "head_importance.pt") if candidates else "")
+PY
+}
+
+resolve_auto_importance_path() {
+    local attr_dataset="$1"
+    local legacy_path
+    legacy_path="$(build_default_importance_path "${attr_dataset}")"
+    if [ -f "${legacy_path}" ]; then
+        echo "${legacy_path}"
+        return 0
+    fi
+
+    local aconfig_path
+    aconfig_path="$(build_aconfig_importance_path "${attr_dataset}")"
+    if [ -n "${aconfig_path}" ] && [ -f "${aconfig_path}" ]; then
+        echo "${aconfig_path}"
+        return 0
+    fi
+
+    echo "${legacy_path}"
+}
 # Recommended LIMIT values for task-specific evals (stability vs runtime trade-off):
 #   mmlu_all: 40
 #   cmmlu_all: 40
 #   ceval-valid_all: 200
 #   gpqa_main_n_shot_all: 200
-#   gsm8k_full: 200
+#   gsm8k: 200
 #   minerva_math: 200
 #   humaneval: 200
 #   mbpp: 200
@@ -88,7 +145,7 @@ default_task_for_attr_dataset() {
         mmlu_all) echo "mmlu" ;;
         cmmlu_all) echo "cmmlu" ;;
         ceval-valid_all) echo "ceval-valid" ;;
-        gsm8k_full) echo "gsm8k" ;;
+        gsm8k) echo "gsm8k" ;;
         minerva_math) echo "minerva_math" ;;
         gpqa_main_n_shot_all) echo "gpqa_main_n_shot" ;;
         humaneval) echo "humaneval" ;;
@@ -106,7 +163,7 @@ default_limit_for_attr_dataset() {
         cmmlu_all) echo 40 ;;
         ceval-valid_all) echo 200 ;;
         gpqa_main_n_shot_all) echo 200 ;;
-        gsm8k_full) echo 200 ;;
+        gsm8k) echo 200 ;;
         minerva_math) echo 200 ;;
         humaneval) echo 200 ;;
         mbpp) echo 200 ;;
@@ -120,7 +177,7 @@ default_limit_for_attr_dataset() {
 resolve_attr_dataset_context() {
     local attr_dataset="$(echo "$1" | xargs)"
     CURRENT_ATTR_DATASET="${attr_dataset}"
-    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(build_default_importance_path "${CURRENT_ATTR_DATASET}")}"
+    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(resolve_auto_importance_path "${CURRENT_ATTR_DATASET}")}"
     if [ -n "${TASKS_STR:-}" ]; then
         IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
     else
@@ -205,6 +262,7 @@ fi
 if [ -z "${GPQA_DATA_PATH}" ] && [ -f "${DEFAULT_GPQA_DATA_PATH}" ]; then
     GPQA_DATA_PATH="${DEFAULT_GPQA_DATA_PATH}"
 fi
+export GPQA_DATA_PATH
 
 # Tasks to run (can be overridden without editing file):
 #   TASKS_STR="mmlu,ruler" bash run_eval_task.sh
@@ -256,12 +314,13 @@ prepare_gpqa_local_task() {
 }
 
 get_gpqa_local_row_count() {
-    python - <<'PY'
+    local data_path="$1"
+    python - "${data_path}" <<'PY'
 import json
 from pathlib import Path
-import os
+import sys
 
-data_path = Path(os.environ["GPQA_DATA_PATH"])
+data_path = Path(sys.argv[1])
 count = 0
 files = [data_path] if data_path.is_file() else sorted(
     p for p in data_path.rglob("*") if p.is_file() and p.suffix.lower() in {".json", ".jsonl"}
@@ -401,7 +460,7 @@ run_single_eval() {
                     GPQA_TASK_DIR="$(prepare_gpqa_local_task)" || return $?
                     INCLUDE_PATH_ARGS=(--include_path "${GPQA_TASK_DIR}")
                     task_name="gpqa_main_n_shot_local"
-                    GPQA_LOCAL_ROWS="$(get_gpqa_local_row_count)" || return $?
+                    GPQA_LOCAL_ROWS="$(get_gpqa_local_row_count "${GPQA_DATA_PATH}")" || return $?
                     GPQA_LOCAL_MAX_FEWSHOT=$(( GPQA_LOCAL_ROWS > 1 ? GPQA_LOCAL_ROWS - 1 : 0 ))
                     if [ "${NUM_FEWSHOT}" -gt "${GPQA_LOCAL_MAX_FEWSHOT}" ]; then
                         echo "[gpqa_local] Requested num_fewshot=${NUM_FEWSHOT}, but local dataset has only ${GPQA_LOCAL_ROWS} rows. Clamping to ${GPQA_LOCAL_MAX_FEWSHOT}."
@@ -575,9 +634,9 @@ for attr_dataset in "${ATTR_DATASETS[@]}"; do
             fi
             echo "Task: ${task}"
             for model_type in "${MODEL_TYPES[@]}"; do
-                RESULT_FILE="${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}/results.json"
-                if [ -f "$RESULT_FILE" ]; then
-                    echo "  ✅ ${model_type}: ${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}/"
+                RESULT_DIR="${RESULTS_ROOT}/${model_type}/${task_tag}_${IMPORTANCE_TAG}"
+                if compgen -G "${RESULT_DIR}/results*.json" > /dev/null; then
+                    echo "  ✅ ${model_type}: ${RESULT_DIR}/"
                 else
                     echo "  ❌ ${model_type}: FAILED"
                 fi

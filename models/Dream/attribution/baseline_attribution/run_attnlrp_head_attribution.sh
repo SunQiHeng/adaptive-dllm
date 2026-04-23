@@ -72,7 +72,7 @@ SAVE_PER_SAMPLE=${SAVE_PER_SAMPLE:-0}
 LAYER_START=${LAYER_START:-0}
 LAYER_END=${LAYER_END:--1}
 
-GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"full"}
+GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"final_hash"}
 
 default_max_samples_for_dataset() {
   case "$1" in

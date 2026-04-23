@@ -534,7 +534,7 @@ def main() -> None:
     p.add_argument(
         "--gsm8k_answer_mode",
         type=str,
-        default="final",
+        default="final_hash",
         choices=["final", "final_hash", "full"],
         help="For GSM8K: supervision target for attribution (final / '#### <final>' / full answer+rationale).",
     )

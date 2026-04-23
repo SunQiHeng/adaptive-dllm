@@ -1,0 +1,5514 @@
+{
+  "results": {
+    "cmmlu": {
+      "acc,none": 0.31529850746268656,
+      "acc_stderr,none": 0.009013832642364664,
+      "acc_norm,none": 0.31529850746268656,
+      "acc_norm_stderr,none": 0.009013832642364664,
+      "alias": "cmmlu"
+    },
+    "cmmlu_agronomy": {
+      "alias": " - cmmlu_agronomy",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_anatomy": {
+      "alias": " - cmmlu_anatomy",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_ancient_chinese": {
+      "alias": " - cmmlu_ancient_chinese",
+      "acc,none": 0.325,
+      "acc_stderr,none": 0.075,
+      "acc_norm,none": 0.325,
+      "acc_norm_stderr,none": 0.075
+    },
+    "cmmlu_arts": {
+      "alias": " - cmmlu_arts",
+      "acc,none": 0.325,
+      "acc_stderr,none": 0.075,
+      "acc_norm,none": 0.325,
+      "acc_norm_stderr,none": 0.075
+    },
+    "cmmlu_astronomy": {
+      "alias": " - cmmlu_astronomy",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_business_ethics": {
+      "alias": " - cmmlu_business_ethics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259732,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259732
+    },
+    "cmmlu_chinese_civil_service_exam": {
+      "alias": " - cmmlu_chinese_civil_service_exam",
+      "acc,none": 0.225,
+      "acc_stderr,none": 0.06686668711812967,
+      "acc_norm,none": 0.225,
+      "acc_norm_stderr,none": 0.06686668711812967
+    },
+    "cmmlu_chinese_driving_rule": {
+      "alias": " - cmmlu_chinese_driving_rule",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259732,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259732
+    },
+    "cmmlu_chinese_food_culture": {
+      "alias": " - cmmlu_chinese_food_culture",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_chinese_foreign_policy": {
+      "alias": " - cmmlu_chinese_foreign_policy",
+      "acc,none": 0.325,
+      "acc_stderr,none": 0.07499999999999998,
+      "acc_norm,none": 0.325,
+      "acc_norm_stderr,none": 0.07499999999999998
+    },
+    "cmmlu_chinese_history": {
+      "alias": " - cmmlu_chinese_history",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_chinese_literature": {
+      "alias": " - cmmlu_chinese_literature",
+      "acc,none": 0.225,
+      "acc_stderr,none": 0.06686668711812967,
+      "acc_norm,none": 0.225,
+      "acc_norm_stderr,none": 0.06686668711812967
+    },
+    "cmmlu_chinese_teacher_qualification": {
+      "alias": " - cmmlu_chinese_teacher_qualification",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_clinical_knowledge": {
+      "alias": " - cmmlu_clinical_knowledge",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_college_actuarial_science": {
+      "alias": " - cmmlu_college_actuarial_science",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_college_education": {
+      "alias": " - cmmlu_college_education",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.07752170911825529,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.07752170911825529
+    },
+    "cmmlu_college_engineering_hydrology": {
+      "alias": " - cmmlu_college_engineering_hydrology",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.06405126152203486,
+      "acc_norm,none": 0.2,
+      "acc_norm_stderr,none": 0.06405126152203486
+    },
+    "cmmlu_college_law": {
+      "alias": " - cmmlu_college_law",
+      "acc,none": 0.425,
+      "acc_stderr,none": 0.07915823166939517,
+      "acc_norm,none": 0.425,
+      "acc_norm_stderr,none": 0.07915823166939517
+    },
+    "cmmlu_college_mathematics": {
+      "alias": " - cmmlu_college_mathematics",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_college_medical_statistics": {
+      "alias": " - cmmlu_college_medical_statistics",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.07752170911825529,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.07752170911825529
+    },
+    "cmmlu_college_medicine": {
+      "alias": " - cmmlu_college_medicine",
+      "acc,none": 0.325,
+      "acc_stderr,none": 0.07499999999999998,
+      "acc_norm,none": 0.325,
+      "acc_norm_stderr,none": 0.07499999999999998
+    },
+    "cmmlu_computer_science": {
+      "alias": " - cmmlu_computer_science",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_computer_security": {
+      "alias": " - cmmlu_computer_security",
+      "acc,none": 0.425,
+      "acc_stderr,none": 0.07915823166939517,
+      "acc_norm,none": 0.425,
+      "acc_norm_stderr,none": 0.07915823166939517
+    },
+    "cmmlu_conceptual_physics": {
+      "alias": " - cmmlu_conceptual_physics",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.07752170911825529,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.07752170911825529
+    },
+    "cmmlu_construction_project_management": {
+      "alias": " - cmmlu_construction_project_management",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_economics": {
+      "alias": " - cmmlu_economics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259735,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259735
+    },
+    "cmmlu_education": {
+      "alias": " - cmmlu_education",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.0763762615825973,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.0763762615825973
+    },
+    "cmmlu_electrical_engineering": {
+      "alias": " - cmmlu_electrical_engineering",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_elementary_chinese": {
+      "alias": " - cmmlu_elementary_chinese",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_elementary_commonsense": {
+      "alias": " - cmmlu_elementary_commonsense",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_elementary_information_and_technology": {
+      "alias": " - cmmlu_elementary_information_and_technology",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_elementary_mathematics": {
+      "alias": " - cmmlu_elementary_mathematics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259733,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259733
+    },
+    "cmmlu_ethnology": {
+      "alias": " - cmmlu_ethnology",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_food_science": {
+      "alias": " - cmmlu_food_science",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_genetics": {
+      "alias": " - cmmlu_genetics",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259733,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259733
+    },
+    "cmmlu_global_facts": {
+      "alias": " - cmmlu_global_facts",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.07844645405527362,
+      "acc_norm,none": 0.4,
+      "acc_norm_stderr,none": 0.07844645405527362
+    },
+    "cmmlu_high_school_biology": {
+      "alias": " - cmmlu_high_school_biology",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_high_school_chemistry": {
+      "alias": " - cmmlu_high_school_chemistry",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_high_school_geography": {
+      "alias": " - cmmlu_high_school_geography",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.07844645405527362,
+      "acc_norm,none": 0.4,
+      "acc_norm_stderr,none": 0.07844645405527362
+    },
+    "cmmlu_high_school_mathematics": {
+      "alias": " - cmmlu_high_school_mathematics",
+      "acc,none": 0.225,
+      "acc_stderr,none": 0.06686668711812967,
+      "acc_norm,none": 0.225,
+      "acc_norm_stderr,none": 0.06686668711812967
+    },
+    "cmmlu_high_school_physics": {
+      "alias": " - cmmlu_high_school_physics",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.07752170911825529,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.07752170911825529
+    },
+    "cmmlu_high_school_politics": {
+      "alias": " - cmmlu_high_school_politics",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_human_sexuality": {
+      "alias": " - cmmlu_human_sexuality",
+      "acc,none": 0.425,
+      "acc_stderr,none": 0.07915823166939517,
+      "acc_norm,none": 0.425,
+      "acc_norm_stderr,none": 0.07915823166939517
+    },
+    "cmmlu_international_law": {
+      "alias": " - cmmlu_international_law",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_journalism": {
+      "alias": " - cmmlu_journalism",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_jurisprudence": {
+      "alias": " - cmmlu_jurisprudence",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.07149950690165272,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.07149950690165272
+    },
+    "cmmlu_legal_and_moral_basis": {
+      "alias": " - cmmlu_legal_and_moral_basis",
+      "acc,none": 0.475,
+      "acc_stderr,none": 0.07996393417804536,
+      "acc_norm,none": 0.475,
+      "acc_norm_stderr,none": 0.07996393417804536
+    },
+    "cmmlu_logical": {
+      "alias": " - cmmlu_logical",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_machine_learning": {
+      "alias": " - cmmlu_machine_learning",
+      "acc,none": 0.45,
+      "acc_stderr,none": 0.07966275068156914,
+      "acc_norm,none": 0.45,
+      "acc_norm_stderr,none": 0.07966275068156914
+    },
+    "cmmlu_management": {
+      "alias": " - cmmlu_management",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.07337993857053426,
+      "acc_norm,none": 0.3,
+      "acc_norm_stderr,none": 0.07337993857053426
+    },
+    "cmmlu_marketing": {
+      "alias": " - cmmlu_marketing",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.07844645405527362,
+      "acc_norm,none": 0.4,
+      "acc_norm_stderr,none": 0.07844645405527362
+    },
+    "cmmlu_marxist_theory": {
+      "alias": " - cmmlu_marxist_theory",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_modern_chinese": {
+      "alias": " - cmmlu_modern_chinese",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_nutrition": {
+      "alias": " - cmmlu_nutrition",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_philosophy": {
+      "alias": " - cmmlu_philosophy",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.07844645405527362,
+      "acc_norm,none": 0.4,
+      "acc_norm_stderr,none": 0.07844645405527362
+    },
+    "cmmlu_professional_accounting": {
+      "alias": " - cmmlu_professional_accounting",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.0763762615825973,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.0763762615825973
+    },
+    "cmmlu_professional_law": {
+      "alias": " - cmmlu_professional_law",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.06933752452815363,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.06933752452815363
+    },
+    "cmmlu_professional_medicine": {
+      "alias": " - cmmlu_professional_medicine",
+      "acc,none": 0.325,
+      "acc_stderr,none": 0.075,
+      "acc_norm,none": 0.325,
+      "acc_norm_stderr,none": 0.075
+    },
+    "cmmlu_professional_psychology": {
+      "alias": " - cmmlu_professional_psychology",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259733,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259733
+    },
+    "cmmlu_public_relations": {
+      "alias": " - cmmlu_public_relations",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.07637626158259733,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.07637626158259733
+    },
+    "cmmlu_security_study": {
+      "alias": " - cmmlu_security_study",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.07752170911825529,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.07752170911825529
+    },
+    "cmmlu_sociology": {
+      "alias": " - cmmlu_sociology",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.07149950690165272,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.07149950690165272
+    },
+    "cmmlu_sports_science": {
+      "alias": " - cmmlu_sports_science",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    },
+    "cmmlu_traditional_chinese_medicine": {
+      "alias": " - cmmlu_traditional_chinese_medicine",
+      "acc,none": 0.35,
+      "acc_stderr,none": 0.0763762615825973,
+      "acc_norm,none": 0.35,
+      "acc_norm_stderr,none": 0.0763762615825973
+    },
+    "cmmlu_virology": {
+      "alias": " - cmmlu_virology",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.07149950690165272,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.07149950690165272
+    },
+    "cmmlu_world_history": {
+      "alias": " - cmmlu_world_history",
+      "acc,none": 0.225,
+      "acc_stderr,none": 0.06686668711812967,
+      "acc_norm,none": 0.225,
+      "acc_norm_stderr,none": 0.06686668711812967
+    },
+    "cmmlu_world_religions": {
+      "alias": " - cmmlu_world_religions",
+      "acc,none": 0.275,
+      "acc_stderr,none": 0.0714995069016527,
+      "acc_norm,none": 0.275,
+      "acc_norm_stderr,none": 0.0714995069016527
+    }
+  },
+  "groups": {
+    "cmmlu": {
+      "acc,none": 0.31529850746268656,
+      "acc_stderr,none": 0.009013832642364664,
+      "acc_norm,none": 0.31529850746268656,
+      "acc_norm_stderr,none": 0.009013832642364664,
+      "alias": "cmmlu"
+    }
+  },
+  "group_subtasks": {
+    "cmmlu": [
+      "cmmlu_agronomy",
+      "cmmlu_anatomy",
+      "cmmlu_ancient_chinese",
+      "cmmlu_arts",
+      "cmmlu_astronomy",
+      "cmmlu_business_ethics",
+      "cmmlu_chinese_civil_service_exam",
+      "cmmlu_chinese_driving_rule",
+      "cmmlu_chinese_food_culture",
+      "cmmlu_chinese_foreign_policy",
+      "cmmlu_chinese_history",
+      "cmmlu_chinese_literature",
+      "cmmlu_chinese_teacher_qualification",
+      "cmmlu_clinical_knowledge",
+      "cmmlu_college_actuarial_science",
+      "cmmlu_college_education",
+      "cmmlu_college_engineering_hydrology",
+      "cmmlu_college_law",
+      "cmmlu_college_mathematics",
+      "cmmlu_college_medical_statistics",
+      "cmmlu_college_medicine",
+      "cmmlu_computer_science",
+      "cmmlu_computer_security",
+      "cmmlu_conceptual_physics",
+      "cmmlu_construction_project_management",
+      "cmmlu_economics",
+      "cmmlu_education",
+      "cmmlu_electrical_engineering",
+      "cmmlu_elementary_chinese",
+      "cmmlu_elementary_commonsense",
+      "cmmlu_elementary_information_and_technology",
+      "cmmlu_elementary_mathematics",
+      "cmmlu_ethnology",
+      "cmmlu_food_science",
+      "cmmlu_genetics",
+      "cmmlu_global_facts",
+      "cmmlu_high_school_biology",
+      "cmmlu_high_school_chemistry",
+      "cmmlu_high_school_geography",
+      "cmmlu_high_school_mathematics",
+      "cmmlu_high_school_physics",
+      "cmmlu_high_school_politics",
+      "cmmlu_human_sexuality",
+      "cmmlu_international_law",
+      "cmmlu_journalism",
+      "cmmlu_jurisprudence",
+      "cmmlu_legal_and_moral_basis",
+      "cmmlu_logical",
+      "cmmlu_machine_learning",
+      "cmmlu_management",
+      "cmmlu_marketing",
+      "cmmlu_marxist_theory",
+      "cmmlu_modern_chinese",
+      "cmmlu_nutrition",
+      "cmmlu_philosophy",
+      "cmmlu_professional_accounting",
+      "cmmlu_professional_law",
+      "cmmlu_professional_medicine",
+      "cmmlu_professional_psychology",
+      "cmmlu_public_relations",
+      "cmmlu_security_study",
+      "cmmlu_sociology",
+      "cmmlu_sports_science",
+      "cmmlu_traditional_chinese_medicine",
+      "cmmlu_virology",
+      "cmmlu_world_history",
+      "cmmlu_world_religions"
+    ]
+  },
+  "configs": {
+    "cmmlu_agronomy": {
+      "task": "cmmlu_agronomy",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "agronomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于农学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_anatomy": {
+      "task": "cmmlu_anatomy",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "anatomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于解剖学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_ancient_chinese": {
+      "task": "cmmlu_ancient_chinese",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "ancient_chinese",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于古汉语的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_arts": {
+      "task": "cmmlu_arts",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "arts",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于艺术学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_astronomy": {
+      "task": "cmmlu_astronomy",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "astronomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于天文学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_business_ethics": {
+      "task": "cmmlu_business_ethics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "business_ethics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于商业伦理的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_civil_service_exam": {
+      "task": "cmmlu_chinese_civil_service_exam",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_civil_service_exam",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国公务员考试的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_driving_rule": {
+      "task": "cmmlu_chinese_driving_rule",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_driving_rule",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国驾驶规则的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_food_culture": {
+      "task": "cmmlu_chinese_food_culture",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_food_culture",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国饮食文化的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_foreign_policy": {
+      "task": "cmmlu_chinese_foreign_policy",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_foreign_policy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国外交政策的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_history": {
+      "task": "cmmlu_chinese_history",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_history",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国历史的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_literature": {
+      "task": "cmmlu_chinese_literature",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_literature",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国文学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_chinese_teacher_qualification": {
+      "task": "cmmlu_chinese_teacher_qualification",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "chinese_teacher_qualification",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中国教师资格的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_clinical_knowledge": {
+      "task": "cmmlu_clinical_knowledge",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "clinical_knowledge",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于临床知识的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_actuarial_science": {
+      "task": "cmmlu_college_actuarial_science",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_actuarial_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学精算学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_education": {
+      "task": "cmmlu_college_education",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_education",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学教育学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_engineering_hydrology": {
+      "task": "cmmlu_college_engineering_hydrology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_engineering_hydrology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学工程水文学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_law": {
+      "task": "cmmlu_college_law",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_law",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学法律的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_mathematics": {
+      "task": "cmmlu_college_mathematics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学数学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_medical_statistics": {
+      "task": "cmmlu_college_medical_statistics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_medical_statistics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学医学统计的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_college_medicine": {
+      "task": "cmmlu_college_medicine",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "college_medicine",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于大学医学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_computer_science": {
+      "task": "cmmlu_computer_science",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "computer_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于计算机科学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_computer_security": {
+      "task": "cmmlu_computer_security",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "computer_security",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于计算机安全的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_conceptual_physics": {
+      "task": "cmmlu_conceptual_physics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "conceptual_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于概念物理学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_construction_project_management": {
+      "task": "cmmlu_construction_project_management",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "construction_project_management",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于建设工程管理的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_economics": {
+      "task": "cmmlu_economics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "economics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于经济学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_education": {
+      "task": "cmmlu_education",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "education",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于教育学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_electrical_engineering": {
+      "task": "cmmlu_electrical_engineering",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "electrical_engineering",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于电气工程的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_elementary_chinese": {
+      "task": "cmmlu_elementary_chinese",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "elementary_chinese",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于小学语文的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_elementary_commonsense": {
+      "task": "cmmlu_elementary_commonsense",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "elementary_commonsense",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于小学常识的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_elementary_information_and_technology": {
+      "task": "cmmlu_elementary_information_and_technology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "elementary_information_and_technology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于小学信息技术的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_elementary_mathematics": {
+      "task": "cmmlu_elementary_mathematics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "elementary_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于初等数学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_ethnology": {
+      "task": "cmmlu_ethnology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "ethnology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于民族学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_food_science": {
+      "task": "cmmlu_food_science",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "food_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于食品科学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_genetics": {
+      "task": "cmmlu_genetics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "genetics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于遗传学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_global_facts": {
+      "task": "cmmlu_global_facts",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "global_facts",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于全球事实的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_biology": {
+      "task": "cmmlu_high_school_biology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_biology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中生物的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_chemistry": {
+      "task": "cmmlu_high_school_chemistry",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_chemistry",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中化学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_geography": {
+      "task": "cmmlu_high_school_geography",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_geography",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中地理的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_mathematics": {
+      "task": "cmmlu_high_school_mathematics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中数学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_physics": {
+      "task": "cmmlu_high_school_physics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中物理学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_high_school_politics": {
+      "task": "cmmlu_high_school_politics",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "high_school_politics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于高中政治的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_human_sexuality": {
+      "task": "cmmlu_human_sexuality",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "human_sexuality",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于人类性行为的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_international_law": {
+      "task": "cmmlu_international_law",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "international_law",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于国际法学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_journalism": {
+      "task": "cmmlu_journalism",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "journalism",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于新闻学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_jurisprudence": {
+      "task": "cmmlu_jurisprudence",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "jurisprudence",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于法理学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_legal_and_moral_basis": {
+      "task": "cmmlu_legal_and_moral_basis",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "legal_and_moral_basis",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于法律与道德基础的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_logical": {
+      "task": "cmmlu_logical",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "logical",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于逻辑学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_machine_learning": {
+      "task": "cmmlu_machine_learning",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "machine_learning",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于机器学习的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_management": {
+      "task": "cmmlu_management",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "management",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于管理学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_marketing": {
+      "task": "cmmlu_marketing",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "marketing",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于市场营销的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_marxist_theory": {
+      "task": "cmmlu_marxist_theory",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "marxist_theory",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于马克思主义理论的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_modern_chinese": {
+      "task": "cmmlu_modern_chinese",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "modern_chinese",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于现代汉语的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_nutrition": {
+      "task": "cmmlu_nutrition",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "nutrition",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于营养学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_philosophy": {
+      "task": "cmmlu_philosophy",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "philosophy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于哲学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_professional_accounting": {
+      "task": "cmmlu_professional_accounting",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "professional_accounting",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于专业会计的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_professional_law": {
+      "task": "cmmlu_professional_law",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "professional_law",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于专业法学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_professional_medicine": {
+      "task": "cmmlu_professional_medicine",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "professional_medicine",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于专业医学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_professional_psychology": {
+      "task": "cmmlu_professional_psychology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "professional_psychology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于专业心理学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_public_relations": {
+      "task": "cmmlu_public_relations",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "public_relations",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于公共关系的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_security_study": {
+      "task": "cmmlu_security_study",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "security_study",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于安全研究的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_sociology": {
+      "task": "cmmlu_sociology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "sociology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于社会学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_sports_science": {
+      "task": "cmmlu_sports_science",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "sports_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于体育学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_traditional_chinese_medicine": {
+      "task": "cmmlu_traditional_chinese_medicine",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "traditional_chinese_medicine",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于中医中药的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_virology": {
+      "task": "cmmlu_virology",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "virology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于病毒学的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_world_history": {
+      "task": "cmmlu_world_history",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "world_history",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于世界历史的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "cmmlu_world_religions": {
+      "task": "cmmlu_world_religions",
+      "dataset_path": "haonan-li/cmmlu",
+      "dataset_name": "world_religions",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{Question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(Answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是关于世界宗教的单项选择题，请直接给出正确答案的选项。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "prune_which": "random",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    }
+  },
+  "versions": {
+    "cmmlu": 1.0,
+    "cmmlu_agronomy": 1.0,
+    "cmmlu_anatomy": 1.0,
+    "cmmlu_ancient_chinese": 1.0,
+    "cmmlu_arts": 1.0,
+    "cmmlu_astronomy": 1.0,
+    "cmmlu_business_ethics": 1.0,
+    "cmmlu_chinese_civil_service_exam": 1.0,
+    "cmmlu_chinese_driving_rule": 1.0,
+    "cmmlu_chinese_food_culture": 1.0,
+    "cmmlu_chinese_foreign_policy": 1.0,
+    "cmmlu_chinese_history": 1.0,
+    "cmmlu_chinese_literature": 1.0,
+    "cmmlu_chinese_teacher_qualification": 1.0,
+    "cmmlu_clinical_knowledge": 1.0,
+    "cmmlu_college_actuarial_science": 1.0,
+    "cmmlu_college_education": 1.0,
+    "cmmlu_college_engineering_hydrology": 1.0,
+    "cmmlu_college_law": 1.0,
+    "cmmlu_college_mathematics": 1.0,
+    "cmmlu_college_medical_statistics": 1.0,
+    "cmmlu_college_medicine": 1.0,
+    "cmmlu_computer_science": 1.0,
+    "cmmlu_computer_security": 1.0,
+    "cmmlu_conceptual_physics": 1.0,
+    "cmmlu_construction_project_management": 1.0,
+    "cmmlu_economics": 1.0,
+    "cmmlu_education": 1.0,
+    "cmmlu_electrical_engineering": 1.0,
+    "cmmlu_elementary_chinese": 1.0,
+    "cmmlu_elementary_commonsense": 1.0,
+    "cmmlu_elementary_information_and_technology": 1.0,
+    "cmmlu_elementary_mathematics": 1.0,
+    "cmmlu_ethnology": 1.0,
+    "cmmlu_food_science": 1.0,
+    "cmmlu_genetics": 1.0,
+    "cmmlu_global_facts": 1.0,
+    "cmmlu_high_school_biology": 1.0,
+    "cmmlu_high_school_chemistry": 1.0,
+    "cmmlu_high_school_geography": 1.0,
+    "cmmlu_high_school_mathematics": 1.0,
+    "cmmlu_high_school_physics": 1.0,
+    "cmmlu_high_school_politics": 1.0,
+    "cmmlu_human_sexuality": 1.0,
+    "cmmlu_international_law": 1.0,
+    "cmmlu_journalism": 1.0,
+    "cmmlu_jurisprudence": 1.0,
+    "cmmlu_legal_and_moral_basis": 1.0,
+    "cmmlu_logical": 1.0,
+    "cmmlu_machine_learning": 1.0,
+    "cmmlu_management": 1.0,
+    "cmmlu_marketing": 1.0,
+    "cmmlu_marxist_theory": 1.0,
+    "cmmlu_modern_chinese": 1.0,
+    "cmmlu_nutrition": 1.0,
+    "cmmlu_philosophy": 1.0,
+    "cmmlu_professional_accounting": 1.0,
+    "cmmlu_professional_law": 1.0,
+    "cmmlu_professional_medicine": 1.0,
+    "cmmlu_professional_psychology": 1.0,
+    "cmmlu_public_relations": 1.0,
+    "cmmlu_security_study": 1.0,
+    "cmmlu_sociology": 1.0,
+    "cmmlu_sports_science": 1.0,
+    "cmmlu_traditional_chinese_medicine": 1.0,
+    "cmmlu_virology": 1.0,
+    "cmmlu_world_history": 1.0,
+    "cmmlu_world_religions": 1.0
+  },
+  "n-shot": {
+    "cmmlu_agronomy": 5,
+    "cmmlu_anatomy": 5,
+    "cmmlu_ancient_chinese": 5,
+    "cmmlu_arts": 5,
+    "cmmlu_astronomy": 5,
+    "cmmlu_business_ethics": 5,
+    "cmmlu_chinese_civil_service_exam": 5,
+    "cmmlu_chinese_driving_rule": 5,
+    "cmmlu_chinese_food_culture": 5,
+    "cmmlu_chinese_foreign_policy": 5,
+    "cmmlu_chinese_history": 5,
+    "cmmlu_chinese_literature": 5,
+    "cmmlu_chinese_teacher_qualification": 5,
+    "cmmlu_clinical_knowledge": 5,
+    "cmmlu_college_actuarial_science": 5,
+    "cmmlu_college_education": 5,
+    "cmmlu_college_engineering_hydrology": 5,
+    "cmmlu_college_law": 5,
+    "cmmlu_college_mathematics": 5,
+    "cmmlu_college_medical_statistics": 5,
+    "cmmlu_college_medicine": 5,
+    "cmmlu_computer_science": 5,
+    "cmmlu_computer_security": 5,
+    "cmmlu_conceptual_physics": 5,
+    "cmmlu_construction_project_management": 5,
+    "cmmlu_economics": 5,
+    "cmmlu_education": 5,
+    "cmmlu_electrical_engineering": 5,
+    "cmmlu_elementary_chinese": 5,
+    "cmmlu_elementary_commonsense": 5,
+    "cmmlu_elementary_information_and_technology": 5,
+    "cmmlu_elementary_mathematics": 5,
+    "cmmlu_ethnology": 5,
+    "cmmlu_food_science": 5,
+    "cmmlu_genetics": 5,
+    "cmmlu_global_facts": 5,
+    "cmmlu_high_school_biology": 5,
+    "cmmlu_high_school_chemistry": 5,
+    "cmmlu_high_school_geography": 5,
+    "cmmlu_high_school_mathematics": 5,
+    "cmmlu_high_school_physics": 5,
+    "cmmlu_high_school_politics": 5,
+    "cmmlu_human_sexuality": 5,
+    "cmmlu_international_law": 5,
+    "cmmlu_journalism": 5,
+    "cmmlu_jurisprudence": 5,
+    "cmmlu_legal_and_moral_basis": 5,
+    "cmmlu_logical": 5,
+    "cmmlu_machine_learning": 5,
+    "cmmlu_management": 5,
+    "cmmlu_marketing": 5,
+    "cmmlu_marxist_theory": 5,
+    "cmmlu_modern_chinese": 5,
+    "cmmlu_nutrition": 5,
+    "cmmlu_philosophy": 5,
+    "cmmlu_professional_accounting": 5,
+    "cmmlu_professional_law": 5,
+    "cmmlu_professional_medicine": 5,
+    "cmmlu_professional_psychology": 5,
+    "cmmlu_public_relations": 5,
+    "cmmlu_security_study": 5,
+    "cmmlu_sociology": 5,
+    "cmmlu_sports_science": 5,
+    "cmmlu_traditional_chinese_medicine": 5,
+    "cmmlu_virology": 5,
+    "cmmlu_world_history": 5,
+    "cmmlu_world_religions": 5
+  },
+  "higher_is_better": {
+    "cmmlu": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_agronomy": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_anatomy": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_ancient_chinese": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_arts": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_astronomy": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_business_ethics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_civil_service_exam": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_driving_rule": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_food_culture": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_foreign_policy": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_literature": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_chinese_teacher_qualification": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_clinical_knowledge": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_actuarial_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_education": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_engineering_hydrology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_law": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_medical_statistics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_college_medicine": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_computer_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_computer_security": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_conceptual_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_construction_project_management": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_economics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_education": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_electrical_engineering": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_elementary_chinese": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_elementary_commonsense": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_elementary_information_and_technology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_elementary_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_ethnology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_food_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_genetics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_global_facts": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_biology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_chemistry": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_geography": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_high_school_politics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_human_sexuality": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_international_law": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_journalism": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_jurisprudence": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_legal_and_moral_basis": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_logical": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_machine_learning": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_management": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_marketing": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_marxist_theory": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_modern_chinese": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_nutrition": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_philosophy": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_professional_accounting": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_professional_law": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_professional_medicine": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_professional_psychology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_public_relations": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_security_study": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_sociology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_sports_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_traditional_chinese_medicine": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_virology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_world_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "cmmlu_world_religions": {
+      "acc": true,
+      "acc_norm": true
+    }
+  },
+  "n-samples": {
+    "cmmlu_agronomy": {
+      "original": 169,
+      "effective": 40
+    },
+    "cmmlu_anatomy": {
+      "original": 148,
+      "effective": 40
+    },
+    "cmmlu_ancient_chinese": {
+      "original": 164,
+      "effective": 40
+    },
+    "cmmlu_arts": {
+      "original": 160,
+      "effective": 40
+    },
+    "cmmlu_astronomy": {
+      "original": 165,
+      "effective": 40
+    },
+    "cmmlu_business_ethics": {
+      "original": 209,
+      "effective": 40
+    },
+    "cmmlu_chinese_civil_service_exam": {
+      "original": 160,
+      "effective": 40
+    },
+    "cmmlu_chinese_driving_rule": {
+      "original": 131,
+      "effective": 40
+    },
+    "cmmlu_chinese_food_culture": {
+      "original": 136,
+      "effective": 40
+    },
+    "cmmlu_chinese_foreign_policy": {
+      "original": 107,
+      "effective": 40
+    },
+    "cmmlu_chinese_history": {
+      "original": 323,
+      "effective": 40
+    },
+    "cmmlu_chinese_literature": {
+      "original": 204,
+      "effective": 40
+    },
+    "cmmlu_chinese_teacher_qualification": {
+      "original": 179,
+      "effective": 40
+    },
+    "cmmlu_clinical_knowledge": {
+      "original": 237,
+      "effective": 40
+    },
+    "cmmlu_college_actuarial_science": {
+      "original": 106,
+      "effective": 40
+    },
+    "cmmlu_college_education": {
+      "original": 107,
+      "effective": 40
+    },
+    "cmmlu_college_engineering_hydrology": {
+      "original": 106,
+      "effective": 40
+    },
+    "cmmlu_college_law": {
+      "original": 108,
+      "effective": 40
+    },
+    "cmmlu_college_mathematics": {
+      "original": 105,
+      "effective": 40
+    },
+    "cmmlu_college_medical_statistics": {
+      "original": 106,
+      "effective": 40
+    },
+    "cmmlu_college_medicine": {
+      "original": 273,
+      "effective": 40
+    },
+    "cmmlu_computer_science": {
+      "original": 204,
+      "effective": 40
+    },
+    "cmmlu_computer_security": {
+      "original": 171,
+      "effective": 40
+    },
+    "cmmlu_conceptual_physics": {
+      "original": 147,
+      "effective": 40
+    },
+    "cmmlu_construction_project_management": {
+      "original": 139,
+      "effective": 40
+    },
+    "cmmlu_economics": {
+      "original": 159,
+      "effective": 40
+    },
+    "cmmlu_education": {
+      "original": 163,
+      "effective": 40
+    },
+    "cmmlu_electrical_engineering": {
+      "original": 172,
+      "effective": 40
+    },
+    "cmmlu_elementary_chinese": {
+      "original": 252,
+      "effective": 40
+    },
+    "cmmlu_elementary_commonsense": {
+      "original": 198,
+      "effective": 40
+    },
+    "cmmlu_elementary_information_and_technology": {
+      "original": 238,
+      "effective": 40
+    },
+    "cmmlu_elementary_mathematics": {
+      "original": 230,
+      "effective": 40
+    },
+    "cmmlu_ethnology": {
+      "original": 135,
+      "effective": 40
+    },
+    "cmmlu_food_science": {
+      "original": 143,
+      "effective": 40
+    },
+    "cmmlu_genetics": {
+      "original": 176,
+      "effective": 40
+    },
+    "cmmlu_global_facts": {
+      "original": 149,
+      "effective": 40
+    },
+    "cmmlu_high_school_biology": {
+      "original": 169,
+      "effective": 40
+    },
+    "cmmlu_high_school_chemistry": {
+      "original": 132,
+      "effective": 40
+    },
+    "cmmlu_high_school_geography": {
+      "original": 118,
+      "effective": 40
+    },
+    "cmmlu_high_school_mathematics": {
+      "original": 164,
+      "effective": 40
+    },
+    "cmmlu_high_school_physics": {
+      "original": 110,
+      "effective": 40
+    },
+    "cmmlu_high_school_politics": {
+      "original": 143,
+      "effective": 40
+    },
+    "cmmlu_human_sexuality": {
+      "original": 126,
+      "effective": 40
+    },
+    "cmmlu_international_law": {
+      "original": 185,
+      "effective": 40
+    },
+    "cmmlu_journalism": {
+      "original": 172,
+      "effective": 40
+    },
+    "cmmlu_jurisprudence": {
+      "original": 411,
+      "effective": 40
+    },
+    "cmmlu_legal_and_moral_basis": {
+      "original": 214,
+      "effective": 40
+    },
+    "cmmlu_logical": {
+      "original": 123,
+      "effective": 40
+    },
+    "cmmlu_machine_learning": {
+      "original": 122,
+      "effective": 40
+    },
+    "cmmlu_management": {
+      "original": 210,
+      "effective": 40
+    },
+    "cmmlu_marketing": {
+      "original": 180,
+      "effective": 40
+    },
+    "cmmlu_marxist_theory": {
+      "original": 189,
+      "effective": 40
+    },
+    "cmmlu_modern_chinese": {
+      "original": 116,
+      "effective": 40
+    },
+    "cmmlu_nutrition": {
+      "original": 145,
+      "effective": 40
+    },
+    "cmmlu_philosophy": {
+      "original": 105,
+      "effective": 40
+    },
+    "cmmlu_professional_accounting": {
+      "original": 175,
+      "effective": 40
+    },
+    "cmmlu_professional_law": {
+      "original": 211,
+      "effective": 40
+    },
+    "cmmlu_professional_medicine": {
+      "original": 376,
+      "effective": 40
+    },
+    "cmmlu_professional_psychology": {
+      "original": 232,
+      "effective": 40
+    },
+    "cmmlu_public_relations": {
+      "original": 174,
+      "effective": 40
+    },
+    "cmmlu_security_study": {
+      "original": 135,
+      "effective": 40
+    },
+    "cmmlu_sociology": {
+      "original": 226,
+      "effective": 40
+    },
+    "cmmlu_sports_science": {
+      "original": 165,
+      "effective": 40
+    },
+    "cmmlu_traditional_chinese_medicine": {
+      "original": 185,
+      "effective": 40
+    },
+    "cmmlu_virology": {
+      "original": 169,
+      "effective": 40
+    },
+    "cmmlu_world_history": {
+      "original": 161,
+      "effective": 40
+    },
+    "cmmlu_world_religions": {
+      "original": 160,
+      "effective": 40
+    }
+  },
+  "config": {
+    "model": "dream_mask_head_eval",
+    "model_args": "model_path=/data/qh_models/Dream-v0-Instruct-7B,max_new_tokens=256,steps=256,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,diffusion_mode=semi,block_length=32,block_size=32,progress_label=cmmlu|mask_head|prune_random_kfrac0p05_kv_group_L0-27_2026-04-15T02-30-42,mc_num=1,likelihood_now_step=256,recompute_mask_each_call=true,prune_which=random,prune_k_frac=0.05,random_prune_seed=1234,layer_start=0,layer_end=27,mask_granularity=kv_group,head_mask_warmup_frac=0.2",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": 40.0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "7d576ae",
+  "date": 1776195436.7104445,
+  "pretty_env_info": "PyTorch version: 2.6.0+cu124\nIs debug build: False\nCUDA used to build PyTorch: 12.4\nROCM used to build PyTorch: N/A\n\nOS: Ubuntu 22.04.5 LTS (x86_64)\nGCC version: (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nClang version: 14.0.0-1ubuntu1.1\nCMake version: version 3.22.1\nLibc version: glibc-2.35\n\nPython version: 3.10.15 (main, Oct  3 2024, 07:27:34) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-6.8.0-101-generic-x86_64-with-glibc2.35\nIs CUDA available: True\nCUDA runtime version: 12.1.66\nCUDA_MODULE_LOADING set to: LAZY\nGPU models and configuration: \nGPU 0: NVIDIA H100 NVL\nGPU 1: NVIDIA H100 NVL\nGPU 2: NVIDIA H100 NVL\nGPU 3: NVIDIA H100 NVL\nGPU 4: NVIDIA H100 NVL\nGPU 5: NVIDIA H100 NVL\n\nNvidia driver version: 580.105.08\ncuDNN version: Could not collect\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  192\nOn-line CPU(s) list:                     0-191\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Platinum 8457C\nCPU family:                              6\nModel:                                   143\nThread(s) per core:                      2\nCore(s) per socket:                      48\nSocket(s):                               2\nStepping:                                8\nCPU max MHz:                             3800.0000\nCPU min MHz:                             800.0000\nBogoMIPS:                                5200.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cat_l2 cdp_l3 intel_ppin cdp_l2 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect user_shstk avx_vnni avx512_bf16 wbnoinvd dtherm ida arat pln pts vnmi avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq la57 rdpid bus_lock_detect cldemote movdiri movdir64b enqcmd fsrm md_clear serialize tsxldtrk pconfig arch_lbr ibt amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities ibpb_exit_to_user\nVirtualization:                          VT-x\nL1d cache:                               4.5 MiB (96 instances)\nL1i cache:                               3 MiB (96 instances)\nL2 cache:                                192 MiB (96 instances)\nL3 cache:                                195 MiB (2 instances)\nNUMA node(s):                            2\nNUMA node0 CPU(s):                       0-47,96-143\nNUMA node1 CPU(s):                       48-95,144-191\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n\nVersions of relevant libraries:\n[pip3] numpy==1.23.5\n[pip3] nvidia-cublas-cu12==12.4.5.8\n[pip3] nvidia-cuda-cupti-cu12==12.4.127\n[pip3] nvidia-cuda-nvrtc-cu12==12.4.127\n[pip3] nvidia-cuda-runtime-cu12==12.4.127\n[pip3] nvidia-cudnn-cu12==9.1.0.70\n[pip3] nvidia-cufft-cu12==11.2.1.3\n[pip3] nvidia-curand-cu12==10.3.5.147\n[pip3] nvidia-cusolver-cu12==11.6.1.9\n[pip3] nvidia-cusparse-cu12==12.3.1.170\n[pip3] nvidia-cusparselt-cu12==0.6.2\n[pip3] nvidia-nccl-cu12==2.21.5\n[pip3] nvidia-nvjitlink-cu12==12.4.127\n[pip3] nvidia-nvtx-cu12==12.4.127\n[pip3] nvtx==0.2.10\n[pip3] torch==2.6.0\n[pip3] torchaudio==2.5.1\n[pip3] torchvision==0.21.0\n[pip3] triton==3.2.0\n[conda] blas                       1.0              mkl\n[conda] cuda-cudart                12.1.105         0                             nvidia\n[conda] cuda-cupti                 12.1.105         0                             nvidia\n[conda] cuda-libraries             12.1.0           0                             nvidia\n[conda] cuda-nvrtc                 12.1.105         0                             nvidia\n[conda] cuda-nvtx                  12.1.105         0                             nvidia\n[conda] cuda-opencl                12.9.19          0                             nvidia\n[conda] cuda-runtime               12.1.0           0                             nvidia\n[conda] ffmpeg                     4.3              hf484d3e_0                    pytorch\n[conda] libcublas                  12.1.0.26        0                             nvidia\n[conda] libcufft                   11.0.2.4         0                             nvidia\n[conda] libcurand                  10.3.10.19       0                             nvidia\n[conda] libcusolver                11.4.4.55        0                             nvidia\n[conda] libcusparse                12.0.2.55        0                             nvidia\n[conda] libjpeg-turbo              2.0.0            h9bf148f_0                    pytorch\n[conda] libnvjitlink               12.1.105         0                             nvidia\n[conda] mkl                        2023.1.0         h213fc3f_46344\n[conda] mkl-service                2.4.0            py310h5eee18b_2\n[conda] mkl_fft                    1.3.11           py310h5eee18b_0\n[conda] mkl_random                 1.2.8            py310h1128e8f_0\n[conda] numpy                      2.2.6            pypi_0                        pypi\n[conda] nvtx                       0.2.10           pypi_0                        pypi\n[conda] pytorch                    2.5.1            py3.10_cuda12.1_cudnn9.1.0_0  pytorch\n[conda] pytorch-cuda               12.1             ha16c6d3_6                    pytorch\n[conda] pytorch-mutex              1.0              cuda                          pytorch\n[conda] torchaudio                 2.5.1            py310_cu121                   pytorch\n[conda] torchtriton                3.1.0            py310                         pytorch\n[conda] torchvision                0.20.1           py310_cu121                   pytorch",
+  "transformers_version": "4.54.0",
+  "lm_eval_version": "0.4.9.1",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_bos_token": [
+    "<|beginoftext|>",
+    "151665"
+  ],
+  "eot_token_id": null,
+  "max_length": 4096,
+  "task_hashes": {
+    "cmmlu_agronomy": "872cbda2b84f36caa524b986ed2cf76caaa2603e0739a2442ed35833f386a94d",
+    "cmmlu_anatomy": "12afe679062e6724810ed756b298f41b90fc53221594bfb82838cb39b40a3869",
+    "cmmlu_ancient_chinese": "4cea72744c81912856154c8bb02a4ef37730cbd9570029f2c3b4e5a0df11f1c0",
+    "cmmlu_arts": "b5907ce7d79ddba8b9c307060a6460451393dc660065a21a321c57736aceeed2",
+    "cmmlu_astronomy": "f552d240c3357bbd3e24747ecc29f237e89b943a1c6dd7a2bae6e3ddfc7950ad",
+    "cmmlu_business_ethics": "07e9e61fad6902a407bbd61968dd0ccd6a51b8401cf9335a49dbd77ea4e30808",
+    "cmmlu_chinese_civil_service_exam": "47a4d489b42b7630426b7ba5e5d0a28cea224bcdf57d0df91ba9c593b5f4852f",
+    "cmmlu_chinese_driving_rule": "d9d2c635d344d5ef5323a395e5a2322ddc5b62528cd00e862bca217f11ef2a74",
+    "cmmlu_chinese_food_culture": "1a3ab202c791a857733583dec72cf76b5ea61c9da87fefdd7a1693d260a29311",
+    "cmmlu_chinese_foreign_policy": "e0f01fb79564c00dfa06babf46c1909f005cf97dd613e324edb4bd778c265218",
+    "cmmlu_chinese_history": "456636d88dfb23b6206e6804c95db5d351dbbd729f11c516a8679863433b2325",
+    "cmmlu_chinese_literature": "36b25cf37ab83322dc01ec86f6a4eaa3557f40624d8fb143023606cd11f3af35",
+    "cmmlu_chinese_teacher_qualification": "fdb7140240fecffa2a1b24723bee39e3f78f1ac8382ca4435797c17f94a8caab",
+    "cmmlu_clinical_knowledge": "d5c62d8c0993cb9f6c59e2b240619a0cee589c37f8cafc6e55659d4477ff8db5",
+    "cmmlu_college_actuarial_science": "c4024dcda1222ebe3cdf0ba9786051c7631f8d1b2f6e267e4fda6326e5d6e02a",
+    "cmmlu_college_education": "00d856565a5115959dd44a7d039854ee96646890ae18f0e15b22ebd96458ab81",
+    "cmmlu_college_engineering_hydrology": "53d388eeed07a80fe97b61b9f06759bb802a14573423691492f5d029e755d7e6",
+    "cmmlu_college_law": "0d4ba4bb76e4f933857f78701a4f09afb7f5fc25fbf82acaadfc6daec0756cc4",
+    "cmmlu_college_mathematics": "b35f222b827dd9da19f2b52ae61fc9e3df1de0388c7276202c12caf8913f45b5",
+    "cmmlu_college_medical_statistics": "66421fd6d9454e15ff439a9a19bc050cfaf056b96d73b99400c5ec8ae008be16",
+    "cmmlu_college_medicine": "27adc4bcba8fbcf8ed81a8f9efa9f1575f80370b1e1ed76100ebffa1db56fa6d",
+    "cmmlu_computer_science": "9e029433ac7a88cfc434a57046fb1c02c27b3bf066ce793eaac7a3b7e4c0040a",
+    "cmmlu_computer_security": "4554da73fab84185e49ef83bd412b768e28d89095b3f2132324e44fa660063f5",
+    "cmmlu_conceptual_physics": "7423effdb8cb54525dbb8b70fbd4c0647e593d06fceb34c19d6766f25c70c566",
+    "cmmlu_construction_project_management": "1f41bc3fe1cbdb612cc80f81b0e83d8dd6bc087680ca3a01512c96c2d0eb5826",
+    "cmmlu_economics": "00915dfd52b4f77755b54feb80c2a3f1e9e2deb0f586b9f6a16863c679d6dd31",
+    "cmmlu_education": "cadcca0e973a24715fe532e1c0e4e44498f6298dae0a790092186438eb503971",
+    "cmmlu_electrical_engineering": "3bf8454c451c2a1a8d3e8fab84d34079b25e00dba1b0b9eb54c08d3813a39f0e",
+    "cmmlu_elementary_chinese": "5fc0be06a489f3b302333fcc7897e2d0ca6c16379c5b1e781dabf0d89fdb9f0b",
+    "cmmlu_elementary_commonsense": "8e91efde8e1850478ef4d2c3a5f2f9af306eabd0abdd19067129a5252292b247",
+    "cmmlu_elementary_information_and_technology": "84a2664c8251571041577c657fe9b105c5e75074b30c33cb4b64a6b394d7cc32",
+    "cmmlu_elementary_mathematics": "c3f5e35fc233dff28c958ab7a4dc6dfe2bcfc7cd5cfd9c66837e67e0bc5fdbcd",
+    "cmmlu_ethnology": "f7cd21e3f961cc9bfa8dbdbbfa6f3bde75ca7bf36cdb2c3252ef232381cf51fa",
+    "cmmlu_food_science": "08654862444d3ee4f358d9c53f5831c5486c0a73a75f297659b080cca23dd580",
+    "cmmlu_genetics": "3416d95e0ca0eaf4dc79cd014b1cb09150dd3655b8edff7cebd429c9492aff18",
+    "cmmlu_global_facts": "e96efa7b14bbb83c9c5e1bfaa303d88ae7636a33924d8dea982ba2b180ec569e",
+    "cmmlu_high_school_biology": "e5866fa01c0675f965659f73b986ed58dc718f17ca521dd6e05b0d23786a6b38",
+    "cmmlu_high_school_chemistry": "272ee193bd7a12fc4ae2502552e1bd424254abd474d5618a2c02cbca2b5d96e1",
+    "cmmlu_high_school_geography": "95ac01edc073bdfe6abc743434feb0f4686026bfb424cede1257ce580437e526",
+    "cmmlu_high_school_mathematics": "4b2952f2423bd0575fe253f836cf0e294662eb5ecf38240db261ede904c12a8a",
+    "cmmlu_high_school_physics": "2356e73e9e9682f8ac87f89cb79a176e23cde671af563f454ac8911cc39b7902",
+    "cmmlu_high_school_politics": "3943b552630d5b7f62c8fd72d0b7e1abeb8bca3f5a5720c5feb1d7a9d8a2e1d9",
+    "cmmlu_human_sexuality": "2764ce3f8198a889e9663dc55e940d2101867f9abc0ae19a536ddd7f1c4c9ea4",
+    "cmmlu_international_law": "fd213014394fd3e99acb8e69bf31160a8e510ca51791039f0e3191a846ffe999",
+    "cmmlu_journalism": "9b8575aff9a2ed059de67424f7d076ed551f02a5af2b2752d5a4d963f38af8e8",
+    "cmmlu_jurisprudence": "2e1d90662cb601bf9b6d98777121aed5a401f35c4c3e5817cd9cf87e06ae8a08",
+    "cmmlu_legal_and_moral_basis": "bb9802226bf483a5d4b3170ec643a12f8b4ff76e7f395e0de7b14ec7dd14aaaf",
+    "cmmlu_logical": "b5897138584a9c3dda81d19e80f9ff6e69d846785128262ed789fe67c9484dd3",
+    "cmmlu_machine_learning": "6d9903ceb3c0b5ab737a1dbd89f86ec19fd17e4eeaee2d80af53fdc5df7f4de9",
+    "cmmlu_management": "1a6d4251d8167c74e0b1b9379b9918f3e26fc51a620f8f8692c0b309c949dc23",
+    "cmmlu_marketing": "777c409f10d5a0c3fb6adb7e26696faef70ed5900abe45a96d2eb6bb80bbfdba",
+    "cmmlu_marxist_theory": "be95cda84267ac7118d37bda72090db824cd840c5f5726668a488edc7755e502",
+    "cmmlu_modern_chinese": "7291c09290e096fc356d7fe99660a4fe10373c03e445eb0e2414565648d70158",
+    "cmmlu_nutrition": "bd5197658d1d675ce981e3f494a9df00ec6d45dec97df93f92d0ff49dcb76bb4",
+    "cmmlu_philosophy": "d2a800a2909d6b42ea104e0bb89106e8a96a08018450f23c52dec87e47632341",
+    "cmmlu_professional_accounting": "fafa4b1fc8d7bcdedae97c556fcab87bde954603ad47aa7906067163d8b1a89e",
+    "cmmlu_professional_law": "948089b6b2d1f670d55c2c97e018a6916405fecd812de8dc6fe3db2d53464ac3",
+    "cmmlu_professional_medicine": "2281d279a76f886dde7ec1665cd1761fdf862cef1f473db4a9ee9f23ff08ab75",
+    "cmmlu_professional_psychology": "80808fa0c236665c623d4909e808261c01a455dcd1d90729453e69c0eb786bcc",
+    "cmmlu_public_relations": "a4e8ea163863455144a938d809ddab1ffce37c9f2188b112d8e7dab235bb9a62",
+    "cmmlu_security_study": "8df74e5d4b1e2c52596733ed3e4c26283fba02782ad8fbebff136c8551aeb187",
+    "cmmlu_sociology": "f239a2861637f1f02a514db94736c006367cb290e1d5bc8d047e0ceb3d1ee818",
+    "cmmlu_sports_science": "ab2f491d8e3c37823f726a46464357656878b5526db87dc353e8cbf71ea608d1",
+    "cmmlu_traditional_chinese_medicine": "94cb023aef82f6eb33eb5d08a81b48fc5b2e639ffba1d4175f3ff8d602ed5286",
+    "cmmlu_virology": "fcea25863417c83399668f4cf2441bce75b13038c46f766a66cc4e7a52542ab4",
+    "cmmlu_world_history": "77d452b8aab00fc5df2238061a7a2d564253c864a297d88676b5d3bd9e061055",
+    "cmmlu_world_religions": "4ea07ed9e10ddde857ce7253930b47814e152a8294924603834f8811ec858344"
+  },
+  "model_source": "dream_mask_head_eval",
+  "model_name": "/data/qh_models/Dream-v0-Instruct-7B",
+  "model_name_sanitized": "__data__qh_models__Dream-v0-Instruct-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "start_time": 3428640.66232265,
+  "end_time": 3429306.854374709,
+  "total_evaluation_time_seconds": "666.1920520588756"
+}

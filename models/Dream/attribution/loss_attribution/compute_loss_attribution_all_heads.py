@@ -494,7 +494,7 @@ def main() -> None:
     parser.add_argument(
         "--gsm8k_answer_mode",
         type=str,
-        default="final",
+        default="final_hash",
         choices=["final", "final_hash", "full"],
         help="gsm8k only: 'final' uses answer after ####, 'final_hash' uses '#### <final>', 'full' uses full text.",
     )

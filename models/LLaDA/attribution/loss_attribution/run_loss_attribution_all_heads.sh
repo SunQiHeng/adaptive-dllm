@@ -25,7 +25,7 @@ echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-"(unset)"}"
 echo "========================================================"
 
 # Pin to a specific GPU id (default: 4; keep consistent with your existing runner)
-GPU_ID=${GPU_ID:-2}
+GPU_ID=${GPU_ID:-4}
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 echo "Pinned GPU via CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 
@@ -48,7 +48,8 @@ RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 
 # Attribution dataset (can differ from downstream eval tasks)
 ATTR_DATASET=${ATTR_DATASET:-"mmlu"}     # nemotron | gsm8k | minerva_math | mmlu | cmmlu | ceval-valid | gpqa_main_n_shot | humaneval | mbpp
-ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp"}
+# ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp"}
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"gsm8k"}
 SPLIT=${SPLIT:-"test"}                      # dataset split name (gsm8k/mmlu); humaneval uses fixed test
 DATA_PATH=${DATA_PATH:-""}
 SAMPLES_PER_CATEGORY=${SAMPLES_PER_CATEGORY:-10}  # nemotron only
@@ -105,9 +106,12 @@ LAYER_END=${LAYER_END:-31}
 
 # GSM8K attribution target:
 # - final:      supervise only final answer tokens (after '####')
-# - final_hash: supervise "#### <final>" (closer to lm-eval extraction pattern)
-# - full:       supervise full `answer` field (rationale + final), usually more stable
-GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"full"}
+# - final_hash: supervise "#### <final>" (closest to lm-eval style final-answer extraction)
+# - full:       supervise full `answer` field (rationale + final), usually more stable but less aligned with exact-match eval
+#
+# Default to `final_hash` so the attribution objective better matches the downstream
+# GSM8K exact-match evaluation used by the pruning pipeline.
+GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"final_hash"}
 # Number of few-shot examples to prepend for GSM8K attribution (0 disables few-shot).
 # Note: this only affects ATTR_DATASET=gsm8k.
 NUM_FEWSHOT=${NUM_FEWSHOT:-5}

@@ -80,8 +80,14 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         print(f"Mode: Absolute Keep Ratios (pre-computed)")
     
     print(f"Target select: {select:.3f} ({select*100:.1f}%)")
+    available_layers = sorted(int(k) for k in sparsity_levels.keys())
     print(f"Layers: {n_layers}, KV Heads per layer: {n_heads}")
     print(f"Total heads: {n_layers * n_heads}")
+    if len(available_layers) != int(n_layers):
+        print(
+            f"Available adaptive layers: {len(available_layers)}/{n_layers} "
+            f"(partial attribution; missing layers will be skipped in stats)"
+        )
     
     # Collect all weights/keep_ratios
     all_values = []
@@ -92,6 +98,9 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     print("-" * 80)
     
     for layer_idx in range(n_layers):
+        if layer_idx not in sparsity_levels:
+            print(f"Layer {layer_idx:2d}: (missing in adaptive_config, skipped)")
+            continue
         values = sparsity_levels[layer_idx]
         print(values)
 
@@ -140,6 +149,10 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     #
     # Previously this function overwrote `all_values` with keep-ratios and then printed them as
     # "Relative weights", which was misleading (e.g., showing mean≈select).
+    if not all_values:
+        print("No adaptive layers present in config; skipping global statistics.")
+        return
+
     weights_tensor = torch.cat(all_values).to(torch.float32)
     global_mean = weights_tensor.mean().item()
     global_min = weights_tensor.min().item()
@@ -168,7 +181,7 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         
         # Count heads that will hit upper limit (keep_ratio > 1.0 after scaling)
         clamped_count = (weights_tensor * float(select) > 1.0).sum().item()
-        total_heads = n_layers * n_heads
+        total_heads = int(weights_tensor.numel())
         print(f"  Heads hitting upper limit (>1.0): {clamped_count}/{total_heads} ({clamped_count/total_heads*100:.1f}%)")
         
         if abs(keep_mean - select) < 0.01:

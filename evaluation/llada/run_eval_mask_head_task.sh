@@ -13,7 +13,7 @@ set -o pipefail
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
-export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-1}
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-5}
 
 source ~/miniconda3/bin/activate adaptive-dllm
 
@@ -40,11 +40,12 @@ PRUNE_SCOPE=${PRUNE_SCOPE:-"layer"} # global|layer (全局排序剪枝 vs 每层
 # You can still override with IMPORTANCE_PATH directly.
 ATTR_MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
 # ATTR_METHOD candidates:
-#   headig | attnlrp | shapley
-ATTR_METHOD=${ATTR_METHOD:-"shapley"}
+#   headig | attnlrp | shapley | attarr
+ATTR_METHOD=${ATTR_METHOD:-"headig"}
 # ATTR_DATASETS_STR candidates:
-#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k_full | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
-ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k_full,minerva_math,gpqa_main_n_shot_all,humaneval,mbpp"}
+#   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
+# ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu_all,cmmlu_all,ceval-valid_all,gsm8k,gpqa_main_n_shot_all,humaneval,mbpp"}
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"gsm8k,gpqa_main_n_shot_all,humaneval,mbpp"}
 IFS=',' read -r -a ATTR_DATASETS <<< "${ATTR_DATASETS_STR}"
 FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
 USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
@@ -52,12 +53,67 @@ build_default_importance_path() {
     local attr_dataset="$1"
     echo "/home/qiheng/Projects/adaptive-dllm/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
 }
+
+build_aconfig_importance_path() {
+    local attr_dataset="$1"
+    python - "$ATTR_MODEL_NAME" "$ATTR_METHOD" "$attr_dataset" <<'PY'
+from pathlib import Path
+import sys
+
+model_name = sys.argv[1]
+attr_method = sys.argv[2]
+attr_dataset = sys.argv[3]
+root = Path("/home/qiheng/Projects/adaptive-dllm/configs/aconfigs")
+if not root.is_dir():
+    print("")
+    raise SystemExit(0)
+
+if attr_method == "headig":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_pm")
+elif attr_method == "attnlrp":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attnlrp_")
+elif attr_method == "shapley":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_shapley_")
+elif attr_method == "attarr":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attarr_")
+else:
+    print("")
+    raise SystemExit(0)
+
+candidates = [p for p in root.iterdir() if p.is_dir() and matches(p.name) and (p / "head_importance.pt").is_file()]
+candidates.sort(key=lambda p: (p.stat().st_mtime, p.name), reverse=True)
+print(str(candidates[0] / "head_importance.pt") if candidates else "")
+PY
+}
+
+resolve_auto_importance_path() {
+    local attr_dataset="$1"
+    local legacy_path
+    legacy_path="$(build_default_importance_path "${attr_dataset}")"
+    if [ -f "${legacy_path}" ]; then
+        echo "${legacy_path}"
+        return 0
+    fi
+
+    local aconfig_path
+    aconfig_path="$(build_aconfig_importance_path "${attr_dataset}")"
+    if [ -n "${aconfig_path}" ] && [ -f "${aconfig_path}" ]; then
+        echo "${aconfig_path}"
+        return 0
+    fi
+
+    echo "${legacy_path}"
+}
 # Recommended LIMIT values for task-specific evals (stability vs runtime trade-off):
 #   mmlu_all: 40
 #   cmmlu_all: 40
 #   ceval-valid_all: 200
 #   gpqa_main_n_shot_all: 200
-#   gsm8k_full: 200
+#   gsm8k: 200
 #   minerva_math: 200
 #   humaneval: 200
 #   mbpp: 200
@@ -127,7 +183,7 @@ default_task_for_attr_dataset() {
         mmlu_all) echo "mmlu" ;;
         cmmlu_all) echo "cmmlu" ;;
         ceval-valid_all) echo "ceval-valid" ;;
-        gsm8k_full) echo "gsm8k" ;;
+        gsm8k) echo "gsm8k" ;;
         minerva_math) echo "minerva_math" ;;
         gpqa_main_n_shot_all) echo "gpqa_main_n_shot" ;;
         humaneval) echo "humaneval" ;;
@@ -145,7 +201,7 @@ default_limit_for_attr_dataset() {
         cmmlu_all) echo 40 ;;
         ceval-valid_all) echo 200 ;;
         gpqa_main_n_shot_all) echo 200 ;;
-        gsm8k_full) echo 200 ;;
+        gsm8k) echo 200 ;;
         minerva_math) echo 200 ;;
         humaneval) echo 200 ;;
         mbpp) echo 200 ;;
@@ -159,7 +215,7 @@ default_limit_for_attr_dataset() {
 resolve_attr_dataset_context() {
     local attr_dataset="$(echo "$1" | xargs)"
     CURRENT_ATTR_DATASET="${attr_dataset}"
-    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(build_default_importance_path "${CURRENT_ATTR_DATASET}")}"
+    IMPORTANCE_PATH="${USER_IMPORTANCE_PATH:-$(resolve_auto_importance_path "${CURRENT_ATTR_DATASET}")}"
     if [ -n "${TASKS_STR:-}" ]; then
         IFS=',' read -r -a TASKS <<< "${TASKS_STR}"
     else
@@ -178,6 +234,7 @@ DEFAULT_GPQA_DATA_PATH="/home/qiheng/Projects/adaptive-dllm/evaluation/local_dat
 if [ -z "${GPQA_DATA_PATH}" ] && [ -f "${DEFAULT_GPQA_DATA_PATH}" ]; then
     GPQA_DATA_PATH="${DEFAULT_GPQA_DATA_PATH}"
 fi
+export GPQA_DATA_PATH
 
 check_minerva_math_deps() {
     python - <<'PY'

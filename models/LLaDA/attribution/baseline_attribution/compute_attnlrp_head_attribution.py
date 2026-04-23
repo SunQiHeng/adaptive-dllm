@@ -330,7 +330,7 @@ def main() -> None:
     )
     p.add_argument("--no_progress", action="store_true", default=False)
     p.add_argument("--progress_update_every", type=int, default=10)
-    p.add_argument("--gsm8k_answer_mode", type=str, default="final", choices=["final", "final_hash", "full"])
+    p.add_argument("--gsm8k_answer_mode", type=str, default="final_hash", choices=["final", "final_hash", "full"])
     p.add_argument("--num_fewshot", type=int, default=0)
     p.add_argument("--layer_start", type=int, default=0)
     p.add_argument("--layer_end", type=int, default=-1)

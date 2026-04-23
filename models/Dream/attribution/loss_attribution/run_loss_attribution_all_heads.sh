@@ -51,8 +51,9 @@ RUN_TS=${RUN_TS:-"$(date +%Y%m%d_%H%M%S)"}
 # ---------------------------
 # Attribution dataset
 # ---------------------------
-ATTR_DATASET=${ATTR_DATASET:-"mmlu"}   # gsm8k | minerva_math | nemotron | mmlu | cmmlu | ceval-valid | gpqa_main_n_shot | humaneval | mbpp
-ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp"}
+#ATTR_DATASET=${ATTR_DATASET:-"mmlu"}   # gsm8k | minerva_math | nemotron | mmlu | cmmlu | ceval-valid | gpqa_main_n_shot | humaneval | mbpp
+# ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp"}
+ATTR_DATASETS_STR=${ATTR_DATASETS_STR:-"gsm8k"}
 SPLIT=${SPLIT:-"test"}                 # gsm8k/mmlu split; humaneval is fixed test internally
 DATA_PATH=${DATA_PATH:-""}
 BASE_DATA_PATH=${DATA_PATH:-""}
@@ -129,9 +130,9 @@ LAYER_END=${LAYER_END:--1}
 
 # GSM8K attribution target:
 # - final:      supervise only final answer tokens (after '####')
-# - final_hash: supervise "#### <final>" (closer to lm-eval extraction pattern)
-# - full:       supervise full `answer` field (rationale + final), usually more stable
-GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"full"}
+# - final_hash: supervise "#### <final>" (closest to lm-eval style final-answer extraction)
+# - full:       supervise full `answer` field (rationale + final), usually more stable but less aligned with exact-match eval
+GSM8K_ANSWER_MODE=${GSM8K_ANSWER_MODE:-"final_hash"}
 
 # ---------------------------
 # Flags

@@ -106,8 +106,14 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
         print(f"Mode: Absolute Keep Ratios (pre-computed)")
     
     print(f"Target select: {select:.3f} ({select*100:.1f}%)")
+    available_layers = sorted(int(k) for k in sparsity_levels.keys())
     print(f"Layers: {n_layers}, Heads per layer (config width): {n_heads}")
     print(f"Total heads: {n_layers * n_heads}")
+    if len(available_layers) != int(n_layers):
+        print(
+            f"Available adaptive layers: {len(available_layers)}/{n_layers} "
+            f"(partial attribution; missing layers will be skipped in stats)"
+        )
     
     # Collect all weights/keep_ratios
     all_values = []
@@ -118,6 +124,9 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     print("-" * 80)
     
     for layer_idx in range(n_layers):
+        if layer_idx not in sparsity_levels:
+            print(f"Layer {layer_idx:2d}: (missing in adaptive_config, skipped)")
+            continue
         values = sparsity_levels[layer_idx]
         layer_mean = values.mean().item()
         layer_min = values.min().item()
@@ -148,6 +157,10 @@ def print_adaptive_config_stats(adaptive_config, select, n_layers, n_heads, mode
     # - If output_relative_weights=True, values are *relative weights* (mean≈1.0), and actual keep_ratios are
     #   keep_ratio = clamp(weight * select, max=1.0).
     # - If output_relative_weights=False, values are already *absolute keep_ratios* in [0, 1].
+    if not all_values:
+        print("No adaptive layers present in config; skipping global statistics.")
+        return
+
     weights_tensor = torch.cat(all_values)
     if output_relative_weights:
         keep_tensor = torch.clamp(weights_tensor * float(select), max=1.0)

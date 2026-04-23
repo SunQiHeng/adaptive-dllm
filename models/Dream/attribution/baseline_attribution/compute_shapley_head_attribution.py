@@ -442,7 +442,7 @@ def main() -> None:
     parser.add_argument("--nemotron_pool_per_category", type=int, default=1000)
     parser.add_argument("--nemotron_categories", type=str, default="code,math,science,chat,safety")
     parser.add_argument("--use_chat_template", action="store_true")
-    parser.add_argument("--gsm8k_answer_mode", type=str, default="full", choices=["final", "final_hash", "full"])
+    parser.add_argument("--gsm8k_answer_mode", type=str, default="final_hash", choices=["final", "final_hash", "full"])
     parser.add_argument("--seed", type=int, default=47)
     parser.add_argument("--data_seed", type=int, default=None)
     parser.add_argument("--mask_seed", type=int, default=None)
