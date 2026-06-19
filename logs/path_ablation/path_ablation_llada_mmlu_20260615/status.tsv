@@ -1,0 +1,31 @@
+2026-06-15 13:07:21	attr_llada_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/attr_llada_dp_mmlu.log
+2026-06-15 13:12:08	attr_llada_dp_mmlu	DONE	
+2026-06-15 13:12:08	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmdiagonal_tspath_ablation_llada_mmlu_20260615_dp/head_importance.pt
+2026-06-15 13:12:08	mask_llada_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/mask_llada_dp_mmlu.log
+2026-06-15 13:32:08	mask_llada_dp_mmlu	DONE	
+2026-06-15 13:32:08	attr_llada_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/attr_llada_stp_mmlu.log
+2026-06-15 13:36:44	attr_llada_stp_mmlu	DONE	
+2026-06-15 13:36:44	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_tspath_ablation_llada_mmlu_20260615_stp/head_importance.pt
+2026-06-15 13:36:44	mask_llada_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/mask_llada_stp_mmlu.log
+2026-06-15 13:58:11	mask_llada_stp_mmlu	DONE	
+2026-06-15 13:58:11	attr_llada_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/attr_llada_poly_mmlu.log
+2026-06-15 14:14:40	attr_llada_poly_mmlu	DONE	
+2026-06-15 14:14:40	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_tspath_ablation_llada_mmlu_20260615_poly/head_importance.pt
+2026-06-15 14:14:40	mask_llada_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/mask_llada_poly_mmlu.log
+2026-06-15 14:38:54	mask_llada_poly_mmlu	DONE	
+2026-06-15 14:38:54	summary	DONE	all path variants completed
+2026-06-16 15:01:02	attr_llada_dp_mmlu	SKIP	already completed
+2026-06-16 15:01:02	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmdiagonal_tspath_ablation_llada_mmlu_20260615_dp/head_importance.pt
+2026-06-16 15:01:02	mask_llada_dp_mmlu	SKIP	already completed
+2026-06-16 15:01:02	adaptive_llada_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/adaptive_llada_dp_mmlu.log
+2026-06-16 16:38:14	adaptive_llada_dp_mmlu	DONE	
+2026-06-16 16:38:14	attr_llada_stp_mmlu	SKIP	already completed
+2026-06-16 16:38:14	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_tspath_ablation_llada_mmlu_20260615_stp/head_importance.pt
+2026-06-16 16:38:14	mask_llada_stp_mmlu	SKIP	already completed
+2026-06-16 16:38:14	adaptive_llada_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/adaptive_llada_stp_mmlu.log
+2026-06-16 18:14:49	adaptive_llada_stp_mmlu	DONE	
+2026-06-16 18:14:49	attr_llada_poly_mmlu	SKIP	already completed
+2026-06-16 18:14:49	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mmlu_all_pmrandom_threshold_tspath_ablation_llada_mmlu_20260615_poly/head_importance.pt
+2026-06-16 18:14:49	mask_llada_poly_mmlu	SKIP	already completed
+2026-06-16 18:14:49	adaptive_llada_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_mmlu_20260615/adaptive_llada_poly_mmlu.log
+2026-06-16 19:53:29	adaptive_llada_poly_mmlu	DONE	

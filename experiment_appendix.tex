@@ -1,0 +1,37 @@
+\section{Additional Experiments}
+\label{app:experiments}
+
+\subsection{Additional Result Breakdowns}
+\label{app:additional_results}
+
+The main text reports the complete task-level adaptive and fixed-budget causal-validation results. Here we provide any additional budget points, per-task runtime and compute measurements, and detailed protocol metadata. Minerva Math is evaluated with \texttt{math\_verify}. Dream uses KV-group interventions unless otherwise stated; LLaDA uses equal per-layer head-pruning ratios unless otherwise stated. Random pruning is not part of the current experiment cycle.
+
+\subsection{Cross-Task Transfer}
+\label{app:cross_task}
+
+We evaluate head importance computed on one task and applied to another. We summarize transfer within knowledge, math, and code task groups, as well as transfer across groups. Each cell reports downstream performance retention relative to the corresponding dense model or the causal gap between prune-least and prune-most.
+
+\subsection{Multi-Task Averaged Attribution}
+\label{app:average_attribution}
+
+We normalize task-specific scores after aligning their direction and average them to obtain a task-agnostic head ranking. We compare this averaged ranking with single-task rankings on the downstream macro average.
+
+\subsection{Score Direction and Post-Processing}
+\label{app:score_direction}
+
+We compare original and negated signed HeadIG scores and ablate signed, absolute-value, and ReLU post-processing. AttnLRP, Shapley, and leave-one-out use their native higher-is-more-important direction.
+
+\subsection{Path, Sample, and Seed Robustness}
+\label{app:robustness}
+
+We sweep the number of IG steps, path samples, attribution examples, and random seeds. We report attribution cost, inter-seed Spearman correlation, top-$k$ overlap, and downstream causal performance.
+
+\subsection{Model-Specific Intervention Protocols}
+\label{app:intervention_protocols}
+
+We compare Dream KV-group and head-level interventions where valid, and compare LLaDA per-layer and global pruning. These experiments test whether conclusions depend on a particular pruning convention.
+
+\subsection{Implementation and Compute Details}
+\label{app:implementation}
+
+We report model checkpoints, task harness versions, prompts, generation settings, attribution hyperparameters, GPU type, wall-clock time, peak memory, and the exact number of model utility evaluations for each method. Exact leave-one-out uses one full-model utility evaluation per attributed head plus one evaluation of the full model.

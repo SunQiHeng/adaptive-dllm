@@ -1,0 +1,8 @@
+2026-06-17 13:54:57	pipeline	START	tasks=cmmlu,gsm8k,gpqa_main_n_shot gpu=5
+2026-06-17 13:54:57	cmmlu	RUNNING	run_tag=path_ablation_dream_multitask_20260617_gpu5_cmmlu attr_samples=60 eval_limit=80 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5/cmmlu.pipeline.log
+2026-06-18 00:41:28	cmmlu	DONE	run_tag=path_ablation_dream_multitask_20260617_gpu5_cmmlu
+2026-06-18 00:41:28	gsm8k	RUNNING	run_tag=path_ablation_dream_multitask_20260617_gpu5_gsm8k attr_samples=80 eval_limit=100 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5/gsm8k.pipeline.log
+2026-06-18 03:56:19	gsm8k	DONE	run_tag=path_ablation_dream_multitask_20260617_gpu5_gsm8k
+2026-06-18 03:56:19	gpqa_main_n_shot	RUNNING	run_tag=path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot attr_samples=80 eval_limit=120 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5/gpqa_main_n_shot.pipeline.log
+2026-06-18 09:04:16	gpqa_main_n_shot	DONE	run_tag=path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot
+2026-06-18 09:04:16	pipeline	DONE	all tasks completed

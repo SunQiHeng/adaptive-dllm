@@ -1,0 +1,22 @@
+2026-06-17 13:54:57	attr_llada_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/attr_llada_dp_cmmlu.log
+2026-06-17 14:04:30	attr_llada_dp_cmmlu	DONE	
+2026-06-17 14:04:30	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmdiagonal_tspath_ablation_llada_multitask_20260617_gpu4_cmmlu_dp/head_importance.pt
+2026-06-17 14:04:30	mask_llada_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/mask_llada_dp_cmmlu.log
+2026-06-17 14:32:14	mask_llada_dp_cmmlu	DONE	
+2026-06-17 14:32:14	adaptive_llada_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/adaptive_llada_dp_cmmlu.log
+2026-06-17 16:59:29	adaptive_llada_dp_cmmlu	DONE	
+2026-06-17 16:59:29	attr_llada_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/attr_llada_stp_cmmlu.log
+2026-06-17 17:31:13	attr_llada_stp_cmmlu	DONE	
+2026-06-17 17:31:13	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_cmmlu_stp/head_importance.pt
+2026-06-17 17:31:13	mask_llada_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/mask_llada_stp_cmmlu.log
+2026-06-17 18:01:02	mask_llada_stp_cmmlu	DONE	
+2026-06-17 18:01:02	adaptive_llada_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/adaptive_llada_stp_cmmlu.log
+2026-06-17 20:31:13	adaptive_llada_stp_cmmlu	DONE	
+2026-06-17 20:31:13	attr_llada_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/attr_llada_poly_cmmlu.log
+2026-06-17 21:19:42	attr_llada_poly_cmmlu	DONE	
+2026-06-17 21:19:42	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_cmmlu_poly/head_importance.pt
+2026-06-17 21:19:42	mask_llada_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/mask_llada_poly_cmmlu.log
+2026-06-17 21:47:07	mask_llada_poly_cmmlu	DONE	
+2026-06-17 21:47:07	adaptive_llada_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_cmmlu/adaptive_llada_poly_cmmlu.log
+2026-06-18 00:13:47	adaptive_llada_poly_cmmlu	DONE	
+2026-06-18 00:13:47	summary	DONE	all path variants completed

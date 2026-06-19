@@ -60,7 +60,7 @@ IMPORTANCE_TAG=""
 USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
 ATTR_MODEL_NAME=${MODEL_NAME:-"dream"}
 # ATTR_METHOD candidates:
-#   headig | attnlrp | shapley | attarr
+#   headig | attnlrp | shapley | attarr | loo
 ATTR_METHOD=${ATTR_METHOD:-"shapley"}
 # ATTR_DATASETS_STR candidates:
 #   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
@@ -100,6 +100,9 @@ elif attr_method == "shapley":
 elif attr_method == "attarr":
     def matches(name: str) -> bool:
         return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attarr_")
+elif attr_method == "loo":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_loo_")
 else:
     print("")
     raise SystemExit(0)
@@ -494,7 +497,7 @@ PY
         fi
         CMD=(python -m accelerate.commands.launch --num_processes=1 eval_dream.py
             --model dream_eval
-            --model_args "${MODEL_ARGS_STR},mc_num=1,likelihood_now_step=${STEPS},recompute_mask_each_call=true"
+            --model_args "${MODEL_ARGS_STR},mc_num=${MC_NUM:-1},likelihood_now_step=${STEPS},recompute_mask_each_call=true"
             --tasks "${task_name}"
             "${INCLUDE_PATH_ARGS[@]}"
             --num_fewshot "${NUM_FEWSHOT_LOCAL}"
@@ -652,4 +655,3 @@ for attr_dataset in "${ATTR_DATASETS[@]}"; do
         done
     done
 done
-

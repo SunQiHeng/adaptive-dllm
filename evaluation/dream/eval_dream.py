@@ -50,7 +50,7 @@ def _iter_with_progress(items, *, desc: str, enable: bool = True, update_every: 
                 print(f"[progress][elapsed={elapsed}s] {desc} {idx}/{total}")
 
 
-_CODE_FENCE_RE = re.compile(r"```(?:python)?\n([\s\S]*?)```", re.IGNORECASE)
+_CODE_FENCE_RE = re.compile(r"```(?:python)?\s*\n?([\s\S]*?)```", re.IGNORECASE)
 
 
 def _maybe_extract_python_completion(context: str, completion: str) -> str:
@@ -62,19 +62,42 @@ def _maybe_extract_python_completion(context: str, completion: str) -> str:
     NOT strip those, causing near-zero pass@1.
 
     Heuristic (kept conservative):
-    - Only triggers when the *context* looks like a Python function prompt (contains 'def ').
+    - Only triggers when the *context* looks like a Python coding prompt. HumanEval usually contains
+      a function signature; MBPP uses a natural-language prompt ending with [BEGIN].
     - If a markdown code fence exists, extract the first fenced block.
     - Else if the completion contains a fence marker, truncate before it.
     """
-    if "def " not in context:
+    looks_like_code_prompt = (
+        "def " in context
+        or "[BEGIN]" in context
+        or "Your code should pass these tests" in context
+    )
+    if not looks_like_code_prompt:
         return completion
 
     m = _CODE_FENCE_RE.search(completion)
     if m:
-        return m.group(1)
+        return m.group(1).strip()
 
     if "```" in completion:
         return completion.split("```", 1)[0]
+
+    for marker in ("[DONE]", "[END]"):
+        if marker in completion:
+            completion = completion.split(marker, 1)[0]
+
+    # MBPP with instruct models may emit a short explanation before raw code even without fences.
+    # Keep the first plausible Python block rather than feeding prose to the unsafe-code evaluator.
+    starts = [
+        idx for idx in (
+            completion.find("\ndef "),
+            completion.find("\nfrom "),
+            completion.find("\nimport "),
+        )
+        if idx >= 0
+    ]
+    if starts and not completion.lstrip().startswith(("def ", "from ", "import ")):
+        completion = completion[min(starts) + 1 :]
 
     return completion
 
@@ -943,4 +966,3 @@ class DreamEvalHarness(LM):
 if __name__ == "__main__":
     set_seed(1234)
     cli_evaluate()
-

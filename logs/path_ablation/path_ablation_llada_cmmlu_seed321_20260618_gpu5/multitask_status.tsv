@@ -1,0 +1,4 @@
+2026-06-18 17:00:18	pipeline	START	tasks=cmmlu gpu=5
+2026-06-18 17:00:18	cmmlu	RUNNING	run_tag=path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu attr_samples=60 eval_limit=80 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5/cmmlu.pipeline.log
+2026-06-18 19:42:31	cmmlu	DONE	run_tag=path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu
+2026-06-18 19:42:31	pipeline	DONE	all tasks completed

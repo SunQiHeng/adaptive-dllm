@@ -1,0 +1,184 @@
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate whether PolyHeadIG yields meaningful head-importance scores for diffusion language models (DLMs/DLLMs) relative to three attribution baselines: \textbf{AttnLRP}, \textbf{Shapley values}, and \textbf{leave-one-out (LOO)}. Since attribution scores are only useful insofar as they predict \emph{causal} effects, we validate all methods under two downstream intervention protocols: (i) attribution-guided adaptive sparse inference, and (ii) importance-based head masking and pruning. We then isolate the contribution of PolyHeadIG's path design and measure its accuracy--stability--cost trade-off.
+
+\subsection{Experimental Setup}
+\label{sec:exp:setup}
+
+\paragraph{Models.}
+We consider two representative DLLM families with transformer backbones and diffusion-style masking/denoising generation. Throughout, we keep the experimental protocol model-agnostic; model-specific hyperparameters are only used to reproduce each family’s standard evaluation settings.
+
+\paragraph{Tasks and metrics.}
+We evaluate on a diverse suite of reasoning, knowledge, and code benchmarks:
+\begin{itemize}
+    \item \textbf{MMLU}, \textbf{CMMLU}, \textbf{CEval}, and \textbf{GPQA}: multiple-choice evaluation. Metric: accuracy.
+    \item \textbf{GSM8K} and \textbf{Minerva Math}: mathematical reasoning. Metrics: extracted-answer exact match for GSM8K (the \texttt{flexible-extract} filter in our evaluation logs) and \texttt{math\_verify} for Minerva Math.
+    \item \textbf{HumanEval} and \textbf{MBPP}: code generation. Metric: pass@1 under the standard functional evaluators.
+\end{itemize}
+Unless otherwise noted, we follow each model family’s default evaluation harness, including the corresponding generation length, diffusion steps, prompt formatting, and answer extraction protocol.
+
+\paragraph{Compared attribution methods.}
+We compare \textbf{PolyHeadIG} (ours) with \textbf{AttnLRP}, \textbf{Shapley values}, and exact \textbf{LOO}, where the LOO score of head $h$ is $\mathcal{L}(\text{without }h)-\mathcal{L}(\text{full})$. AttAttr is included as an additional IG-style baseline in the appendix. All methods produce one attribution score per attention head over the same selected layer range, and the resulting scores are consumed by identical downstream intervention pipelines.
+
+\paragraph{Score direction.}
+We normalize all scores so that a larger value means a more important head. Signed HeadIG/PolyHeadIG attributes the CE loss, for which helpful heads generally receive negative raw scores; we therefore negate its raw signed scores before downstream use. AttnLRP, Shapley, and LOO already produce scores whose larger values indicate greater importance and are not negated. We include a score-direction ablation in the appendix.
+
+\paragraph{Intervention units.}
+Dream uses GQA and is intervened on at the KV-group level, whereas the current LLaDA protocol prunes the same head fraction independently in every layer. We report the unit, layer range, and pruning budget with every result and avoid directly comparing absolute degradation across these two model-specific protocols.
+
+\paragraph{Attribution data.}
+We compute head importance on an attribution dataset that may or may not match the downstream evaluation tasks. Unless otherwise stated, we report the attribution dataset, the number of attribution examples $M$, and the exact attribution configuration used for each method.
+
+\subsection{HeadIG Configuration}
+\label{sec:exp:headig_config}
+
+\paragraph{Masking schedule and Monte-Carlo sampling.}
+To emulate multiple diffusion timesteps and reduce variance, HeadIG averages over a set of masking rates $\{\rho_t\}_{t=1}^{T}$ and $S$ independent mask samples per rate, as described in Section~\ref{ch:method}.
+
+\paragraph{Path design.}
+Within HeadIG, we compare the \textbf{Diagonal Path (DP)}, a single-sample \textbf{Stochastic Threshold Path (STP)}, and the final multi-path estimator \textbf{PolyHeadIG} defined in Section~\ref{sec:method:path}. We report IG steps $K$, path samples $P$, and post-processing $\phi$.
+
+\paragraph{Implementation details.}
+Low-level implementation details, reproducibility settings, and compute reporting conventions are deferred to Appendix~\ref{app:implementation}.
+
+\subsection{Validation 1: Attribution-Guided Adaptive Sparse Inference}
+\label{sec:exp:adaptive}
+
+\paragraph{Setting.}
+We evaluate adaptive sparse inference under a fixed generation protocol. For each attribution method, we use the corresponding precomputed head scores to guide the head-wise sparse allocation during inference. We compare these attribution-guided variants against the standard dense model.
+
+\paragraph{Reporting.}
+We report every task at the fixed adaptive-sparsity setting used by the current implementation, together with the dense reference and the measured inference cost. Budget sweeps are reported where available, but are not required for the primary method comparison.
+
+\begin{table}[t]
+\centering
+\caption{Current inventory of LLaDA-1.5 adaptive sparse results. Dense and LOO entries marked with values were produced in the 2026-06-07--09 formal/table-fill runs. Historical AttnLRP, Shapley, and PolyHeadIG entries still require the sign-direction audit described in the text. Macro averages are over currently available non-Minerva entries only.}
+\label{tab:adaptive_llada_draft}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Task} & \textbf{Dense} & \textbf{AttnLRP} & \textbf{Shapley} & \textbf{LOO} & \textbf{PolyHeadIG} \\
+\hline
+MMLU (acc) & 65.09 & 62.24 & 62.54 & 61.58 & 63.86 \\
+CMMLU (acc) & 67.24 & 60.41 & 63.66 & 62.84 & 64.14 \\
+CEval (acc) & 66.05 & 59.81 & 63.22 & TBD & 62.85 \\
+GPQA (acc) & 26.50 & 23.00 & 25.00 & 24.00 & 22.00 \\
+GSM8K (EM) & 80.00 & 59.60 & 60.00 & 64.00 & 70.50 \\
+Minerva Math (\texttt{math\_verify}) & TBD & TBD & TBD & TBD & TBD \\
+HumanEval (pass@1) & 37.20 & 38.41 & 37.80 & 37.20 & 38.70 \\
+MBPP (pass@1) & 37.00 & 37.00 & 37.00 & 37.00 & 37.00 \\
+Macro average (available) & 54.15 & 48.64 & 49.89 & 47.77 & 51.29 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[t]
+\centering
+\caption{Current inventory of Dream adaptive sparse results. Dense and partial LOO entries marked with values were produced in the 2026-06-07--10 table-fill/formal/recovery runs. GPQA entries use the higher-MC likelihood audit with \texttt{MC\_NUM}=8; PolyHeadIG GPQA and GSM8K entries were refreshed by the 2026-06-16--17 same-source reattribution run. Macro averages are over currently available non-Minerva entries only.}
+\label{tab:adaptive_dream_draft}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Task} & \textbf{Dense} & \textbf{AttnLRP} & \textbf{Shapley} & \textbf{LOO} & \textbf{PolyHeadIG} \\
+\hline
+MMLU (acc) & TBD & 41.93 & 41.58 & TBD & 43.11 \\
+CMMLU (acc) & 34.59 & 34.58 & 35.15 & 34.81 & 35.26 \\
+CEval (acc) & 34.03 & 33.43 & 34.62 & TBD & 35.07 \\
+GPQA (acc) & 29.50 & 24.00 & 19.50 & 21.50 & 23.50 \\
+GSM8K (EM) & 82.50 & 66.00 & 65.50 & 65.00 & 67.00 \\
+Minerva Math (\texttt{math\_verify}) & TBD & TBD & TBD & TBD & TBD \\
+HumanEval (pass@1) & 39.63 & 39.63 & 39.63 & 39.63 & 39.63\\
+MBPP (pass@1) & 54.50 & 54.50 & 54.50 & 54.50 & 54.50 \\
+Macro average (available) & 45.79 & 42.01 & 41.50 & 43.09 & 42.58 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\paragraph{Hypothesis.}
+If PolyHeadIG better identifies functionally important heads, then at matched sparsity budgets its adaptive sparse variant should preserve downstream accuracy more effectively than variants guided by the baseline attribution methods.
+
+\subsection{Validation 2: Importance-Based Head Masking and Pruning}
+\label{sec:exp:masking}
+
+\paragraph{Protocol.}
+For each attribution method, we rank heads by importance and perform direct causal interventions by pruning a fixed number (or fraction) of heads. In the main text, we focus on \textbf{prune-most}: removing the top-$k$ heads according to the attribution ranking. This directly tests whether the heads ranked as most important are causally necessary for downstream performance. We keep prune-least runs as diagnostic audits, but do not use them as the primary pruning metric because signed attribution methods and nonnegative relevance baselines assign different semantics to their low-score tails.
+For Dream, the default intervention unit is a KV group over layers 0--27. For LLaDA, the default protocol removes the same fraction of heads within every layer over layers 0--31. We state each model-specific budget explicitly and do not treat their absolute degradation as directly equivalent.
+
+\paragraph{Reporting.}
+At a fixed model-specific pruning budget, we report the task score after \textbf{prune-most}, together with the dense reference. Lower post-pruning performance indicates that the method selected heads with stronger causal contribution. Additional prune-least diagnostics and budget points are reserved for the appendix.
+
+\begin{table}[t]
+\centering
+\caption{Task score after pruning the top-ranked heads. Lower is better under this destructive intervention because it indicates that the attributed heads were causally important. Current entries are partial results from the 2026-06-07--17 formal, mask-main, and PolyHeadIG reattribution runs; macro averages are over currently available non-Minerva entries only.}
+\label{tab:mask_main}
+\begin{tabular}{llccccc}
+\hline
+\textbf{Model} & \textbf{Task} & \textbf{Dense} & \textbf{AttnLRP} & \textbf{Shapley} & \textbf{LOO} & \textbf{PolyHeadIG} \\
+\hline
+Dream & MMLU (acc) & TBD & 37.19 & 38.33 & 39.21 & 38.20 \\
+Dream & CMMLU (acc) & 34.59 & 28.17 & 30.63 & 27.54 & 24.59 \\
+Dream & CEval (acc) & 34.03 & 29.35 & 30.53 & TBD & 29.27 \\
+Dream & GPQA (acc) & 29.50 & 22.00 & 27.50 & 28.00 & 24.00 \\
+Dream & GSM8K (EM) & 82.50 & 9.50 & 81.50 & 21.00 & 9.50 \\
+Dream & Minerva Math (\texttt{math\_verify}) & TBD & TBD & TBD & TBD & TBD \\
+Dream & HumanEval (pass@1) & 39.63 & 39.02 & 39.02 & 38.41 & 37.80 \\
+Dream & MBPP (pass@1) & 54.50 & 54.50 & 54.50 & 55.00 & 54.00 \\
+Dream & Macro average (available) & 45.79 & 31.39 & 43.14 & 34.86 & 31.05 \\
+LLaDA & MMLU (acc) & 65.09 & 43.90 & 53.73 & 52.46 & 46.45 \\
+LLaDA & CMMLU (acc) & 67.24 & 33.66 & 57.99 & 49.74 & 35.26 \\
+LLaDA & CEval (acc) & 66.05 & 33.06 & 57.73 & TBD & 30.98 \\
+LLaDA & GPQA (acc) & 26.50 & 28.00 & 27.00 & 33.50 & 25.00 \\
+LLaDA & GSM8K (EM) & 80.00 & 14.00 & 65.00 & 52.50 & 1.50 \\
+LLaDA & Minerva Math (\texttt{math\_verify}) & TBD & TBD & TBD & TBD & TBD \\
+LLaDA & HumanEval (pass@1) & 37.20 & 37.20 & 38.41 & 37.80 & 36.59 \\
+LLaDA & MBPP (pass@1) & 37.00 & 36.50 & 37.00 & 37.00 & 36.00 \\
+LLaDA & Macro average (available) & 54.15 & 32.33 & 48.12 & 43.83 & 30.25 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Path Ablation, Stability, and Cost}
+\label{sec:exp:ablations}
+
+This ablation tests the central design choice of PolyHeadIG. We compare diagonal IG (DP), one stochastic threshold path (STP), and multi-path PolyHeadIG while fixing the attribution examples, masking schedule, IG steps, score post-processing, and downstream intervention protocol. DP versus STP isolates asynchronous head activation; STP versus PolyHeadIG isolates multi-path averaging.
+
+We jointly report destructive prune-most performance, causal gap, adaptive-sparse performance, and attribution wall-clock time. Seed stability and top-$k$ overlap are being collected as supporting diagnostics. This directly tests whether the additional paths improve causal ranking quality enough to justify their cost.
+
+\begin{table}[t]
+\centering
+\caption{Current multi-task path-design ablation at a matched attribution and downstream protocol. Prune-most is the task score after removing the top-ranked heads, where lower is better; causal gap is prune-least minus prune-most, where higher is better; Adaptive is the adaptive-sparse task score, where higher is better. MMLU uses 40 attribution/evaluation examples; CMMLU uses 60 attribution examples and an 80-example evaluation limit; GSM8K and GPQA use 80 attribution examples with 100 and 120 evaluation examples, respectively. All rows use 8 IG steps, five mask rates with two mask samples per rate, and seed 123.}
+\label{tab:path_ablation}
+\begin{tabular}{lllcccc}
+\hline
+\textbf{Model} & \textbf{Task} & \textbf{Path} & \textbf{Prune-most} & \textbf{Causal gap} & \textbf{Adaptive} & \textbf{Time} \\
+\hline
+Dream & MMLU & DP & 32.02 & -4.39 & TBD & 8.58 min \\
+Dream & MMLU & STP & 35.88 & 4.96 & TBD & 8.25 min \\
+Dream & MMLU & PolyHeadIG & 37.68 & -6.32 & TBD & 32.38 min \\
+Dream & CMMLU & DP & 29.20 & -0.26 & 33.60 & 14.28 min \\
+Dream & CMMLU & STP & 28.96 & -4.07 & 34.22 & 36.65 min \\
+Dream & CMMLU & PolyHeadIG & 29.59 & -4.81 & 34.16 & 69.43 min \\
+Dream & GSM8K & DP & 21.00 & 61.00 & 73.00 & 13.80 min \\
+Dream & GSM8K & STP & 86.00 & -6.00 & 75.00 & 14.02 min \\
+Dream & GSM8K & PolyHeadIG & 10.00 & 74.00 & 72.00 & 54.72 min \\
+Dream & GPQA & DP & 29.17 & -7.50 & 25.00 & 14.62 min \\
+Dream & GPQA & STP & 25.00 & -0.83 & 22.50 & 13.98 min \\
+Dream & GPQA & PolyHeadIG & 20.83 & 5.00 & 22.50 & 54.87 min \\
+LLaDA & MMLU & DP & 40.48 & 19.17 & 63.42 & 4.78 min \\
+LLaDA & MMLU & STP & 38.29 & 20.92 & 64.08 & 4.60 min \\
+LLaDA & MMLU & PolyHeadIG & 48.51 & 7.59 & 63.29 & 16.48 min \\
+LLaDA & CMMLU & DP & 42.74 & 17.44 & 65.07 & 9.55 min \\
+LLaDA & CMMLU & STP & 30.76 & 29.83 & 64.53 & 31.73 min \\
+LLaDA & CMMLU & PolyHeadIG & 27.54 & 32.37 & 64.94 & 48.48 min \\
+LLaDA & GSM8K & DP & 43.00 & 6.00 & 66.00 & 18.63 min \\
+LLaDA & GSM8K & STP & 39.00 & 5.00 & 69.00 & 18.23 min \\
+LLaDA & GSM8K & PolyHeadIG & 36.00 & 9.00 & 59.00 & 70.57 min \\
+LLaDA & GPQA & DP & 28.33 & -2.50 & 23.33 & 8.40 min \\
+LLaDA & GPQA & STP & 27.50 & 1.67 & 28.33 & 8.57 min \\
+LLaDA & GPQA & PolyHeadIG & 26.67 & 0.83 & 24.17 & 37.55 min \\
+\hline
+\end{tabular}
+\end{table}
+
+Additional cross-task transfer, multi-task averaged attribution, score-direction checks, and model-specific intervention analyses are reported in the appendix.

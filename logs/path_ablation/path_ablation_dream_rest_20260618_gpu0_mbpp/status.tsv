@@ -1,0 +1,18 @@
+2026-06-19 06:44:13	attr_dream_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/attr_dream_dp_mbpp.log
+2026-06-19 06:55:28	attr_dream_dp_mbpp	DONE	
+2026-06-19 06:55:28	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mbpp_pmdiagonal_tspath_ablation_dream_rest_20260618_gpu0_mbpp_dp/head_importance.pt
+2026-06-19 06:55:28	mask_dream_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/mask_dream_dp_mbpp.log
+2026-06-19 10:33:23	mask_dream_dp_mbpp	DONE	
+2026-06-19 10:33:23	adaptive_dream_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/adaptive_dream_dp_mbpp.log
+2026-06-19 12:16:58	adaptive_dream_dp_mbpp	DONE	
+2026-06-19 12:16:58	attr_dream_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/attr_dream_stp_mbpp.log
+2026-06-19 12:27:57	attr_dream_stp_mbpp	DONE	
+2026-06-19 12:27:57	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mbpp_pmrandom_threshold_tspath_ablation_dream_rest_20260618_gpu0_mbpp_stp/head_importance.pt
+2026-06-19 12:27:57	mask_dream_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/mask_dream_stp_mbpp.log
+2026-06-19 16:13:55	mask_dream_stp_mbpp	DONE	
+2026-06-19 16:13:55	adaptive_dream_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/adaptive_dream_stp_mbpp.log
+2026-06-19 16:15:10	adaptive_dream_stp_mbpp	FAILED	rc=1
+2026-06-19 16:15:10	attr_dream_poly_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/attr_dream_poly_mbpp.log
+2026-06-19 16:57:27	attr_dream_poly_mbpp	DONE	
+2026-06-19 16:57:27	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mbpp_pmrandom_threshold_tspath_ablation_dream_rest_20260618_gpu0_mbpp_poly/head_importance.pt
+2026-06-19 16:57:27	mask_dream_poly_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_mbpp/mask_dream_poly_mbpp.log

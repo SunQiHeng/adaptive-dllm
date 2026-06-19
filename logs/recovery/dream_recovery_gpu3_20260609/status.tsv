@@ -1,0 +1,14 @@
+2026-06-09 23:25:38	gpqa_attnlrp_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/gpqa_attnlrp_mc8.log
+2026-06-10 01:29:02	gpqa_attnlrp_mc8	DONE	
+2026-06-10 01:29:02	gpqa_shapley_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/gpqa_shapley_mc8.log
+2026-06-10 03:33:23	gpqa_shapley_mc8	DONE	
+2026-06-10 03:33:23	gpqa_headig_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/gpqa_headig_mc8.log
+2026-06-10 05:38:41	gpqa_headig_mc8	DONE	
+2026-06-10 05:38:41	mbpp_dense_full	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/mbpp_dense_full.log
+2026-06-10 09:11:06	mbpp_dense_full	DONE	
+2026-06-10 09:11:06	mbpp_attnlrp_full	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/mbpp_attnlrp_full.log
+2026-06-10 15:01:18	mbpp_attnlrp_full	DONE	
+2026-06-10 15:01:18	mbpp_headig_full	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/mbpp_headig_full.log
+2026-06-10 19:53:03	mbpp_headig_full	DONE	
+2026-06-10 19:53:03	mbpp_loo_full	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/recovery/dream_recovery_gpu3_20260609/mbpp_loo_full.log
+2026-06-10 23:49:32	mbpp_loo_full	DONE	

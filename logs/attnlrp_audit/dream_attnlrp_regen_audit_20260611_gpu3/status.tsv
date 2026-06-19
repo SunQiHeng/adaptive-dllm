@@ -1,0 +1,14 @@
+2026-06-11 18:07:53	attr_gpqa	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/attr_gpqa.log
+2026-06-11 18:19:26	attr_gpqa	DONE	
+2026-06-11 18:19:26	attr_gpqa	IMPORTANCE	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_attnlrp_style_relu_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsdream_attnlrp_regen_audit_20260611_gpu3_gpqa_main_n_shot/head_importance.pt
+2026-06-11 18:19:26	attr_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/attr_gsm8k.log
+2026-06-11 18:22:11	attr_gsm8k	DONE	
+2026-06-11 18:22:11	attr_gsm8k	IMPORTANCE	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_attnlrp_style_relu_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsdream_attnlrp_regen_audit_20260611_gpu3_gsm8k/head_importance.pt
+2026-06-11 18:22:11	eval_gpqa_attr_on_gpqa_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/eval_gpqa_attr_on_gpqa_mc8.log
+2026-06-11 20:24:24	eval_gpqa_attr_on_gpqa_mc8	DONE	
+2026-06-11 20:24:24	eval_gpqa_attr_on_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/eval_gpqa_attr_on_gsm8k.log
+2026-06-11 20:52:56	eval_gpqa_attr_on_gsm8k	DONE	
+2026-06-11 20:52:56	eval_gsm8k_attr_on_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/eval_gsm8k_attr_on_gsm8k.log
+2026-06-11 21:24:39	eval_gsm8k_attr_on_gsm8k	DONE	
+2026-06-11 21:24:39	eval_gsm8k_attr_on_gpqa_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/attnlrp_audit/dream_attnlrp_regen_audit_20260611_gpu3/eval_gsm8k_attr_on_gpqa_mc8.log
+2026-06-11 22:17:27	eval_gsm8k_attr_on_gpqa_mc8	FAILED	rc=1

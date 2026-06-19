@@ -1,0 +1,16 @@
+2026-06-18 17:00:18	attr_llada_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/attr_llada_dp_cmmlu.log
+2026-06-18 17:10:34	attr_llada_dp_cmmlu	DONE	
+2026-06-18 17:10:34	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmdiagonal_tspath_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu_dp/head_importance.pt
+2026-06-18 17:10:34	mask_llada_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/mask_llada_dp_cmmlu.log
+2026-06-18 17:35:12	mask_llada_dp_cmmlu	DONE	
+2026-06-18 17:35:12	attr_llada_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/attr_llada_stp_cmmlu.log
+2026-06-18 18:06:45	attr_llada_stp_cmmlu	DONE	
+2026-06-18 18:06:45	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmrandom_threshold_tspath_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu_stp/head_importance.pt
+2026-06-18 18:06:45	mask_llada_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/mask_llada_stp_cmmlu.log
+2026-06-18 18:31:35	mask_llada_stp_cmmlu	DONE	
+2026-06-18 18:31:35	attr_llada_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/attr_llada_poly_cmmlu.log
+2026-06-18 19:18:55	attr_llada_poly_cmmlu	DONE	
+2026-06-18 19:18:55	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_cmmlu_all_pmrandom_threshold_tspath_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu_poly/head_importance.pt
+2026-06-18 19:18:55	mask_llada_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_cmmlu_seed321_20260618_gpu5_cmmlu/mask_llada_poly_cmmlu.log
+2026-06-18 19:42:31	mask_llada_poly_cmmlu	DONE	
+2026-06-18 19:42:31	summary	DONE	all path variants completed

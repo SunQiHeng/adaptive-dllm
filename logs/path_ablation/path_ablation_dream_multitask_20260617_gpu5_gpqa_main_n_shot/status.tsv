@@ -1,0 +1,22 @@
+2026-06-18 03:56:19	attr_dream_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/attr_dream_dp_gpqa_main_n_shot.log
+2026-06-18 04:10:56	attr_dream_dp_gpqa_main_n_shot	DONE	
+2026-06-18 04:10:56	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_pmdiagonal_tspath_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot_dp/head_importance.pt
+2026-06-18 04:10:56	mask_dream_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/mask_dream_dp_gpqa_main_n_shot.log
+2026-06-18 04:23:01	mask_dream_dp_gpqa_main_n_shot	DONE	
+2026-06-18 04:23:01	adaptive_dream_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/adaptive_dream_dp_gpqa_main_n_shot.log
+2026-06-18 05:26:00	adaptive_dream_dp_gpqa_main_n_shot	DONE	
+2026-06-18 05:26:00	attr_dream_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/attr_dream_stp_gpqa_main_n_shot.log
+2026-06-18 05:39:59	attr_dream_stp_gpqa_main_n_shot	DONE	
+2026-06-18 05:39:59	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot_stp/head_importance.pt
+2026-06-18 05:39:59	mask_dream_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/mask_dream_stp_gpqa_main_n_shot.log
+2026-06-18 05:52:03	mask_dream_stp_gpqa_main_n_shot	DONE	
+2026-06-18 05:52:03	adaptive_dream_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/adaptive_dream_stp_gpqa_main_n_shot.log
+2026-06-18 06:53:59	adaptive_dream_stp_gpqa_main_n_shot	DONE	
+2026-06-18 06:53:59	attr_dream_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/attr_dream_poly_gpqa_main_n_shot.log
+2026-06-18 07:48:51	attr_dream_poly_gpqa_main_n_shot	DONE	
+2026-06-18 07:48:51	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot_poly/head_importance.pt
+2026-06-18 07:48:51	mask_dream_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/mask_dream_poly_gpqa_main_n_shot.log
+2026-06-18 08:00:52	mask_dream_poly_gpqa_main_n_shot	DONE	
+2026-06-18 08:00:52	adaptive_dream_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gpqa_main_n_shot/adaptive_dream_poly_gpqa_main_n_shot.log
+2026-06-18 09:04:16	adaptive_dream_poly_gpqa_main_n_shot	DONE	
+2026-06-18 09:04:16	summary	DONE	all path variants completed

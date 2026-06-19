@@ -1,0 +1,16 @@
+2026-06-18 17:00:18	attr_dream_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/attr_dream_dp_gsm8k.log
+2026-06-18 17:15:24	attr_dream_dp_gsm8k	DONE	
+2026-06-18 17:15:24	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmdiagonal_tspath_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k_dp/head_importance.pt
+2026-06-18 17:15:24	mask_dream_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/mask_dream_dp_gsm8k.log
+2026-06-18 17:45:11	mask_dream_dp_gsm8k	DONE	
+2026-06-18 17:45:11	attr_dream_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/attr_dream_stp_gsm8k.log
+2026-06-18 17:59:07	attr_dream_stp_gsm8k	DONE	
+2026-06-18 17:59:07	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k_stp/head_importance.pt
+2026-06-18 17:59:07	mask_dream_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/mask_dream_stp_gsm8k.log
+2026-06-18 18:28:48	mask_dream_stp_gsm8k	DONE	
+2026-06-18 18:28:48	attr_dream_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/attr_dream_poly_gsm8k.log
+2026-06-18 19:24:57	attr_dream_poly_gsm8k	DONE	
+2026-06-18 19:24:57	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k_poly/head_importance.pt
+2026-06-18 19:24:57	mask_dream_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k/mask_dream_poly_gsm8k.log
+2026-06-18 19:54:32	mask_dream_poly_gsm8k	DONE	
+2026-06-18 19:54:32	summary	DONE	all path variants completed

@@ -1,0 +1,32 @@
+2026-06-15 13:07:21	attr_dream_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/attr_dream_dp_mmlu.log
+2026-06-15 13:15:56	attr_dream_dp_mmlu	DONE	
+2026-06-15 13:15:56	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmdiagonal_tspath_ablation_dream_mmlu_20260615_dp/head_importance.pt
+2026-06-15 13:15:56	mask_dream_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/mask_dream_dp_mmlu.log
+2026-06-15 13:34:10	mask_dream_dp_mmlu	DONE	
+2026-06-15 13:34:10	attr_dream_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/attr_dream_stp_mmlu.log
+2026-06-15 13:42:25	attr_dream_stp_mmlu	DONE	
+2026-06-15 13:42:25	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmrandom_threshold_tspath_ablation_dream_mmlu_20260615_stp/head_importance.pt
+2026-06-15 13:42:25	mask_dream_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/mask_dream_stp_mmlu.log
+2026-06-15 14:01:28	mask_dream_stp_mmlu	DONE	
+2026-06-15 14:01:28	attr_dream_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/attr_dream_poly_mmlu.log
+2026-06-15 14:33:51	attr_dream_poly_mmlu	DONE	
+2026-06-15 14:33:51	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmrandom_threshold_tspath_ablation_dream_mmlu_20260615_poly/head_importance.pt
+2026-06-15 14:33:52	mask_dream_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/mask_dream_poly_mmlu.log
+2026-06-15 15:11:34	mask_dream_poly_mmlu	DONE	
+2026-06-15 15:11:34	summary	DONE	all path variants completed
+2026-06-16 15:01:02	attr_dream_dp_mmlu	SKIP	already completed
+2026-06-16 15:01:02	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmdiagonal_tspath_ablation_dream_mmlu_20260615_dp/head_importance.pt
+2026-06-16 15:01:02	mask_dream_dp_mmlu	SKIP	already completed
+2026-06-16 15:01:02	adaptive_dream_dp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/adaptive_dream_dp_mmlu.log
+2026-06-16 15:02:52	adaptive_dream_dp_mmlu	FAILED	rc=1
+2026-06-16 15:02:52	attr_dream_stp_mmlu	SKIP	already completed
+2026-06-16 15:02:52	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmrandom_threshold_tspath_ablation_dream_mmlu_20260615_stp/head_importance.pt
+2026-06-16 15:02:52	mask_dream_stp_mmlu	SKIP	already completed
+2026-06-16 15:02:52	adaptive_dream_stp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/adaptive_dream_stp_mmlu.log
+2026-06-16 15:04:14	adaptive_dream_stp_mmlu	FAILED	rc=1
+2026-06-16 15:04:14	attr_dream_poly_mmlu	SKIP	already completed
+2026-06-16 15:04:14	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_pmrandom_threshold_tspath_ablation_dream_mmlu_20260615_poly/head_importance.pt
+2026-06-16 15:04:14	mask_dream_poly_mmlu	SKIP	already completed
+2026-06-16 15:04:14	adaptive_dream_poly_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_mmlu_20260615/adaptive_dream_poly_mmlu.log
+2026-06-16 15:05:33	adaptive_dream_poly_mmlu	FAILED	rc=1
+2026-06-16 15:05:33	summary	FAILED	adaptive:dp adaptive:stp adaptive:poly

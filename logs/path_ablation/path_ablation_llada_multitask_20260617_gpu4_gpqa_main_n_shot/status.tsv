@@ -1,0 +1,22 @@
+2026-06-18 08:01:18	attr_llada_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/attr_llada_dp_gpqa_main_n_shot.log
+2026-06-18 08:09:42	attr_llada_dp_gpqa_main_n_shot	DONE	
+2026-06-18 08:09:42	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gpqa_main_n_shot_all_pmdiagonal_tspath_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot_dp/head_importance.pt
+2026-06-18 08:09:42	mask_llada_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/mask_llada_dp_gpqa_main_n_shot.log
+2026-06-18 08:14:27	mask_llada_dp_gpqa_main_n_shot	DONE	
+2026-06-18 08:14:27	adaptive_llada_dp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/adaptive_llada_dp_gpqa_main_n_shot.log
+2026-06-18 08:26:25	adaptive_llada_dp_gpqa_main_n_shot	DONE	
+2026-06-18 08:26:25	attr_llada_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/attr_llada_stp_gpqa_main_n_shot.log
+2026-06-18 08:34:59	attr_llada_stp_gpqa_main_n_shot	DONE	
+2026-06-18 08:34:59	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gpqa_main_n_shot_all_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot_stp/head_importance.pt
+2026-06-18 08:34:59	mask_llada_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/mask_llada_stp_gpqa_main_n_shot.log
+2026-06-18 08:39:42	mask_llada_stp_gpqa_main_n_shot	DONE	
+2026-06-18 08:39:42	adaptive_llada_stp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/adaptive_llada_stp_gpqa_main_n_shot.log
+2026-06-18 08:52:01	adaptive_llada_stp_gpqa_main_n_shot	DONE	
+2026-06-18 08:52:01	attr_llada_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/attr_llada_poly_gpqa_main_n_shot.log
+2026-06-18 09:29:34	attr_llada_poly_gpqa_main_n_shot	DONE	
+2026-06-18 09:29:34	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gpqa_main_n_shot_all_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot_poly/head_importance.pt
+2026-06-18 09:29:34	mask_llada_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/mask_llada_poly_gpqa_main_n_shot.log
+2026-06-18 09:35:16	mask_llada_poly_gpqa_main_n_shot	DONE	
+2026-06-18 09:35:17	adaptive_llada_poly_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gpqa_main_n_shot/adaptive_llada_poly_gpqa_main_n_shot.log
+2026-06-18 09:49:28	adaptive_llada_poly_gpqa_main_n_shot	DONE	
+2026-06-18 09:49:28	summary	DONE	all path variants completed

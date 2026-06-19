@@ -1,0 +1,7 @@
+2026-06-12 19:00:39	mask_llada_headig_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_llada_headig_gpu2_20260612/mask_llada_headig_mmlu.log
+2026-06-12 19:00:42	mask_llada_headig_mmlu	FAILED	rc=3
+2026-06-12 19:00:43	mask_llada_headig_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_llada_headig_gpu2_20260612/mask_llada_headig_cmmlu.log
+2026-06-12 19:00:48	mask_llada_headig_cmmlu	FAILED	rc=3
+2026-06-12 19:00:48	mask_llada_headig_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_llada_headig_gpu2_20260612/mask_llada_headig_ceval_valid.log
+2026-06-12 19:00:53	mask_llada_headig_ceval_valid	FAILED	rc=3
+2026-06-12 19:00:53	mask_llada_headig_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_llada_headig_gpu2_20260612/mask_llada_headig_gpqa_main_n_shot.log

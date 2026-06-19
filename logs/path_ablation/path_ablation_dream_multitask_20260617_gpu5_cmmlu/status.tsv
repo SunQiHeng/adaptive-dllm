@@ -1,0 +1,22 @@
+2026-06-17 13:54:58	attr_dream_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/attr_dream_dp_cmmlu.log
+2026-06-17 14:09:15	attr_dream_dp_cmmlu	DONE	
+2026-06-17 14:09:15	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmdiagonal_tspath_ablation_dream_multitask_20260617_gpu5_cmmlu_dp/head_importance.pt
+2026-06-17 14:09:15	mask_dream_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/mask_dream_dp_cmmlu.log
+2026-06-17 14:34:48	mask_dream_dp_cmmlu	DONE	
+2026-06-17 14:34:48	adaptive_dream_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/adaptive_dream_dp_cmmlu.log
+2026-06-17 17:06:44	adaptive_dream_dp_cmmlu	DONE	
+2026-06-17 17:06:44	attr_dream_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/attr_dream_stp_cmmlu.log
+2026-06-17 17:43:23	attr_dream_stp_cmmlu	DONE	
+2026-06-17 17:43:23	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_cmmlu_stp/head_importance.pt
+2026-06-17 17:43:23	mask_dream_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/mask_dream_stp_cmmlu.log
+2026-06-17 18:09:25	mask_dream_stp_cmmlu	DONE	
+2026-06-17 18:09:25	adaptive_dream_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/adaptive_dream_stp_cmmlu.log
+2026-06-17 20:37:37	adaptive_dream_stp_cmmlu	DONE	
+2026-06-17 20:37:37	attr_dream_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/attr_dream_poly_cmmlu.log
+2026-06-17 21:47:03	attr_dream_poly_cmmlu	DONE	
+2026-06-17 21:47:03	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_cmmlu_poly/head_importance.pt
+2026-06-17 21:47:03	mask_dream_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/mask_dream_poly_cmmlu.log
+2026-06-17 22:12:01	mask_dream_poly_cmmlu	DONE	
+2026-06-17 22:12:01	adaptive_dream_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_cmmlu/adaptive_dream_poly_cmmlu.log
+2026-06-18 00:41:28	adaptive_dream_poly_cmmlu	DONE	
+2026-06-18 00:41:28	summary	DONE	all path variants completed

@@ -1,0 +1,4 @@
+2026-06-12 19:00:38	retry_gsm8k_attr_on_gpqa_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/audit_retry/dream_audit_retry_mask_gpu3_20260612/retry_gsm8k_attr_on_gpqa_mc8.log
+2026-06-12 23:55:50	retry_gsm8k_attr_on_gpqa_mc8	DONE	
+2026-06-12 23:55:50	dream_shapley_headig_mask_main	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/audit_retry/dream_audit_retry_mask_gpu3_20260612/dream_shapley_headig_mask_main.log
+2026-06-13 14:19:46	dream_shapley_headig_mask_main	FAILED	rc=1

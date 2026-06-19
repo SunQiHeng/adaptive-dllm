@@ -1,0 +1,4351 @@
+{
+  "results": {
+    "ceval-valid": {
+      "acc_norm,none": 0.237741456166419,
+      "acc_norm_stderr,none": 0.011558211538495457,
+      "acc,none": 0.237741456166419,
+      "acc_stderr,none": 0.011558211538495457,
+      "alias": "ceval-valid"
+    },
+    "ceval-valid_accountant": {
+      "alias": " - ceval-valid_accountant",
+      "acc,none": 0.1836734693877551,
+      "acc_stderr,none": 0.05589005688828228,
+      "acc_norm,none": 0.1836734693877551,
+      "acc_norm_stderr,none": 0.05589005688828228
+    },
+    "ceval-valid_advanced_mathematics": {
+      "alias": " - ceval-valid_advanced_mathematics",
+      "acc,none": 0.05263157894736842,
+      "acc_stderr,none": 0.05263157894736842,
+      "acc_norm,none": 0.05263157894736842,
+      "acc_norm_stderr,none": 0.05263157894736842
+    },
+    "ceval-valid_art_studies": {
+      "alias": " - ceval-valid_art_studies",
+      "acc,none": 0.06060606060606061,
+      "acc_stderr,none": 0.04218003305174258,
+      "acc_norm,none": 0.06060606060606061,
+      "acc_norm_stderr,none": 0.04218003305174258
+    },
+    "ceval-valid_basic_medicine": {
+      "alias": " - ceval-valid_basic_medicine",
+      "acc,none": 0.47368421052631576,
+      "acc_stderr,none": 0.1176877882894626,
+      "acc_norm,none": 0.47368421052631576,
+      "acc_norm_stderr,none": 0.1176877882894626
+    },
+    "ceval-valid_business_administration": {
+      "alias": " - ceval-valid_business_administration",
+      "acc,none": 0.18181818181818182,
+      "acc_stderr,none": 0.06818181818181816,
+      "acc_norm,none": 0.18181818181818182,
+      "acc_norm_stderr,none": 0.06818181818181816
+    },
+    "ceval-valid_chinese_language_and_literature": {
+      "alias": " - ceval-valid_chinese_language_and_literature",
+      "acc,none": 0.21739130434782608,
+      "acc_stderr,none": 0.08793911249520549,
+      "acc_norm,none": 0.21739130434782608,
+      "acc_norm_stderr,none": 0.08793911249520549
+    },
+    "ceval-valid_civil_servant": {
+      "alias": " - ceval-valid_civil_servant",
+      "acc,none": 0.2553191489361702,
+      "acc_stderr,none": 0.06429065810876616,
+      "acc_norm,none": 0.2553191489361702,
+      "acc_norm_stderr,none": 0.06429065810876616
+    },
+    "ceval-valid_clinical_medicine": {
+      "alias": " - ceval-valid_clinical_medicine",
+      "acc,none": 0.3181818181818182,
+      "acc_stderr,none": 0.10163945352271771,
+      "acc_norm,none": 0.3181818181818182,
+      "acc_norm_stderr,none": 0.10163945352271771
+    },
+    "ceval-valid_college_chemistry": {
+      "alias": " - ceval-valid_college_chemistry",
+      "acc,none": 0.375,
+      "acc_stderr,none": 0.10094660663590604,
+      "acc_norm,none": 0.375,
+      "acc_norm_stderr,none": 0.10094660663590604
+    },
+    "ceval-valid_college_economics": {
+      "alias": " - ceval-valid_college_economics",
+      "acc,none": 0.34545454545454546,
+      "acc_stderr,none": 0.06470956516382614,
+      "acc_norm,none": 0.34545454545454546,
+      "acc_norm_stderr,none": 0.06470956516382614
+    },
+    "ceval-valid_college_physics": {
+      "alias": " - ceval-valid_college_physics",
+      "acc,none": 0.2631578947368421,
+      "acc_stderr,none": 0.10379087338771256,
+      "acc_norm,none": 0.2631578947368421,
+      "acc_norm_stderr,none": 0.10379087338771256
+    },
+    "ceval-valid_college_programming": {
+      "alias": " - ceval-valid_college_programming",
+      "acc,none": 0.2972972972972973,
+      "acc_stderr,none": 0.07617808344724215,
+      "acc_norm,none": 0.2972972972972973,
+      "acc_norm_stderr,none": 0.07617808344724215
+    },
+    "ceval-valid_computer_architecture": {
+      "alias": " - ceval-valid_computer_architecture",
+      "acc,none": 0.42857142857142855,
+      "acc_stderr,none": 0.11065666703449763,
+      "acc_norm,none": 0.42857142857142855,
+      "acc_norm_stderr,none": 0.11065666703449763
+    },
+    "ceval-valid_computer_network": {
+      "alias": " - ceval-valid_computer_network",
+      "acc,none": 0.2631578947368421,
+      "acc_stderr,none": 0.10379087338771256,
+      "acc_norm,none": 0.2631578947368421,
+      "acc_norm_stderr,none": 0.10379087338771256
+    },
+    "ceval-valid_discrete_mathematics": {
+      "alias": " - ceval-valid_discrete_mathematics",
+      "acc,none": 0.1875,
+      "acc_stderr,none": 0.10077822185373188,
+      "acc_norm,none": 0.1875,
+      "acc_norm_stderr,none": 0.10077822185373188
+    },
+    "ceval-valid_education_science": {
+      "alias": " - ceval-valid_education_science",
+      "acc,none": 0.27586206896551724,
+      "acc_stderr,none": 0.08446516354424752,
+      "acc_norm,none": 0.27586206896551724,
+      "acc_norm_stderr,none": 0.08446516354424752
+    },
+    "ceval-valid_electrical_engineer": {
+      "alias": " - ceval-valid_electrical_engineer",
+      "acc,none": 0.1891891891891892,
+      "acc_stderr,none": 0.06527647182968215,
+      "acc_norm,none": 0.1891891891891892,
+      "acc_norm_stderr,none": 0.06527647182968215
+    },
+    "ceval-valid_environmental_impact_assessment_engineer": {
+      "alias": " - ceval-valid_environmental_impact_assessment_engineer",
+      "acc,none": 0.22580645161290322,
+      "acc_stderr,none": 0.07633651333031764,
+      "acc_norm,none": 0.22580645161290322,
+      "acc_norm_stderr,none": 0.07633651333031764
+    },
+    "ceval-valid_fire_engineer": {
+      "alias": " - ceval-valid_fire_engineer",
+      "acc,none": 0.3225806451612903,
+      "acc_stderr,none": 0.08534681648595455,
+      "acc_norm,none": 0.3225806451612903,
+      "acc_norm_stderr,none": 0.08534681648595455
+    },
+    "ceval-valid_high_school_biology": {
+      "alias": " - ceval-valid_high_school_biology",
+      "acc,none": 0.2631578947368421,
+      "acc_stderr,none": 0.10379087338771256,
+      "acc_norm,none": 0.2631578947368421,
+      "acc_norm_stderr,none": 0.10379087338771256
+    },
+    "ceval-valid_high_school_chemistry": {
+      "alias": " - ceval-valid_high_school_chemistry",
+      "acc,none": 0.21052631578947367,
+      "acc_stderr,none": 0.0960916767552923,
+      "acc_norm,none": 0.21052631578947367,
+      "acc_norm_stderr,none": 0.0960916767552923
+    },
+    "ceval-valid_high_school_chinese": {
+      "alias": " - ceval-valid_high_school_chinese",
+      "acc,none": 0.15789473684210525,
+      "acc_stderr,none": 0.08594700851870798,
+      "acc_norm,none": 0.15789473684210525,
+      "acc_norm_stderr,none": 0.08594700851870798
+    },
+    "ceval-valid_high_school_geography": {
+      "alias": " - ceval-valid_high_school_geography",
+      "acc,none": 0.3684210526315789,
+      "acc_stderr,none": 0.11369720523522558,
+      "acc_norm,none": 0.3684210526315789,
+      "acc_norm_stderr,none": 0.11369720523522558
+    },
+    "ceval-valid_high_school_history": {
+      "alias": " - ceval-valid_high_school_history",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.11239029738980327,
+      "acc_norm,none": 0.4,
+      "acc_norm_stderr,none": 0.11239029738980327
+    },
+    "ceval-valid_high_school_mathematics": {
+      "alias": " - ceval-valid_high_school_mathematics",
+      "acc,none": 0.3888888888888889,
+      "acc_stderr,none": 0.11823563735376173,
+      "acc_norm,none": 0.3888888888888889,
+      "acc_norm_stderr,none": 0.11823563735376173
+    },
+    "ceval-valid_high_school_physics": {
+      "alias": " - ceval-valid_high_school_physics",
+      "acc,none": 0.3157894736842105,
+      "acc_stderr,none": 0.10956136839295433,
+      "acc_norm,none": 0.3157894736842105,
+      "acc_norm_stderr,none": 0.10956136839295433
+    },
+    "ceval-valid_high_school_politics": {
+      "alias": " - ceval-valid_high_school_politics",
+      "acc,none": 0.3684210526315789,
+      "acc_stderr,none": 0.11369720523522558,
+      "acc_norm,none": 0.3684210526315789,
+      "acc_norm_stderr,none": 0.11369720523522558
+    },
+    "ceval-valid_ideological_and_moral_cultivation": {
+      "alias": " - ceval-valid_ideological_and_moral_cultivation",
+      "acc,none": 0.2631578947368421,
+      "acc_stderr,none": 0.10379087338771256,
+      "acc_norm,none": 0.2631578947368421,
+      "acc_norm_stderr,none": 0.10379087338771256
+    },
+    "ceval-valid_law": {
+      "alias": " - ceval-valid_law",
+      "acc,none": 0.125,
+      "acc_stderr,none": 0.06895966054592131,
+      "acc_norm,none": 0.125,
+      "acc_norm_stderr,none": 0.06895966054592131
+    },
+    "ceval-valid_legal_professional": {
+      "alias": " - ceval-valid_legal_professional",
+      "acc,none": 0.34782608695652173,
+      "acc_stderr,none": 0.10154334054280735,
+      "acc_norm,none": 0.34782608695652173,
+      "acc_norm_stderr,none": 0.10154334054280735
+    },
+    "ceval-valid_logic": {
+      "alias": " - ceval-valid_logic",
+      "acc,none": 0.13636363636363635,
+      "acc_stderr,none": 0.0748867700952649,
+      "acc_norm,none": 0.13636363636363635,
+      "acc_norm_stderr,none": 0.0748867700952649
+    },
+    "ceval-valid_mao_zedong_thought": {
+      "alias": " - ceval-valid_mao_zedong_thought",
+      "acc,none": 0.16666666666666666,
+      "acc_stderr,none": 0.07770873402002615,
+      "acc_norm,none": 0.16666666666666666,
+      "acc_norm_stderr,none": 0.07770873402002615
+    },
+    "ceval-valid_marxism": {
+      "alias": " - ceval-valid_marxism",
+      "acc,none": 0.15789473684210525,
+      "acc_stderr,none": 0.085947008518708,
+      "acc_norm,none": 0.15789473684210525,
+      "acc_norm_stderr,none": 0.085947008518708
+    },
+    "ceval-valid_metrology_engineer": {
+      "alias": " - ceval-valid_metrology_engineer",
+      "acc,none": 0.25,
+      "acc_stderr,none": 0.09028938981432691,
+      "acc_norm,none": 0.25,
+      "acc_norm_stderr,none": 0.09028938981432691
+    },
+    "ceval-valid_middle_school_biology": {
+      "alias": " - ceval-valid_middle_school_biology",
+      "acc,none": 0.23809523809523808,
+      "acc_stderr,none": 0.09523809523809523,
+      "acc_norm,none": 0.23809523809523808,
+      "acc_norm_stderr,none": 0.09523809523809523
+    },
+    "ceval-valid_middle_school_chemistry": {
+      "alias": " - ceval-valid_middle_school_chemistry",
+      "acc,none": 0.2,
+      "acc_stderr,none": 0.09176629354822471,
+      "acc_norm,none": 0.2,
+      "acc_norm_stderr,none": 0.09176629354822471
+    },
+    "ceval-valid_middle_school_geography": {
+      "alias": " - ceval-valid_middle_school_geography",
+      "acc,none": 0.3333333333333333,
+      "acc_stderr,none": 0.14213381090374033,
+      "acc_norm,none": 0.3333333333333333,
+      "acc_norm_stderr,none": 0.14213381090374033
+    },
+    "ceval-valid_middle_school_history": {
+      "alias": " - ceval-valid_middle_school_history",
+      "acc,none": 0.13636363636363635,
+      "acc_stderr,none": 0.0748867700952649,
+      "acc_norm,none": 0.13636363636363635,
+      "acc_norm_stderr,none": 0.0748867700952649
+    },
+    "ceval-valid_middle_school_mathematics": {
+      "alias": " - ceval-valid_middle_school_mathematics",
+      "acc,none": 0.15789473684210525,
+      "acc_stderr,none": 0.08594700851870798,
+      "acc_norm,none": 0.15789473684210525,
+      "acc_norm_stderr,none": 0.08594700851870798
+    },
+    "ceval-valid_middle_school_physics": {
+      "alias": " - ceval-valid_middle_school_physics",
+      "acc,none": 0.21052631578947367,
+      "acc_stderr,none": 0.09609167675529229,
+      "acc_norm,none": 0.21052631578947367,
+      "acc_norm_stderr,none": 0.09609167675529229
+    },
+    "ceval-valid_middle_school_politics": {
+      "alias": " - ceval-valid_middle_school_politics",
+      "acc,none": 0.09523809523809523,
+      "acc_stderr,none": 0.06563832739090583,
+      "acc_norm,none": 0.09523809523809523,
+      "acc_norm_stderr,none": 0.06563832739090583
+    },
+    "ceval-valid_modern_chinese_history": {
+      "alias": " - ceval-valid_modern_chinese_history",
+      "acc,none": 0.391304347826087,
+      "acc_stderr,none": 0.10405096111532161,
+      "acc_norm,none": 0.391304347826087,
+      "acc_norm_stderr,none": 0.10405096111532161
+    },
+    "ceval-valid_operating_system": {
+      "alias": " - ceval-valid_operating_system",
+      "acc,none": 0.21052631578947367,
+      "acc_stderr,none": 0.0960916767552923,
+      "acc_norm,none": 0.21052631578947367,
+      "acc_norm_stderr,none": 0.0960916767552923
+    },
+    "ceval-valid_physician": {
+      "alias": " - ceval-valid_physician",
+      "acc,none": 0.22448979591836735,
+      "acc_stderr,none": 0.06022425581505364,
+      "acc_norm,none": 0.22448979591836735,
+      "acc_norm_stderr,none": 0.06022425581505364
+    },
+    "ceval-valid_plant_protection": {
+      "alias": " - ceval-valid_plant_protection",
+      "acc,none": 0.045454545454545456,
+      "acc_stderr,none": 0.04545454545454546,
+      "acc_norm,none": 0.045454545454545456,
+      "acc_norm_stderr,none": 0.04545454545454546
+    },
+    "ceval-valid_probability_and_statistics": {
+      "alias": " - ceval-valid_probability_and_statistics",
+      "acc,none": 0.2222222222222222,
+      "acc_stderr,none": 0.10083169033033672,
+      "acc_norm,none": 0.2222222222222222,
+      "acc_norm_stderr,none": 0.10083169033033672
+    },
+    "ceval-valid_professional_tour_guide": {
+      "alias": " - ceval-valid_professional_tour_guide",
+      "acc,none": 0.20689655172413793,
+      "acc_stderr,none": 0.07655305550699536,
+      "acc_norm,none": 0.20689655172413793,
+      "acc_norm_stderr,none": 0.07655305550699536
+    },
+    "ceval-valid_sports_science": {
+      "alias": " - ceval-valid_sports_science",
+      "acc,none": 0.10526315789473684,
+      "acc_stderr,none": 0.0723351864143449,
+      "acc_norm,none": 0.10526315789473684,
+      "acc_norm_stderr,none": 0.0723351864143449
+    },
+    "ceval-valid_tax_accountant": {
+      "alias": " - ceval-valid_tax_accountant",
+      "acc,none": 0.20408163265306123,
+      "acc_stderr,none": 0.058172215566282534,
+      "acc_norm,none": 0.20408163265306123,
+      "acc_norm_stderr,none": 0.058172215566282534
+    },
+    "ceval-valid_teacher_qualification": {
+      "alias": " - ceval-valid_teacher_qualification",
+      "acc,none": 0.22727272727272727,
+      "acc_stderr,none": 0.06390760676613884,
+      "acc_norm,none": 0.22727272727272727,
+      "acc_norm_stderr,none": 0.06390760676613884
+    },
+    "ceval-valid_urban_and_rural_planner": {
+      "alias": " - ceval-valid_urban_and_rural_planner",
+      "acc,none": 0.21739130434782608,
+      "acc_stderr,none": 0.061487546190134544,
+      "acc_norm,none": 0.21739130434782608,
+      "acc_norm_stderr,none": 0.061487546190134544
+    },
+    "ceval-valid_veterinary_medicine": {
+      "alias": " - ceval-valid_veterinary_medicine",
+      "acc,none": 0.21739130434782608,
+      "acc_stderr,none": 0.08793911249520549,
+      "acc_norm,none": 0.21739130434782608,
+      "acc_norm_stderr,none": 0.08793911249520549
+    }
+  },
+  "groups": {
+    "ceval-valid": {
+      "acc_norm,none": 0.237741456166419,
+      "acc_norm_stderr,none": 0.011558211538495457,
+      "acc,none": 0.237741456166419,
+      "acc_stderr,none": 0.011558211538495457,
+      "alias": "ceval-valid"
+    }
+  },
+  "group_subtasks": {
+    "ceval-valid": [
+      "ceval-valid_computer_network",
+      "ceval-valid_operating_system",
+      "ceval-valid_computer_architecture",
+      "ceval-valid_college_programming",
+      "ceval-valid_college_physics",
+      "ceval-valid_college_chemistry",
+      "ceval-valid_advanced_mathematics",
+      "ceval-valid_probability_and_statistics",
+      "ceval-valid_discrete_mathematics",
+      "ceval-valid_electrical_engineer",
+      "ceval-valid_metrology_engineer",
+      "ceval-valid_high_school_mathematics",
+      "ceval-valid_high_school_physics",
+      "ceval-valid_high_school_chemistry",
+      "ceval-valid_high_school_biology",
+      "ceval-valid_middle_school_mathematics",
+      "ceval-valid_middle_school_biology",
+      "ceval-valid_middle_school_physics",
+      "ceval-valid_middle_school_chemistry",
+      "ceval-valid_veterinary_medicine",
+      "ceval-valid_college_economics",
+      "ceval-valid_business_administration",
+      "ceval-valid_marxism",
+      "ceval-valid_mao_zedong_thought",
+      "ceval-valid_education_science",
+      "ceval-valid_teacher_qualification",
+      "ceval-valid_high_school_politics",
+      "ceval-valid_high_school_geography",
+      "ceval-valid_middle_school_politics",
+      "ceval-valid_middle_school_geography",
+      "ceval-valid_modern_chinese_history",
+      "ceval-valid_ideological_and_moral_cultivation",
+      "ceval-valid_logic",
+      "ceval-valid_law",
+      "ceval-valid_chinese_language_and_literature",
+      "ceval-valid_art_studies",
+      "ceval-valid_professional_tour_guide",
+      "ceval-valid_legal_professional",
+      "ceval-valid_high_school_chinese",
+      "ceval-valid_high_school_history",
+      "ceval-valid_middle_school_history",
+      "ceval-valid_civil_servant",
+      "ceval-valid_sports_science",
+      "ceval-valid_plant_protection",
+      "ceval-valid_basic_medicine",
+      "ceval-valid_clinical_medicine",
+      "ceval-valid_urban_and_rural_planner",
+      "ceval-valid_accountant",
+      "ceval-valid_fire_engineer",
+      "ceval-valid_environmental_impact_assessment_engineer",
+      "ceval-valid_tax_accountant",
+      "ceval-valid_physician"
+    ]
+  },
+  "configs": {
+    "ceval-valid_accountant": {
+      "task": "ceval-valid_accountant",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "accountant",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于注册会计师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_advanced_mathematics": {
+      "task": "ceval-valid_advanced_mathematics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "advanced_mathematics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高等数学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_art_studies": {
+      "task": "ceval-valid_art_studies",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "art_studies",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于艺术学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_basic_medicine": {
+      "task": "ceval-valid_basic_medicine",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "basic_medicine",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于基础医学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_business_administration": {
+      "task": "ceval-valid_business_administration",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "business_administration",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于工商管理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_chinese_language_and_literature": {
+      "task": "ceval-valid_chinese_language_and_literature",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "chinese_language_and_literature",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于中国语言文学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_civil_servant": {
+      "task": "ceval-valid_civil_servant",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "civil_servant",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于公务员的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_clinical_medicine": {
+      "task": "ceval-valid_clinical_medicine",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "clinical_medicine",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于临床医学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_college_chemistry": {
+      "task": "ceval-valid_college_chemistry",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "college_chemistry",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于大学化学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_college_economics": {
+      "task": "ceval-valid_college_economics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "college_economics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于大学经济学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_college_physics": {
+      "task": "ceval-valid_college_physics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "college_physics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于大学物理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_college_programming": {
+      "task": "ceval-valid_college_programming",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "college_programming",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于大学编程的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_computer_architecture": {
+      "task": "ceval-valid_computer_architecture",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "computer_architecture",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于计算机组成的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_computer_network": {
+      "task": "ceval-valid_computer_network",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "computer_network",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于计算机网络的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_discrete_mathematics": {
+      "task": "ceval-valid_discrete_mathematics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "discrete_mathematics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于离散数学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_education_science": {
+      "task": "ceval-valid_education_science",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "education_science",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于教育学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_electrical_engineer": {
+      "task": "ceval-valid_electrical_engineer",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "electrical_engineer",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于注册电气工程师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_environmental_impact_assessment_engineer": {
+      "task": "ceval-valid_environmental_impact_assessment_engineer",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "environmental_impact_assessment_engineer",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于环境影响评价工程师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_fire_engineer": {
+      "task": "ceval-valid_fire_engineer",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "fire_engineer",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于注册消防工程师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_biology": {
+      "task": "ceval-valid_high_school_biology",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_biology",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中生物的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_chemistry": {
+      "task": "ceval-valid_high_school_chemistry",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_chemistry",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中化学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_chinese": {
+      "task": "ceval-valid_high_school_chinese",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_chinese",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中语文的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_geography": {
+      "task": "ceval-valid_high_school_geography",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_geography",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中地理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_history": {
+      "task": "ceval-valid_high_school_history",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_history",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中历史的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_mathematics": {
+      "task": "ceval-valid_high_school_mathematics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_mathematics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中数学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_physics": {
+      "task": "ceval-valid_high_school_physics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_physics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中物理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_high_school_politics": {
+      "task": "ceval-valid_high_school_politics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "high_school_politics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于高中政治的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_ideological_and_moral_cultivation": {
+      "task": "ceval-valid_ideological_and_moral_cultivation",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "ideological_and_moral_cultivation",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于思想道德修养与法律基础的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_law": {
+      "task": "ceval-valid_law",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "law",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于法学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_legal_professional": {
+      "task": "ceval-valid_legal_professional",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "legal_professional",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于法律职业资格的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_logic": {
+      "task": "ceval-valid_logic",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "logic",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于逻辑学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_mao_zedong_thought": {
+      "task": "ceval-valid_mao_zedong_thought",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "mao_zedong_thought",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于毛泽东思想和中国特色社会主义理论体系概论的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_marxism": {
+      "task": "ceval-valid_marxism",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "marxism",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于马克思主义基本原理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_metrology_engineer": {
+      "task": "ceval-valid_metrology_engineer",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "metrology_engineer",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于注册计量师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_biology": {
+      "task": "ceval-valid_middle_school_biology",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_biology",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中生物的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_chemistry": {
+      "task": "ceval-valid_middle_school_chemistry",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_chemistry",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中化学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_geography": {
+      "task": "ceval-valid_middle_school_geography",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_geography",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中地理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_history": {
+      "task": "ceval-valid_middle_school_history",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_history",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中历史的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_mathematics": {
+      "task": "ceval-valid_middle_school_mathematics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_mathematics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中数学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_physics": {
+      "task": "ceval-valid_middle_school_physics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_physics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中物理的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_middle_school_politics": {
+      "task": "ceval-valid_middle_school_politics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "middle_school_politics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于初中政治的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_modern_chinese_history": {
+      "task": "ceval-valid_modern_chinese_history",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "modern_chinese_history",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于近代史纲要的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_operating_system": {
+      "task": "ceval-valid_operating_system",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "operating_system",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于操作系统的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_physician": {
+      "task": "ceval-valid_physician",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "physician",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于医师资格的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_plant_protection": {
+      "task": "ceval-valid_plant_protection",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "plant_protection",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于植物保护的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_probability_and_statistics": {
+      "task": "ceval-valid_probability_and_statistics",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "probability_and_statistics",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于概率统计的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_professional_tour_guide": {
+      "task": "ceval-valid_professional_tour_guide",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "professional_tour_guide",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于导游资格的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_sports_science": {
+      "task": "ceval-valid_sports_science",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "sports_science",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于体育学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_tax_accountant": {
+      "task": "ceval-valid_tax_accountant",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "tax_accountant",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于税务师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_teacher_qualification": {
+      "task": "ceval-valid_teacher_qualification",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "teacher_qualification",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于教师资格的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_urban_and_rural_planner": {
+      "task": "ceval-valid_urban_and_rural_planner",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "urban_and_rural_planner",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于注册城乡规划师的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    },
+    "ceval-valid_veterinary_medicine": {
+      "task": "ceval-valid_veterinary_medicine",
+      "dataset_path": "ceval/ceval-exam",
+      "dataset_name": "veterinary_medicine",
+      "validation_split": "val",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{A}}\nB. {{B}}\nC. {{C}}\nD. {{D}}\n答案：",
+      "doc_to_target": "{{['A', 'B', 'C', 'D'].index(answer)}}",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "以下是中国关于兽医学的单项选择题，请选出其中的正确答案。\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.0,
+        "model_path": "/data/qh_models/Dream-v0-Instruct-7B",
+        "max_new_tokens": 256,
+        "steps": 256,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "alg": "entropy",
+        "alg_temp": 0.0,
+        "diffusion_mode": "semi",
+        "block_length": 32,
+        "block_size": 32,
+        "progress_label": "ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26",
+        "mc_num": 1,
+        "likelihood_now_step": 256,
+        "recompute_mask_each_call": true,
+        "importance_path": "/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt",
+        "prune_which": "least",
+        "prune_k_frac": 0.05,
+        "random_prune_seed": 1234,
+        "layer_start": 0,
+        "layer_end": 27,
+        "mask_granularity": "kv_group",
+        "head_mask_warmup_frac": 0.2
+      }
+    }
+  },
+  "versions": {
+    "ceval-valid": 2.0,
+    "ceval-valid_accountant": 2.0,
+    "ceval-valid_advanced_mathematics": 2.0,
+    "ceval-valid_art_studies": 2.0,
+    "ceval-valid_basic_medicine": 2.0,
+    "ceval-valid_business_administration": 2.0,
+    "ceval-valid_chinese_language_and_literature": 2.0,
+    "ceval-valid_civil_servant": 2.0,
+    "ceval-valid_clinical_medicine": 2.0,
+    "ceval-valid_college_chemistry": 2.0,
+    "ceval-valid_college_economics": 2.0,
+    "ceval-valid_college_physics": 2.0,
+    "ceval-valid_college_programming": 2.0,
+    "ceval-valid_computer_architecture": 2.0,
+    "ceval-valid_computer_network": 2.0,
+    "ceval-valid_discrete_mathematics": 2.0,
+    "ceval-valid_education_science": 2.0,
+    "ceval-valid_electrical_engineer": 2.0,
+    "ceval-valid_environmental_impact_assessment_engineer": 2.0,
+    "ceval-valid_fire_engineer": 2.0,
+    "ceval-valid_high_school_biology": 2.0,
+    "ceval-valid_high_school_chemistry": 2.0,
+    "ceval-valid_high_school_chinese": 2.0,
+    "ceval-valid_high_school_geography": 2.0,
+    "ceval-valid_high_school_history": 2.0,
+    "ceval-valid_high_school_mathematics": 2.0,
+    "ceval-valid_high_school_physics": 2.0,
+    "ceval-valid_high_school_politics": 2.0,
+    "ceval-valid_ideological_and_moral_cultivation": 2.0,
+    "ceval-valid_law": 2.0,
+    "ceval-valid_legal_professional": 2.0,
+    "ceval-valid_logic": 2.0,
+    "ceval-valid_mao_zedong_thought": 2.0,
+    "ceval-valid_marxism": 2.0,
+    "ceval-valid_metrology_engineer": 2.0,
+    "ceval-valid_middle_school_biology": 2.0,
+    "ceval-valid_middle_school_chemistry": 2.0,
+    "ceval-valid_middle_school_geography": 2.0,
+    "ceval-valid_middle_school_history": 2.0,
+    "ceval-valid_middle_school_mathematics": 2.0,
+    "ceval-valid_middle_school_physics": 2.0,
+    "ceval-valid_middle_school_politics": 2.0,
+    "ceval-valid_modern_chinese_history": 2.0,
+    "ceval-valid_operating_system": 2.0,
+    "ceval-valid_physician": 2.0,
+    "ceval-valid_plant_protection": 2.0,
+    "ceval-valid_probability_and_statistics": 2.0,
+    "ceval-valid_professional_tour_guide": 2.0,
+    "ceval-valid_sports_science": 2.0,
+    "ceval-valid_tax_accountant": 2.0,
+    "ceval-valid_teacher_qualification": 2.0,
+    "ceval-valid_urban_and_rural_planner": 2.0,
+    "ceval-valid_veterinary_medicine": 2.0
+  },
+  "n-shot": {
+    "ceval-valid_accountant": 5,
+    "ceval-valid_advanced_mathematics": 5,
+    "ceval-valid_art_studies": 5,
+    "ceval-valid_basic_medicine": 5,
+    "ceval-valid_business_administration": 5,
+    "ceval-valid_chinese_language_and_literature": 5,
+    "ceval-valid_civil_servant": 5,
+    "ceval-valid_clinical_medicine": 5,
+    "ceval-valid_college_chemistry": 5,
+    "ceval-valid_college_economics": 5,
+    "ceval-valid_college_physics": 5,
+    "ceval-valid_college_programming": 5,
+    "ceval-valid_computer_architecture": 5,
+    "ceval-valid_computer_network": 5,
+    "ceval-valid_discrete_mathematics": 5,
+    "ceval-valid_education_science": 5,
+    "ceval-valid_electrical_engineer": 5,
+    "ceval-valid_environmental_impact_assessment_engineer": 5,
+    "ceval-valid_fire_engineer": 5,
+    "ceval-valid_high_school_biology": 5,
+    "ceval-valid_high_school_chemistry": 5,
+    "ceval-valid_high_school_chinese": 5,
+    "ceval-valid_high_school_geography": 5,
+    "ceval-valid_high_school_history": 5,
+    "ceval-valid_high_school_mathematics": 5,
+    "ceval-valid_high_school_physics": 5,
+    "ceval-valid_high_school_politics": 5,
+    "ceval-valid_ideological_and_moral_cultivation": 5,
+    "ceval-valid_law": 5,
+    "ceval-valid_legal_professional": 5,
+    "ceval-valid_logic": 5,
+    "ceval-valid_mao_zedong_thought": 5,
+    "ceval-valid_marxism": 5,
+    "ceval-valid_metrology_engineer": 5,
+    "ceval-valid_middle_school_biology": 5,
+    "ceval-valid_middle_school_chemistry": 5,
+    "ceval-valid_middle_school_geography": 5,
+    "ceval-valid_middle_school_history": 5,
+    "ceval-valid_middle_school_mathematics": 5,
+    "ceval-valid_middle_school_physics": 5,
+    "ceval-valid_middle_school_politics": 5,
+    "ceval-valid_modern_chinese_history": 5,
+    "ceval-valid_operating_system": 5,
+    "ceval-valid_physician": 5,
+    "ceval-valid_plant_protection": 5,
+    "ceval-valid_probability_and_statistics": 5,
+    "ceval-valid_professional_tour_guide": 5,
+    "ceval-valid_sports_science": 5,
+    "ceval-valid_tax_accountant": 5,
+    "ceval-valid_teacher_qualification": 5,
+    "ceval-valid_urban_and_rural_planner": 5,
+    "ceval-valid_veterinary_medicine": 5
+  },
+  "higher_is_better": {
+    "ceval-valid": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_accountant": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_advanced_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_art_studies": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_basic_medicine": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_business_administration": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_chinese_language_and_literature": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_civil_servant": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_clinical_medicine": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_college_chemistry": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_college_economics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_college_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_college_programming": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_computer_architecture": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_computer_network": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_discrete_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_education_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_electrical_engineer": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_environmental_impact_assessment_engineer": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_fire_engineer": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_biology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_chemistry": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_chinese": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_geography": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_high_school_politics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_ideological_and_moral_cultivation": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_law": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_legal_professional": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_logic": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_mao_zedong_thought": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_marxism": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_metrology_engineer": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_biology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_chemistry": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_geography": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_mathematics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_middle_school_politics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_modern_chinese_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_operating_system": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_physician": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_plant_protection": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_probability_and_statistics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_professional_tour_guide": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_sports_science": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_tax_accountant": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_teacher_qualification": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_urban_and_rural_planner": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "ceval-valid_veterinary_medicine": {
+      "acc": true,
+      "acc_norm": true
+    }
+  },
+  "n-samples": {
+    "ceval-valid_computer_network": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_operating_system": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_computer_architecture": {
+      "original": 21,
+      "effective": 21
+    },
+    "ceval-valid_college_programming": {
+      "original": 37,
+      "effective": 37
+    },
+    "ceval-valid_college_physics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_college_chemistry": {
+      "original": 24,
+      "effective": 24
+    },
+    "ceval-valid_advanced_mathematics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_probability_and_statistics": {
+      "original": 18,
+      "effective": 18
+    },
+    "ceval-valid_discrete_mathematics": {
+      "original": 16,
+      "effective": 16
+    },
+    "ceval-valid_electrical_engineer": {
+      "original": 37,
+      "effective": 37
+    },
+    "ceval-valid_metrology_engineer": {
+      "original": 24,
+      "effective": 24
+    },
+    "ceval-valid_high_school_mathematics": {
+      "original": 18,
+      "effective": 18
+    },
+    "ceval-valid_high_school_physics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_high_school_chemistry": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_high_school_biology": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_middle_school_mathematics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_middle_school_biology": {
+      "original": 21,
+      "effective": 21
+    },
+    "ceval-valid_middle_school_physics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_middle_school_chemistry": {
+      "original": 20,
+      "effective": 20
+    },
+    "ceval-valid_veterinary_medicine": {
+      "original": 23,
+      "effective": 23
+    },
+    "ceval-valid_college_economics": {
+      "original": 55,
+      "effective": 55
+    },
+    "ceval-valid_business_administration": {
+      "original": 33,
+      "effective": 33
+    },
+    "ceval-valid_marxism": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_mao_zedong_thought": {
+      "original": 24,
+      "effective": 24
+    },
+    "ceval-valid_education_science": {
+      "original": 29,
+      "effective": 29
+    },
+    "ceval-valid_teacher_qualification": {
+      "original": 44,
+      "effective": 44
+    },
+    "ceval-valid_high_school_politics": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_high_school_geography": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_middle_school_politics": {
+      "original": 21,
+      "effective": 21
+    },
+    "ceval-valid_middle_school_geography": {
+      "original": 12,
+      "effective": 12
+    },
+    "ceval-valid_modern_chinese_history": {
+      "original": 23,
+      "effective": 23
+    },
+    "ceval-valid_ideological_and_moral_cultivation": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_logic": {
+      "original": 22,
+      "effective": 22
+    },
+    "ceval-valid_law": {
+      "original": 24,
+      "effective": 24
+    },
+    "ceval-valid_chinese_language_and_literature": {
+      "original": 23,
+      "effective": 23
+    },
+    "ceval-valid_art_studies": {
+      "original": 33,
+      "effective": 33
+    },
+    "ceval-valid_professional_tour_guide": {
+      "original": 29,
+      "effective": 29
+    },
+    "ceval-valid_legal_professional": {
+      "original": 23,
+      "effective": 23
+    },
+    "ceval-valid_high_school_chinese": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_high_school_history": {
+      "original": 20,
+      "effective": 20
+    },
+    "ceval-valid_middle_school_history": {
+      "original": 22,
+      "effective": 22
+    },
+    "ceval-valid_civil_servant": {
+      "original": 47,
+      "effective": 47
+    },
+    "ceval-valid_sports_science": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_plant_protection": {
+      "original": 22,
+      "effective": 22
+    },
+    "ceval-valid_basic_medicine": {
+      "original": 19,
+      "effective": 19
+    },
+    "ceval-valid_clinical_medicine": {
+      "original": 22,
+      "effective": 22
+    },
+    "ceval-valid_urban_and_rural_planner": {
+      "original": 46,
+      "effective": 46
+    },
+    "ceval-valid_accountant": {
+      "original": 49,
+      "effective": 49
+    },
+    "ceval-valid_fire_engineer": {
+      "original": 31,
+      "effective": 31
+    },
+    "ceval-valid_environmental_impact_assessment_engineer": {
+      "original": 31,
+      "effective": 31
+    },
+    "ceval-valid_tax_accountant": {
+      "original": 49,
+      "effective": 49
+    },
+    "ceval-valid_physician": {
+      "original": 49,
+      "effective": 49
+    }
+  },
+  "config": {
+    "model": "dream_mask_head_eval",
+    "model_args": "model_path=/data/qh_models/Dream-v0-Instruct-7B,max_new_tokens=256,steps=256,temperature=0.1,top_p=0.9,alg=entropy,alg_temp=0.0,diffusion_mode=semi,block_length=32,block_size=32,progress_label=ceval-valid|mask_head|prune_least_kfrac0p05_kv_group_L0-27_2026-06-14T19-14-26,mc_num=1,likelihood_now_step=256,recompute_mask_each_call=true,importance_path=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_ceval-valid_all_pmrandom_threshold_ts20260404_044032_neg/head_importance.pt,prune_which=least,prune_k_frac=0.05,random_prune_seed=1234,layer_start=0,layer_end=27,mask_granularity=kv_group,head_mask_warmup_frac=0.2",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": 200.0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "4be713e",
+  "date": 1781436512.4040234,
+  "pretty_env_info": "PyTorch version: 2.6.0+cu124\nIs debug build: False\nCUDA used to build PyTorch: 12.4\nROCM used to build PyTorch: N/A\n\nOS: Ubuntu 22.04.5 LTS (x86_64)\nGCC version: (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nClang version: 14.0.0-1ubuntu1.1\nCMake version: version 3.22.1\nLibc version: glibc-2.35\n\nPython version: 3.10.15 (main, Oct  3 2024, 07:27:34) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-6.8.0-111-generic-x86_64-with-glibc2.35\nIs CUDA available: True\nCUDA runtime version: 12.1.66\nCUDA_MODULE_LOADING set to: LAZY\nGPU models and configuration: \nGPU 0: NVIDIA H100 NVL\nGPU 1: NVIDIA H100 NVL\nGPU 2: NVIDIA H100 NVL\nGPU 3: NVIDIA H100 NVL\nGPU 4: NVIDIA H100 NVL\nGPU 5: NVIDIA H100 NVL\n\nNvidia driver version: 580.105.08\ncuDNN version: Could not collect\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  192\nOn-line CPU(s) list:                     0-191\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Platinum 8457C\nCPU family:                              6\nModel:                                   143\nThread(s) per core:                      2\nCore(s) per socket:                      48\nSocket(s):                               2\nStepping:                                8\nCPU max MHz:                             3800.0000\nCPU min MHz:                             800.0000\nBogoMIPS:                                5200.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cat_l2 cdp_l3 intel_ppin cdp_l2 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect user_shstk avx_vnni avx512_bf16 wbnoinvd dtherm ida arat pln pts vnmi avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq la57 rdpid bus_lock_detect cldemote movdiri movdir64b enqcmd fsrm md_clear serialize tsxldtrk pconfig arch_lbr ibt amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities ibpb_exit_to_user\nVirtualization:                          VT-x\nL1d cache:                               4.5 MiB (96 instances)\nL1i cache:                               3 MiB (96 instances)\nL2 cache:                                192 MiB (96 instances)\nL3 cache:                                195 MiB (2 instances)\nNUMA node(s):                            2\nNUMA node0 CPU(s):                       0-47,96-143\nNUMA node1 CPU(s):                       48-95,144-191\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n\nVersions of relevant libraries:\n[pip3] numpy==1.23.5\n[pip3] nvidia-cublas-cu12==12.4.5.8\n[pip3] nvidia-cuda-cupti-cu12==12.4.127\n[pip3] nvidia-cuda-nvrtc-cu12==12.4.127\n[pip3] nvidia-cuda-runtime-cu12==12.4.127\n[pip3] nvidia-cudnn-cu12==9.1.0.70\n[pip3] nvidia-cufft-cu12==11.2.1.3\n[pip3] nvidia-curand-cu12==10.3.5.147\n[pip3] nvidia-cusolver-cu12==11.6.1.9\n[pip3] nvidia-cusparse-cu12==12.3.1.170\n[pip3] nvidia-cusparselt-cu12==0.6.2\n[pip3] nvidia-nccl-cu12==2.21.5\n[pip3] nvidia-nvjitlink-cu12==12.4.127\n[pip3] nvidia-nvtx-cu12==12.4.127\n[pip3] nvtx==0.2.10\n[pip3] torch==2.6.0\n[pip3] torchaudio==2.5.1\n[pip3] torchvision==0.21.0\n[pip3] triton==3.2.0\n[conda] blas                       1.0              mkl\n[conda] cuda-cudart                12.1.105         0                             nvidia\n[conda] cuda-cupti                 12.1.105         0                             nvidia\n[conda] cuda-libraries             12.1.0           0                             nvidia\n[conda] cuda-nvrtc                 12.1.105         0                             nvidia\n[conda] cuda-nvtx                  12.1.105         0                             nvidia\n[conda] cuda-opencl                12.9.19          0                             nvidia\n[conda] cuda-runtime               12.1.0           0                             nvidia\n[conda] ffmpeg                     4.3              hf484d3e_0                    pytorch\n[conda] libcublas                  12.1.0.26        0                             nvidia\n[conda] libcufft                   11.0.2.4         0                             nvidia\n[conda] libcurand                  10.3.10.19       0                             nvidia\n[conda] libcusolver                11.4.4.55        0                             nvidia\n[conda] libcusparse                12.0.2.55        0                             nvidia\n[conda] libjpeg-turbo              2.0.0            h9bf148f_0                    pytorch\n[conda] libnvjitlink               12.1.105         0                             nvidia\n[conda] mkl                        2023.1.0         h213fc3f_46344\n[conda] mkl-service                2.4.0            py310h5eee18b_2\n[conda] mkl_fft                    1.3.11           py310h5eee18b_0\n[conda] mkl_random                 1.2.8            py310h1128e8f_0\n[conda] numpy                      1.23.5           pypi_0                        pypi\n[conda] nvtx                       0.2.10           pypi_0                        pypi\n[conda] pytorch                    2.5.1            py3.10_cuda12.1_cudnn9.1.0_0  pytorch\n[conda] pytorch-cuda               12.1             ha16c6d3_6                    pytorch\n[conda] pytorch-mutex              1.0              cuda                          pytorch\n[conda] torchaudio                 2.5.1            py310_cu121                   pytorch\n[conda] torchtriton                3.1.0            py310                         pytorch\n[conda] torchvision                0.20.1           py310_cu121                   pytorch",
+  "transformers_version": "4.54.0",
+  "lm_eval_version": "0.4.9.1",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "151643"
+  ],
+  "tokenizer_bos_token": [
+    "<|beginoftext|>",
+    "151665"
+  ],
+  "eot_token_id": null,
+  "max_length": 4096,
+  "task_hashes": {
+    "ceval-valid_computer_network": "b293882261dac5f3a7a890485bc99004bf1df814dd7ab676dc5b886d856b8f7f",
+    "ceval-valid_operating_system": "052d619fec4f68a6a599506e7ac92fbc6ae171d57878a41ae2be0754a073d9df",
+    "ceval-valid_computer_architecture": "808613b9770b912faa85c4f6ed0ec562871ad7202caeffc05bd55137a425e84b",
+    "ceval-valid_college_programming": "3240cede82ebf52b3496fb53826585556e1eaf752fa4f8d5d80051983becca9b",
+    "ceval-valid_college_physics": "78fbc7c04cd990efa53ed3fd1e915c5981e7625228e4987ad64a4ad6df387946",
+    "ceval-valid_college_chemistry": "95198ba87914b254b14fa931632f7a6a375bf11195473cf737c3a07bdfa96b49",
+    "ceval-valid_advanced_mathematics": "3dd5105a715fc23fb422bdd1bd17eb36926c5b3f9d858559c894547e2e070f2e",
+    "ceval-valid_probability_and_statistics": "12b8eff9ec328d5f20f37473e08c89feb2cfe3675efe2d88c55178516980465d",
+    "ceval-valid_discrete_mathematics": "aaf82214f7f2eadf7b762508be7791e1b1a697bf5068f3a87a7bc7a99535b6ab",
+    "ceval-valid_electrical_engineer": "4efdb841c48cd456852f1d6744a253a9806e0d633fae9990305053e2f60d09f9",
+    "ceval-valid_metrology_engineer": "7e8e5c9c376ed7119f9876442c556bd861be644d09d0c8d0bdec49fccbf325b9",
+    "ceval-valid_high_school_mathematics": "0c871c787ab07276c8e67f76d2602e0e8bd6cb1ceb878e6cb9ab3932b712c75b",
+    "ceval-valid_high_school_physics": "e6dde9db9d291aae1f0ede4398167fec7c48bed7218dc47d0506d5db7d9a37bc",
+    "ceval-valid_high_school_chemistry": "bd3ca0bcdb6196436075b4a1155fa7e9390fc5d58b1d899a63ecb062c52084cc",
+    "ceval-valid_high_school_biology": "8f3285b00b3239ef16610aa3ecfb2f88a73a1ff8d897460c8a711bbd47c8957a",
+    "ceval-valid_middle_school_mathematics": "22d096efaa2956d9d4313b598fe632e7462f32e3af0fb25e4128dfac32ca18ef",
+    "ceval-valid_middle_school_biology": "514521ebe960b86e36287f0cb446d2f17ac12c531388edda54f09a23d4293b53",
+    "ceval-valid_middle_school_physics": "f74b396601a48c8f5efbfc2ae663d2db61ce9f648d4f7238adba515c9aad4972",
+    "ceval-valid_middle_school_chemistry": "4b0f3149f2209d61b6138800c980b014a21aa76ec4604241b648b78f3252dc3f",
+    "ceval-valid_veterinary_medicine": "7132465056ea624fcb89d992ab42ed518900f2bc37dfafa9ea9f7d8dcebf76aa",
+    "ceval-valid_college_economics": "778919158f988d47eaee789dd47183db77a6a8d4ff5f2992abf7cff77651e1ac",
+    "ceval-valid_business_administration": "b50a018588a98737d63d0f84c140fa43886c6b61512fa00c4ef7096c0171c0c9",
+    "ceval-valid_marxism": "dff14f2854bb6daa6266d77933bd989c690d5cb17924759262326e1cdea70bf4",
+    "ceval-valid_mao_zedong_thought": "a4115777ca87e70a4fe8796b70ad1b020c61a8e1aba39fad224f043796311ae1",
+    "ceval-valid_education_science": "474121214c69e31e35836a23cbb457cee5a36b8f4ee7c05103824aab9dac5d88",
+    "ceval-valid_teacher_qualification": "8346ef5fe0bfed4ed45209d803412d958aa3be83bc31b4360acc9beb02de8eab",
+    "ceval-valid_high_school_politics": "600a0d25623a75e80233b00a716c3de1a149f1b61aee810edccb5fe7ce2c7fe6",
+    "ceval-valid_high_school_geography": "4c29b6939651b81cac3312a01df4724fb95e140553e9fde1863369e958168a4d",
+    "ceval-valid_middle_school_politics": "648c73dd37b4994b6aa4f0ed8976ab931e49d210751863cd9f722225bfb5d24c",
+    "ceval-valid_middle_school_geography": "8a24a0a150e4d8efda70b8c366f8856e0489003ddd6a4431cb849cfea158caaf",
+    "ceval-valid_modern_chinese_history": "74a31739e8aa6c4467290ca3ef050210b240c4635dd9e6df162640abb6bab984",
+    "ceval-valid_ideological_and_moral_cultivation": "c02598b6b6ef191cfcbdd21479292dd5bfe15139cb1556c2d21ec23779b1d747",
+    "ceval-valid_logic": "82786c9bcbaaa5756215572b361282fa2c5d2461aea9d80500e3bcb4af69ce83",
+    "ceval-valid_law": "24d87aa6da7d1d5be58726e52c1545048b6ee2b45ff30653088749a21627bbba",
+    "ceval-valid_chinese_language_and_literature": "bfeb4e204b5f4fd7fc8a6bca43b96761f612737860d906f2276e1fd0ab605c00",
+    "ceval-valid_art_studies": "9db30e676a0e259fe25f779fbe82da21d8931024b7e3907e0d1d7c8fe349f9b6",
+    "ceval-valid_professional_tour_guide": "fb3fd064c91e027c37ad6a237e4472ec8755445fbb3a7f5b8c3edb148930e471",
+    "ceval-valid_legal_professional": "b0f455d07dcff4ffe12fed66fa9be74190eedceda082e06187c4b7fe4c6a6e34",
+    "ceval-valid_high_school_chinese": "b998d44b81caeeb7cc396318805c59365bbbca67dc78182facba74c4e658026b",
+    "ceval-valid_high_school_history": "dc8018db1c21e0cd9fafa8fd1e74733dc0f0a1f4cc37b1495a09fd14cb92fba3",
+    "ceval-valid_middle_school_history": "579f793617f38b2fad9496e5097822297608b61c32053d7f07dde7350118fc65",
+    "ceval-valid_civil_servant": "bc63de85d83b3db5dbc5efcf8fe00de57cc33aca9a1ca35144dbe2eb6607adc3",
+    "ceval-valid_sports_science": "9d0ea08b63fb40857c2ca88cbc5749eabd76ee802c2e7b76884b2018b6a2f62e",
+    "ceval-valid_plant_protection": "571f85215e2c1002fd6627bb63bd2e53eef5f13a49ef47dfc010f0d2f71cbdb0",
+    "ceval-valid_basic_medicine": "475c0c9a5fbab3baf252f640da1c7eba19a4aa9c950dc875688d1968f54b9e7a",
+    "ceval-valid_clinical_medicine": "f6e92e70ce833ea18c61b8950f99f0a67109fd2e7620981e14323f20fed4926e",
+    "ceval-valid_urban_and_rural_planner": "f53cef4a96d80857503bc4e7231223bcf82df7839fab9e89270e01a7050a3a3d",
+    "ceval-valid_accountant": "1b2b5466138f77eb7973f2e085e20bd83293ef8c384b60493e489c3a9d22f3de",
+    "ceval-valid_fire_engineer": "065aef9729c0eb7993158fdf2ac7f5250fea2547282b4498f6d988701eb5e985",
+    "ceval-valid_environmental_impact_assessment_engineer": "46f80f161d01fe7f14775ff3f336564c65045288bb857e4a6f5a2eca11e9b722",
+    "ceval-valid_tax_accountant": "09f66242ba0683e5f8cd67978f2ba8fcf912eebd3a73a4a540f547a9c46726b3",
+    "ceval-valid_physician": "c7e74a2eb6faf9dcbe271f4eac3411266b3ee58a539e97e7d06f21005dc3b34d"
+  },
+  "model_source": "dream_mask_head_eval",
+  "model_name": "/data/qh_models/Dream-v0-Instruct-7B",
+  "model_name_sanitized": "__data__qh_models__Dream-v0-Instruct-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "start_time": 1552948.804173282,
+  "end_time": 1553662.14570161,
+  "total_evaluation_time_seconds": "713.3415283279028"
+}

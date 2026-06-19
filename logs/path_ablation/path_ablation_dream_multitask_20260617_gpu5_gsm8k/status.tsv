@@ -1,0 +1,22 @@
+2026-06-18 00:41:28	attr_dream_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/attr_dream_dp_gsm8k.log
+2026-06-18 00:55:16	attr_dream_dp_gsm8k	DONE	
+2026-06-18 00:55:16	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmdiagonal_tspath_ablation_dream_multitask_20260617_gpu5_gsm8k_dp/head_importance.pt
+2026-06-18 00:55:16	mask_dream_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/mask_dream_dp_gsm8k.log
+2026-06-18 01:19:51	mask_dream_dp_gsm8k	DONE	
+2026-06-18 01:19:51	adaptive_dream_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/adaptive_dream_dp_gsm8k.log
+2026-06-18 01:32:44	adaptive_dream_dp_gsm8k	DONE	
+2026-06-18 01:32:44	attr_dream_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/attr_dream_stp_gsm8k.log
+2026-06-18 01:46:45	attr_dream_stp_gsm8k	DONE	
+2026-06-18 01:46:45	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_gsm8k_stp/head_importance.pt
+2026-06-18 01:46:45	mask_dream_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/mask_dream_stp_gsm8k.log
+2026-06-18 02:11:23	mask_dream_stp_gsm8k	DONE	
+2026-06-18 02:11:23	adaptive_dream_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/adaptive_dream_stp_gsm8k.log
+2026-06-18 02:24:09	adaptive_dream_stp_gsm8k	DONE	
+2026-06-18 02:24:09	attr_dream_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/attr_dream_poly_gsm8k.log
+2026-06-18 03:18:52	attr_dream_poly_gsm8k	DONE	
+2026-06-18 03:18:52	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_dream_multitask_20260617_gpu5_gsm8k_poly/head_importance.pt
+2026-06-18 03:18:52	mask_dream_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/mask_dream_poly_gsm8k.log
+2026-06-18 03:43:28	mask_dream_poly_gsm8k	DONE	
+2026-06-18 03:43:28	adaptive_dream_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_multitask_20260617_gpu5_gsm8k/adaptive_dream_poly_gsm8k.log
+2026-06-18 03:56:19	adaptive_dream_poly_gsm8k	DONE	
+2026-06-18 03:56:19	summary	DONE	all path variants completed

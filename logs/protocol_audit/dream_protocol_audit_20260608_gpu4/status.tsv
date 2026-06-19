@@ -1,0 +1,6 @@
+2026-06-08 22:49:30	gpqa_dense_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/protocol_audit/dream_protocol_audit_20260608_gpu4/gpqa_dense_mc8.log
+2026-06-08 23:02:06	gpqa_dense_mc8	DONE	
+2026-06-08 23:02:06	gpqa_loo_adaptive_mc8	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/protocol_audit/dream_protocol_audit_20260608_gpu4/gpqa_loo_adaptive_mc8.log
+2026-06-09 01:41:40	gpqa_loo_adaptive_mc8	DONE	
+2026-06-09 01:41:40	mbpp_dense_postprocess_l20	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/protocol_audit/dream_protocol_audit_20260608_gpu4/mbpp_dense_postprocess_l20.log
+2026-06-09 02:03:39	mbpp_dense_postprocess_l20	DONE	

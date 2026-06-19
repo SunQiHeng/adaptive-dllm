@@ -1,0 +1,2 @@
+2026-06-19 10:19:36	pipeline	START	tasks=minerva_math gpu=4
+2026-06-19 10:19:36	minerva_math	RUNNING	run_tag=path_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math attr_samples=20 eval_limit=20 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_minerva_smoke_20260618_gpu4/minerva_math.pipeline.log

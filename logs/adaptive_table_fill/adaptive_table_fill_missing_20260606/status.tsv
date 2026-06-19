@@ -1,0 +1,52 @@
+2026-06-06 23:40:58	dense_llada_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_mmlu.log
+2026-06-06 23:57:09	dense_llada_mmlu	DONE	
+2026-06-06 23:57:09	dense_llada_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_cmmlu.log
+2026-06-07 00:10:24	dense_llada_cmmlu	DONE	
+2026-06-07 00:10:24	dense_llada_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_ceval_valid.log
+2026-06-07 00:16:01	dense_llada_ceval_valid	DONE	
+2026-06-07 00:16:01	dense_llada_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_gpqa_main_n_shot.log
+2026-06-07 00:18:43	dense_llada_gpqa_main_n_shot	DONE	
+2026-06-07 00:18:43	dense_llada_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_gsm8k.log
+2026-06-07 01:39:48	dense_llada_gsm8k	DONE	
+2026-06-07 01:39:48	dense_llada_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_humaneval.log
+2026-06-07 04:08:02	dense_llada_humaneval	DONE	
+2026-06-07 04:08:02	dense_llada_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_llada_mbpp.log
+2026-06-07 13:19:23	dense_llada_mbpp	DONE	
+2026-06-07 13:19:23	dense_dream_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_mmlu.log
+2026-06-07 13:34:00	dense_dream_mmlu	FAILED	rc=1
+2026-06-07 13:34:00	dense_dream_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_cmmlu.log
+2026-06-07 14:13:08	dense_dream_cmmlu	DONE	
+2026-06-07 14:13:08	dense_dream_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_ceval_valid.log
+2026-06-07 14:42:38	dense_dream_ceval_valid	DONE	
+2026-06-07 14:42:38	dense_dream_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_gpqa_main_n_shot.log
+2026-06-07 14:46:47	dense_dream_gpqa_main_n_shot	DONE	
+2026-06-07 14:46:47	dense_dream_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_gsm8k.log
+2026-06-07 15:33:49	dense_dream_gsm8k	DONE	
+2026-06-07 15:33:49	dense_dream_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_humaneval.log
+2026-06-07 19:27:09	dense_dream_humaneval	DONE	
+2026-06-07 19:27:09	dense_dream_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/dense_dream_mbpp.log
+2026-06-08 02:42:17	dense_dream_mbpp	DONE	
+2026-06-08 02:42:17	adaptive_llada_attnlrp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_llada_attnlrp_gpqa_main_n_shot.log
+2026-06-08 03:05:58	adaptive_llada_attnlrp_gpqa_main_n_shot	DONE	
+2026-06-08 03:05:58	adaptive_llada_shapley_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_llada_shapley_gpqa_main_n_shot.log
+2026-06-08 03:29:38	adaptive_llada_shapley_gpqa_main_n_shot	DONE	
+2026-06-08 03:29:38	adaptive_llada_headig_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_llada_headig_gpqa_main_n_shot.log
+2026-06-08 03:53:43	adaptive_llada_headig_gpqa_main_n_shot	DONE	
+2026-06-08 03:53:43	adaptive_dream_attnlrp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_attnlrp_gpqa_main_n_shot.log
+2026-06-08 04:12:29	adaptive_dream_attnlrp_gpqa_main_n_shot	DONE	
+2026-06-08 04:12:29	adaptive_dream_shapley_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_shapley_gpqa_main_n_shot.log
+2026-06-08 04:31:04	adaptive_dream_shapley_gpqa_main_n_shot	DONE	
+2026-06-08 04:31:04	adaptive_dream_headig_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_headig_gpqa_main_n_shot.log
+2026-06-08 04:49:49	adaptive_dream_headig_gpqa_main_n_shot	DONE	
+2026-06-08 04:49:49	adaptive_dream_attnlrp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_attnlrp_humaneval.log
+2026-06-08 08:37:56	adaptive_dream_attnlrp_humaneval	DONE	
+2026-06-08 08:37:56	adaptive_dream_shapley_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_shapley_humaneval.log
+2026-06-08 12:41:16	adaptive_dream_shapley_humaneval	DONE	
+2026-06-08 12:41:16	adaptive_dream_headig_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_headig_humaneval.log
+2026-06-08 17:51:54	adaptive_dream_headig_humaneval	DONE	
+2026-06-08 17:51:54	adaptive_dream_attnlrp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_attnlrp_mbpp.log
+2026-06-09 05:00:11	adaptive_dream_attnlrp_mbpp	FAILED	rc=2
+2026-06-09 05:00:11	adaptive_dream_shapley_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_shapley_mbpp.log
+2026-06-09 16:38:08	adaptive_dream_shapley_mbpp	DONE	
+2026-06-09 16:38:08	adaptive_dream_headig_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/adaptive_table_fill/adaptive_table_fill_missing_20260606/adaptive_dream_headig_mbpp.log
+2026-06-09 16:45:26	adaptive_dream_headig_mbpp	FAILED	rc=1

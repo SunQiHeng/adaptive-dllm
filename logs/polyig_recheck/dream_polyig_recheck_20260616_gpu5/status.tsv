@@ -1,0 +1,16 @@
+2026-06-16 19:05:09 HKT	INFO	run	gpu=5 tag=dream_polyig_recheck_20260616_gpu5
+2026-06-16 19:05:09 HKT	START	attr_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/attr_gpqa.log
+2026-06-16 21:30:47 HKT	DONE	attr_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/attr_gpqa.log
+2026-06-16 21:30:47 HKT	PATH	gpqa	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_pmrandom_threshold_tsdream_polyig_recheck_20260616_gpu5_gpqa_main_n_shot_all/head_importance.pt
+2026-06-16 21:30:47 HKT	START	adaptive_gpqa_to_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/adaptive_gpqa_to_gpqa.log
+2026-06-16 23:42:37 HKT	DONE	adaptive_gpqa_to_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/adaptive_gpqa_to_gpqa.log
+2026-06-16 23:42:37 HKT	START	prune_most_gpqa_to_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/prune_most_gpqa_to_gpqa.log
+2026-06-16 23:52:03 HKT	DONE	prune_most_gpqa_to_gpqa	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/prune_most_gpqa_to_gpqa.log
+2026-06-16 23:52:03 HKT	START	attr_gsm8k_final_hash	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/attr_gsm8k_final_hash.log
+2026-06-17 01:02:39 HKT	DONE	attr_gsm8k_final_hash	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/attr_gsm8k_final_hash.log
+2026-06-17 01:02:39 HKT	PATH	gsm8k_final_hash	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_pmrandom_threshold_tsdream_polyig_recheck_20260616_gpu5_gsm8k_final_hash/head_importance.pt
+2026-06-17 01:02:39 HKT	START	adaptive_gsm8k_to_gsm8k	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/adaptive_gsm8k_to_gsm8k.log
+2026-06-17 01:27:49 HKT	DONE	adaptive_gsm8k_to_gsm8k	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/adaptive_gsm8k_to_gsm8k.log
+2026-06-17 01:27:49 HKT	START	prune_most_gsm8k_to_gsm8k	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/prune_most_gsm8k_to_gsm8k.log
+2026-06-17 01:52:49 HKT	DONE	prune_most_gsm8k_to_gsm8k	/home/qiheng/Projects/adaptive-dllm/logs/polyig_recheck/dream_polyig_recheck_20260616_gpu5/prune_most_gsm8k_to_gsm8k.log
+2026-06-17 01:52:49 HKT	DONE	pipeline	dream_polyig_recheck_20260616_gpu5

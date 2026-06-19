@@ -1,0 +1,6 @@
+2026-06-18 19:57:23	pipeline	START	tasks=ceval-valid,humaneval,mbpp gpu=0
+2026-06-18 19:57:23	ceval-valid	RUNNING	run_tag=path_ablation_dream_rest_20260618_gpu0_ceval_valid attr_samples=60 eval_limit=100 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0/ceval_valid.pipeline.log
+2026-06-18 19:59:01	ceval-valid	FAILED	rc=1 run_tag=path_ablation_dream_rest_20260618_gpu0_ceval_valid
+2026-06-18 19:59:01	humaneval	RUNNING	run_tag=path_ablation_dream_rest_20260618_gpu0_humaneval attr_samples=60 eval_limit=80 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0/humaneval.pipeline.log
+2026-06-19 06:44:13	humaneval	DONE	run_tag=path_ablation_dream_rest_20260618_gpu0_humaneval
+2026-06-19 06:44:13	mbpp	RUNNING	run_tag=path_ablation_dream_rest_20260618_gpu0_mbpp attr_samples=60 eval_limit=80 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0/mbpp.pipeline.log

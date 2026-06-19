@@ -1,0 +1,22 @@
+2026-06-18 00:13:47	attr_llada_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/attr_llada_dp_gsm8k.log
+2026-06-18 00:32:25	attr_llada_dp_gsm8k	DONE	
+2026-06-18 00:32:25	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gsm8k_final_hash_pmdiagonal_tspath_ablation_llada_multitask_20260617_gpu4_gsm8k_dp/head_importance.pt
+2026-06-18 00:32:25	mask_llada_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/mask_llada_dp_gsm8k.log
+2026-06-18 01:48:33	mask_llada_dp_gsm8k	DONE	
+2026-06-18 01:48:33	adaptive_llada_dp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/adaptive_llada_dp_gsm8k.log
+2026-06-18 02:32:36	adaptive_llada_dp_gsm8k	DONE	
+2026-06-18 02:32:36	attr_llada_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/attr_llada_stp_gsm8k.log
+2026-06-18 02:50:50	attr_llada_stp_gsm8k	DONE	
+2026-06-18 02:50:50	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_gsm8k_stp/head_importance.pt
+2026-06-18 02:50:50	mask_llada_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/mask_llada_stp_gsm8k.log
+2026-06-18 04:06:50	mask_llada_stp_gsm8k	DONE	
+2026-06-18 04:06:50	adaptive_llada_stp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/adaptive_llada_stp_gsm8k.log
+2026-06-18 04:50:42	adaptive_llada_stp_gsm8k	DONE	
+2026-06-18 04:50:42	attr_llada_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/attr_llada_poly_gsm8k.log
+2026-06-18 06:01:16	attr_llada_poly_gsm8k	DONE	
+2026-06-18 06:01:16	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_gsm8k_final_hash_pmrandom_threshold_tspath_ablation_llada_multitask_20260617_gpu4_gsm8k_poly/head_importance.pt
+2026-06-18 06:01:16	mask_llada_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/mask_llada_poly_gsm8k.log
+2026-06-18 07:17:13	mask_llada_poly_gsm8k	DONE	
+2026-06-18 07:17:13	adaptive_llada_poly_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_multitask_20260617_gpu4_gsm8k/adaptive_llada_poly_gsm8k.log
+2026-06-18 08:01:18	adaptive_llada_poly_gsm8k	DONE	
+2026-06-18 08:01:18	summary	DONE	all path variants completed

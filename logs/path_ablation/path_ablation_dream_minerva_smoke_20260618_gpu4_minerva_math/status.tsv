@@ -1,0 +1,9 @@
+2026-06-19 10:19:36	attr_dream_dp_minerva_math	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math/attr_dream_dp_minerva_math.log
+2026-06-19 10:23:41	attr_dream_dp_minerva_math	DONE	
+2026-06-19 10:23:41	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_minerva_math_pmdiagonal_tspath_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math_dp/head_importance.pt
+2026-06-19 10:23:41	mask_dream_dp_minerva_math	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math/mask_dream_dp_minerva_math.log
+2026-06-19 16:03:57	mask_dream_dp_minerva_math	DONE	
+2026-06-19 16:03:57	attr_dream_stp_minerva_math	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math/attr_dream_stp_minerva_math.log
+2026-06-19 16:07:51	attr_dream_stp_minerva_math	DONE	
+2026-06-19 16:07:51	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_minerva_math_pmrandom_threshold_tspath_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math_stp/head_importance.pt
+2026-06-19 16:07:51	mask_dream_stp_minerva_math	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_minerva_smoke_20260618_gpu4_minerva_math/mask_dream_stp_minerva_math.log

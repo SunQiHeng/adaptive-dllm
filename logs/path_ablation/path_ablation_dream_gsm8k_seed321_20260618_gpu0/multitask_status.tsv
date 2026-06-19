@@ -1,0 +1,4 @@
+2026-06-18 17:00:18	pipeline	START	tasks=gsm8k gpu=0
+2026-06-18 17:00:18	gsm8k	RUNNING	run_tag=path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k attr_samples=80 eval_limit=100 log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_gsm8k_seed321_20260618_gpu0/gsm8k.pipeline.log
+2026-06-18 19:54:32	gsm8k	DONE	run_tag=path_ablation_dream_gsm8k_seed321_20260618_gpu0_gsm8k
+2026-06-18 19:54:32	pipeline	DONE	all tasks completed

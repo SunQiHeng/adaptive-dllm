@@ -1,3 +1,4 @@
+
 # adaptive-dllm 项目总览
 
 本文件用于帮助其他大模型（或新协作者）快速理解本仓库的目标、目录结构、关键文件职责与常见工作流。
@@ -86,8 +87,11 @@ adaptive-dllm/
 - `models/Dream/attribution/baseline_attribution/compute_shapley_head_attribution.py`
   - CoKV-style Sliced Shapley baseline
   - 通过随机 permutation、采样 coalition size 和 complementary contribution 近似 head importance
+- `models/Dream/attribution/baseline_attribution/compute_leave_one_out_head_attribution.py`
+  - exact leave-one-out baseline
+  - 逐个移除 query head，以 `L(without head)-L(full)` 衡量重要性
 - `models/Dream/attribution/baseline_attribution/run_*.sh`
-  - Dream baseline 归因运行脚本（AttnLRP-style / AttAttr-style / Shapley）
+  - Dream baseline 归因运行脚本（AttnLRP-style / AttAttr-style / Shapley / LOO）
 
 ### LLaDA
 
@@ -106,8 +110,11 @@ adaptive-dllm/
 - `models/LLaDA/attribution/baseline_attribution/compute_shapley_head_attribution.py`
   - CoKV-style Sliced Shapley baseline
   - 将 CoKV 的 cooperative-game / complementary-contribution 思路迁移到 diffusion head attribution
+- `models/LLaDA/attribution/baseline_attribution/compute_leave_one_out_head_attribution.py`
+  - exact leave-one-out baseline
+  - 逐个移除 attention head，以 `L(without head)-L(full)` 衡量重要性
 - `models/LLaDA/attribution/baseline_attribution/run_*.sh`
-  - LLaDA baseline 归因运行脚本（AttnLRP-style / AttAttr-style / Shapley）
+  - LLaDA baseline 归因运行脚本（AttnLRP-style / AttAttr-style / Shapley / LOO）
 
 ### 共享归因工具
 
@@ -208,7 +215,7 @@ adaptive-dllm/
    - 使用 `compute_loss_attribution_all_heads.py` 或 `baseline_attribution/` 下的脚本生成 `head_importance.pt`
    - 当前 batch runner 默认保存到 `configs/aconfigs/`，并记录 metadata（dataset、seed、path_mode、mask_probs 等）
    - attribution 当前也已支持与主评测一致的 8 个统一任务名
-   - 对 `gpqa_main_n_shot`，`loss_attribution`、`AttnLRP-style`、`AttAttr-style`、`Shapley` 四类 runner 现在也支持本地 `DATA_PATH`，若未显式传入且存在默认本地副本，则自动使用 `evaluation/local_data/gpqa/gpqa_main.jsonl`
+   - 对 `gpqa_main_n_shot`，`loss_attribution`、`AttnLRP-style`、`AttAttr-style`、`Shapley`、`LOO` 五类 runner 现在也支持本地 `DATA_PATH`，若未显式传入且存在默认本地副本，则自动使用 `evaluation/local_data/gpqa/gpqa_main.jsonl`
    - baseline / IG 产物若只覆盖部分层，当前 `adaptive` 评测统计也支持缺层跳过，方便做局部 layer-range 实验
    - 对新增任务的兼容映射为：
      - `cmmlu / ceval-valid / gpqa_main_n_shot` -> MMLU-style prompt builder
@@ -224,11 +231,11 @@ adaptive-dllm/
    - 对比 `standard vs sparse vs adaptive`，并做 `most/least/random` 消融
    - 现在也可将 `global diffusion vs semi diffusion` 作为独立消融维度
    - `gpqa_main_n_shot` 若无法访问 gated HF 数据集，可直接使用本地副本 `evaluation/local_data/gpqa/gpqa_main.jsonl`
-   - `run_eval_task.sh` / `run_eval_mask_head_task.sh` 当前支持 `ATTR_METHOD=headig|attnlrp|attarr|shapley`，且会优先自动解析 `configs/aconfigs/` 下最新匹配的 importance 目录
+   - `run_eval_task.sh` / `run_eval_mask_head_task.sh` 当前支持 `ATTR_METHOD=headig|attnlrp|attarr|shapley|loo`，且会优先自动解析 `configs/aconfigs/` 下最新匹配的 importance 目录
 
 ### 6.1 批量归因 Runner 约定
 
-- 现在 8 个归因 runner（`LLaDA/Dream` x `loss_attribution / AttnLRP-style / AttAttr-style / Shapley`）都支持单卡串行跑多个任务。
+- 现在 10 个归因 runner（`LLaDA/Dream` x `loss_attribution / AttnLRP-style / AttAttr-style / Shapley / LOO`）都支持单卡串行跑多个任务。
 - 默认任务列表由 `ATTR_DATASETS_STR` 控制，当前默认值为：
   - `mmlu,cmmlu,ceval-valid,gsm8k,minerva_math,gpqa_main_n_shot,humaneval,mbpp`
 - 若不想跑全套，可手动覆盖：
@@ -260,11 +267,11 @@ adaptive-dllm/
 - `head_importance.pt`
   - 归因产物标准文件名，包含 `importance_scores + metadata`
 - `baseline_attribution`
-  - 放置非主 IG 路线的 baseline 实现，目前已包含 `AttnLRP-style`、`AttAttr-style` 与 `CoKV-style Shapley`
+  - 放置非主 IG 路线的 baseline 实现，目前已包含 `AttnLRP-style`、`AttAttr-style`、`CoKV-style Shapley` 与 exact LOO
 - `attarr`
   - baseline 方法之一；对每个 head 的 attention output 元素做 element-wise IG，再对该 head 的所有元素 attribution 取平均作为 importance
 - `task alias / dataset alias`
-  - 统一任务名归一化层，确保评测、IG、AttnLRP-style、Shapley 对同一任务名保持一致
+  - 统一任务名归一化层，确保评测、IG、AttnLRP-style、Shapley、LOO 对同一任务名保持一致
 - `mask_probs + mask_samples_per_prob`
   - diffusion 风格监督采样配置
 - `coalition_sizes / sampling_number`
@@ -311,4 +318,3 @@ adaptive-dllm/
 ## 9. 当前项目定位（一句话）
 
 这是一个“**归因算法 + 推理策略验证 + 双模型对照评测**”的一体化实验仓库，重点不是单纯可视化，而是验证 attribution 对真实推理行为（稀疏化/剪枝）的可用性。
-

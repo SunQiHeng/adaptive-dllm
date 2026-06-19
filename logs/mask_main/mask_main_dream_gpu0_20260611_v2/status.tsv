@@ -1,0 +1,42 @@
+2026-06-11 18:18:45	mask_dream_attnlrp_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_mmlu.log
+2026-06-11 19:06:52	mask_dream_attnlrp_mmlu	DONE	
+2026-06-11 19:06:52	mask_dream_attnlrp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_cmmlu.log
+2026-06-11 19:47:34	mask_dream_attnlrp_cmmlu	DONE	
+2026-06-11 19:47:34	mask_dream_attnlrp_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_ceval_valid.log
+2026-06-11 20:14:41	mask_dream_attnlrp_ceval_valid	DONE	
+2026-06-11 20:14:41	mask_dream_attnlrp_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_gpqa_main_n_shot.log
+2026-06-11 21:06:32	mask_dream_attnlrp_gpqa_main_n_shot	DONE	
+2026-06-11 21:06:32	mask_dream_attnlrp_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_gsm8k.log
+2026-06-11 23:40:55	mask_dream_attnlrp_gsm8k	DONE	
+2026-06-11 23:40:55	mask_dream_attnlrp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_humaneval.log
+2026-06-12 10:33:36	mask_dream_attnlrp_humaneval	DONE	
+2026-06-12 10:33:36	mask_dream_attnlrp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_attnlrp_mbpp.log
+2026-06-13 07:50:37	mask_dream_attnlrp_mbpp	DONE	
+2026-06-13 07:50:37	mask_dream_shapley_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_mmlu.log
+2026-06-13 08:31:41	mask_dream_shapley_mmlu	DONE	
+2026-06-13 08:31:41	mask_dream_shapley_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_cmmlu.log
+2026-06-13 09:07:46	mask_dream_shapley_cmmlu	DONE	
+2026-06-13 09:07:46	mask_dream_shapley_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_ceval_valid.log
+2026-06-13 09:30:58	mask_dream_shapley_ceval_valid	DONE	
+2026-06-13 09:30:58	mask_dream_shapley_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_gpqa_main_n_shot.log
+2026-06-13 10:15:42	mask_dream_shapley_gpqa_main_n_shot	DONE	
+2026-06-13 10:15:42	mask_dream_shapley_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_gsm8k.log
+2026-06-13 12:27:55	mask_dream_shapley_gsm8k	DONE	
+2026-06-13 12:27:55	mask_dream_shapley_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_humaneval.log
+2026-06-13 22:08:07	mask_dream_shapley_humaneval	DONE	
+2026-06-13 22:08:08	mask_dream_shapley_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_shapley_mbpp.log
+2026-06-14 17:52:13	mask_dream_shapley_mbpp	DONE	
+2026-06-14 17:52:13	mask_dream_headig_mmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_mmlu.log
+2026-06-14 18:33:25	mask_dream_headig_mmlu	DONE	
+2026-06-14 18:33:25	mask_dream_headig_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_cmmlu.log
+2026-06-14 19:14:26	mask_dream_headig_cmmlu	DONE	
+2026-06-14 19:14:26	mask_dream_headig_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_ceval_valid.log
+2026-06-14 19:40:25	mask_dream_headig_ceval_valid	DONE	
+2026-06-14 19:40:25	mask_dream_headig_gpqa_main_n_shot	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_gpqa_main_n_shot.log
+2026-06-14 20:27:21	mask_dream_headig_gpqa_main_n_shot	DONE	
+2026-06-14 20:27:21	mask_dream_headig_gsm8k	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_gsm8k.log
+2026-06-14 22:41:05	mask_dream_headig_gsm8k	DONE	
+2026-06-14 22:41:05	mask_dream_headig_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_humaneval.log
+2026-06-15 08:27:10	mask_dream_headig_humaneval	DONE	
+2026-06-15 08:27:10	mask_dream_headig_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/mask_main/mask_main_dream_gpu0_20260611_v2/mask_dream_headig_mbpp.log
+2026-06-16 04:24:37	mask_dream_headig_mbpp	DONE	

@@ -3,7 +3,7 @@ Head masking / pruning utilities for LLaDA.
 
 目标：根据预先计算的 head importance 分数，对每一层的 attention heads 做“剪枝”验证：
 - prune_most:  剪掉最重要的 top-k heads
-- prune_least: 剪掉最不重要的 top-k heads
+- prune_least: 剪掉分数最低的 top-k heads
 
 实现方式（不改权重、不改结构）：
 1) 加载 importance_scores (layer_idx -> tensor[n_heads])
@@ -38,8 +38,8 @@ class HeadPruningSpec:
     描述一次 head 剪枝实验。
 
     - prune_which:
-        - "most":  剪掉最重要的 heads (largest=True)
-        - "least": 剪掉最不重要的 heads (largest=False)
+        - "most":  剪掉分数最高的 heads (largest=True)
+        - "least": 剪掉分数最低的 heads (largest=False)
     - k / k_frac: 二选一（k_frac 会按 n_heads * k_frac 四舍五入，并至少剪 1 个 head）
     """
 
@@ -410,4 +410,3 @@ def apply_head_keep_masks_(
         if head_mask_warmup_frac is not None:
             # Stored on block; generation loop writes `_head_mask_now_step/_head_mask_whole_steps`.
             block._head_mask_warmup_frac = float(head_mask_warmup_frac)  # type: ignore[attr-defined]
-

@@ -1,0 +1,22 @@
+2026-06-18 19:46:59	attr_llada_dp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/attr_llada_dp_humaneval.log
+2026-06-18 19:53:00	attr_llada_dp_humaneval	DONE	
+2026-06-18 19:53:00	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_humaneval_pmdiagonal_tspath_ablation_llada_rest_20260618_gpu5_humaneval_dp/head_importance.pt
+2026-06-18 19:53:00	mask_llada_dp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/mask_llada_dp_humaneval.log
+2026-06-18 21:45:25	mask_llada_dp_humaneval	DONE	
+2026-06-18 21:45:25	adaptive_llada_dp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/adaptive_llada_dp_humaneval.log
+2026-06-18 22:44:34	adaptive_llada_dp_humaneval	DONE	
+2026-06-18 22:44:34	attr_llada_stp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/attr_llada_stp_humaneval.log
+2026-06-18 22:50:26	attr_llada_stp_humaneval	DONE	
+2026-06-18 22:50:26	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_humaneval_pmrandom_threshold_tspath_ablation_llada_rest_20260618_gpu5_humaneval_stp/head_importance.pt
+2026-06-18 22:50:26	mask_llada_stp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/mask_llada_stp_humaneval.log
+2026-06-19 00:36:01	mask_llada_stp_humaneval	DONE	
+2026-06-19 00:36:01	adaptive_llada_stp_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/adaptive_llada_stp_humaneval.log
+2026-06-19 01:33:45	adaptive_llada_stp_humaneval	DONE	
+2026-06-19 01:33:45	attr_llada_poly_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/attr_llada_poly_humaneval.log
+2026-06-19 01:56:50	attr_llada_poly_humaneval	DONE	
+2026-06-19 01:56:50	importance_llada_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_humaneval_pmrandom_threshold_tspath_ablation_llada_rest_20260618_gpu5_humaneval_poly/head_importance.pt
+2026-06-19 01:56:50	mask_llada_poly_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/mask_llada_poly_humaneval.log
+2026-06-19 03:42:45	mask_llada_poly_humaneval	DONE	
+2026-06-19 03:42:45	adaptive_llada_poly_humaneval	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_humaneval/adaptive_llada_poly_humaneval.log
+2026-06-19 04:40:28	adaptive_llada_poly_humaneval	DONE	
+2026-06-19 04:40:28	summary	DONE	all path variants completed

@@ -1,0 +1,7 @@
+2026-06-18 19:45:21	attr_llada_dp_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_ceval_valid/attr_llada_dp_ceval_valid.log
+2026-06-18 19:45:53	attr_llada_dp_ceval_valid	FAILED	rc=1
+2026-06-18 19:45:53	attr_llada_stp_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_ceval_valid/attr_llada_stp_ceval_valid.log
+2026-06-18 19:46:26	attr_llada_stp_ceval_valid	FAILED	rc=1
+2026-06-18 19:46:26	attr_llada_poly_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_ceval_valid/attr_llada_poly_ceval_valid.log
+2026-06-18 19:46:59	attr_llada_poly_ceval_valid	FAILED	rc=1
+2026-06-18 19:46:59	summary	FAILED	attr:dp attr:stp attr:poly

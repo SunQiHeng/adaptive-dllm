@@ -1,0 +1,38 @@
+2026-06-10 18:33:26	mmlu	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mmlu/attribution.log
+2026-06-10 19:38:58	mmlu	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mmlu_all_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_mmlu/head_importance.pt
+2026-06-10 19:38:58	mmlu	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mmlu/adaptive.log
+2026-06-10 19:54:45	mmlu	adaptive	FAILED	rc=1
+2026-06-10 19:54:45	mmlu	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mmlu/pruning.log
+2026-06-10 20:19:09	mmlu	pruning-most-least	DONE	
+2026-06-10 20:19:09	cmmlu	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/cmmlu/attribution.log
+2026-06-10 21:56:36	cmmlu	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_cmmlu/head_importance.pt
+2026-06-10 21:56:36	cmmlu	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/cmmlu/adaptive.log
+2026-06-11 00:22:41	cmmlu	adaptive	DONE	
+2026-06-11 00:22:41	cmmlu	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/cmmlu/pruning.log
+2026-06-11 00:42:48	cmmlu	pruning-most-least	DONE	
+2026-06-11 00:42:48	ceval-valid	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/ceval_valid/attribution.log
+2026-06-11 00:43:35	ceval-valid	attribution	FAILED	rc=1
+2026-06-11 00:43:35	gpqa_main_n_shot	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gpqa_main_n_shot/attribution.log
+2026-06-11 01:51:04	gpqa_main_n_shot	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gpqa_main_n_shot_all_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_gpqa_main_n_shot/head_importance.pt
+2026-06-11 01:51:04	gpqa_main_n_shot	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gpqa_main_n_shot/adaptive.log
+2026-06-11 02:15:20	gpqa_main_n_shot	adaptive	DONE	
+2026-06-11 02:15:20	gpqa_main_n_shot	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gpqa_main_n_shot/pruning.log
+2026-06-11 02:22:22	gpqa_main_n_shot	pruning-most-least	DONE	
+2026-06-11 02:22:22	gsm8k	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gsm8k/attribution.log
+2026-06-11 02:56:24	gsm8k	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_gsm8k_final_hash_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_gsm8k/head_importance.pt
+2026-06-11 02:56:24	gsm8k	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gsm8k/adaptive.log
+2026-06-11 03:30:29	gsm8k	adaptive	DONE	
+2026-06-11 03:30:29	gsm8k	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/gsm8k/pruning.log
+2026-06-11 04:33:57	gsm8k	pruning-most-least	DONE	
+2026-06-11 04:33:57	humaneval	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/humaneval/attribution.log
+2026-06-11 05:07:45	humaneval	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_humaneval_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_humaneval/head_importance.pt
+2026-06-11 05:07:45	humaneval	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/humaneval/adaptive.log
+2026-06-11 07:19:44	humaneval	adaptive	DONE	
+2026-06-11 07:19:44	humaneval	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/humaneval/pruning.log
+2026-06-11 11:50:08	humaneval	pruning-most-least	DONE	
+2026-06-11 11:50:08	mbpp	attribution	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mbpp/attribution.log
+2026-06-11 12:27:33	mbpp	attribution	DONE	importance=/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_mbpp_loo_signed_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_tsformal_loo_dream_20260606_mbpp/head_importance.pt
+2026-06-11 12:27:33	mbpp	adaptive	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mbpp/adaptive.log
+2026-06-11 17:53:13	mbpp	adaptive	DONE	
+2026-06-11 17:53:13	mbpp	pruning-most-least	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/loo_core/formal_loo_dream_20260606/mbpp/pruning.log
+2026-06-12 01:44:35	mbpp	pruning-most-least	DONE	

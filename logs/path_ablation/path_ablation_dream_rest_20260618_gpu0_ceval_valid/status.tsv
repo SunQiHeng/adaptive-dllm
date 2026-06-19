@@ -1,0 +1,7 @@
+2026-06-18 19:57:23	attr_dream_dp_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_ceval_valid/attr_dream_dp_ceval_valid.log
+2026-06-18 19:57:56	attr_dream_dp_ceval_valid	FAILED	rc=1
+2026-06-18 19:57:56	attr_dream_stp_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_ceval_valid/attr_dream_stp_ceval_valid.log
+2026-06-18 19:58:28	attr_dream_stp_ceval_valid	FAILED	rc=1
+2026-06-18 19:58:28	attr_dream_poly_ceval_valid	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_rest_20260618_gpu0_ceval_valid/attr_dream_poly_ceval_valid.log
+2026-06-18 19:59:01	attr_dream_poly_ceval_valid	FAILED	rc=1
+2026-06-18 19:59:01	summary	FAILED	attr:dp attr:stp attr:poly

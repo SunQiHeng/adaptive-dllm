@@ -1,0 +1,13 @@
+2026-06-19 04:40:28	attr_llada_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/attr_llada_dp_mbpp.log
+2026-06-19 04:46:18	attr_llada_dp_mbpp	DONE	
+2026-06-19 04:46:18	importance_llada_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mbpp_pmdiagonal_tspath_ablation_llada_rest_20260618_gpu5_mbpp_dp/head_importance.pt
+2026-06-19 04:46:18	mask_llada_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/mask_llada_dp_mbpp.log
+2026-06-19 09:05:46	mask_llada_dp_mbpp	DONE	
+2026-06-19 09:05:46	adaptive_llada_dp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/adaptive_llada_dp_mbpp.log
+2026-06-19 11:31:10	adaptive_llada_dp_mbpp	DONE	
+2026-06-19 11:31:10	attr_llada_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/attr_llada_stp_mbpp.log
+2026-06-19 11:36:54	attr_llada_stp_mbpp	DONE	
+2026-06-19 11:36:54	importance_llada_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_llada-1_5_mbpp_pmrandom_threshold_tspath_ablation_llada_rest_20260618_gpu5_mbpp_stp/head_importance.pt
+2026-06-19 11:36:54	mask_llada_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/mask_llada_stp_mbpp.log
+2026-06-19 15:59:23	mask_llada_stp_mbpp	DONE	
+2026-06-19 15:59:23	adaptive_llada_stp_mbpp	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_llada_rest_20260618_gpu5_mbpp/adaptive_llada_stp_mbpp.log

@@ -1,0 +1,16 @@
+2026-06-18 00:38:43	attr_dream_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/attr_dream_dp_cmmlu.log
+2026-06-18 00:53:03	attr_dream_dp_cmmlu	DONE	
+2026-06-18 00:53:03	importance_dream_dp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmdiagonal_tspath_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu_dp/head_importance.pt
+2026-06-18 00:53:03	mask_dream_dp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/mask_dream_dp_cmmlu.log
+2026-06-18 01:22:05	mask_dream_dp_cmmlu	DONE	
+2026-06-18 01:22:05	attr_dream_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/attr_dream_stp_cmmlu.log
+2026-06-18 01:58:36	attr_dream_stp_cmmlu	DONE	
+2026-06-18 01:58:37	importance_dream_stp	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmrandom_threshold_tspath_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu_stp/head_importance.pt
+2026-06-18 01:58:37	mask_dream_stp_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/mask_dream_stp_cmmlu.log
+2026-06-18 02:27:39	mask_dream_stp_cmmlu	DONE	
+2026-06-18 02:27:39	attr_dream_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/attr_dream_poly_cmmlu.log
+2026-06-18 03:36:26	attr_dream_poly_cmmlu	DONE	
+2026-06-18 03:36:26	importance_dream_poly	PATH	/home/qiheng/Projects/adaptive-dllm/configs/aconfigs/head_importance_dream_cmmlu_all_pmrandom_threshold_tspath_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu_poly/head_importance.pt
+2026-06-18 03:36:26	mask_dream_poly_cmmlu	RUNNING	log=/home/qiheng/Projects/adaptive-dllm/logs/path_ablation/path_ablation_dream_cmmlu_seed321_20260618_gpu0_cmmlu/mask_dream_poly_cmmlu.log
+2026-06-18 04:05:29	mask_dream_poly_cmmlu	DONE	
+2026-06-18 04:05:29	summary	DONE	all path variants completed

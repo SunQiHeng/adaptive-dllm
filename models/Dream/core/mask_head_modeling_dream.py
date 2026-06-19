@@ -2,8 +2,8 @@
 Dream head masking / pruning utilities.
 
 Pruning modes:
-- prune_which="most":  prune globally most-important top-k units
-- prune_which="least": prune globally least-important top-k units
+- prune_which="most":  prune globally highest-scoring top-k units
+- prune_which="least": prune globally lowest-scoring top-k units
 - prune_which="random": random pruning within specified layer range
 
 Granularity (mask_granularity):

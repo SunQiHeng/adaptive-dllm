@@ -10,14 +10,17 @@
 
 set -o pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${PROJECT_ROOT:-"$(cd "${SCRIPT_DIR}/../.." && pwd)"}"
+
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=true
-export PYTHONPATH=/home/qiheng/Projects/adaptive-dllm:$PYTHONPATH
+export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-5}
 
 source ~/miniconda3/bin/activate adaptive-dllm
 
-cd /home/qiheng/Projects/adaptive-dllm/evaluation/llada
+cd "${PROJECT_ROOT}/evaluation/llada"
 
 # -----------------------
 # Model config
@@ -40,7 +43,7 @@ PRUNE_SCOPE=${PRUNE_SCOPE:-"layer"} # global|layer (全局排序剪枝 vs 每层
 # You can still override with IMPORTANCE_PATH directly.
 ATTR_MODEL_NAME=${MODEL_NAME:-"llada-1_5"}
 # ATTR_METHOD candidates:
-#   headig | attnlrp | shapley | attarr
+#   headig | attnlrp | shapley | attarr | loo
 ATTR_METHOD=${ATTR_METHOD:-"headig"}
 # ATTR_DATASETS_STR candidates:
 #   mmlu_all | cmmlu_all | ceval-valid_all | gsm8k | minerva_math | gpqa_main_n_shot_all | humaneval | mbpp
@@ -51,19 +54,20 @@ FIRST_ATTR_DATASET="$(echo "${ATTR_DATASETS[0]}" | xargs)"
 USER_IMPORTANCE_PATH=${IMPORTANCE_PATH:-""}
 build_default_importance_path() {
     local attr_dataset="$1"
-    echo "/home/qiheng/Projects/adaptive-dllm/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
+    echo "${PROJECT_ROOT}/configs/${ATTR_MODEL_NAME}_${ATTR_METHOD}_${attr_dataset}/head_importance.pt"
 }
 
 build_aconfig_importance_path() {
     local attr_dataset="$1"
-    python - "$ATTR_MODEL_NAME" "$ATTR_METHOD" "$attr_dataset" <<'PY'
+    python - "$PROJECT_ROOT" "$ATTR_MODEL_NAME" "$ATTR_METHOD" "$attr_dataset" <<'PY'
 from pathlib import Path
 import sys
 
-model_name = sys.argv[1]
-attr_method = sys.argv[2]
-attr_dataset = sys.argv[3]
-root = Path("/home/qiheng/Projects/adaptive-dllm/configs/aconfigs")
+project_root = Path(sys.argv[1])
+model_name = sys.argv[2]
+attr_method = sys.argv[3]
+attr_dataset = sys.argv[4]
+root = project_root / "configs" / "aconfigs"
 if not root.is_dir():
     print("")
     raise SystemExit(0)
@@ -80,6 +84,9 @@ elif attr_method == "shapley":
 elif attr_method == "attarr":
     def matches(name: str) -> bool:
         return name.startswith(f"head_importance_{model_name}_{attr_dataset}_attarr_")
+elif attr_method == "loo":
+    def matches(name: str) -> bool:
+        return name.startswith(f"head_importance_{model_name}_{attr_dataset}_loo_")
 else:
     print("")
     raise SystemExit(0)

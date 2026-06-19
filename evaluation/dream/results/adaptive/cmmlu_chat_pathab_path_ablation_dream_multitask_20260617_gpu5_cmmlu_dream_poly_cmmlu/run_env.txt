@@ -1,0 +1,6 @@
+[env] date: 2026-06-17T22:12:01+08:00
+[env] CUDA_VISIBLE_DEVICES=5
+[env] python: 3.13.5
+[env] torch: 2.9.1+cu128
+[env] transformers: 4.57.1
+[W617 22:12:03.937131557 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
