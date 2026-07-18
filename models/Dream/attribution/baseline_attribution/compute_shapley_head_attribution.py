@@ -20,6 +20,7 @@ import argparse
 import importlib.util
 import os
 import sys
+import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -38,7 +39,7 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 
 from models.Dream.core.modeling_dream import DreamModel
-from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name, row_manifest_sha256
 
 
 def _should_use_tqdm(show_progress: bool) -> bool:
@@ -332,6 +333,9 @@ def compute_sliced_shapley(
         total_heads += int(n_heads)
 
     coalition_sizes = _parse_coalition_sizes(",".join(str(x) for x in coalition_sizes), total_heads)
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    prepare_started = time.perf_counter()
     prepared_rows, prep_diag = _prepare_rows(
         model,
         tokenizer,
@@ -348,6 +352,9 @@ def compute_sliced_shapley(
     )
     if not prepared_rows:
         raise RuntimeError("No valid prepared rows after dataset preprocessing.")
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    preparation_seconds = time.perf_counter() - prepare_started
 
     gate = _MultiOProjHeadGate(specs)
     gate.install()
@@ -360,7 +367,11 @@ def compute_sliced_shapley(
         iterator = range(int(sampling_number))
         use_tqdm = _should_use_tqdm(show_progress)
         if use_tqdm:
-            iterator = tqdm(iterator, total=int(sampling_number), desc="sliced_shapley", dynamic_ncols=True, leave=False)
+            iterator = tqdm(iterator, total=int(sampling_number), desc="cokv_ssv", dynamic_ncols=True, leave=False)
+
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+        sampling_started = time.perf_counter()
 
         for step_idx, _ in enumerate(iterator, 1):
             size_idx = int(torch.randint(len(coalition_sizes), (1,), generator=g, device=device).item())
@@ -398,7 +409,16 @@ def compute_sliced_shapley(
             sv_count[left_cpu, size_idx] += 1.0
             if show_progress and (not use_tqdm) and progress_update_every > 0:
                 if (step_idx % int(progress_update_every)) == 0 or step_idx == int(sampling_number):
-                    print(f"[progress] sliced_shapley samples={step_idx}/{int(sampling_number)}")
+                    print(f"[progress] cokv_ssv samples={step_idx}/{int(sampling_number)}")
+
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+        sampling_seconds = time.perf_counter() - sampling_started
+        seconds_per_sample = sampling_seconds / max(1, int(sampling_number))
+        print(
+            f"[timing] preparation_seconds={preparation_seconds:.6f} "
+            f"sampling_seconds={sampling_seconds:.6f} seconds_per_sample={seconds_per_sample:.6f}"
+        )
 
         avg = torch.zeros_like(sv_sum)
         mask = sv_count > 0
@@ -417,6 +437,9 @@ def compute_sliced_shapley(
             **prep_diag,
             "prepared_rows": int(len(prepared_rows)),
             "sampling_number": int(sampling_number),
+            "preparation_seconds": float(preparation_seconds),
+            "sampling_seconds": float(sampling_seconds),
+            "seconds_per_sample": float(seconds_per_sample),
             "coalition_sizes": [int(x) for x in coalition_sizes],
             "size_counts_total": [int(x) for x in sv_count.sum(dim=0).tolist()],
         }
@@ -470,7 +493,7 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print("========================================================")
-    print("Dream Shapley Head Attribution Baseline")
+    print("Dream CoKV Head Attribution Baseline")
     print("========================================================")
     print(f"Started at: {datetime.now().isoformat()}")
     print(f"device={device}")
@@ -541,6 +564,10 @@ def main() -> None:
             data_seed=int(data_seed),
         )
 
+    rows_manifest = row_manifest_sha256(rows)
+    print(f"[data] rows_loaded={len(rows)}")
+    print(f"[data] rows_manifest_sha256={rows_manifest}")
+
     layers_all = _find_layers(model)
     n_layers = len(layers_all)
     n_heads_cfg = int(getattr(model.config, "num_attention_heads", 0) or getattr(model.config, "n_heads", 0) or 0)
@@ -598,14 +625,14 @@ def main() -> None:
     importance_scores = {int(k): v.detach().to(torch.float32).cpu() for k, v in scores_device.items()}
     all_vals = torch.cat([importance_scores[k] for k in sorted(importance_scores.keys())]).to(torch.float32)
     print(
-        f"Shapley head scores: mean={all_vals.mean().item():.6f}, std={all_vals.std().item():.6f}, "
+        f"CoKV head scores: mean={all_vals.mean().item():.6f}, std={all_vals.std().item():.6f}, "
         f"min={all_vals.min().item():.6f}, max={all_vals.max().item():.6f}"
     )
 
     out = {
         "importance_scores": importance_scores,
         "metadata": {
-            "method": "dream_sliced_shapley_head_value_diffusion_masked_ce_answer_only_multit",
+            "method": "dream_cokv_sliced_shapley_head_value_diffusion_masked_ce_answer_only_multit",
             "reference": "CoKV Sliced Shapley Value with complementary contributions",
             "reference_url": "https://arxiv.org/abs/2502.17501",
             "model_path": args.model_path,
@@ -617,6 +644,8 @@ def main() -> None:
             "data_path": str(args.data_path) if args.data_path else None,
             "split": str(args.split),
             "max_samples": int(args.max_samples),
+            "rows_loaded": int(len(rows)),
+            "rows_manifest_sha256": str(rows_manifest),
             "seed": int(seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),

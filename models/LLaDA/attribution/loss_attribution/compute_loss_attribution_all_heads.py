@@ -48,7 +48,7 @@ from datasets import load_dataset
 
 from models.LLaDA.core.modeling import LLaDAModelLM
 from models.LLaDA.core.configuration import ActivationCheckpointingStrategy
-from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name, row_manifest_sha256
 
 def _should_use_tqdm(show_progress: bool) -> bool:
     return bool(show_progress and (tqdm is not None) and sys.stderr.isatty())
@@ -453,8 +453,19 @@ def _row_fingerprint(dataset: str, row: Dict[str, Any]) -> str:
     """
     Stable-ish fingerprint for a sampled row to detect duplicates / unchanged sample sets.
     """
-    if dataset == "gsm8k":
+    if dataset in {"gsm8k", "minerva_math"}:
         payload = {"q": row.get("question", ""), "a": row.get("answer", "")}
+    elif dataset in {"mmlu", "cmmlu", "ceval-valid", "gpqa_main_n_shot"}:
+        payload = {
+            "q": row.get("question", ""),
+            "choices": row.get("choices", []),
+            "answer": row.get("answer", ""),
+        }
+    elif dataset in {"humaneval", "mbpp"}:
+        payload = {
+            "prompt": row.get("prompt", ""),
+            "solution": row.get("canonical_solution", ""),
+        }
     else:
         payload = {
             "system_prompt": row.get("system_prompt", ""),
@@ -685,7 +696,9 @@ def main() -> None:
         print(f"[data] nemotron_categories={args.nemotron_categories}")
         print(f"[data] samples_per_category={int(args.samples_per_category)} nemotron_pool_per_category={int(args.nemotron_pool_per_category)} pool_per_category_used={int(pool_per_category)}")
         print(f"[data] per_category_counts={per_cat_counts}")
+    rows_manifest = row_manifest_sha256(rows)
     print(f"[data] rows_loaded={len(rows)}")
+    print(f"[data] rows_manifest_sha256={rows_manifest}")
     # Optional: print sample fingerprints for quick sanity checks (dup/unchanged set).
     if int(args.debug_dump_samples) > 0:
         n = min(int(args.debug_dump_samples), len(rows))
@@ -791,6 +804,7 @@ def main() -> None:
             "split": args.split,
             "max_samples": int(args.max_samples),
             "rows_loaded": int(len(rows)),
+            "rows_manifest_sha256": str(rows_manifest),
             "seed": int(base_seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),
@@ -868,5 +882,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-

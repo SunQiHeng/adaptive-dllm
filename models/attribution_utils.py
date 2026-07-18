@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import random
 from typing import Any, Dict, List, Optional
 
+from datasets import config as datasets_config
 from datasets import get_dataset_config_names, load_dataset
 
 
@@ -23,6 +25,22 @@ _DATASET_ALIASES = {
     "mbpp": "mbpp",
     "nemotron": "nemotron",
 }
+
+
+def row_manifest_sha256(rows: List[Dict[str, Any]]) -> str:
+    """Return an order-sensitive digest for auditing attribution data equality."""
+    digest = hashlib.sha256()
+    for row in rows:
+        payload = json.dumps(
+            row,
+            sort_keys=True,
+            ensure_ascii=False,
+            default=str,
+            separators=(",", ":"),
+        )
+        digest.update(payload.encode("utf-8"))
+        digest.update(b"\n")
+    return digest.hexdigest()
 
 
 def _resolve_local_data_paths(data_path: str) -> List[str]:
@@ -306,6 +324,44 @@ def _stable_int_seed(*parts: int) -> int:
     return int(x % (2**31 - 1))
 
 
+def _cached_dataset_config_names(hf_id: str) -> List[str]:
+    """Discover dataset configs from the local Arrow cache.
+
+    ``get_dataset_config_names`` queries Hub metadata and may therefore return
+    an empty list in offline mode even when every individual configuration has
+    already been cached.  The cache layout is stable across ``datasets``
+    versions: each configuration lives in a direct child directory named after
+    that configuration.  This fallback preserves the normal Hub path when it
+    is available while making multi-config datasets usable offline.
+    """
+    cache_roots = [
+        os.environ.get("HF_DATASETS_CACHE", ""),
+        os.fspath(getattr(datasets_config, "HF_DATASETS_CACHE", "")),
+        os.path.expanduser("~/.cache/huggingface/datasets"),
+    ]
+    cache_dir_name = hf_id.replace("/", "___")
+
+    seen = set()
+    for cache_root in cache_roots:
+        cache_root = os.path.expanduser(str(cache_root))
+        if not cache_root or cache_root in seen:
+            continue
+        seen.add(cache_root)
+        dataset_cache_dir = os.path.join(cache_root, cache_dir_name)
+        if not os.path.isdir(dataset_cache_dir):
+            continue
+
+        names = sorted(
+            entry.name
+            for entry in os.scandir(dataset_cache_dir)
+            if entry.is_dir()
+            and os.path.isdir(os.path.join(entry.path, "0.0.0"))
+        )
+        if names:
+            return names
+    return []
+
+
 def _load_multiconfig_mcq_rows(
     dataset_name: str,
     *,
@@ -331,7 +387,12 @@ def _load_multiconfig_mcq_rows(
         rows = [dict(ds[i]) for i in _sample_indices(len(ds), max_samples, data_seed)]
         return [canonicalize_row_for_dataset(row, dataset_name) for row in rows]
 
-    config_names = [c for c in get_dataset_config_names(hf_id) if c and c != "default"]
+    try:
+        config_names = [c for c in get_dataset_config_names(hf_id) if c and c != "default"]
+    except Exception:
+        config_names = []
+    if not config_names:
+        config_names = _cached_dataset_config_names(hf_id)
     if not config_names:
         raise RuntimeError(f"No dataset configs found for {hf_id}")
 

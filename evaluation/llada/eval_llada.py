@@ -263,6 +263,7 @@ class LLaDAEvalHarness(LM):
         # - recompute_mask_each_call: True (masks depend on content; caching across examples is wrong)
         likelihood_now_step=None,
         recompute_mask_each_call=False,
+        mask_density_audit_max_calls=1,
         progress_label="",
         device="cuda",
         **kwargs,
@@ -473,6 +474,9 @@ class LLaDAEvalHarness(LM):
         self.remasking = remasking
         self.likelihood_now_step = likelihood_now_step
         self.recompute_mask_each_call = recompute_mask_each_call
+        self.mask_density_audit_max_calls = int(mask_density_audit_max_calls)
+        self._mask_density_audit_calls = 0
+        self._likelihood_boundary_logged = False
         
         print(f"\n{'='*70}")
         print(f"LLaDA Evaluation Setup")
@@ -491,6 +495,42 @@ class LLaDAEvalHarness(LM):
     @property
     def world_size(self):
         return self._world_size
+
+    def _begin_mask_density_audit(self, sparse_param, *, label: str):
+        """Attach a one-call logical block-density accumulator to adaptive attention."""
+        if (
+            self.model_type != "adaptive"
+            or sparse_param is None
+            or self._mask_density_audit_calls >= self.mask_density_audit_max_calls
+        ):
+            return None
+        audit = {
+            "label": str(label),
+            "kept_blocks": None,
+            "total_blocks": 0,
+            "mask_builds": 0,
+        }
+        sparse_param["_mask_density_audit"] = audit
+        return audit
+
+    def _finish_mask_density_audit(self, sparse_param, audit) -> None:
+        if audit is None:
+            return
+        sparse_param.pop("_mask_density_audit", None)
+        kept = audit.get("kept_blocks")
+        total = int(audit.get("total_blocks", 0))
+        if kept is None or total <= 0:
+            return
+        kept_count = int(kept.item())
+        density = kept_count / float(total)
+        self._mask_density_audit_calls += 1
+        print(
+            "[mask-density] "
+            f"label={audit.get('label', '')} logical_kept={kept_count}/{total} "
+            f"density={density:.6f} builds={int(audit.get('mask_builds', 0))} "
+            f"q_blocks=[{audit.get('q_blocks_min', 'n/a')},{audit.get('q_blocks_max', 'n/a')}] "
+            f"kv_blocks=[{audit.get('kv_blocks_min', 'n/a')},{audit.get('kv_blocks_max', 'n/a')}]"
+        )
     
     def _forward_process(self, batch, prompt_index):
         b, l = batch.shape
@@ -524,11 +564,24 @@ class LLaDAEvalHarness(LM):
             # For loglikelihood tasks, we need to add 'now_step' which controls sparse warmup/scheduling.
             # Default keeps historical behavior (0 -> warmup -> standard attention).
             sparse_param_copy = self.sparse_param.copy()
+            if prompt_index is not None:
+                prompt_row = prompt_index[0] if prompt_index.ndim > 1 else prompt_index
+                target_len = int(batch.shape[1] - int(prompt_row.to(torch.int64).sum().item()))
+                sparse_param_copy['new_generation'] = max(1, min(int(batch.shape[1]), target_len))
+                if not self._likelihood_boundary_logged:
+                    print(
+                        "[likelihood-boundary] "
+                        f"seq_len={int(batch.shape[1])} prompt_len={int(batch.shape[1]) - target_len} "
+                        f"new_generation={sparse_param_copy['new_generation']}"
+                    )
+                    self._likelihood_boundary_logged = True
             if 'now_step' not in sparse_param_copy:
                 sparse_param_copy['now_step'] = int(self.likelihood_now_step) if self.likelihood_now_step is not None else 0
             if self.recompute_mask_each_call:
                 sparse_param_copy['recompute_mask_each_call'] = True
+            density_audit = self._begin_mask_density_audit(sparse_param_copy, label="likelihood")
             logits = self.model(batch, SparseD_param=sparse_param_copy).logits
+            self._finish_mask_density_audit(sparse_param_copy, density_audit)
         else:
             logits = self.model(batch).logits
         
@@ -676,6 +729,7 @@ class LLaDAEvalHarness(LM):
                     SparseD_param=self.sparse_param
                 )
             elif self.model_type == 'adaptive':
+                density_audit = self._begin_mask_density_audit(self.sparse_param, label="generation")
                 generated_answer = adaptive_generate(
                     self.model, prompt,
                     steps=self.steps,
@@ -688,6 +742,7 @@ class LLaDAEvalHarness(LM):
                     mask_id=self.mask_id,
                     SparseD_param=self.sparse_param
                 )
+                self._finish_mask_density_audit(self.sparse_param, density_audit)
             else:
                 raise ValueError(f"Unknown model_type: {self.model_type}")
             
@@ -709,4 +764,3 @@ class LLaDAEvalHarness(LM):
 if __name__ == "__main__":
     set_seed(1234)
     cli_evaluate()
-

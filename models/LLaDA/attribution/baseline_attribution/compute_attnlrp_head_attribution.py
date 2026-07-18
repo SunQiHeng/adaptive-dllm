@@ -42,7 +42,7 @@ from datasets import load_dataset
 
 from models.LLaDA.core.modeling import LLaDAModelLM
 from models.LLaDA.core.configuration import ActivationCheckpointingStrategy
-from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name, row_manifest_sha256
 
 
 def _should_use_tqdm(show_progress: bool) -> bool:
@@ -447,6 +447,10 @@ def main() -> None:
             data_seed=int(data_seed),
         )
 
+    rows_manifest = row_manifest_sha256(rows)
+    print(f"[data] rows_loaded={len(rows)}")
+    print(f"[data] rows_manifest_sha256={rows_manifest}")
+
     if int(args.debug_dump_samples) > 0:
         n = min(int(args.debug_dump_samples), len(rows))
         print(f"[data] debug_dump_samples (first {n}):")
@@ -527,6 +531,7 @@ def main() -> None:
             "split": args.split,
             "max_samples": int(args.max_samples),
             "rows_loaded": int(len(rows)),
+            "rows_manifest_sha256": str(rows_manifest),
             "seed": int(base_seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),

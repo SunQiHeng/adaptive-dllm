@@ -303,6 +303,7 @@ class DreamEvalHarness(LM):
         # Likelihood eval params (for multiple-choice tasks like MMLU)
         likelihood_now_step=None,         # Set > warmup to trigger sparse attention in likelihood scoring
         recompute_mask_each_call=False,  # Recompute masks for each forward (needed for dynamic sequences)
+        mask_density_audit_max_calls=1,
         progress_label="",
         device="cuda",
         **kwargs,
@@ -608,6 +609,9 @@ class DreamEvalHarness(LM):
         self.is_check_greedy = is_check_greedy
         self.likelihood_now_step = likelihood_now_step
         self.recompute_mask_each_call = recompute_mask_each_call
+        self.mask_density_audit_max_calls = int(mask_density_audit_max_calls)
+        self._mask_density_audit_calls = 0
+        self._likelihood_boundary_logged = False
         self.progress_update_every = 10
         self.progress_label = str(progress_label).strip()
         
@@ -651,6 +655,42 @@ class DreamEvalHarness(LM):
     @property
     def world_size(self):
         return self._world_size
+
+    def _begin_mask_density_audit(self, sparse_param, *, label: str):
+        """Attach a one-call logical block-density accumulator to adaptive attention."""
+        if (
+            self.model_type != "adaptive"
+            or sparse_param is None
+            or self._mask_density_audit_calls >= self.mask_density_audit_max_calls
+        ):
+            return None
+        audit = {
+            "label": str(label),
+            "kept_blocks": None,
+            "total_blocks": 0,
+            "mask_builds": 0,
+        }
+        sparse_param["_mask_density_audit"] = audit
+        return audit
+
+    def _finish_mask_density_audit(self, sparse_param, audit) -> None:
+        if audit is None:
+            return
+        sparse_param.pop("_mask_density_audit", None)
+        kept = audit.get("kept_blocks")
+        total = int(audit.get("total_blocks", 0))
+        if kept is None or total <= 0:
+            return
+        kept_count = int(kept.item())
+        density = kept_count / float(total)
+        self._mask_density_audit_calls += 1
+        print(
+            "[mask-density] "
+            f"label={audit.get('label', '')} logical_kept={kept_count}/{total} "
+            f"density={density:.6f} builds={int(audit.get('mask_builds', 0))} "
+            f"q_blocks=[{audit.get('q_blocks_min', 'n/a')},{audit.get('q_blocks_max', 'n/a')}] "
+            f"kv_blocks=[{audit.get('kv_blocks_min', 'n/a')},{audit.get('kv_blocks_max', 'n/a')}]"
+        )
     
     @property
     def tokenizer_name(self):
@@ -719,6 +759,17 @@ class DreamEvalHarness(LM):
         if self.sparse_param is not None:
             # For loglikelihood tasks (MMLU), need to set now_step to trigger sparse attention
             sparse_param_copy = self.sparse_param.copy()
+            if prompt_index is not None:
+                prompt_row = prompt_index[0] if prompt_index.ndim > 1 else prompt_index
+                target_len = int(batch.shape[1] - int(prompt_row.to(torch.int64).sum().item()))
+                sparse_param_copy['new_generation'] = max(1, min(int(batch.shape[1]), target_len))
+                if not self._likelihood_boundary_logged:
+                    print(
+                        "[likelihood-boundary] "
+                        f"seq_len={int(batch.shape[1])} prompt_len={int(batch.shape[1]) - target_len} "
+                        f"new_generation={sparse_param_copy['new_generation']}"
+                    )
+                    self._likelihood_boundary_logged = True
             # NOTE:
             # Dream's `self.sparse_param` is initialized with now_step=0, so checking
             # `'now_step' not in sparse_param_copy` will *never* override it.
@@ -727,13 +778,14 @@ class DreamEvalHarness(LM):
                 sparse_param_copy['now_step'] = int(self.likelihood_now_step)
             if self.recompute_mask_each_call:
                 sparse_param_copy['recompute_mask_each_call'] = True
-            
+            density_audit = self._begin_mask_density_audit(sparse_param_copy, label="likelihood")
             logits = self.model(
                 input_ids=batch,
                 attention_mask=attention_mask,
                 position_ids=position_ids,
                 SparseD_param=sparse_param_copy
             ).logits
+            self._finish_mask_density_audit(sparse_param_copy, density_audit)
         else:
             logits = self.model(
                 input_ids=batch,
@@ -884,6 +936,7 @@ class DreamEvalHarness(LM):
             # NOTE: Following official demo - pass first arg as positional, rest as kwargs
             if self.sparse_param is not None:
                 # For sparse/adaptive models, pass SparseD_param
+                density_audit = self._begin_mask_density_audit(self.sparse_param, label="generation")
                 generated = self.model.diffusion_generate(
                     prompt_ids,  # First arg positional (not inputs=)
                     attention_mask=attention_mask,
@@ -900,6 +953,7 @@ class DreamEvalHarness(LM):
                     alg_temp=self.generation_config.alg_temp,
                     SparseD_param=self.sparse_param
                 )
+                self._finish_mask_density_audit(self.sparse_param, density_audit)
             else:
                 # For standard model  
                 generated = self.model.diffusion_generate(

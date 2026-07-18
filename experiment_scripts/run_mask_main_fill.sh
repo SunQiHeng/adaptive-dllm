@@ -11,6 +11,15 @@ GPU_ID=${GPU_ID:?Set GPU_ID to an available physical GPU index.}
 RUN_TAG=${RUN_TAG:-"mask_main_fill_${MODEL_FAMILY}_$(date +%Y%m%d_%H%M%S)"}
 METHODS_STR=${METHODS_STR:-"attnlrp,shapley,headig"}
 DATASETS_STR=${DATASETS_STR:-"mmlu,cmmlu,ceval-valid,gpqa_main_n_shot,gsm8k,humaneval,mbpp"}
+if [ -z "${PRUNE_MODES:-}" ]; then
+  # The AttAttr main-table fill only needs prune-most.  Other historical audit
+  # runs retain both tails unless explicitly overridden.
+  if [ "${METHODS_STR}" = "attarr" ]; then
+    PRUNE_MODES="most"
+  else
+    PRUNE_MODES="most,least"
+  fi
+fi
 
 # Historical main-table baseline attribution used gsm8k_full for AttnLRP /
 # Shapley / PolyHeadIG. Override to "gsm8k_final_hash,gsm8k_full" for a
@@ -105,15 +114,18 @@ latest_importance_path_for_source() {
     headig) prefix="head_importance_${model_name}_${source_label}_pm" ;;
     attnlrp) prefix="head_importance_${model_name}_${source_label}_attnlrp_" ;;
     shapley) prefix="head_importance_${model_name}_${source_label}_shapley_" ;;
+    cokv) prefix="head_importance_${model_name}_${source_label}_cokv_" ;;
     loo) prefix="head_importance_${model_name}_${source_label}_loo_" ;;
-    attarr) prefix="head_importance_${model_name}_${source_label}_attarr_" ;;
+    # Restrict AttAttr to the formal K=8 / five-mask-rate protocol so a newer
+    # smoke or stability run cannot be selected accidentally.
+    attarr) prefix="head_importance_${model_name}_${source_label}_attarr_signed_k8_zero_maskp0.15-0.3-0.5-0.7-0.9_mcs2_mean_masked_" ;;
     *)
       echo "ERROR: unsupported method=${method}" >&2
       return 2
       ;;
   esac
 
-  if [ "${method}" = "headig" ]; then
+  if [ "${method}" = "headig" ] || [ "${method}" = "attarr" ]; then
     find "${PROJECT_ROOT}/configs/aconfigs" -mindepth 2 -maxdepth 2 -type f \
       -path "*/${prefix}*/head_importance.pt" \
       ! -path "*/${prefix}*_neg/head_importance.pt" \
@@ -125,6 +137,8 @@ latest_importance_path_for_source() {
   else
     find "${PROJECT_ROOT}/configs/aconfigs" -mindepth 2 -maxdepth 2 -type f \
       -path "*/${prefix}*/head_importance.pt" \
+      ! -path "*/${prefix}*_neg/head_importance.pt" \
+      ! -path "*/${prefix}*_neg_neg/head_importance.pt" \
       -printf "%T@ %p\n" \
       | sort -nr \
       | head -n 1 \
@@ -193,7 +207,9 @@ run_pruning_item() {
   fi
 
   local use_negated=0
-  if [ "${method}" = "headig" ]; then
+  # Both methods below attribute the CE loss.  Helpful heads therefore have
+  # negative raw signed scores and must be negated exactly once downstream.
+  if [ "${method}" = "headig" ] || [ "${method}" = "attarr" ]; then
     use_negated=1
   fi
 
@@ -219,7 +235,7 @@ run_pruning_item() {
   if [ "${MODEL_FAMILY}" = "llada" ]; then
     run_stage "${item}" "${log_path}" \
       "${common_env[@]}" \
-      MODES="most,least" \
+      MODES="${PRUNE_MODES}" \
       PRUNE_SCOPE="layer" \
       PRUNE_K_FRAC="0.2" \
       bash "${PRUNING_RUNNER}"
@@ -231,7 +247,7 @@ run_pruning_item() {
     run_stage "${item}" "${log_path}" \
       "${common_env[@]}" \
       MC_NUM="${mc_num}" \
-      PRUNE_WHICH_LIST="most,least" \
+      PRUNE_WHICH_LIST="${PRUNE_MODES}" \
       MASK_GRANULARITY="kv_group" \
       PRUNE_K_FRAC="0.05" \
       bash "${PRUNING_RUNNER}"

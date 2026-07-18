@@ -16,8 +16,10 @@ export HF_DATASETS_TRUST_REMOTE_CODE=true
 export PYTHONPATH="${PROJECT_ROOT}:$PYTHONPATH"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-1}"
 
-# Activate environment
-# source ~/miniconda3/bin/activate adaptive-dllm
+# Activate the same environment used by the attribution and pruning runners.
+# This is required for non-interactive/background jobs, whose PATH does not
+# otherwise contain python/accelerate.
+source ~/miniconda3/bin/activate adaptive-dllm
 
 cd "${PROJECT_ROOT}/evaluation/dream"
 

@@ -47,7 +47,7 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 
 from models.Dream.core.modeling_dream import DreamModel
-from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name
+from models.attribution_utils import load_hf_rows, load_local_rows, normalize_dataset_name, row_manifest_sha256
 
 # -----------------------------------------------------------------------------
 # IMPORTANT:
@@ -692,6 +692,10 @@ def main() -> None:
             data_seed=int(data_seed),
         )
 
+    rows_manifest = row_manifest_sha256(rows)
+    print(f"[data] rows_loaded={len(rows)}")
+    print(f"[data] rows_manifest_sha256={rows_manifest}")
+
     layers_all = _find_layers(model)
     n_layers = len(layers_all)
     n_heads_cfg = int(getattr(model.config, "num_attention_heads", 0) or getattr(model.config, "n_heads", 0) or 0)
@@ -777,6 +781,8 @@ def main() -> None:
             "data_path": str(args.data_path) if args.data_path else None,
             "split": str(args.split),
             "max_samples": int(args.max_samples),
+            "rows_loaded": int(len(rows)),
+            "rows_manifest_sha256": str(rows_manifest),
             "seed": int(seed),
             "data_seed": int(data_seed),
             "mask_seed": int(mask_seed),
@@ -819,5 +825,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 

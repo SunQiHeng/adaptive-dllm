@@ -379,6 +379,33 @@ class AdaptiveDreamAttention(DreamAttention):
                     self.fine_mask[:, :, idx:idx+1, self.last:],
                     head_mask[:, :, :1, :],
                 )
+
+        # Optionally accumulate the *realized logical block density*.  The
+        # accumulation remains on GPU across layers/builds and is synchronized
+        # only once by the evaluation harness after the audited call.
+        audit = SparseD_param.get("_mask_density_audit")
+        if isinstance(audit, dict):
+            kept_blocks = self.fine_mask.sum(dtype=torch.int64).detach()
+            previous = audit.get("kept_blocks")
+            audit["kept_blocks"] = kept_blocks if previous is None else previous + kept_blocks
+            audit["total_blocks"] = int(audit.get("total_blocks", 0)) + int(self.fine_mask.numel())
+            audit["mask_builds"] = int(audit.get("mask_builds", 0)) + 1
+            audit["q_blocks_min"] = min(
+                int(audit.get("q_blocks_min", self.fine_mask.shape[-2])),
+                int(self.fine_mask.shape[-2]),
+            )
+            audit["q_blocks_max"] = max(
+                int(audit.get("q_blocks_max", self.fine_mask.shape[-2])),
+                int(self.fine_mask.shape[-2]),
+            )
+            audit["kv_blocks_min"] = min(
+                int(audit.get("kv_blocks_min", self.fine_mask.shape[-1])),
+                int(self.fine_mask.shape[-1]),
+            )
+            audit["kv_blocks_max"] = max(
+                int(audit.get("kv_blocks_max", self.fine_mask.shape[-1])),
+                int(self.fine_mask.shape[-1]),
+            )
         
         # Convert to block mask for ALL heads at once
         new_mask = customize_mask(self.fine_mask, block_size=block_size)
@@ -559,4 +586,3 @@ class AdaptiveDreamModel(DreamModel):
 
 # Alias for compatibility
 AdaptiveDreamForMaskedLM = AdaptiveDreamModel
-

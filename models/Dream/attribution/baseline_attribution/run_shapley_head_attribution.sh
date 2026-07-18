@@ -13,7 +13,7 @@ set -euo pipefail
 mkdir -p logs
 
 echo "========================================================"
-echo "Dream Shapley Head Attribution Baseline"
+echo "Dream CoKV Head Attribution Baseline"
 echo "========================================================"
 echo "Started at: $(date)"
 echo "Host: $(hostname)"
@@ -77,10 +77,10 @@ default_max_samples_for_dataset() {
     cmmlu) echo "${CMMLU_MAX_SAMPLES:-200}" ;;
     ceval-valid) echo "${CEVAL_VALID_MAX_SAMPLES:-200}" ;;
     gpqa_main_n_shot) echo "${GPQA_MAX_SAMPLES:-200}" ;;
-    gsm8k) echo "${GSM8K_MAX_SAMPLES:-100}" ;;
-    minerva_math) echo "${MINERVA_MATH_MAX_SAMPLES:-100}" ;;
-    humaneval) echo "${HUMANEVAL_MAX_SAMPLES:-100}" ;;
-    mbpp) echo "${MBPP_MAX_SAMPLES:-100}" ;;
+    gsm8k) echo "${GSM8K_MAX_SAMPLES:-200}" ;;
+    minerva_math) echo "${MINERVA_MATH_MAX_SAMPLES:-200}" ;;
+    humaneval) echo "${HUMANEVAL_MAX_SAMPLES:-200}" ;;
+    mbpp) echo "${MBPP_MAX_SAMPLES:-200}" ;;
     nemotron) echo "${NEMOTRON_MAX_SAMPLES:-50}" ;;
     *) echo "${DEFAULT_MAX_SAMPLES:-100}" ;;
   esac
@@ -118,7 +118,7 @@ elif [ "${ATTR_DATASET}" = "mbpp" ]; then
   DATASET_CONFIG="sanitized"
 fi
 
-TAG="shapley_${SCORE_POSTPROCESS}_M${SAMPLING_NUMBER}_H$(echo "${COALITION_SIZES}" | tr ',' '-')"
+TAG="cokv_${SCORE_POSTPROCESS}_M${SAMPLING_NUMBER}_H$(echo "${COALITION_SIZES}" | tr ',' '-')"
 TAG="${TAG}_maskp$(echo "${MASK_PROBS}" | tr ',' '-')_mcs${MASK_SAMPLES_PER_PROB}_${LOSS_NORMALIZE}"
 
 OUT_DIR="${OUT_ROOT}/head_importance_${MODEL_NAME}"

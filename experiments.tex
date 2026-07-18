@@ -147,7 +147,7 @@ We jointly report destructive prune-most performance, causal gap, adaptive-spars
 
 \begin{table}[t]
 \centering
-\caption{Current multi-task path-design ablation at a matched attribution and downstream protocol. Prune-most is the task score after removing the top-ranked heads, where lower is better; causal gap is prune-least minus prune-most, where higher is better; Adaptive is the adaptive-sparse task score, where higher is better. MMLU uses 40 attribution/evaluation examples; CMMLU uses 60 attribution examples and an 80-example evaluation limit; GSM8K and GPQA use 80 attribution examples with 100 and 120 evaluation examples, respectively. All rows use 8 IG steps, five mask rates with two mask samples per rate, and seed 123.}
+\caption{Current multi-task path-design ablation at a matched attribution and downstream protocol. Prune-most is the task score after removing the top-ranked heads, where lower is better; causal gap is prune-least minus prune-most, where higher is better; Adaptive is the adaptive-sparse task score, where higher is better. MMLU uses 40 attribution/evaluation examples; CMMLU uses 60 attribution examples and an 80-example evaluation limit; GSM8K and GPQA use 80 attribution examples with 100 and 120 evaluation examples, respectively; HumanEval and MBPP use 60 attribution examples and an 80-example evaluation limit. All rows use 8 IG steps, five mask rates with two mask samples per rate, and seed 123. CEval is blocked by the current offline dataset cache, and Minerva Math is tracked separately as a small smoke test.}
 \label{tab:path_ablation}
 \begin{tabular}{lllcccc}
 \hline
@@ -165,6 +165,12 @@ Dream & GSM8K & PolyHeadIG & 10.00 & 74.00 & 72.00 & 54.72 min \\
 Dream & GPQA & DP & 29.17 & -7.50 & 25.00 & 14.62 min \\
 Dream & GPQA & STP & 25.00 & -0.83 & 22.50 & 13.98 min \\
 Dream & GPQA & PolyHeadIG & 20.83 & 5.00 & 22.50 & 54.87 min \\
+Dream & HumanEval & DP & 60.00 & 0.00 & 60.00 & 10.95 min \\
+Dream & HumanEval & STP & 58.75 & 1.25 & 60.00 & 10.92 min \\
+Dream & HumanEval & PolyHeadIG & 60.00 & 0.00 & 60.00 & 42.30 min \\
+Dream & MBPP & DP & 60.00 & 0.00 & 60.00 & 11.25 min \\
+Dream & MBPP & STP & 60.00 & 0.00 & 60.00 & 10.98 min \\
+Dream & MBPP & PolyHeadIG & 60.00 & 0.00 & 60.00 & 42.28 min \\
 LLaDA & MMLU & DP & 40.48 & 19.17 & 63.42 & 4.78 min \\
 LLaDA & MMLU & STP & 38.29 & 20.92 & 64.08 & 4.60 min \\
 LLaDA & MMLU & PolyHeadIG & 48.51 & 7.59 & 63.29 & 16.48 min \\
@@ -177,6 +183,12 @@ LLaDA & GSM8K & PolyHeadIG & 36.00 & 9.00 & 59.00 & 70.57 min \\
 LLaDA & GPQA & DP & 28.33 & -2.50 & 23.33 & 8.40 min \\
 LLaDA & GPQA & STP & 27.50 & 1.67 & 28.33 & 8.57 min \\
 LLaDA & GPQA & PolyHeadIG & 26.67 & 0.83 & 24.17 & 37.55 min \\
+LLaDA & HumanEval & DP & 53.75 & 0.00 & 55.00 & 6.02 min \\
+LLaDA & HumanEval & STP & 55.00 & -1.25 & 53.75 & 5.87 min \\
+LLaDA & HumanEval & PolyHeadIG & 53.75 & 1.25 & 55.00 & 23.08 min \\
+LLaDA & MBPP & DP & 35.00 & 0.00 & 35.00 & 5.83 min \\
+LLaDA & MBPP & STP & 35.00 & 0.00 & 35.00 & 5.73 min \\
+LLaDA & MBPP & PolyHeadIG & 35.00 & 0.00 & 35.00 & 23.25 min \\
 \hline
 \end{tabular}
 \end{table}
