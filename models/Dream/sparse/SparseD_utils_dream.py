@@ -8,6 +8,13 @@ from torch.nn.attention.flex_attention import (
     flex_attention
 )
 
+# The method selects attention at a logical 32-token granularity, while
+# PyTorch 2.5 FlexAttention on Ampere requires a 128-token sparse tile for
+# head_dim=128.  Smaller compute tiles keep the kernel within the RTX 4090
+# shared-memory limit without changing the logical mask.
+FLEX_PHYSICAL_BLOCK_SIZE = 128
+FLEX_KERNEL_OPTIONS = {"BLOCK_M": 64, "BLOCK_N": 32}
+
 def create_block_mask_cached(
     score_mod,
     B,
@@ -41,6 +48,19 @@ def customize_mask(mask, block_size=128):
     def process(b, h, q_idx, kv_id):
         return mask[b, h, q_idx//block_size, kv_id//block_size]
     return process
+
+
+def pad_logical_block_mask(mask, logical_block_size, physical_block_size=FLEX_PHYSICAL_BLOCK_SIZE):
+    """Pad a logical block mask so FlexAttention may inspect full physical tiles."""
+    if physical_block_size % logical_block_size != 0:
+        raise ValueError(
+            f"physical_block_size={physical_block_size} must be divisible by "
+            f"logical_block_size={logical_block_size}"
+        )
+    blocks_per_tile = physical_block_size // logical_block_size
+    pad_q = (-mask.shape[-2]) % blocks_per_tile
+    pad_kv = (-mask.shape[-1]) % blocks_per_tile
+    return F.pad(mask, (0, pad_kv, 0, pad_q), mode="constant", value=False)
 
 def create_attention_block_mask(attn_weights, block_size=128, keep_ratio=0.5):
     bsz, num_heads, q_len, kv_len = attn_weights.shape

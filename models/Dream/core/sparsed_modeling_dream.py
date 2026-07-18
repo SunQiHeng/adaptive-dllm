@@ -69,15 +69,14 @@ logger = logging.get_logger(__name__)
 _CHECKPOINT_FOR_DOC = "Dream-7B"
 _CONFIG_FOR_DOC = "DreamConfig"
 
-kernel_options = {
-    "BLOCK_M": 64,
-    "BLOCK_N": 64,
-    "BLOCK_M1": 32,
-    "BLOCK_N1": 32,
-    "BLOCK_M2": 32,
-    "BLOCK_N2": 32,
-}
-from ..sparse.SparseD_utils_dream import create_block_mask_cached, customize_mask, create_attention_block_mask
+from ..sparse.SparseD_utils_dream import (
+    FLEX_KERNEL_OPTIONS,
+    FLEX_PHYSICAL_BLOCK_SIZE,
+    create_attention_block_mask,
+    create_block_mask_cached,
+    customize_mask,
+    pad_logical_block_mask,
+)
 
 # Copied from transformers.models.llama.modeling_llama.LlamaRMSNorm with Llama->Dream
 class DreamRMSNorm(nn.Module):
@@ -394,7 +393,8 @@ class DreamAttention(nn.Module):
                     attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
                     fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                     self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
-                new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+                new_mask = customize_mask(flex_mask, block_size=block_size)
                 compile_masks = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
                 self.block_mask = create_block_mask_cached(
                     new_mask,
@@ -403,7 +403,7 @@ class DreamAttention(nn.Module):
                     q_len,
                     kv_len,
                     device=query_states.device,
-                    block_size=block_size,
+                    block_size=FLEX_PHYSICAL_BLOCK_SIZE,
                     _compile=compile_masks,
                 )
             
@@ -454,7 +454,8 @@ class DreamAttention(nn.Module):
                     self.fine_mask[:, :, idx : idx + 1, self.last:] = torch.logical_or(
                         self.fine_mask[:, :, idx : idx + 1, self.last:], fine_mask[:, : :1, :]
                     )
-                new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+                new_mask = customize_mask(flex_mask, block_size=block_size)
                 compile_masks = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
                 self.block_mask = create_block_mask_cached(
                     new_mask,
@@ -463,7 +464,7 @@ class DreamAttention(nn.Module):
                     q_len,
                     kv_len,
                     device=query_states.device,
-                    block_size=block_size,
+                    block_size=FLEX_PHYSICAL_BLOCK_SIZE,
                     _compile=compile_masks,
                 )
 
@@ -472,9 +473,21 @@ class DreamAttention(nn.Module):
             # `flex_attention` in that case to avoid inductor/triton autotune crashes.
             use_compiled_flex = not (SparseD_param is not None and SparseD_param.get("recompute_mask_each_call", False))
             if use_compiled_flex:
-                attn_output = flex_attn(query_states, key_states, value_states, block_mask=self.block_mask)
+                attn_output = flex_attn(
+                    query_states,
+                    key_states,
+                    value_states,
+                    block_mask=self.block_mask,
+                    kernel_options=FLEX_KERNEL_OPTIONS,
+                )
             else:
-                attn_output = flex_attention(query_states, key_states, value_states, block_mask=self.block_mask)
+                attn_output = flex_attention(
+                    query_states,
+                    key_states,
+                    value_states,
+                    block_mask=self.block_mask,
+                    kernel_options=FLEX_KERNEL_OPTIONS,
+                )
         # -------- End Sparse Attention -----------
 
         # attn_weights = torch.matmul(query_states, key_states.transpose(2, 3)) / math.sqrt(self.head_dim)

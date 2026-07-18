@@ -28,7 +28,14 @@ from .sparsed_modeling_dream import (
     DreamBaseModel,
     DreamModel
 )
-from ..sparse.SparseD_utils_dream import create_block_mask_cached, customize_mask, create_attention_block_mask
+from ..sparse.SparseD_utils_dream import (
+    FLEX_KERNEL_OPTIONS,
+    FLEX_PHYSICAL_BLOCK_SIZE,
+    create_attention_block_mask,
+    create_block_mask_cached,
+    customize_mask,
+    pad_logical_block_mask,
+)
 
 
 class AdaptiveDreamAttention(DreamAttention):
@@ -274,9 +281,21 @@ class AdaptiveDreamAttention(DreamAttention):
             # `flex_attention` in that case to avoid inductor/triton autotune crashes.
             use_compiled_flex = not SparseD_param.get("recompute_mask_each_call", False)
             if use_compiled_flex:
-                attn_output = flex_attn(query_states, key_states_repeated, value_states_repeated, block_mask=self.block_mask)
+                attn_output = flex_attn(
+                    query_states,
+                    key_states_repeated,
+                    value_states_repeated,
+                    block_mask=self.block_mask,
+                    kernel_options=FLEX_KERNEL_OPTIONS,
+                )
             else:
-                attn_output = flex_attention(query_states, key_states_repeated, value_states_repeated, block_mask=self.block_mask)
+                attn_output = flex_attention(
+                    query_states,
+                    key_states_repeated,
+                    value_states_repeated,
+                    block_mask=self.block_mask,
+                    kernel_options=FLEX_KERNEL_OPTIONS,
+                )
         
         return attn_output
     
@@ -408,7 +427,8 @@ class AdaptiveDreamAttention(DreamAttention):
             )
         
         # Convert to block mask for ALL heads at once
-        new_mask = customize_mask(self.fine_mask, block_size=block_size)
+        flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+        new_mask = customize_mask(flex_mask, block_size=block_size)
         compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
         self.block_mask = create_block_mask_cached(
             new_mask,
@@ -417,7 +437,7 @@ class AdaptiveDreamAttention(DreamAttention):
             q_len,
             kv_len,
             device=query_states.device,
-            block_size=block_size,
+            block_size=FLEX_PHYSICAL_BLOCK_SIZE,
             _compile=compile_masks,
         )
     

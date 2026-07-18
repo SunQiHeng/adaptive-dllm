@@ -60,7 +60,14 @@ import torch._dynamo
 torch._dynamo.config.cache_size_limit = 10000
 torch._dynamo.config.accumulated_cache_size_limit = 10000
 flex_attn = torch.compile(flex_attention, dynamic=False)
-from ..sparse.sparsed_utils import create_block_mask_cached, customize_mask, create_attention_block_mask
+from ..sparse.sparsed_utils import (
+    FLEX_KERNEL_OPTIONS,
+    FLEX_PHYSICAL_BLOCK_SIZE,
+    create_attention_block_mask,
+    create_block_mask_cached,
+    customize_mask,
+    pad_logical_block_mask,
+)
 
 __all__ = [
     "LayerNormBase",
@@ -799,7 +806,8 @@ class LLaDABlock(nn.Module):
                             fine_mask = create_attention_block_mask(attn_weights, block_size=block_size, keep_ratio=select) 
                             self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
                     compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
-                    new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                    flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+                    new_mask = customize_mask(flex_mask, block_size=block_size)
                     self.block_mask = create_block_mask_cached(
                         new_mask,
                         bsz,
@@ -807,7 +815,7 @@ class LLaDABlock(nn.Module):
                         q_len,
                         kv_len,
                         device=query_states.device,
-                        block_size=block_size,
+                        block_size=FLEX_PHYSICAL_BLOCK_SIZE,
                         _compile=compile_masks,
                     )
                 att = self._scaled_dot_product_attention(
@@ -871,7 +879,8 @@ class LLaDABlock(nn.Module):
                         self.fine_mask[:, :, idx : idx + 1, self.last:] = torch.logical_or(
                             self.fine_mask[:, :, idx : idx + 1, self.last:], fine_mask[:, : :1, :]
                         )
-                    new_mask = customize_mask(self.fine_mask, block_size=block_size)
+                    flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+                    new_mask = customize_mask(flex_mask, block_size=block_size)
                     self.block_mask = create_block_mask_cached(
                         new_mask,
                         bsz,
@@ -879,11 +888,17 @@ class LLaDABlock(nn.Module):
                         q_len,
                         kv_len,
                         device=query_states.device,
-                        block_size=block_size,
+                        block_size=FLEX_PHYSICAL_BLOCK_SIZE,
                         _compile=compile_masks,
                     )
 
-                att = flex_attn(q, k, v, block_mask=self.block_mask)
+                att = flex_attn(
+                    q,
+                    k,
+                    v,
+                    block_mask=self.block_mask,
+                    kernel_options=FLEX_KERNEL_OPTIONS,
+                )
         
         # Re-assemble all head outputs side-by-side.
         att = att.transpose(1, 2).contiguous().view(B, T, C)

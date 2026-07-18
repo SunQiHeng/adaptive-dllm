@@ -24,7 +24,14 @@ torch._dynamo.config.accumulated_cache_size_limit = 10000
 flex_attn = torch.compile(flex_attention, dynamic=False)
 
 from .sparsed_modeling import LLaDABlock, LLaDALlamaBlock, LLaDAModel, LLaDAModelLM
-from ..sparse.sparsed_utils import create_block_mask_cached, customize_mask, create_attention_block_mask
+from ..sparse.sparsed_utils import (
+    FLEX_KERNEL_OPTIONS,
+    FLEX_PHYSICAL_BLOCK_SIZE,
+    create_attention_block_mask,
+    create_block_mask_cached,
+    customize_mask,
+    pad_logical_block_mask,
+)
 
 
 class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
@@ -245,7 +252,13 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
                 self._build_adaptive_masks(
                     q, k_for_q, v_for_q, block_size, new_generation, SparseD_param
                 )
-            att = flex_attn(q, k_for_q, v_for_q, block_mask=self.block_mask)
+            att = flex_attn(
+                q,
+                k_for_q,
+                v_for_q,
+                block_mask=self.block_mask,
+                kernel_options=FLEX_KERNEL_OPTIONS,
+            )
         
         return att
     
@@ -380,7 +393,8 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             )
         
         # Convert to block mask for ALL heads at once
-        new_mask = customize_mask(self.fine_mask, block_size=block_size)
+        flex_mask = pad_logical_block_mask(self.fine_mask, logical_block_size=block_size)
+        new_mask = customize_mask(flex_mask, block_size=block_size)
         compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
         self.block_mask = create_block_mask_cached(
             new_mask,
@@ -389,7 +403,7 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
             q_len,
             kv_len,
             device=q.device,
-            block_size=block_size,
+            block_size=FLEX_PHYSICAL_BLOCK_SIZE,
             _compile=compile_masks,
         )
     
