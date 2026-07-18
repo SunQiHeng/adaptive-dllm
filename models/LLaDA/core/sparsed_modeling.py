@@ -800,7 +800,16 @@ class LLaDABlock(nn.Module):
                             self.fine_mask[:, :, idx:idx+1, self.last:] = torch.logical_or(self.fine_mask[:, :, idx:idx+1, self.last:], fine_mask[:, : :1, :])
                     compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
                     new_mask = customize_mask(self.fine_mask, block_size=block_size)
-                    self.block_mask = create_block_mask_cached(new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks)
+                    self.block_mask = create_block_mask_cached(
+                        new_mask,
+                        bsz,
+                        num_heads,
+                        q_len,
+                        kv_len,
+                        device=query_states.device,
+                        block_size=block_size,
+                        _compile=compile_masks,
+                    )
                 att = self._scaled_dot_product_attention(
                     q,
                     k,
@@ -864,7 +873,14 @@ class LLaDABlock(nn.Module):
                         )
                     new_mask = customize_mask(self.fine_mask, block_size=block_size)
                     self.block_mask = create_block_mask_cached(
-                        new_mask, bsz, num_heads, q_len, kv_len, device=query_states.device, _compile=compile_masks
+                        new_mask,
+                        bsz,
+                        num_heads,
+                        q_len,
+                        kv_len,
+                        device=query_states.device,
+                        block_size=block_size,
+                        _compile=compile_masks,
                     )
 
                 att = flex_attn(q, k, v, block_mask=self.block_mask)

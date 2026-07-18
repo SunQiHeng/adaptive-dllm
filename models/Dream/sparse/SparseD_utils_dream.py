@@ -8,12 +8,33 @@ from torch.nn.attention.flex_attention import (
     flex_attention
 )
 
-def create_block_mask_cached(score_mod, B, H, M, N, device="cuda", _compile=True):
+def create_block_mask_cached(
+    score_mod,
+    B,
+    H,
+    M,
+    N,
+    device="cuda",
+    block_size=_DEFAULT_SPARSE_BLOCK_SIZE,
+    _compile=True,
+):
     block_mask = create_block_mask(
         score_mod, B, H, M, N, 
-        device=device, 
+        device=device,
+        BLOCK_SIZE=block_size,
         _compile=_compile,
     )
+    # PyTorch 2.5.1 builds the sparse indices with the requested tile but
+    # returns BlockMask metadata with the default 128x128 tile.  FlexAttention
+    # then interprets otherwise-correct indices at the wrong granularity.
+    # Keep the metadata consistent with both the logical mask and the indices.
+    if isinstance(block_size, int):
+        expected_block_size = (block_size, block_size)
+    else:
+        q_block_size, kv_block_size = block_size
+        expected_block_size = (kv_block_size, q_block_size)
+    if tuple(block_mask.BLOCK_SIZE) != tuple(expected_block_size):
+        block_mask.BLOCK_SIZE = expected_block_size
     return block_mask
 
 def customize_mask(mask, block_size=128):

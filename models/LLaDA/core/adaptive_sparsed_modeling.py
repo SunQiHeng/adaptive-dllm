@@ -383,7 +383,14 @@ class AdaptiveLLaDALlamaBlock(LLaDALlamaBlock):
         new_mask = customize_mask(self.fine_mask, block_size=block_size)
         compile_masks = not SparseD_param.get("recompute_mask_each_call", False)
         self.block_mask = create_block_mask_cached(
-            new_mask, B, n_heads, q_len, kv_len, device=q.device, _compile=compile_masks
+            new_mask,
+            B,
+            n_heads,
+            q_len,
+            kv_len,
+            device=q.device,
+            block_size=block_size,
+            _compile=compile_masks,
         )
     
     def forward(

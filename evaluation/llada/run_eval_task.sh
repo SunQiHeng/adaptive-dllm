@@ -604,7 +604,7 @@ for attr_dataset in "${ATTR_DATASETS[@]}"; do
             for model_type in "${MODEL_TYPES[@]}"; do
                 CURRENT_TASK=$((CURRENT_TASK + 1))
                 CURRENT_RUN_LABEL="[${CURRENT_TASK}/${TOTAL_TASKS}] dataset=${CURRENT_ATTR_DATASET} variant=${negation_label} task=${task} model=${model_type}"
-                run_single_eval "$task" "$model_type"
+                run_single_eval "$task" "$model_type" || exit $?
             done
         done
     done
