@@ -399,7 +399,6 @@ def compute_all_heads_joint_ig(
                     gate.alpha_flat = alpha_flat
 
                     model.zero_grad(set_to_none=True)
-                    loss_weighted_sum = None
                     total_variants = 0
                     if use_amp_bf16:
                         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
@@ -410,8 +409,11 @@ def compute_all_heads_joint_ig(
                                 l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
                                 bs = int(end - start)
                                 total_variants += bs
-                                lw = l * float(bs)
-                                loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
+                                # Backpropagate immediately so completed
+                                # micro-batch graphs can be released.
+                                weighted_loss = l * float(bs)
+                                weighted_loss.backward()
+                                del _raw, logits, l, weighted_loss
                     else:
                         for start in range(0, n_variants, chunk):
                             end = min(start + chunk, n_variants)
@@ -420,16 +422,16 @@ def compute_all_heads_joint_ig(
                             l = _masked_ce_answer_only_batch(logits, all_labels_tail[start:end], normalize=loss_normalize)
                             bs = int(end - start)
                             total_variants += bs
-                            lw = l * float(bs)
-                            loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
+                            weighted_loss = l * float(bs)
+                            weighted_loss.backward()
+                            del _raw, logits, l, weighted_loss
 
-                    if loss_weighted_sum is None or total_variants <= 0:
+                    if total_variants <= 0:
                         continue
-                    loss = loss_weighted_sum / float(total_variants)
-                    loss.backward()
                     if alpha_flat.grad is None:
                         raise RuntimeError("alpha_flat.grad is None; hook may not be applied correctly.")
-                    ig_accum += alpha_flat.grad.detach().to(torch.float32) * delta_alpha
+                    mean_grad = alpha_flat.grad.detach().to(torch.float32) / float(total_variants)
+                    ig_accum += mean_grad * delta_alpha
 
                 ig_row_total += ig_accum / float(ps)
 
@@ -825,4 +827,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
