@@ -233,7 +233,6 @@ def compute_all_heads_joint_relevance(
             gate.alpha_flat = alpha_flat
             model.zero_grad(set_to_none=True)
 
-            loss_weighted_sum = None
             total_variants = 0
             if use_amp_bf16:
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
@@ -243,8 +242,12 @@ def compute_all_heads_joint_relevance(
                         l = _masked_ce_answer_only_batch(logits, all_labels[start:end], normalize=loss_normalize)
                         bs = int(end - start)
                         total_variants += bs
-                        lw = l * float(bs)
-                        loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
+                        # Backpropagate each micro-batch immediately.  Keeping a
+                        # tensor sum here would retain every forward graph until
+                        # the end of the row and defeat micro-batching.
+                        weighted_loss = l * float(bs)
+                        weighted_loss.backward()
+                        del logits, l, weighted_loss
             else:
                 for start in range(0, n_variants, chunk):
                     end = min(start + chunk, n_variants)
@@ -252,19 +255,21 @@ def compute_all_heads_joint_relevance(
                     l = _masked_ce_answer_only_batch(logits, all_labels[start:end], normalize=loss_normalize)
                     bs = int(end - start)
                     total_variants += bs
-                    lw = l * float(bs)
-                    loss_weighted_sum = lw if loss_weighted_sum is None else (loss_weighted_sum + lw)
+                    weighted_loss = l * float(bs)
+                    weighted_loss.backward()
+                    del logits, l, weighted_loss
 
-            if loss_weighted_sum is None or total_variants <= 0:
+            if total_variants <= 0:
                 total_rows_skipped_no_variants += 1
                 continue
-
-            loss = loss_weighted_sum / float(total_variants)
-            loss.backward()
             if alpha_flat.grad is None:
                 raise RuntimeError("alpha_flat.grad is None; hook may not be applied correctly.")
 
-            raw_score = -(alpha_flat.grad.detach().to(torch.float32) * alpha_flat.detach().to(torch.float32))
+            # Each chunk contributes its batch-summed loss above.  Dividing the
+            # accumulated gate gradient recovers the gradient of the original
+            # mean over all mask variants.
+            mean_grad = alpha_flat.grad.detach().to(torch.float32) / float(total_variants)
+            raw_score = -(mean_grad * alpha_flat.detach().to(torch.float32))
             score = _postprocess_relevance(raw_score, relevance_postprocess)
             score_sum_flat += score
             total_items += 1
