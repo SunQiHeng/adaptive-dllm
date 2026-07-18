@@ -95,14 +95,14 @@ run_stage minerva_matched "$STATE_DIR/minerva_matched.log" env \
 
 run_stage minerva_baselines "$STATE_DIR/minerva_baselines.log" env \
   MODEL_FAMILY="$MODEL_FAMILY" GPU_ID="$GPU_ID" RUN_TAG="$MINERVA_BASELINE_TAG" \
-  METHODS_STR=attarr,attnlrp,loo MAX_SAMPLES=200 EVAL_LIMIT=200 \
+  METHODS_STR=attarr,attnlrp,loo MAX_SAMPLES=200 EVAL_LIMIT=29 \
   RUN_DENSE=1 RUN_ADAPTIVE=1 RUN_PRUNING=1 \
   bash "$PROJECT_ROOT/experiment_scripts/run_minerva_baselines_pipeline.sh" || exit $?
 
 run_stage minerva_path_ablation "$STATE_DIR/minerva_path_ablation.log" env \
   MODEL_FAMILY="$MODEL_FAMILY" GPU_ID="$GPU_ID" \
   RUN_TAG="minerva_path_${MODEL_FAMILY}_20260717_r1" \
-  ATTR_DATASET=minerva_math TASK=minerva_math ATTR_MAX_SAMPLES=200 EVAL_LIMIT=200 \
+  ATTR_DATASET=minerva_math TASK=minerva_math ATTR_MAX_SAMPLES=200 EVAL_LIMIT=29 \
   IG_STEPS=8 MASK_PROBS="0.15,0.3,0.5,0.7,0.9" MASK_SAMPLES_PER_PROB=2 \
   SEED="$MODEL_SEED" DATA_SEED="$MODEL_SEED" MASK_SEED="$MODEL_SEED" \
   PATH_SEED="$MODEL_SEED" RUN_ADAPTIVE=1 \

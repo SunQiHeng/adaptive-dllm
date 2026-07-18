@@ -17,6 +17,12 @@ ATTR_DATASET=${ATTR_DATASET:-"mmlu"}
 TASK=${TASK:-"mmlu"}
 ATTR_MAX_SAMPLES=${ATTR_MAX_SAMPLES:-40}
 EVAL_LIMIT=${EVAL_LIMIT:-40}
+MINERVA_LIMIT_PER_SUBTASK=${MINERVA_LIMIT_PER_SUBTASK:-29}
+if [ "${TASK}" = "minerva_math" ]; then
+  # lm-eval applies --limit independently to each of the seven Minerva
+  # subtasks.  Twenty-nine per subtask gives a 203-example total budget.
+  EVAL_LIMIT=${MINERVA_LIMIT_PER_SUBTASK}
+fi
 IG_STEPS=${IG_STEPS:-8}
 MASK_PROBS=${MASK_PROBS:-"0.15,0.3,0.5,0.7,0.9"}
 MASK_SAMPLES_PER_PROB=${MASK_SAMPLES_PER_PROB:-2}

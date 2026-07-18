@@ -173,7 +173,7 @@ default_limit_for_attr_dataset() {
         ceval-valid_all) echo 200 ;;
         gpqa_main_n_shot_all) echo 200 ;;
         gsm8k) echo 200 ;;
-        minerva_math) echo 200 ;;
+        minerva_math) echo "${MINERVA_LIMIT_PER_SUBTASK:-29}" ;;
         humaneval) echo 200 ;;
         mbpp) echo 200 ;;
         *)

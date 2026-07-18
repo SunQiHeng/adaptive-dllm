@@ -6,6 +6,7 @@ set -uo pipefail
 # attribution. It is resumable via per-item .done markers under logs/mask_main.
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MINERVA_LIMIT_PER_SUBTASK=${MINERVA_LIMIT_PER_SUBTASK:-29}
 MODEL_FAMILY=${MODEL_FAMILY:?Set MODEL_FAMILY=llada or dream.}
 GPU_ID=${GPU_ID:?Set GPU_ID to an available physical GPU index.}
 RUN_TAG=${RUN_TAG:-"mask_main_fill_${MODEL_FAMILY}_$(date +%Y%m%d_%H%M%S)"}
@@ -93,7 +94,7 @@ limit_for_task() {
   case "$1" in
     mmlu|cmmlu) echo 40 ;;
     ceval-valid|gpqa_main_n_shot|gsm8k|humaneval|mbpp) echo 200 ;;
-    minerva_math) echo 200 ;;
+    minerva_math) echo "${MINERVA_LIMIT_PER_SUBTASK}" ;;
     *)
       echo "ERROR: unsupported task=$1" >&2
       return 2

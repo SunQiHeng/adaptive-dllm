@@ -11,6 +11,7 @@ set -uo pipefail
 # - AttnLRP and Shapley: USE_NEGATED=0.
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MINERVA_LIMIT_PER_SUBTASK=${MINERVA_LIMIT_PER_SUBTASK:-29}
 GPU_ID=${GPU_ID:?Set GPU_ID to an available physical GPU index.}
 RUN_TAG=${RUN_TAG:-"adaptive_table_fill_$(date +%Y%m%d_%H%M%S)"}
 STATE_DIR="${PROJECT_ROOT}/logs/adaptive_table_fill/${RUN_TAG}"
@@ -66,7 +67,8 @@ source_label_for_task() {
 limit_for_task() {
   case "$1" in
     mmlu|cmmlu) echo 40 ;;
-    ceval-valid|gpqa_main_n_shot|gsm8k|minerva_math|humaneval|mbpp) echo 200 ;;
+    ceval-valid|gpqa_main_n_shot|gsm8k|humaneval|mbpp) echo 200 ;;
+    minerva_math) echo "${MINERVA_LIMIT_PER_SUBTASK}" ;;
     *)
       echo "ERROR: unsupported task: $1" >&2
       return 2

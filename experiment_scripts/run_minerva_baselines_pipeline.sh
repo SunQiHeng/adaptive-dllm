@@ -12,7 +12,10 @@ GPU_ID=${GPU_ID:?Set GPU_ID}
 RUN_TAG=${RUN_TAG:-minerva_formal_${MODEL_FAMILY}_$(date +%Y%m%d_%H%M%S)}
 METHODS_STR=${METHODS_STR:-attarr,attnlrp,loo}
 MAX_SAMPLES=${MAX_SAMPLES:-200}
-EVAL_LIMIT=${EVAL_LIMIT:-200}
+# Attribution still uses MAX_SAMPLES=200.  lm-eval applies its limit to each
+# of seven Minerva subtasks, so 29 per subtask yields 203 evaluation examples.
+MINERVA_LIMIT_PER_SUBTASK=${MINERVA_LIMIT_PER_SUBTASK:-29}
+EVAL_LIMIT=${MINERVA_LIMIT_PER_SUBTASK}
 RUN_DENSE=${RUN_DENSE:-1}
 RUN_ADAPTIVE=${RUN_ADAPTIVE:-1}
 RUN_PRUNING=${RUN_PRUNING:-1}
